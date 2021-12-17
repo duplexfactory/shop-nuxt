@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "deploy": "yarn build && cp package.deploy.json .output/ && wrangler publish",
     "dev": "nuxi dev",
     "build": "nuxi build",
     "start": "node .output/server/index.mjs"

@@ -1,0 +1,5 @@
+{
+    "name": "shop-nuxt",
+    "version": "1.0.0",
+    "main": "./server/index.mjs"
+}
