@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const header = ref('Nuxt 3 starter template')
+console.log(header)
 </script>
 
 <template>
