@@ -21,6 +21,6 @@ const { counter, inc, dec } = goSick();
       <button @click="dec">-</button>
     </div>
 
-    <nuxt-link to=/>back</nuxt-link>
+    <nuxt-link to='/'>back</nuxt-link>
   </div>
 </template>
