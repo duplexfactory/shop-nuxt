@@ -16,47 +16,65 @@ const { counter } = goSick();
     <nuxt-link to="/hello">HEEEEEE</nuxt-link>
 
 
-    <div>
-      Store Card Square
-      <div>
 
-        <div class="flex flex-row border">
-          <div class="mr-4 bg-gray-500 rounded">
-            Image Here
-          </div>
-          <div>
-            <div class="font-semibold text-lg">Store name</div>
-            <div class="mt-1 text-gray-500">Followers 1,000</div>
-            <div class="mt-2 flex flex-row">
-              <div v-for="i in [1, 2, 3]" :key="i.toString()" class="text-white text-sm bg-pink-400 px-2 py-1 rounded-lg mr-2">Tag 1</div>
+    <div class="container mx-auto">
+      <div>
+        Store Card Square
+        <div>
+
+          <div class="flex flex-row border">
+            <div class="mr-4 bg-gray-500 rounded">
+              Image Here
+            </div>
+            <div>
+              <div class="font-semibold text-lg">Store name</div>
+              <div class="mt-1 text-gray-500">Followers 1,000</div>
+              <div class="mt-2 flex flex-row">
+                <div v-for="i in [1, 2, 3]" :key="i.toString()" class="text-white text-sm bg-pink-400 px-2 py-1 rounded-lg mr-2">Tag 1</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      Store Card Rectangle
-      <div class="border p-4 flex flex-row">
-        <div class="mr-4">
-          <div class="bg-gray-500 rounded-full" style="aspect-ratio: 1; height: 100px;">
-            1
+        Store Card Rectangle
+        <div class="border rounded-xl p-4 flex flex-row">
+          <div class="mr-4">
+            <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 100px;">
+              1
+            </div>
+            <div class="mt-2 font-semibold text-lg">Store name</div>
+            <div class="mt-2 text-gray-500 flex flex-row">
+              <div class="text-center" style="flex: 1;">
+                <div>Followers</div>
+                <div>1,000</div>
+              </div>
+              <div class="text-center" style="flex: 1;">
+                <div>Posts</div>
+                <div>1,000</div>
+              </div>
+            </div>
+            <div class="mt-2 text-gray-500 text-xs">Last active Yesterday</div>
+            <div class="mt-2 flex flex-row">
+              <div v-for="i in [1, 2, 3]"
+                   :key="i.toString()"
+                   class="text-white text-xs bg-pink-400 px-2 py-1 rounded-lg mr-2">
+                Tag 1
+              </div>
+            </div>
           </div>
-          <div class="mt-2 font-semibold text-lg">Store name</div>
-          <div class="mt-2 text-gray-500">Followers 1,000</div>
-          <div class="mt-2 text-gray-500">Last active Yesterday</div>
-          <div class="mt-2 flex flex-row">
-            <div v-for="i in [1, 2, 3]" :key="i.toString()" class="text-white text-sm bg-pink-400 px-2 py-1 rounded-lg mr-2">Tag 1</div>
+          <div class="">
+            <div class="text-gray-500">Tag line</div>
+            <div class="mt-2 text-gray-500">Description</div>
+            <div class="flex flex-row mt-2">
+              <div v-for="i in [1, 2, 3]" :key="i.toString()" class="bg-gray-300 mr-2" style="aspect-ratio: 1; height: 80px;"></div>
+            </div>
           </div>
+
         </div>
-        <div class="">
-          <div class="text-gray-500">Tag line</div>
-          <div class="mt-2 text-gray-500">Description</div>
-          <div class="flex flex-row mt-2">
-            <div v-for="i in [1, 2, 3]" :key="i.toString()" class="bg-gray-300 mr-2" style="aspect-ratio: 1; height: 80px;"></div>
-          </div>
-        </div>
 
       </div>
-
     </div>
+
+
   </div>
 </template>
