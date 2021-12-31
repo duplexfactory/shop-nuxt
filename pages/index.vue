@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const header = ref('Nuxt 3 starter template')
 const { counter } = goSick();
 
@@ -20,6 +20,47 @@ const description = 'description'; // Dummy
 
 </script>
 
+<script lang="ts">
+
+import Swiper, { Navigation, Pagination } from 'swiper';
+// import Swiper and modules styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+// configure Swiper to use modules
+Swiper.use([Navigation, Pagination]);
+
+export default {
+  mounted() {
+    const swiper = new Swiper('.swiper', {
+      // Optional parameters
+      // direction: 'vertical',
+      // loop: true,
+
+      slidesPerView: 3,
+      slidesPerGroup: 3,
+
+      // If we need pagination
+      pagination: {
+        el: '.swiper-pagination',
+      },
+
+      // Navigation arrows
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+
+      // // And if we need scrollbar
+      // scrollbar: {
+      //   el: '.swiper-scrollbar',
+      // },
+    });
+  }
+}
+</script>
+
 <template>
   <div>
     <h1 class="rounded-md bg-green-200 text-xl text-green-700 font-bold">
@@ -35,6 +76,28 @@ const description = 'description'; // Dummy
 
 
     <div class="container mx-auto">
+
+
+      <!-- Slider main container -->
+      <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <StoreCardSquare v-for="i in [1, 2, 3, 4, 5]"
+                           class="swiper-slide"
+                           :key="i.toString() + '-store-card-sq'"></StoreCardSquare>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+<!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+<!--        <div class="swiper-scrollbar"></div>-->
+      </div>
+
 
       <div class="section-title">熱門店鋪</div>
       <div class="flex flex-row">
