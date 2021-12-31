@@ -47,6 +47,16 @@ const description = 'description'; // Dummy
 
       <div class="mt-10 text-xl">Components Showcase</div>
 
+      <div class="mt-8 mb-4">Post Card</div>
+      <div class="grid grid-cols-8">
+        <div class="p-4 col-span-1">
+          <div class="bg-gray-300 rounded-md" style="aspect-ratio: 1;"></div>
+          <div class="mt-2">Post content long long long long long long long long long long long long long</div>
+          <div class="mt-2 text-sm text-gray-500">{{ storeName }}</div>
+          <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">探索</button>
+        </div>
+      </div>
+
       <div class="mt-8 mb-4">Simple Store Card</div>
       <div class="flex flex-row">
         <div class="p-4 text-center">
@@ -75,8 +85,9 @@ const description = 'description'; // Dummy
             </div>
 
             <div class="mt-2 font-semibold text-lg">{{ storeName }}</div>
+            <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
-            <div class="mt-2 text-sm text-gray-500 flex flex-row">
+            <div class="mt-4 text-sm text-gray-500 flex flex-row">
               <div class="text-center" style="flex: 1;">
                 <div>Followers</div>
                 <div>1,000</div>
@@ -94,15 +105,16 @@ const description = 'description'; // Dummy
                    class="mr-2"
                    title="Tag 1"></tag>
             </div>
-            <div class="mt-2 text-gray-500 text-xs">Last active {{ lastActive }}</div>
+
+            <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">進入店鋪</button>
 
           </div>
 
           <div class="col-span-1">
-            <div class="bg-gray-300" style="aspect-ratio: 1; height: 200px;"></div>
+            <div class="bg-gray-300" style="aspect-ratio: 1; height: 220px;"></div>
             <div class="flex flex-row">
-              <div class="bg-red-300" style="aspect-ratio: 1; height: 100px;"></div>
-              <div class="bg-green-300" style="aspect-ratio: 1; height: 100px;"></div>
+              <div class="bg-red-300" style="aspect-ratio: 1; height: 110px;"></div>
+              <div class="bg-green-300" style="aspect-ratio: 1; height: 110px;"></div>
             </div>
           </div>
         </div>
@@ -116,6 +128,7 @@ const description = 'description'; // Dummy
             </div>
 
             <div class="mt-2 font-semibold text-lg">{{ storeName }}</div>
+            <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
             <div class="mt-2 text-sm text-gray-500 flex flex-row">
               <div class="text-center" style="flex: 1;">
@@ -135,7 +148,6 @@ const description = 'description'; // Dummy
                    class="mr-2"
                    title="Tag 1"></tag>
             </div>
-            <div class="mt-2 text-gray-500 text-xs">Last active {{ lastActive }}</div>
 
           </div>
           <div class="">
