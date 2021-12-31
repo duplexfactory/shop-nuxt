@@ -18,7 +18,6 @@ const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth()}/${l
 // const description = res.data.value.description;
 const description = 'description'; // Dummy
 
-
 </script>
 
 <template>
@@ -36,10 +35,17 @@ const description = 'description'; // Dummy
 
 
     <div class="container mx-auto">
-      <div>熱門店鋪</div>
-      <div>最新產品</div>
-      <div>活躍店長</div>
-      <div>實體店鋪</div>
+
+      <div class="section-title">熱門店鋪</div>
+      <div class="flex flex-row">
+        <StoreCardSquare v-for="i in [1, 2, 3]"
+                         :key="i.toString() + '-store-card-sq'"></StoreCardSquare>
+      </div>
+
+
+      <div class="section-title">最新產品</div>
+      <div class="section-title">活躍店長</div>
+      <div class="section-title">實體店鋪</div>
     </div>
 
 
@@ -57,7 +63,7 @@ const description = 'description'; // Dummy
         </div>
       </div>
 
-      <div class="mt-8 mb-4">Simple Store Card</div>
+      <div class="mt-8 mb-4">Store Card Simple</div>
       <div class="flex flex-row">
         <div class="p-4 text-center">
           <div class="bg-gray-300 rounded-full mx-auto" style="aspect-ratio: 1; height: 100px;">
@@ -166,4 +172,12 @@ const description = 'description'; // Dummy
 
   </div>
 </template>
+
+<style>
+  .section-title {
+    @apply text-xl font-semi-bold;
+  }
+
+
+</style>
 
