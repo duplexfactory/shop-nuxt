@@ -38,6 +38,8 @@ export default {
       // direction: 'vertical',
       // loop: true,
 
+      spaceBetween: 24,
+
       slidesPerView: 3,
       slidesPerGroup: 3,
 

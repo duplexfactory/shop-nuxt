@@ -28,10 +28,10 @@ const description = 'description';
         </div>
       </div>
 
-      <div class="mt-4 flex">
+      <div class="mt-2">
         <tag v-for="i in [1, 2, 3]"
              :key="i.toString()"
-             class="mr-2"
+             class="mr-2 mt-2"
              title="Tag 1"></tag>
       </div>
 
@@ -40,10 +40,10 @@ const description = 'description';
     </div>
 
     <div class="col-span-1">
-      <div class="bg-gray-300" style="aspect-ratio: 1; height: 220px;"></div>
+      <div class="bg-gray-300" style="aspect-ratio: 1;"></div>
       <div class="flex flex-row">
-        <div class="bg-red-300" style="aspect-ratio: 1; height: 110px;"></div>
-        <div class="bg-green-300" style="aspect-ratio: 1; height: 110px;"></div>
+        <div class="bg-red-300" style="aspect-ratio: 1; flex: 1;"></div>
+        <div class="bg-green-300" style="aspect-ratio: 1; flex: 1;"></div>
       </div>
     </div>
   </div>
