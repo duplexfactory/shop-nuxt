@@ -2,7 +2,7 @@
 // Dummy data.
 const storeName = 'caseonlyy';
 const lastActiveDate = new Date();
-const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth()}/${lastActiveDate.getFullYear()}`;
+const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
 const description = 'description';
 </script>
 

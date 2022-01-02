@@ -13,7 +13,7 @@ const storeName = 'caseonlyy';
 
 // const lastActiveDate = new Date(res.data.value.lastActive);
 const lastActiveDate = new Date(); // Dummy
-const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth()}/${lastActiveDate.getFullYear()}`;
+const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
 
 // const description = res.data.value.description;
 const description = 'description'; // Dummy
