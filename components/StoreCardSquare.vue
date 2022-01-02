@@ -9,12 +9,17 @@ const description = 'description';
 <template>
   <div class="border rounded-md grid grid-cols-2">
     <div class="p-4 col-span-1">
-      <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 80px;">
+
+      <div class="flex items-center">
+        <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 65px;"></div>
+
+        <div class="ml-2">
+          <div class="font-semibold text-lg">{{ storeName }}</div>
+          <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
+        </div>
 
       </div>
 
-      <div class="mt-2 font-semibold text-lg">{{ storeName }}</div>
-      <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
       <div class="mt-4 text-sm text-gray-500 flex flex-row">
         <div class="text-center" style="flex: 1;">

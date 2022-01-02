@@ -38,10 +38,10 @@ export default {
       // direction: 'vertical',
       // loop: true,
 
-      spaceBetween: 24,
+      spaceBetween: 16,
 
-      slidesPerView: 3,
-      slidesPerGroup: 3,
+      slidesPerView: 4,
+      slidesPerGroup: 4,
 
       // If we need pagination
       pagination: {
