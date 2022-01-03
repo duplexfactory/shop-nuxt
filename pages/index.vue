@@ -38,11 +38,16 @@ export default {
       // direction: 'vertical',
       // loop: true,
 
-      spaceBetween: 32,
+      spaceBetween: 16,
       slidesPerView: 2,
       slidesPerGroup: 2,
 
       breakpoints: {
+        1024: {
+          spaceBetween: 32,
+          slidesPerView: 2,
+          slidesPerGroup: 2,
+        },
         1536: {
           spaceBetween: 16,
           slidesPerView: 3,

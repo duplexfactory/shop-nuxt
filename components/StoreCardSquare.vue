@@ -46,7 +46,7 @@ const description = 'description';
 
     <div class="col-span-1">
       <div class="bg-gray-300" style="aspect-ratio: 1;"></div>
-      <div class="flex flex-row">
+      <div class="block lg:flex flex-row">
         <div class="bg-red-300" style="aspect-ratio: 1; flex: 1;"></div>
         <div class="bg-green-300" style="aspect-ratio: 1; flex: 1;"></div>
       </div>
