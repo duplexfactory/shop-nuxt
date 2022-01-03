@@ -10,6 +10,21 @@ export default defineConfig({
     },
     extend: {
     },
+    container: {
+      // screens: {
+      //     'sm': '540px',
+      //     'md': '720px',
+      //     'lg': '960px',
+      //     'xl': '1140px',
+      // }
+      padding: {
+        DEFAULT: '2rem',
+        sm: '4rem',
+        lg: '6rem',
+        xl: '8rem',
+        '2xl': '10rem',
+      },
+    }
   },
   plugins: [],
 })

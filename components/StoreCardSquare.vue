@@ -11,7 +11,7 @@ const description = 'description';
     <div class="p-4 col-span-1">
 
       <div class="flex items-center">
-        <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 65px;"></div>
+        <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 60px;"></div>
 
         <div class="ml-2">
           <div class="font-semibold text-lg">{{ storeName }}</div>

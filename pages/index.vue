@@ -38,10 +38,17 @@ export default {
       // direction: 'vertical',
       // loop: true,
 
-      spaceBetween: 16,
+      spaceBetween: 32,
+      slidesPerView: 2,
+      slidesPerGroup: 2,
 
-      slidesPerView: 4,
-      slidesPerGroup: 4,
+      breakpoints: {
+        1536: {
+          spaceBetween: 16,
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+        }
+      },
 
       // If we need pagination
       pagination: {
@@ -79,7 +86,7 @@ export default {
 
     <div class="container mx-auto">
 
-
+      <div class="section-title">熱門店鋪</div>
       <!-- Slider main container -->
       <div class="swiper">
         <!-- Additional required wrapper -->
@@ -96,15 +103,8 @@ export default {
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div>
 
-<!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-<!--        <div class="swiper-scrollbar"></div>-->
-      </div>
-
-
-      <div class="section-title">熱門店鋪</div>
-      <div class="flex flex-row">
-        <StoreCardSquare v-for="i in [1, 2, 3]"
-                         :key="i.toString() + '-store-card-sq'"></StoreCardSquare>
+        <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+        <!--        <div class="swiper-scrollbar"></div>-->
       </div>
 
 
