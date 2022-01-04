@@ -49,6 +49,11 @@ export default {
           // slidesPerGroup: 2,
 
           spaceBetween: 16,
+          slidesPerView: 2.2,
+          slidesPerGroup: 2.2,
+        },
+        1280: {
+          spaceBetween: 16,
           slidesPerView: 2.5,
           slidesPerGroup: 2.5,
         },
@@ -99,14 +104,14 @@ export default {
       <!-- Slider main container -->
       <div class="swiper">
         <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper pb-8">
           <!-- Slides -->
           <StoreCardSquare v-for="i in [1, 2, 3, 4, 5]"
                            class="swiper-slide"
                            :key="i.toString() + '-store-card-sq'"></StoreCardSquare>
         </div>
         <!-- If we need pagination -->
-        <div class="swiper-pagination"></div>
+        <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
         <div class="swiper-button-prev"></div>
@@ -249,9 +254,16 @@ export default {
 
 <style>
   .section-title {
-    @apply text-xl font-semi-bold;
+    @apply text-2xl mb-4 mt-6;
   }
 
+  .swiper-pagination .swiper-pagination-bullet-active {
+    /*background-color: black;*/
+    @apply bg-pink-400;
+  }
 
+  .swiper-button-next, .swiper-button-prev {
+    @apply text-pink-400;
+  }
 </style>
 
