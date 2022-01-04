@@ -21,7 +21,7 @@ const description = 'description';
       </div>
 
 
-      <div class="mt-4 text-sm text-gray-500 flex flex-row">
+      <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
         <div class="text-center" style="flex: 1;">
           <div>Followers</div>
           <div>1,000</div>
@@ -33,14 +33,14 @@ const description = 'description';
         </div>
       </div>
 
-      <div class="mt-2">
-        <tag v-for="i in [1, 2, 3]"
+      <div class="mt-1 2xl:mt-2">
+        <tag v-for="i in [1, 2, 3, 4, 5]"
              :key="i.toString()"
-             class="mr-2 mt-2"
+             class="mr-1 2xl:mr-2 mt-1 2xl:mt-2 px-1 py-0.5 2xl:px-2 2xl:py-1"
              title="Tag 1"></tag>
       </div>
 
-      <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">進入店鋪</button>
+      <button class="mt-2 2xl:mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">進入店鋪</button>
 
     </div>
 
