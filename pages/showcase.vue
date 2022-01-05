@@ -33,6 +33,13 @@
             </div>
         </div>
 
+        <div class="mt-8 mb-4">Store Card Offline</div>
+        <div class="grid grid-cols-3">
+            <div class="col-span-1">
+                <StoreCardOffline></StoreCardOffline>
+            </div>
+        </div>
+
         <div class="mt-8 mb-4">Store Card Rectangle</div>
         <div class="border rounded-md p-4 flex flex-row">
             <div class="mr-4">

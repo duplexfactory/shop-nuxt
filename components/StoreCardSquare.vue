@@ -23,12 +23,12 @@ const description = 'description';
 
       <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
         <div class="text-center" style="flex: 1;">
-          <div>Followers</div>
+          <div>粉絲</div>
           <div>1,000</div>
         </div>
         <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
         <div class="text-center" style="flex: 1;">
-          <div>Posts</div>
+          <div>貼文</div>
           <div>1,000</div>
         </div>
       </div>

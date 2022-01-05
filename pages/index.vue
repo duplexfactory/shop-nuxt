@@ -40,9 +40,10 @@ const description = 'description'; // Dummy
       <StoreCardSquareSwiperList></StoreCardSquareSwiperList>
 
       <div class="section-title">最新產品</div>
-      <StoreCardSimpleSwiperList></StoreCardSimpleSwiperList>
 
       <div class="section-title">活躍店長</div>
+      <StoreCardSimpleSwiperList></StoreCardSimpleSwiperList>
+
       <div class="section-title">實體店鋪</div>
     </div>
 
