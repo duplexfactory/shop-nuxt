@@ -31,3 +31,5 @@ yarn-error.log*
 
 # Cloudflare deploy
 wrangler.toml
+
+.env
