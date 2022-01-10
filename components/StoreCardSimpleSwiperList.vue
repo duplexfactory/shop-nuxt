@@ -22,18 +22,14 @@
 
                 breakpoints: {
                     1024: {
-                        // spaceBetween: 32,
-                        // slidesPerView: 2,
-                        // slidesPerGroup: 2,
-
                         spaceBetween: 16,
-                        slidesPerView: 2.2,
-                        slidesPerGroup: 2.2,
+                        slidesPerView: 3,
+                        slidesPerGroup: 3,
                     },
                     1280: {
                         spaceBetween: 16,
-                        slidesPerView: 2.5,
-                        slidesPerGroup: 2.5,
+                        slidesPerView: 4,
+                        slidesPerGroup: 4,
                     },
                     1536: {
                         spaceBetween: 16,
@@ -49,8 +45,8 @@
 
                 // Navigation arrows
                 navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                    nextEl: this.$refs.swiperButtonNext,
+                    prevEl: this.$refs.swiperButtonPrev,
                 },
 
                 // // And if we need scrollbar
@@ -76,8 +72,8 @@
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
 
         <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
         <!--        <div class="swiper-scrollbar"></div>-->

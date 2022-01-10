@@ -49,8 +49,8 @@
 
                 // Navigation arrows
                 navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                    nextEl: this.$refs.swiperButtonNext,
+                    prevEl: this.$refs.swiperButtonPrev,
                 },
 
                 // // And if we need scrollbar
@@ -76,8 +76,8 @@
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
 
         <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
         <!--        <div class="swiper-scrollbar"></div>-->
