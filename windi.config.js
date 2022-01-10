@@ -27,4 +27,7 @@ export default defineConfig({
     }
   },
   plugins: [],
+  shortcuts: {
+    'btn': 'text-white text-md bg-pink-400 px-6 py-2 rounded-md'
+  },
 })
