@@ -1,8 +1,8 @@
-import { defineNuxtConfig } from 'nuxt3'
+import {defineNuxtConfig, NuxtConfig} from 'nuxt3';
 
-declare module '@nuxt/schema' {
+declare module 'nuxt3' {
   interface NuxtConfig {
-    windicss?: any
+    windicss?: any;
   }
 }
 
@@ -17,4 +17,4 @@ export default defineNuxtConfig({
   windicss: {
     analyze: true
   },
-})
+} as NuxtConfig);
