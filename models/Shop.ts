@@ -9,6 +9,6 @@ export default class Shop {
     activeScore?: number
 
     // denormalize
-    icon: string
+    profilePicUrl: string
     medias: string[]
 }

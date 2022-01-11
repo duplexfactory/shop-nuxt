@@ -8,6 +8,7 @@ export default interface IgPage {
     followerCount: number
     followingCount: number
     externalUrl: string
+    profilePicUrl: string
 
     private?: boolean
     deleted?: boolean
