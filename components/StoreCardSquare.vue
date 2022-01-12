@@ -26,9 +26,7 @@
         <div class="p-4 col-span-1">
 
             <div class="flex flex-row items-center">
-                <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 60px;">
-                    <img :src="profilePicUrl"/>
-                </div>
+                <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${profilePicUrl});`" style="height: 60px;"></div>
 
                 <div class="ml-2 overflow-hidden">
                     <div class="font-semibold text-lg truncate">{{ username }}</div>
