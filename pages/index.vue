@@ -37,7 +37,7 @@ const description = 'description'; // Dummy
     <div class="container mx-auto">
 
       <div class="section-title">熱門店鋪</div>
-      <StoreCardSquareSwiperList></StoreCardSquareSwiperList>
+      <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
       <div class="section-title">最新產品</div>
 

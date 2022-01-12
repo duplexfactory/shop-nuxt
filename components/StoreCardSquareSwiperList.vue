@@ -1,15 +1,19 @@
 <script lang="ts">
-
     import Swiper, { Navigation, Pagination } from 'swiper';
     // import Swiper and modules styles
     import 'swiper/css';
     import 'swiper/css/navigation';
     import 'swiper/css/pagination';
+    import {PropType} from "vue";
+    import Shop from '~/models/Shop';
 
     // configure Swiper to use modules
     Swiper.use([Navigation, Pagination]);
 
     export default {
+        props: {
+            shops: Array as PropType<Shop[]>
+        },
         mounted() {
             const swiper = new Swiper(this.$refs.swiper, {
                 // Optional parameters
@@ -68,9 +72,10 @@
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper pb-8">
             <!-- Slides -->
-            <StoreCardSquare v-for="i in [1, 2, 3, 4, 5]"
+            <StoreCardSquare v-for="shop in shops"
                              class="swiper-slide"
-                             :key="i.toString() + '-store-card-sq'"></StoreCardSquare>
+                             :shop="shop"
+                             :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
