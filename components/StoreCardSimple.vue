@@ -18,7 +18,7 @@
                  class="mr-2"
                  title="Tag 1"></tag>
         </div>
-        <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">探索</button>
+        <button class="mt-4 btn-primary">探索</button>
 
     </div>
 </template>

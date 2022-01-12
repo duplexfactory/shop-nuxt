@@ -1,0 +1,11 @@
+.btn {
+    @apply text-md px-6 py-2 rounded-md;
+}
+
+.btn-primary {
+    @apply btn text-white bg-pink-400;
+}
+
+.btn-outline {
+    @apply btn text-pink-400 border border-pink-400;
+}

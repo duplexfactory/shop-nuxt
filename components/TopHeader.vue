@@ -11,7 +11,7 @@
 
       <!-- right -->
       <div>
-        <button class="border border-pink-400 text-pink-400 text-md px-6 py-2">認證我的商店</button>
+        <button class="btn-outline">認證我的商店</button>
       </div>
     </div>
     <!--<div id="nav" class="container">nav</div>-->

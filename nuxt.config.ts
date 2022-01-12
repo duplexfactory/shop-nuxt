@@ -11,6 +11,9 @@ export default defineNuxtConfig({
   windicss: {
     analyze: true
   },
+  css: [
+    '@/assets/css/main.css'
+  ],
   privateRuntimeConfig: {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,

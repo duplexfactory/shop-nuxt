@@ -40,7 +40,7 @@ const description = 'description';
              title="Tag 1"></tag>
       </div>
 
-      <button class="mt-2 2xl:mt-4 btn">進入店鋪</button>
+      <button class="mt-2 2xl:mt-4 btn-primary">進入店鋪</button>
 
     </div>
 
