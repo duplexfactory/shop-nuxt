@@ -2,6 +2,7 @@
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
 
+    const {tagsLookup} = useTags()
     const {shop} = defineProps({
         shop: Object as PropType<IgPage>
     })
@@ -28,10 +29,9 @@
                 <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 60px;"></div>
 
                 <div class="ml-2 overflow-hidden">
-                    <div class="font-semibold text-lg truncate">{{ igUsername }}</div>
+                    <div class="font-semibold text-lg truncate">{{ username }}</div>
                     <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
                 </div>
-
             </div>
 
 
@@ -49,10 +49,10 @@
 
             <div class="mt-1 2xl:mt-2"
                  style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; /* number of lines to show */ -webkit-box-orient: vertical; font-size: 0;">
-                <tag v-for="i in [1, 2, 3, 4, 5]"
-                     :key="i.toString()"
+                <tag v-for="tag in tags"
+                     :key="tag"
                      class="mr-1 2xl:mr-2 mt-1 2xl:mt-2 px-1 py-0.5 2xl:px-2 2xl:py-1"
-                     title="Tag 1"></tag>
+                     :title="tagsLookup[tag]"></tag>
             </div>
 
             <button class="mt-2 2xl:mt-4 btn-primary">進入店鋪</button>

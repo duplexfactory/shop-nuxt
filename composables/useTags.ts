@@ -1,5 +1,74 @@
-const categories = [{"id":"hand-made","label":"手作","tags":[{"id":"candle","label":"蠟燭"},{"id":"hand-strap","label":"手繩"},{"id":"eternal-life","label":"永生花"},{"id":"leather","label":"皮革"}]},{"id":"apparel","label":"服飾","tags":[{"id":"men's","label":"男裝"},{"id":"women's-clothing","label":"女裝"},{"id":"cap","label":"帽"},{"id":"shoe","label":"鞋"},{"id":"jewelry","label":"首飾"},{"id":"famous-brand","label":"名牌"},{"id":"bag","label":"袋"},{"id":"suit","label":"西裝"},{"id":"jewelry","label":"珠寶"},{"id":"underwear","label":"内衣"},{"id":"ancient","label":"古著"}]},{"id":"cosmetic","label":"美容","tags":[{"id":"nail","label":"美甲"},{"id":"skin-care","label":"護膚"}]},{"id":"food","label":"食物","tags":[{"id":"buffet","label":"散水餅"},{"id":"cake","label":"蛋糕"},{"id":"tea","label":"茶"},{"id":"manual-beer","label":"手工啤酒"},{"id":"soup-bag","label":"湯包"}]},{"id":"adult-products","label":"成人用品","tags":[{"id":"sex-toys","label":"性玩具"},{"id":"sexy-underwear","label":"情趣內衣"},{"id":"condom","label":"安全套"}]},{"id":"serve","label":"服務","tags":[{"id":"hairstyle","label":"髮型屋"},{"id":"workshop","label":"工作坊"},{"id":"self-service","label":"自拍舘"}]},{"id":"stationery-boutique","label":"文具精品","tags":[{"id":"phone-case","label":"手機殼"},{"id":"watch","label":"手錶"},{"id":"stationery","label":"文具"},{"id":"model","label":"模型"},{"id":"periphery","label":"周邊"},{"id":"silver-bag","label":"銀包"},{"id":"computer-bag","label":"電腦袋"}]},{"id":"universal","label":"通用","tags":[{"id":"south-korea","label":"韓國"},{"id":"japan","label":"日本"},{"id":"purchase","label":"代購"},{"id":"second-hand","label":"二手"},{"id":"customize","label":"訂製"}]},{"id":"pet","label":"寵物","tags":[{"id":"pet-supplies","label":"寵物用品"},{"id":"pet-food","label":"寵物食品"}]}]
+const categories = [{id: "dummy", label: "DUMMY", "tags": []}, {
+    "id": "hand-made",
+    "label": "手作",
+    "tags": [{"id": "candle", "label": "蠟燭"}, {"id": "hand-strap", "label": "手繩"}, {
+        "id": "eternal-life",
+        "label": "永生花"
+    }, {"id": "leather", "label": "皮革"}]
+}, {
+    "id": "apparel",
+    "label": "服飾",
+    "tags": [{"id": "men's", "label": "男裝"}, {"id": "women's-clothing", "label": "女裝"}, {
+        "id": "cap",
+        "label": "帽"
+    }, {"id": "shoe", "label": "鞋"}, {"id": "jewelry", "label": "首飾"}, {
+        "id": "famous-brand",
+        "label": "名牌"
+    }, {"id": "bag", "label": "袋"}, {"id": "suit", "label": "西裝"}, {"id": "jewelry", "label": "珠寶"}, {
+        "id": "underwear",
+        "label": "内衣"
+    }, {"id": "ancient", "label": "古著"}]
+}, {
+    "id": "cosmetic",
+    "label": "美容",
+    "tags": [{"id": "nail", "label": "美甲"}, {"id": "skin-care", "label": "護膚"}]
+}, {
+    "id": "food",
+    "label": "食物",
+    "tags": [{"id": "buffet", "label": "散水餅"}, {"id": "cake", "label": "蛋糕"}, {
+        "id": "tea",
+        "label": "茶"
+    }, {"id": "manual-beer", "label": "手工啤酒"}, {"id": "soup-bag", "label": "湯包"}]
+}, {
+    "id": "adult-products",
+    "label": "成人用品",
+    "tags": [{"id": "sex-toys", "label": "性玩具"}, {"id": "sexy-underwear", "label": "情趣內衣"}, {
+        "id": "condom",
+        "label": "安全套"
+    }]
+}, {
+    "id": "serve",
+    "label": "服務",
+    "tags": [{"id": "hairstyle", "label": "髮型屋"}, {"id": "workshop", "label": "工作坊"}, {
+        "id": "self-service",
+        "label": "自拍舘"
+    }]
+}, {
+    "id": "stationery-boutique",
+    "label": "文具精品",
+    "tags": [{"id": "phone-case", "label": "手機殼"}, {"id": "watch", "label": "手錶"}, {
+        "id": "stationery",
+        "label": "文具"
+    }, {"id": "model", "label": "模型"}, {"id": "periphery", "label": "周邊"}, {
+        "id": "silver-bag",
+        "label": "銀包"
+    }, {"id": "computer-bag", "label": "電腦袋"}]
+}, {
+    "id": "universal",
+    "label": "通用",
+    "tags": [{"id": "south-korea", "label": "韓國"}, {"id": "japan", "label": "日本"}, {
+        "id": "purchase",
+        "label": "代購"
+    }, {"id": "second-hand", "label": "二手"}, {"id": "customize", "label": "訂製"}]
+}, {"id": "pet", "label": "寵物", "tags": [{"id": "pet-supplies", "label": "寵物用品"}, {"id": "pet-food", "label": "寵物食品"}]}]
+
+const tagsLookup = categories.reduce((dict, cat) => {
+    dict[cat.id] = cat.label;
+    for (const t of cat.tags)
+        dict[t.id] = t.label;
+    return dict;
+}, {} as Record<string, string>)
 
 export default function () {
-    return categories;
+    return {categories, tagsLookup};
 }
