@@ -26,7 +26,9 @@
         <div class="p-4 col-span-1">
 
             <div class="flex flex-row items-center">
-                <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 60px;"></div>
+                <div class="bg-gray-300 rounded-full" style="aspect-ratio: 1; height: 60px;">
+                    <img :src="profilePicUrl"/>
+                </div>
 
                 <div class="ml-2 overflow-hidden">
                     <div class="font-semibold text-lg truncate">{{ username }}</div>
@@ -60,10 +62,12 @@
         </div>
 
         <div class="col-span-1">
-            <div class="bg-gray-300" style="aspect-ratio: 1;"></div>
+            <div class="bg-gray-300" style="aspect-ratio: 1;">
+                <img :src="mediaUrls[0]"/>
+            </div>
             <div class="block lg:flex flex-row">
-                <div class="bg-red-300" style="aspect-ratio: 1; flex: 1;"></div>
-                <div class="bg-green-300" style="aspect-ratio: 1; flex: 1;"></div>
+                <div class="bg-red-300" style="aspect-ratio: 1; flex: 1;"><img :src="mediaUrls[1]"/></div>
+                <div class="bg-green-300" style="aspect-ratio: 1; flex: 1;"><img :src="mediaUrls[2]"/></div>
             </div>
         </div>
     </div>
