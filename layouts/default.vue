@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <top-header></top-header>
-      <slot/>
+
+    <slot/>
+
+    <bottom-footer></bottom-footer>
   </div>
 </template>
 
