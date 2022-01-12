@@ -1,5 +1,5 @@
 export default interface IgPage {
-    id: number
+    pk: number
     username: string
     fullName: string
     biography: string
@@ -16,4 +16,11 @@ export default interface IgPage {
     lastStory: number
     lastFetch: number
     lastActivity: number
+
+    // computed
+    tags: string[];
+    activeScore: number;
+
+    // denormalize
+    mediaUrls: string[];
 }

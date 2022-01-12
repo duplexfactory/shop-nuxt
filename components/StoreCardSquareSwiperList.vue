@@ -5,14 +5,14 @@
     import 'swiper/css/navigation';
     import 'swiper/css/pagination';
     import {PropType} from "vue";
-    import Shop from '~/models/Shop';
+    import IgPage from '~/models/IgPage';
 
     // configure Swiper to use modules
     Swiper.use([Navigation, Pagination]);
 
     export default {
         props: {
-            shops: Array as PropType<Shop[]>
+            shops: Array as PropType<IgPage[]>
         },
         mounted() {
             const swiper = new Swiper(this.$refs.swiper, {
