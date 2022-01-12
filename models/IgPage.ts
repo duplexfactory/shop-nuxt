@@ -10,10 +10,10 @@ export default interface IgPage {
     externalUrl: string
     profilePicUrl: string
 
-    private?: boolean
-    deleted?: boolean
+    private: boolean
+    deleted: boolean
 
-    lastStory?: number
+    lastStory: number
     lastFetch: number
     lastActivity: number
 }

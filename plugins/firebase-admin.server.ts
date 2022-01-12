@@ -1,5 +1,15 @@
 // import config from "#config";
 import {cert, getApps, initializeApp} from "firebase-admin/app";
+import {QuerySnapshot} from "@google-cloud/firestore";
+
+declare module "@google-cloud/firestore" {
+  interface QuerySnapshot<T> {
+    data(): T[];
+  }
+}
+QuerySnapshot.prototype.data = function <T>(this: QuerySnapshot<T>) {
+  return this.docs.map(doc => doc.data());
+};
 
 export default ({$config}) => {
   if (!getApps().length) {

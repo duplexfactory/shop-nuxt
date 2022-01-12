@@ -11,4 +11,6 @@ export default class Shop {
     // denormalize
     profilePicUrl: string
     medias: string[]
+    lastActivity: number
+    followerCount: number
 }
