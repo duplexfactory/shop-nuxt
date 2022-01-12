@@ -62,14 +62,18 @@
         </div>
 
         <div class="col-span-1">
-            <div class="bg-gray-300" style="aspect-ratio: 1;">
-                <img :src="mediaUrls[0]"/>
-            </div>
+            <div class="bg-gray-300 square-image-container" :style="`background-image: url(${mediaUrls[0]});`"></div>
             <div class="block lg:flex flex-row">
-                <div class="bg-red-300" style="aspect-ratio: 1; flex: 1;"><img :src="mediaUrls[1]"/></div>
-                <div class="bg-green-300" style="aspect-ratio: 1; flex: 1;"><img :src="mediaUrls[2]"/></div>
+                <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>
+                <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>
             </div>
         </div>
     </div>
 </template>
 
+<style>
+.square-image-container {
+    aspect-ratio: 1;
+    @apply bg-center bg-cover;
+}
+</style>
