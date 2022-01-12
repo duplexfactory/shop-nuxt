@@ -13,14 +13,24 @@ export function shopCollection() {
     return getFirestore().collection("shops") as CollectionReference<Shop>;
 }
 
-export function mediaCollection(id: number) {
-    return pageCollection().doc(id.toString()).collection("medias") as CollectionReference<IgMedia>;
+export type IdInput = number | string | { id: string | number }
+
+function idString(id: string | number) {
+    return (typeof id === "string") ? id : id.toString();
 }
 
-export function trayCollection(id: number) {
-    return pageCollection().doc(id.toString()).collection("trays") as CollectionReference<IgTray>;
+export function toId(id: IdInput) {
+    return idString((typeof id === "object") ? id.id : id);
 }
 
-export function storyCollection(id: number) {
-    return pageCollection().doc(id.toString()).collection("stories") as CollectionReference<IgStory>;
+export function mediaCollection(id: IdInput) {
+    return pageCollection().doc(toId(id)).collection("medias") as CollectionReference<IgMedia>;
+}
+
+export function trayCollection(id: IdInput) {
+    return pageCollection().doc(toId(id)).collection("trays") as CollectionReference<IgTray>;
+}
+
+export function storyCollection(id: IdInput) {
+    return pageCollection().doc(toId(id)).collection("stories") as CollectionReference<IgStory>;
 }
