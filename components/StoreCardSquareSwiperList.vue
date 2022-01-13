@@ -32,12 +32,12 @@
 
                         spaceBetween: 16,
                         slidesPerView: 2.2,
-                        slidesPerGroup: 2.2,
+                        slidesPerGroup: 2,
                     },
                     1280: {
                         spaceBetween: 16,
                         slidesPerView: 2.5,
-                        slidesPerGroup: 2.5,
+                        slidesPerGroup: 2,
                     },
                     1536: {
                         spaceBetween: 16,
