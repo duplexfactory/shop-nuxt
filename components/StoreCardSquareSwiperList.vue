@@ -94,10 +94,16 @@
     }
 
     .swiper-button-next, .swiper-button-prev {
+        display: none;
         @apply text-pink-400;
     }
 
     .swiper-button-next::after, .swiper-button-prev::after {
-      font-size: 32px;
+        font-size: 32px;
     }
+
+    .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
+        display: flex !important;
+    }
+
 </style>
