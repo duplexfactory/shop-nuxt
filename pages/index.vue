@@ -1,4 +1,5 @@
 <script setup>
+import StoreCardOffline from "../components/StoreCardOffline";
 const header = ref('Nuxt 3 starter template')
 const {counter} = goSick();
 
@@ -12,14 +13,13 @@ const storeName = 'caseonlyy';
 // const data = JSON.parse(res);
 
 const {data} = await useFetch(`/api/home`);
-const {hot, active, latest} = data.value;
+const {hot, active, latest, physical} = data.value;
 // const lastActiveDate = new Date(res.data.value.lastActive);
 const lastActiveDate = new Date(); // Dummy
 const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
 
 // const description = res.data.value.description;
 const description = 'description'; // Dummy
-
 </script>
 
 <template>
@@ -47,6 +47,8 @@ const description = 'description'; // Dummy
       <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
 
       <div class="section-title">實體店鋪</div>
+      <StoreCardOfflineSwiperList :shops="physical"></StoreCardOfflineSwiperList>
+
     </div>
 
   </div>
