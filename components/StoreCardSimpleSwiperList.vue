@@ -1,15 +1,19 @@
 <script lang="ts">
-
     import Swiper, { Navigation, Pagination } from 'swiper';
     // import Swiper and modules styles
     import 'swiper/css';
     import 'swiper/css/navigation';
     import 'swiper/css/pagination';
+    import {PropType} from "vue";
+    import IgPage from '~/models/IgPage';
 
     // configure Swiper to use modules
     Swiper.use([Navigation, Pagination]);
 
     export default {
+        props: {
+            shops: Array as PropType<IgPage[]>
+        },
         mounted() {
             const swiper = new Swiper(this.$refs.swiper, {
                 // Optional parameters
@@ -64,9 +68,10 @@
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper pb-8">
             <!-- Slides -->
-            <StoreCardSimple v-for="i in Array(12).fill(0).map((_, i) => i)"
+            <StoreCardSimple v-for="shop in shops"
                              class="swiper-slide"
-                             :key="i.toString() + '-store-card-sq'"></StoreCardSimple>
+                             :shop="shop"
+                             :key="shop.ig_username + '-store-card-simple'"></StoreCardSimple>
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
@@ -79,13 +84,16 @@
         <!--        <div class="swiper-scrollbar"></div>-->
     </div>
 </template>
-<style>
-    .swiper-pagination .swiper-pagination-bullet-active {
-        /*background-color: black;*/
-        @apply bg-pink-400;
-    }
+<style scoped>
+.swiper-pagination .swiper-pagination-bullet-active {
+  @apply bg-pink-400;
+}
 
-    .swiper-button-next, .swiper-button-prev {
-        @apply text-pink-400;
-    }
+.swiper-button-next, .swiper-button-prev {
+  @apply text-pink-400;
+}
+
+.swiper-button-next::after, .swiper-button-prev::after {
+  font-size: 32px;
+}
 </style>

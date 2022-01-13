@@ -88,13 +88,16 @@
         <!--        <div class="swiper-scrollbar"></div>-->
     </div>
 </template>
-<style>
+<style scoped>
     .swiper-pagination .swiper-pagination-bullet-active {
-        /*background-color: black;*/
         @apply bg-pink-400;
     }
 
     .swiper-button-next, .swiper-button-prev {
         @apply text-pink-400;
+    }
+
+    .swiper-button-next::after, .swiper-button-prev::after {
+      font-size: 32px;
     }
 </style>

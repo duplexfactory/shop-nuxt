@@ -40,9 +40,11 @@ const description = 'description'; // Dummy
       <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
       <div class="section-title">最新產品</div>
+<!--      {{ latest }}-->
 
       <div class="section-title">活躍店長</div>
-      <StoreCardSimpleSwiperList></StoreCardSimpleSwiperList>
+<!--      {{ active }}-->
+      <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
 
       <div class="section-title">實體店鋪</div>
     </div>
