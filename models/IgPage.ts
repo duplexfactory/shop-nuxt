@@ -17,8 +17,12 @@ export default interface IgPage {
     lastFetch: number
     lastActivity: number
 
-    // computed
+    // marked
     tags: string[];
+    businessRegistration: boolean;
+    brickAndMortar: boolean;
+
+    // computed
     activeScore: number;
 
     // denormalize
