@@ -37,12 +37,12 @@
                 <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
                     <div class="text-center" style="flex: 1;">
                         <div>粉絲</div>
-                        <div>{{ followerCount }}</div>
+                        <div>{{ followerCount.toLocaleString() }}</div>
                     </div>
                     <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
                     <div class="text-center" style="flex: 1;">
                         <div>貼文</div>
-                        <div>{{ mediaCount }}</div>
+                        <div>{{ mediaCount.toLocaleString() }}</div>
                     </div>
                 </div>
 
