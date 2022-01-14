@@ -1,5 +1,9 @@
 <script setup>
 import StoreCardOffline from "../components/StoreCardOffline";
+import PostCardSwiperList from "../components/PostCardSwiperList";
+export default {
+  components: {PostCardSwiperList}
+}
 const header = ref('Nuxt 3 starter template')
 const {counter} = goSick();
 
@@ -40,7 +44,7 @@ const description = 'description'; // Dummy
       <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
       <div class="section-title">最新產品</div>
-<!--      {{ latest }}-->
+      <PostCardSwiperList :shops="latest"></PostCardSwiperList>
 
       <div class="section-title">活躍店長</div>
 <!--      {{ active }}-->

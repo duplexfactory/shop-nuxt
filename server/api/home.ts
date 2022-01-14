@@ -1,4 +1,4 @@
-import {pageCollection} from "~/server/firebase/collections";
+import {mediaCollection, mediaCollectionGroup, pageCollection} from "~/server/firebase/collections";
 
 export default async () => {
     const [hot, latest, active, physical] = await Promise.all([
@@ -9,10 +9,8 @@ export default async () => {
             .limit(5)
             .get()
             .then(ss => ss.data()),
-        pageCollection()
-            .where("deleted", "==", false)
-            .where("private", "==", false)
-            .orderBy("lastActivity", "desc")
+        mediaCollectionGroup()
+            .orderBy("takenAt", "desc")
             .limit(12)
             .get()
             .then(ss => ss.data()),

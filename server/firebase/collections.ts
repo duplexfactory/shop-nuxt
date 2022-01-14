@@ -3,6 +3,9 @@ import IgPage from "~/models/IgPage";
 import IgMedia from "~/models/IgMedia";
 import IgTray from "~/models/IgTray";
 import IgStory from "~/models/IgStory";
+import {getDatabase} from "firebase-admin/lib/database";
+import {firestore} from "firebase-admin/lib/firestore/firestore-namespace";
+import CollectionGroup = firestore.CollectionGroup;
 
 export function pageCollection() {
     return getFirestore().collection("pages") as CollectionReference<IgPage>;
@@ -16,6 +19,10 @@ function idString(id: string | number) {
 
 export function toId(id: IdInput) {
     return idString((typeof id === "object") ? id.id : id);
+}
+
+export function mediaCollectionGroup() {
+    return firestore().collectionGroup("medias") as CollectionGroup<IgMedia>;
 }
 
 export function mediaCollection(id: IdInput) {
