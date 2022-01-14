@@ -30,11 +30,11 @@
              style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; /* number of lines to show */ -webkit-box-orient: vertical; font-size: 0;">
           <tag v-for="tag in tags"
                :key="tag"
-               class="mr-1 2xl:mr-2 mt-1 2xl:mt-2 px-1 py-0.5 2xl:px-2 2xl:py-1"
+               class="mr-1 2xl:mr-2"
                :title="tagsLookup[tag]"></tag>
         </div>
 
-        <button class="mt-4 btn-primary">探索</button>
+        <button class="mt-4 btn-primary btn-sm">探索</button>
 
     </div>
 </template>

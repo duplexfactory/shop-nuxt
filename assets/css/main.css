@@ -9,3 +9,11 @@
 .btn-outline {
     @apply btn text-pink-400 border border-pink-400;
 }
+
+.btn-primary-hover.btn-outline:hover {
+    @apply btn text-white bg-pink-400;
+}
+
+.btn-sm {
+    @apply text-sm px-3 py-1;
+}
