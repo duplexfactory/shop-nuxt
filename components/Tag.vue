@@ -9,7 +9,7 @@ const props = defineProps({
 <!--    {{ title }}-->
 <!--  </div>-->
 
-  <div class="inline-block text-pink-600 text-xs">
+  <div class="inline-block text-pink-600 text-sm">
     {{ `#${title}` }}
   </div>
 </template>

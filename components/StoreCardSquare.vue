@@ -58,8 +58,10 @@
 
         <div class="col-span-1">
             <div class="bg-gray-300 square-image-container" :style="`background-image: url(${mediaUrls[0]});`"></div>
+            <hr class="bg-white" style="height: 2px;"/>
             <div class="block lg:flex flex-row">
                 <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>
+                <div style="width: 2px;"></div>
                 <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>
             </div>
         </div>
