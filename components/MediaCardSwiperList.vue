@@ -6,14 +6,12 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
-import StoreCardOffline from "~/components/StoreCardOffline.vue";
-import PostCard from "~/components/PostCard.vue";
 
 // configure Swiper to use modules
 Swiper.use([Navigation, Pagination]);
 
 export default {
-  components: {PostCard, StoreCardOffline},
+  components: {},
   props: {
     medias: Array as PropType<IgMedia[]>
   },
@@ -75,10 +73,10 @@ export default {
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper pb-8">
       <!-- Slides -->
-      <PostCard v-for="media in medias"
+      <MediaCard v-for="media in medias"
                 class="swiper-slide"
                 :media="media"
-                :key="media.id + '-post-card'"></PostCard>
+                :key="media.id + '-post-card'"></MediaCard>
     </div>
     <!-- If we need pagination -->
     <div class="swiper-pagination" style="bottom: 0px !important;"></div>
