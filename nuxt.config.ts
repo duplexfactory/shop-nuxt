@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     preset: "cloudflare"
   },
   buildModules: [
-    "@vueuse/core/nuxt",
+    "@vueuse/nuxt",
     "nuxt-windicss",
   ],
   windicss: {
