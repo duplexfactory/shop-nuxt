@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const header = ref('Nuxt 3 starter template')
 const {counter} = goSick();
 
@@ -13,12 +13,7 @@ const storeName = 'caseonlyy';
 
 const {data} = await useFetch(`/api/home`);
 const {hot, active, latest, physical} = data.value;
-// const lastActiveDate = new Date(res.data.value.lastActive);
-const lastActiveDate = new Date(); // Dummy
-const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
 
-// const description = res.data.value.description;
-const description = 'description'; // Dummy
 </script>
 
 <template>
@@ -34,11 +29,11 @@ const description = 'description'; // Dummy
     <!--<nuxt-link to="/hello">HEEEEEE</nuxt-link>-->
 
     <div class="container mx-auto">
-
       <div class="section-title">熱門店鋪</div>
       <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
       <div class="section-title">最新貼文</div>
+<!--      {{ latest }} -->
       <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
 
       <div class="section-title">活躍店長</div>
