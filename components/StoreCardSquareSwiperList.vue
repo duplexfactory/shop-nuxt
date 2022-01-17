@@ -36,8 +36,8 @@
                     },
                     1280: {
                         spaceBetween: 16,
-                        slidesPerView: 2.5,
-                        slidesPerGroup: 2,
+                        slidesPerView: 3,
+                        slidesPerGroup: 3,
                     },
                     1536: {
                         spaceBetween: 16,

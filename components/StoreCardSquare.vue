@@ -28,11 +28,11 @@
                 <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${profilePicUrl});`" style="height: 60px;"></div>
 
                 <div class="mt-1 2xl:mt-2 overflow-hidden">
-                  <div class="font-semibold text-lg truncate">{{ username }}</div>
+                  <div class="font-semibold truncate">{{ username }}</div>
                   <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
                 </div>
 
-                <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
+                <div class="mt-2 2xl:mt-4 text-xs text-gray-500 flex flex-row">
                     <div class="text-center" style="flex: 1;">
                         <div>粉絲</div>
                         <div>{{ followerCount.toLocaleString() }}</div>
@@ -52,7 +52,7 @@
                          :title="tagsLookup[tag]"></tag>
                 </div>
 
-                <button class="mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
+                <button class="mt-2 2xl:mt-4 btn btn-sm btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
             </div>
         </div>
 

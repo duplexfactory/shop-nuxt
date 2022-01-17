@@ -49,7 +49,7 @@ const {hot, active, latest, physical} = data.value;
 
 <style>
 .section-title {
-  @apply text-2xl mb-4 mt-6;
+  @apply text-xl mb-4 mt-6;
 }
 
 .swiper-pagination .swiper-pagination-bullet-active {

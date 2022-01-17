@@ -7,13 +7,28 @@
 }
 
 .btn-outline {
-    @apply btn text-pink-400 border border-pink-400;
+    @apply text-pink-400 border border-pink-400;
 }
 
 .btn-primary-hover.btn-outline:hover {
-    @apply btn text-white bg-pink-400;
+    @apply text-white bg-pink-400;
 }
 
 .btn-sm {
     @apply text-sm px-3 py-1;
 }
+
+@screen md {
+    .md\:btn {
+        @apply btn;
+    }
+}
+
+@screen xl {
+    .xl\:btn {
+        @apply btn;
+    }
+}
+
+/*https://github.com/windicss/windicss/issues/351*/
+
