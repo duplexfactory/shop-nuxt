@@ -37,8 +37,8 @@ const description = 'description';
           <div>旺角、銅鑼灣</div>
         </div>
 
-        <div class="mt-2 2xl:mt-4"
-             style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; /* number of lines to show */ -webkit-box-orient: vertical; font-size: 0;">
+        <div class="mt-2 2xl:mt-4 line-clamp-2"
+             style="font-size: 0;">
           <tag v-for="tag in tags"
                :key="tag"
                class="mr-1 2xl:mr-2"

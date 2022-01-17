@@ -26,8 +26,8 @@
         <div class="bg-gray-300 rounded-full square-image-container mx-auto" :style="`background-image: url(${profilePicUrl});`" style="height: 100px;"></div>
 
         <div class="mt-2 font-semibold text-lg">{{ username }}</div>
-        <div class="mt-1 2xl:mt-2"
-             style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; /* number of lines to show */ -webkit-box-orient: vertical; font-size: 0;">
+        <div class="mt-1 2xl:mt-2 line-clamp-1"
+             style="font-size: 0;">
           <tag v-for="tag in tags"
                :key="tag"
                class="mr-1 2xl:mr-2"
