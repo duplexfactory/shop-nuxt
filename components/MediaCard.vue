@@ -23,11 +23,11 @@ const {
 </script>
 
 <template>
-  <div class="p-4">
-    <div class="bg-gray-300 rounded-md" style="aspect-ratio: 1;"></div>
+  <div>
+    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${coverImageUrl});`"></div>
     <div class="mt-2 whitespace-pre-wrap line-clamp-8" >{{ caption }}</div>
 <!--    <div class="mt-2 text-sm text-gray-500">{{ storeName }}</div>-->
-    <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">探索</button>
+<!--    <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">探索</button>-->
   </div>
 </template>
 

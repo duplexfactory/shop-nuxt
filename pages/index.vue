@@ -38,7 +38,7 @@ const description = 'description'; // Dummy
       <div class="section-title">熱門店鋪</div>
       <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
-      <div class="section-title">最新產品</div>
+      <div class="section-title">最新貼文</div>
       <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
 
       <div class="section-title">活躍店長</div>

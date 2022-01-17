@@ -32,18 +32,18 @@ export default {
           // slidesPerGroup: 2,
 
           spaceBetween: 16,
-          slidesPerView: 2.2,
-          slidesPerGroup: 2,
-        },
-        1280: {
-          spaceBetween: 16,
-          slidesPerView: 2.5,
-          slidesPerGroup: 2,
-        },
-        1536: {
-          spaceBetween: 16,
           slidesPerView: 3,
           slidesPerGroup: 3,
+        },
+        1280: {
+          spaceBetween: 24,
+          slidesPerView: 3.5,
+          slidesPerGroup: 3,
+        },
+        1536: {
+          spaceBetween: 24,
+          slidesPerView: 4,
+          slidesPerGroup: 4,
         }
       },
 
