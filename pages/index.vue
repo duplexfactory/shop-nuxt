@@ -30,6 +30,7 @@ const {hot, active, latest, physical} = data.value;
 
     <div class="container mx-auto">
       <div class="section-title">熱門店鋪</div>
+      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>
       <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
       <div class="section-title">最新貼文</div>
