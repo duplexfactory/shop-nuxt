@@ -1,4 +1,4 @@
-import {mediaCollection, mediaCollectionGroup, pageCollection} from "~/server/firebase/collections";
+import {mediaCollectionGroup, pageCollection} from "~/server/firebase/collections";
 
 export default async () => {
     const [hot, latest, active, physical] = await Promise.all([

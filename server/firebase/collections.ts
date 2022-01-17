@@ -3,8 +3,10 @@ import IgPage from "~/models/IgPage";
 import IgMedia from "~/models/IgMedia";
 import IgTray from "~/models/IgTray";
 import IgStory from "~/models/IgStory";
+import {initFirebase} from "~/server/firebase/init";
 // import {firestore} from "firebase-admin/firestore";
 // import CollectionGroup = firestore.CollectionGroup;
+initFirebase();
 
 export function pageCollection() {
     return getFirestore().collection("pages") as CollectionReference<IgPage>;
