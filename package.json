@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vueuse/nuxt": "^7.5.3",
+    "dayjs": "^1.10.7",
     "firebase-admin": "^10.0.1",
     "node-fetch": "^3.1.0",
     "swiper": "^7.4.1"

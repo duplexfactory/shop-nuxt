@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
+    import dayjs from "dayjs";
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
@@ -16,8 +17,7 @@
         profilePicUrl,
         tags
     } = shop;
-    const lastActiveDate = new Date(lastActivity * 1000);
-    const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
+    const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
     const description = 'description';
 </script>
 

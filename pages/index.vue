@@ -33,7 +33,6 @@ const {hot, active, latest, physical} = data.value;
       <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
 
       <div class="section-title">最新貼文</div>
-<!--      {{ latest }} -->
       <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
 
       <div class="section-title">活躍店長</div>

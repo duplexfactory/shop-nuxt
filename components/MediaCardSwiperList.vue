@@ -6,14 +6,19 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
+import IgPage from "~/models/IgPage";
 
 // configure Swiper to use modules
 Swiper.use([Navigation, Pagination]);
 
+type MediaWithShop = IgMedia & {
+  igPage: IgPage
+};
+
 export default {
   components: {},
   props: {
-    medias: Array as PropType<IgMedia[]>
+    medias: Array as PropType<MediaWithShop[]>
   },
   mounted() {
     const swiper = new Swiper(this.$refs.swiper, {
@@ -76,6 +81,7 @@ export default {
       <MediaCard v-for="media in medias"
                 class="swiper-slide"
                 :media="media"
+                :shop="media.igPage"
                 :key="media.id + '-post-card'"></MediaCard>
     </div>
     <!-- If we need pagination -->

@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
+import IgPage from "~/models/IgPage";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const {tagsLookup} = useTags()
-const {media} = defineProps({
-  media: Object as PropType<IgMedia>
+const {media, shop} = defineProps({
+  media: Object as PropType<IgMedia>,
+  shop: Object as PropType<IgPage>,
 })
 
 const {
@@ -17,15 +22,16 @@ const {
 
   takenAt,
 } = media;
-// const lastActiveDate = new Date(lastActivity * 1000);
-// const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
-// const description = 'description';
+
+const takenAtString = dayjs(takenAt * 1000).fromNow();
+
 </script>
 
 <template>
   <div>
     <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${coverImageUrl});`"></div>
-    <div class="mt-2 whitespace-pre-wrap line-clamp-8" >{{ caption }}</div>
+    <div class="mt-2 text-sm whitespace-pre-wrap line-clamp-10" >{{ caption }}</div>
+    <div class="mt-2 text-sm text-gray-500">{{ shop.username + ' • ' + takenAtString  }}</div>
 <!--    <div class="mt-2 text-sm text-gray-500">{{ storeName }}</div>-->
 <!--    <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">探索</button>-->
   </div>
