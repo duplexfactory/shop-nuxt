@@ -14,6 +14,8 @@ const storeName = 'caseonlyy';
 const {data} = await useFetch(`/api/home`);
 const {hot, active, latest, physical} = data.value;
 
+const {categories} = useTags()
+
 </script>
 
 <template>
@@ -27,6 +29,14 @@ const {hot, active, latest, physical} = data.value;
     <!--Edit <strong>layouts/default.vue</strong> and <strong>windi.config.js</strong>.-->
     <!--</p>-->
     <!--<nuxt-link to="/hello">HEEEEEE</nuxt-link>-->
+
+    <div class="bg-gray-50">
+      <div class="container mx-auto flex py-2">
+        <div v-for="category in categories" :key="category['id']" class="px-8">
+          {{ category['label'] }}
+        </div>
+      </div>
+    </div>
 
     <div class="sm:container mx-auto">
       <div class="section-title px-4 md:px-0">熱門店鋪</div>
