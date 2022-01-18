@@ -20,8 +20,18 @@
 </script>
 
 <template>
-    <div>
-        <div class="container mx-auto">
+
+  <div>
+    <!-- Media modal -->
+    <transition name="modal">
+      <MediaModal v-if="showModal" @close="showModal = false">
+        <template v-slot:header>
+          <h3>custom header</h3>
+        </template>
+      </MediaModal>
+    </transition>
+
+    <div class="container mx-auto">
 
             <div class="flex flex-row">
 

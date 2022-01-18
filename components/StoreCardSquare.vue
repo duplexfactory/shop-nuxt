@@ -28,7 +28,9 @@
                 <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${profilePicUrl});`" style="height: 60px;"></div>
 
                 <div class="mt-1 2xl:mt-2 overflow-hidden">
-                  <div class="font-semibold text-lg truncate">{{ username }}</div>
+                  <div class="font-semibold text-lg truncate">
+                    <a class="hover:underline" :href="`https://www.instagram.com/${username}/`" target="_blank">{{ username }}</a>
+                  </div>
                   <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
                 </div>
 
@@ -52,7 +54,7 @@
                          :title="tagsLookup[tag]"></tag>
                 </div>
 
-                <button class="hidden sm:block mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
+                <nuxt-link :to="`/shop/${username}`" class="hidden sm:block mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</nuxt-link>
             </div>
         </div>
 

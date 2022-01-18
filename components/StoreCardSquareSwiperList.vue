@@ -67,15 +67,19 @@
 </script>
 
 <template>
-    <!-- Slider main container -->
-    <div class="swiper" ref="swiper">
+    <div>
+
+
+
+      <!-- Slider main container -->
+      <div class="swiper" ref="swiper">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper pb-8">
-            <!-- Slides -->
-            <StoreCardSquare v-for="shop in shops"
-                             class="swiper-slide"
-                             :shop="shop"
-                             :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
+          <!-- Slides -->
+          <StoreCardSquare v-for="shop in shops"
+                           class="swiper-slide"
+                           :shop="shop"
+                           :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
         </div>
 
         <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
@@ -86,6 +90,8 @@
 
         <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
         <!--        <div class="swiper-scrollbar"></div>-->
+      </div>
+
     </div>
 </template>
 <style scoped>
