@@ -1,14 +1,15 @@
 <script lang="ts">
-    import Swiper, { Navigation, Pagination } from 'swiper';
+    import Swiper, { Navigation, FreeMode, Pagination } from 'swiper';
     // import Swiper and modules styles
     import 'swiper/css';
     import 'swiper/css/navigation';
     import 'swiper/css/pagination';
+    import "swiper/css/free-mode";
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
 
     // configure Swiper to use modules
-    Swiper.use([Navigation, Pagination]);
+    Swiper.use([Navigation, FreeMode, Pagination]);
 
     export default {
         props: {
@@ -21,34 +22,33 @@
                 // loop: true,
 
                 spaceBetween: 16,
-                slidesPerView: 2,
-                slidesPerGroup: 2,
+                slidesPerView: 1.2,
+                slidesPerGroup: 1,
+                freeMode: true,
 
                 breakpoints: {
                     1024: {
-                        // spaceBetween: 32,
-                        // slidesPerView: 2,
-                        // slidesPerGroup: 2,
-
                         spaceBetween: 16,
                         slidesPerView: 2.2,
                         slidesPerGroup: 2,
+                        freeMode: false,
                     },
                     1280: {
                         spaceBetween: 16,
                         slidesPerView: 2.5,
                         slidesPerGroup: 2,
+                        freeMode: false,
                     },
                     1536: {
                         spaceBetween: 16,
                         slidesPerView: 3,
                         slidesPerGroup: 3,
+                        freeMode: false,
                     }
                 },
 
-                // If we need pagination
                 pagination: {
-                    el: '.swiper-pagination',
+                  el: '.swiper-pagination',
                 },
 
                 // Navigation arrows
@@ -77,8 +77,8 @@
                              :shop="shop"
                              :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
         </div>
-        <!-- If we need pagination -->
-        <div class="swiper-pagination" style="bottom: 0px !important;"></div>
+
+        <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
         <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
@@ -102,8 +102,10 @@
         font-size: 32px;
     }
 
-    .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
+    @screen md {
+      .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
         display: flex !important;
+      }
     }
 
 </style>

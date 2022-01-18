@@ -98,8 +98,10 @@
   font-size: 32px;
 }
 
-.swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
-  display: flex !important;
+@screen md {
+  .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
+    display: flex !important;
+  }
 }
 
 </style>

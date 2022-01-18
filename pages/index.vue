@@ -28,17 +28,20 @@ const {hot, active, latest, physical} = data.value;
     <!--</p>-->
     <!--<nuxt-link to="/hello">HEEEEEE</nuxt-link>-->
 
-    <div class="container mx-auto">
-      <div class="section-title">熱門店鋪</div>
-      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>
-      <StoreCardSquareSwiperList :shops="hot"></StoreCardSquareSwiperList>
+    <div class="sm:container mx-auto">
+      <div class="section-title px-4 md:px-0">熱門店鋪</div>
+      <StoreCardSquareSwiperList class="!px-4 !md:px-0" :shops="hot"></StoreCardSquareSwiperList>
+      <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
-      <div class="section-title">最新貼文</div>
-      <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
+      <div class="px-4 md:px-0">
+        <div class="section-title">最新貼文</div>
+        <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
+      </div>
 
-      <div class="section-title">活躍店長</div>
-<!--      {{ active }}-->
-      <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
+      <div class="px-4 md:px-0">
+        <div class="section-title">活躍店長</div>
+        <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
+      </div>
 
       <div class="section-title">實體店鋪</div>
       <StoreCardOfflineSwiperList :shops="physical"></StoreCardOfflineSwiperList>
@@ -49,8 +52,15 @@ const {hot, active, latest, physical} = data.value;
 </template>
 
 <style>
+
 .section-title {
-  @apply text-2xl mb-4 mt-6;
+  @apply text-xl mb-3 mt-5;
+}
+
+@screen md {
+  .section-title {
+    @apply text-2xl mb-4 mt-6;
+  }
 }
 
 .swiper-pagination .swiper-pagination-bullet-active {

@@ -52,14 +52,14 @@
                          :title="tagsLookup[tag]"></tag>
                 </div>
 
-                <button class="mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
+                <button class="hidden md:block mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
             </div>
         </div>
 
         <div class="col-span-1">
             <div class="bg-gray-300 square-image-container" :style="`background-image: url(${mediaUrls[0]});`"></div>
             <div class="bg-white" style="height: 2px;"/>
-            <div class="block lg:flex flex-row">
+            <div class="flex flex-row">
                 <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>
                 <div style="width: 2px;"></div>
                 <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>
