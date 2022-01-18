@@ -78,8 +78,5 @@ const {categories} = useTags()
   @apply bg-pink-400;
 }
 
-.swiper-button-next, .swiper-button-prev {
-  @apply text-pink-400;
-}
 </style>
 
