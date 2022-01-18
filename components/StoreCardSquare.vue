@@ -52,7 +52,7 @@
                          :title="tagsLookup[tag]"></tag>
                 </div>
 
-                <button class="hidden md:block mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
+                <button class="hidden sm:block mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</button>
             </div>
         </div>
 

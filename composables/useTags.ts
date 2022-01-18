@@ -1,4 +1,4 @@
-const categories = [{id: "dummy", label: "DUMMY", "tags": []}, {
+const categories = [{
     "id": "hand-made",
     "label": "手作",
     "tags": [{"id": "candle", "label": "蠟燭"}, {"id": "hand-strap", "label": "手繩"}, {
@@ -30,13 +30,6 @@ const categories = [{id: "dummy", label: "DUMMY", "tags": []}, {
         "label": "茶"
     }, {"id": "manual-beer", "label": "手工啤酒"}, {"id": "soup-bag", "label": "湯包"}]
 }, {
-    "id": "adult-products",
-    "label": "成人用品",
-    "tags": [{"id": "sex-toys", "label": "性玩具"}, {"id": "sexy-underwear", "label": "情趣內衣"}, {
-        "id": "condom",
-        "label": "安全套"
-    }]
-}, {
     "id": "serve",
     "label": "服務",
     "tags": [{"id": "hairstyle", "label": "髮型屋"}, {"id": "workshop", "label": "工作坊"}, {
@@ -53,6 +46,13 @@ const categories = [{id: "dummy", label: "DUMMY", "tags": []}, {
         "id": "silver-bag",
         "label": "銀包"
     }, {"id": "computer-bag", "label": "電腦袋"}]
+}, {"id": "pet", "label": "寵物", "tags": [{"id": "pet-supplies", "label": "寵物用品"}, {"id": "pet-food", "label": "寵物食品"}]}, {
+    "id": "adult-products",
+    "label": "成人用品",
+    "tags": [{"id": "sex-toys", "label": "性玩具"}, {"id": "sexy-underwear", "label": "情趣內衣"}, {
+        "id": "condom",
+        "label": "安全套"
+    }]
 }, {
     "id": "universal",
     "label": "通用",
@@ -60,7 +60,7 @@ const categories = [{id: "dummy", label: "DUMMY", "tags": []}, {
         "id": "purchase",
         "label": "代購"
     }, {"id": "second-hand", "label": "二手"}, {"id": "customize", "label": "訂製"}]
-}, {"id": "pet", "label": "寵物", "tags": [{"id": "pet-supplies", "label": "寵物用品"}, {"id": "pet-food", "label": "寵物食品"}]}]
+}]
 
 const tagsLookup = categories.reduce((dict, cat) => {
     dict[cat.id] = cat.label;
