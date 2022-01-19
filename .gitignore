@@ -12,6 +12,8 @@ yarn-error.log*
 
 # Nuxt generate
 .output
+.netlify
+dist
 
 .DS_Store
 
@@ -33,3 +35,4 @@ yarn-error.log*
 wrangler.toml
 
 .env
+
