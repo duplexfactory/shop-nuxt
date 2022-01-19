@@ -19,10 +19,20 @@ const {categories} = useTags();
 
 const showModal = ref(false);
 
+// function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {
+//   const lastIndex = Math.ceil(slidesPerView) - 1;
+//   const marginStyle = index != lastIndex ? `margin-right: ${spaceBetween}px; ` : '';
+//   // if (index == lastIndex) {
+//   //   return 'height: 100%;';
+//   // }
+//   return 'aspect-ratio: 4/3; ' + marginStyle + `width: calc(${100 / slidesPerView}% - ${(16 * (slidesPerView - 1) / slidesPerView)}px);`;
+// }
+
 </script>
 
 <template>
   <div>
+
     <!--<h1 class="rounded-md bg-green-200 text-xl text-green-700 font-bold">-->
     <!--{{ header }}-->
     <!--{{ counter }}-->
@@ -46,38 +56,16 @@ const showModal = ref(false);
 
     <div class="sm:container mx-auto">
       <div class="section-title px-4 md:px-0">熱門店鋪</div>
-      <client-only>
-        <StoreCardSquareSwiperList class="!px-4 !md:px-0" :shops="hot"></StoreCardSquareSwiperList>
-      </client-only>
-<!--      <div class="flex">-->
-<!--&lt;!&ndash;        1, 2.2, 2.5, 3&ndash;&gt;-->
+<!--      <div class="w-full whitespace-pre overflow-hidden">-->
+<!--        &lt;!&ndash;        1, 2.2, 2.5, 3&ndash;&gt;-->
 <!--        <template v-for="(_, i) of Array(Math.ceil(2.2)).fill(0)">-->
-<!--          <div class="bg-red-300 w-full"-->
-<!--               style="aspect-ratio: 4/3; flex: 1;"-->
-<!--               :style="i !== Array(Math.ceil(2.2)).length - 1 ? 'margin-right: 16px;' : ''">-->
-<!--          </div>-->
-<!--        </template>-->
-<!--      </div>-->
-      <div class="flex">
-        <!--        1, 2.2, 2.5, 3-->
-        <template v-for="(_, i) of Array(Math.ceil(2.2)).fill(0)">
-          <div class="bg-red-300 w-full"
-               style="aspect-ratio: 4/3; flex: 1;"
-               :style="i != 0 ? 'padding-left: 32px;' : ''">
-            <div class="h-full w-full bg-green-300"></div>
-          </div>
-        </template>
-      </div>
-<!--      <div class="flex">-->
-<!--        <template v-for="(_, i) of Array(Math.ceil(2.2)).fill(0)">-->
-<!--          <div class="bg-red-300 w-full"-->
-<!--               style="aspect-ratio: 4/3; flex: 1;"-->
-<!--               :style="i !== Array(Math.ceil(2.2)).length - 1 ? 'padding-right: 16px;' : ''">-->
+<!--          <div class="bg-red-300 inline-block"-->
+<!--               :style="slideStyle(16, 2.5, i)">-->
 <!--            <div class="h-full w-full bg-green-300"></div>-->
 <!--          </div>-->
 <!--        </template>-->
 <!--      </div>-->
-
+      <StoreCardSquareSwiperList class="!px-4 !md:px-0" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
       <div class="px-4 md:px-0">
