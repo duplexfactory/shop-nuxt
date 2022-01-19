@@ -1,9 +1,6 @@
 import {defineNuxtConfig, NuxtConfig} from "nuxt3";
 
 export default defineNuxtConfig({
-  nitro: {
-    preset: "netlify"
-  },
   buildModules: [
     "@vueuse/nuxt",
     "nuxt-windicss",
@@ -20,7 +17,5 @@ export default defineNuxtConfig({
     FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
   },
   ssr: true,
-  plugins: [
-    {src: '~/plugins/dayjs-locale.ts', mode: 'client'}
-  ]
+  plugins: []
 } as NuxtConfig);

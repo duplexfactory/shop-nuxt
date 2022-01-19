@@ -3,8 +3,6 @@ import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
 import IgPage from "~/models/IgPage";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
 
 const {tagsLookup} = useTags()
 const {media, shop} = defineProps({
