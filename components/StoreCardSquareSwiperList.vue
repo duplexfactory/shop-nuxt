@@ -98,7 +98,11 @@
 
 <template>
     <div>
-      <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>
+      <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="pb-8">
+        <template v-slot:default="slotProps">
+          <div class="h-full w-full bg-loading"></div>
+        </template>
+      </swiper-slides-placeholder>
       <!-- Slider main container -->
       <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
         <!-- Additional required wrapper -->
@@ -139,6 +143,22 @@
     @screen md {
       .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
         display: flex !important;
+      }
+    }
+
+
+
+    .bg-loading {
+      background: #eee;
+      background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+      border-radius: 5px;
+      background-size: 200% 100%;
+      animation: 1.5s shine linear infinite;
+    }
+
+    @keyframes shine {
+      to {
+        background-position-x: -200%;
       }
     }
 

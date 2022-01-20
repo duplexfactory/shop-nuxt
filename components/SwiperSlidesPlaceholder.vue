@@ -64,7 +64,7 @@ export default {
       <template v-for="(_, i) of Array(Math.ceil(config.slidesPerView)).fill(0)">
         <div class="bg-red-300"
              :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
-          <div class="h-full w-full bg-loading"></div>
+          <slot :config="config"></slot>
         </div>
       </template>
     </div>
@@ -76,17 +76,4 @@ export default {
 
 <style scoped>
 
-  .bg-loading {
-    background: #eee;
-    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-    border-radius: 5px;
-    background-size: 200% 100%;
-    animation: 1.5s shine linear infinite;
-  }
-
-  @keyframes shine {
-    to {
-      background-position-x: -200%;
-    }
-  }
 </style>
