@@ -5,7 +5,8 @@ import {SwiperOptions} from "swiper/types/swiper-options";
 export default {
   components: {},
   props: {
-    swiperOptions: Object as PropType<SwiperOptions>
+    swiperOptions: Object as PropType<SwiperOptions>,
+    slideAspectRatio: Number
   },
 
   methods: {
@@ -14,7 +15,7 @@ export default {
       if (index == lastIndex) {
         return 'flex: 1;';
       }
-      return `aspect-ratio: 4/3; margin-right: ${spaceBetween}px; width: calc(${100 / slidesPerView}% - ${(spaceBetween * (slidesPerView - 1) / slidesPerView)}px);`;
+      return `aspect-ratio: ${this.slideAspectRatio}; margin-right: ${spaceBetween}px; width: calc(${100 / slidesPerView}% - ${(spaceBetween * (slidesPerView - 1) / slidesPerView)}px);`;
     },
 
     configs(): { classBreakpoint: string; nextClassBreakpoint: string, spaceBetween: number; slidesPerView: number; }[] {

@@ -56,23 +56,12 @@ const showModal = ref(false);
 
     <div class="sm:container mx-auto">
       <div class="section-title px-4 md:px-0">熱門店鋪</div>
-<!--      <div class="w-full whitespace-pre overflow-hidden">-->
-<!--        &lt;!&ndash;        1, 2.2, 2.5, 3&ndash;&gt;-->
-<!--        <template v-for="(_, i) of Array(Math.ceil(2.2)).fill(0)">-->
-<!--          <div class="bg-red-300 inline-block"-->
-<!--               :style="slideStyle(16, 2.5, i)">-->
-<!--            <div class="h-full w-full bg-green-300"></div>-->
-<!--          </div>-->
-<!--        </template>-->
-<!--      </div>-->
       <StoreCardSquareSwiperList class="!px-4 !md:px-0" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
       <div class="px-4 md:px-0">
         <div class="section-title">最新貼文</div>
-        <client-only>
-          <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
-        </client-only>
+        <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
       </div>
 
       <div class="px-4 md:px-0">

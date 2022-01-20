@@ -28,13 +28,21 @@
     export default {
         components: {SwiperSlidesPlaceholder},
         data() : {
+          swiperReady: boolean,
           swiperOptions: SwiperOptions
         } {
             return {
+                swiperReady: false,
                 swiperOptions: {
                       // Optional parameters
                       // direction: 'vertical',
                       // loop: true,
+
+                      on: {
+                          init: () => {
+                            this.swiperReady = true;
+                          },
+                      },
 
                       spaceBetween: 16,
                       slidesPerView: 1.2,
@@ -90,21 +98,9 @@
 
 <template>
     <div>
-
-
-<!--      <div class="w-full flex">-->
-<!--        &lt;!&ndash;        1, 2.2, 2.5, 3&ndash;&gt;-->
-<!--        <template v-for="(_, i) of Array(Math.ceil(2.2)).fill(0)">-->
-<!--          <div class="bg-red-300"-->
-<!--               :style="slideStyle(16, 2.2, i)">-->
-<!--            <div class="h-full w-full bg-green-300"></div>-->
-<!--          </div>-->
-<!--        </template>-->
-<!--      </div>-->
-      <swiper-slides-placeholder :swiper-options="swiperOptions"></swiper-slides-placeholder>
-
+      <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>
       <!-- Slider main container -->
-      <div class="swiper" ref="swiper">
+      <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper pb-8">
           <!-- Slides -->
