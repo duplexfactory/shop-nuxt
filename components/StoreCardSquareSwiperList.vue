@@ -74,12 +74,6 @@
                         el: '.swiper-pagination',
                       },
 
-                      // Navigation arrows
-                      navigation: {
-                        nextEl: this.$refs.swiperButtonNext,
-                        prevEl: this.$refs.swiperButtonPrev,
-                      },
-
                       // // And if we need scrollbar
                       // scrollbar: {
                       //   el: '.swiper-scrollbar',
@@ -91,6 +85,12 @@
             shops: Array as PropType<IgPage[]>
         },
         mounted() {
+            // Navigation arrows
+            this.swiperOptions.navigation = {
+              nextEl: this.$refs.swiperButtonNext,
+              prevEl: this.$refs.swiperButtonPrev,
+            };
+
             const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
         }
     }
@@ -127,27 +127,6 @@
     </div>
 </template>
 <style scoped>
-    .swiper-pagination .swiper-pagination-bullet-active {
-        @apply bg-pink-400;
-    }
-
-    .swiper-button-next, .swiper-button-prev {
-        display: none;
-        @apply text-pink-400;
-    }
-
-    .swiper-button-next::after, .swiper-button-prev::after {
-        font-size: 32px;
-    }
-
-    @screen md {
-      .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
-        display: flex !important;
-      }
-    }
-
-
-
     .bg-loading {
       background: #eee;
       background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);

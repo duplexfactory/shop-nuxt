@@ -64,7 +64,7 @@ export default {
       <template v-for="(_, i) of Array(Math.ceil(config.slidesPerView)).fill(0)">
         <div class="bg-red-300"
              :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
-          <slot :config="config"></slot>
+          <slot></slot>
         </div>
       </template>
     </div>

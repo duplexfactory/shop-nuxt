@@ -67,12 +67,6 @@ export default {
           el: '.swiper-pagination',
         },
 
-        // Navigation arrows
-        navigation: {
-          nextEl: this.$refs.swiperButtonNext,
-          prevEl: this.$refs.swiperButtonPrev,
-        },
-
         // // And if we need scrollbar
         // scrollbar: {
         //   el: '.swiper-scrollbar',
@@ -84,6 +78,12 @@ export default {
     medias: Array as PropType<MediaWithShop[]>
   },
   mounted() {
+    // Navigation arrows
+    this.swiperOptions.navigation = {
+      nextEl: this.$refs.swiperButtonNext,
+      prevEl: this.$refs.swiperButtonPrev,
+    };
+
     const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
   }
 }

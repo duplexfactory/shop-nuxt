@@ -31,7 +31,7 @@ const showModal = ref(false);
 </script>
 
 <template>
-  <div>
+  <div class="mb-16">
 
     <!--<h1 class="rounded-md bg-green-200 text-xl text-green-700 font-bold">-->
     <!--{{ header }}-->
@@ -43,20 +43,22 @@ const showModal = ref(false);
     <!--</p>-->
     <!--<nuxt-link to="/hello">HEEEEEE</nuxt-link>-->
 
-    <div class="bg-gray-50">
-      <div class="container mx-auto flex">
-        <div v-for="category in categories" class="dropdown" :key="category['id']">
-          <div class="py-2 px-8">{{ category['label'] }}</div>
-          <ul>
-            <li v-for="tag in category.tags" :key="tag.id">{{ tag.label }}</li>
-          </ul>
+    <div class="hidden md:block bg-gray-50">
+      <div class="container mx-auto" >
+        <div class="whitespace-nowrap overflow-x-scroll overflow-y-hidden" style="height: 40px;">
+          <div v-for="category in categories" class="dropdown inline-block" :key="category['id']">
+            <div class="py-2 px-8">{{ category['label'] }}</div>
+            <ul>
+              <li v-for="tag in category.tags" :key="tag.id">{{ tag.label }}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="sm:container mx-auto">
       <div class="section-title px-4 md:px-0">熱門店鋪</div>
-      <StoreCardSquareSwiperList class="!px-4 !md:px-0" :shops="hot"></StoreCardSquareSwiperList>
+      <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
       <div class="px-4 md:px-0">
@@ -71,16 +73,41 @@ const showModal = ref(false);
         </client-only>
       </div>
 
-      <div class="section-title">實體店鋪</div>
-      <client-only>
-        <StoreCardOfflineSwiperList :shops="physical"></StoreCardOfflineSwiperList>
-      </client-only>
+      <div class="section-title px-4 md:px-0">實體店鋪</div>
+      <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>
     </div>
 
   </div>
 </template>
 
 <style>
+
+.swiper-padding .swiper {
+  @apply px-4 md:px-0;
+}
+
+.swiper-pagination .swiper-pagination-bullet-active {
+  @apply bg-pink-400;
+}
+
+.swiper-button-next, .swiper-button-prev {
+  display: none;
+  @apply text-pink-400;
+}
+
+.swiper-button-next::after, .swiper-button-prev::after {
+  font-size: 32px;
+}
+
+@screen md {
+  .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
+    display: flex !important;
+  }
+}
+
+</style>
+
+<style scoped>
 
 .section-title {
   @apply text-xl mb-3 mt-5;
@@ -92,10 +119,10 @@ const showModal = ref(false);
   }
 }
 
-.swiper-pagination .swiper-pagination-bullet-active {
-  /*background-color: black;*/
-  @apply bg-pink-400;
-}
+
+
+
+
 
 .dropdown {
   @apply relative;
@@ -114,6 +141,22 @@ const showModal = ref(false);
   @apply px-8 py-2 text-center;
 }
 
+
+
+
+::-webkit-scrollbar {
+  height: 4px;               /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #FAFAFA;        /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: lightgray;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 0px solid orange;  /* creates padding around scroll thumb */
+}
 
 </style>
 

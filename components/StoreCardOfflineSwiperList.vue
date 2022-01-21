@@ -1,5 +1,5 @@
 <script lang="ts">
-import Swiper, {Navigation, FreeMode, Pagination} from 'swiper';
+import Swiper, { Navigation, FreeMode, Pagination } from 'swiper';
 // import Swiper and modules styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -7,108 +7,126 @@ import 'swiper/css/pagination';
 import "swiper/css/free-mode";
 import {PropType} from "vue";
 import IgPage from '~/models/IgPage';
-import StoreCardOffline from "~/components/StoreCardOffline.vue";
+import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
+import {SwiperOptions} from "swiper/types/swiper-options";
 
 // configure Swiper to use modules
 Swiper.use([Navigation, FreeMode, Pagination]);
 
 export default {
-  components: {StoreCardOffline},
+  components: {SwiperSlidesPlaceholder},
+  data() : {
+    swiperReady: boolean,
+    swiperOptions: SwiperOptions
+  } {
+    return {
+      swiperReady: false,
+      swiperOptions: {
+        // Optional parameters
+        // direction: 'vertical',
+        // loop: true,
+
+        on: {
+          init: () => {
+            this.swiperReady = true;
+          },
+        },
+
+        spaceBetween: 16,
+        slidesPerView: 1.2,
+        slidesPerGroup: 1,
+        freeMode: true,
+
+        breakpoints: {
+          1024: { // lg
+            spaceBetween: 16,
+            slidesPerView: 2.2,
+            slidesPerGroup: 2,
+            freeMode: false,
+          },
+          1280: { // xl
+            spaceBetween: 16,
+            slidesPerView: 2.5,
+            slidesPerGroup: 2,
+            freeMode: false,
+          },
+          1536: { // 2xl
+            spaceBetween: 16,
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            freeMode: false,
+          }
+        },
+
+        pagination: {
+          el: '.swiper-pagination',
+        },
+
+        // // And if we need scrollbar
+        // scrollbar: {
+        //   el: '.swiper-scrollbar',
+        // },
+      }
+    }
+  },
   props: {
     shops: Array as PropType<IgPage[]>
   },
   mounted() {
-    const swiper = new Swiper(this.$refs.swiper, {
-      // Optional parameters
-      // direction: 'vertical',
-      // loop: true,
+    // Navigation arrows
+    this.swiperOptions.navigation = {
+      nextEl: this.$refs.swiperButtonNext,
+      prevEl: this.$refs.swiperButtonPrev,
+    };
 
-      spaceBetween: 16,
-      slidesPerView: 1.2,
-      slidesPerGroup: 1,
-      freeMode: true,
-
-      breakpoints: {
-        1024: {
-          spaceBetween: 16,
-          slidesPerView: 2.2,
-          slidesPerGroup: 2,
-          freeMode: false,
-        },
-        1280: {
-          spaceBetween: 16,
-          slidesPerView: 2.5,
-          slidesPerGroup: 2,
-          freeMode: false,
-        },
-        1536: {
-          spaceBetween: 16,
-          slidesPerView: 3,
-          slidesPerGroup: 3,
-          freeMode: false,
-        }
-      },
-
-      // If we need pagination
-      pagination: {
-        el: '.swiper-pagination',
-      },
-
-      // Navigation arrows
-      navigation: {
-        nextEl: this.$refs.swiperButtonNext,
-        prevEl: this.$refs.swiperButtonPrev,
-      },
-
-      // // And if we need scrollbar
-      // scrollbar: {
-      //   el: '.swiper-scrollbar',
-      // },
-    });
+    const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
   }
 }
 </script>
 
 <template>
-  <!-- Slider main container -->
-  <div class="swiper" ref="swiper">
-    <!-- Additional required wrapper -->
-    <div class="swiper-wrapper pb-8">
-      <!-- Slides -->
-      <StoreCardOffline v-for="shop in shops"
-                       class="swiper-slide"
-                       :shop="shop"
-                       :key="shop.ig_username + '-store-card-sq'"></StoreCardOffline>
+  <div>
+    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="pb-8">
+      <template v-slot:default="slotProps">
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
+
+    <!-- Slider main container -->
+    <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
+      <!-- Additional required wrapper -->
+      <div class="swiper-wrapper pb-8">
+        <!-- Slides -->
+        <StoreCardOffline v-for="shop in shops"
+                          class="swiper-slide"
+                          :shop="shop"
+                          :key="shop.ig_username + '-store-card-sq'"></StoreCardOffline>
+      </div>
+      <!-- If we need pagination -->
+      <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
+
+      <!-- If we need navigation buttons -->
+      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+      <div ref="swiperButtonNext" class="swiper-button-next"></div>
+
+      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+      <!--        <div class="swiper-scrollbar"></div>-->
     </div>
-    <!-- If we need pagination -->
-    <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
-
-    <!-- If we need navigation buttons -->
-    <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-    <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-    <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-    <!--        <div class="swiper-scrollbar"></div>-->
   </div>
 </template>
 <style scoped>
-.swiper-pagination .swiper-pagination-bullet-active {
-  @apply bg-pink-400;
-}
+    .bg-loading {
+      background: #eee;
+      background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+      border-radius: 5px;
+      background-size: 200% 100%;
+      animation: 1.5s shine linear infinite;
+    }
 
-.swiper-button-next, .swiper-button-prev {
-  display: none;
-  @apply text-pink-400;
-}
-
-.swiper-button-next::after, .swiper-button-prev::after {
-  font-size: 32px;
-}
-
-@screen md {
-  .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
-    display: flex !important;
-  }
-}
+    @keyframes shine {
+      to {
+        background-position-x: -200%;
+      }
+    }
 
 </style>
