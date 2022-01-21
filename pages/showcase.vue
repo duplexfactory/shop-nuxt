@@ -4,6 +4,9 @@
     const lastActiveDate = new Date();
     const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
     const description = 'description';
+
+    const {data} = await useFetch(`/api/shop?id=43808406274`);
+    const {page: shop} = data.value
 </script>
 
 <template>
@@ -23,20 +26,20 @@
 
         <div class="mt-8 mb-4">Store Card Simple</div>
         <div class="flex flex-row">
-            <StoreCardSimple></StoreCardSimple>
+            <StoreCardSimple :shop="shop"></StoreCardSimple>
         </div>
 
         <div class="mt-8 mb-4">Store Card Square</div>
         <div class="grid grid-cols-3">
             <div class="col-span-1">
-                <StoreCardSquare></StoreCardSquare>
+                <StoreCardSquare :shop="shop"></StoreCardSquare>
             </div>
         </div>
 
         <div class="mt-8 mb-4">Store Card Offline</div>
         <div class="grid grid-cols-3">
             <div class="col-span-1">
-                <StoreCardOffline></StoreCardOffline>
+                <StoreCardOffline :shop="shop"></StoreCardOffline>
             </div>
         </div>
 
@@ -51,15 +54,15 @@
                 <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
                 <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
-                  <div class="text-center" style="flex: 1;">
-                    <div>粉絲</div>
-                    <div>1,000</div>
-                  </div>
-                  <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
-                  <div class="text-center" style="flex: 1;">
-                    <div>貼文</div>
-                    <div>1,000</div>
-                  </div>
+                    <div class="text-center" style="flex: 1;">
+                        <div>粉絲</div>
+                        <div>1,000</div>
+                    </div>
+                    <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
+                    <div class="text-center" style="flex: 1;">
+                        <div>貼文</div>
+                        <div>1,000</div>
+                    </div>
                 </div>
 
                 <div class="mt-4 flex">
@@ -74,7 +77,8 @@
                 <div class="text-gray-500">Tag line</div>
                 <div class="mt-2 text-gray-500">{{ description }}</div>
                 <div class="flex flex-row mt-2">
-                    <div v-for="i in [1, 2, 3]" :key="i.toString()" class="bg-gray-300 mr-2" style="aspect-ratio: 1; height: 100px;"></div>
+                    <div v-for="i in [1, 2, 3]" :key="i.toString()" class="bg-gray-300 mr-2"
+                         style="aspect-ratio: 1; height: 100px;"></div>
                 </div>
             </div>
 
