@@ -30,6 +30,27 @@ const showModal = ref(false);
 
 </script>
 
+<script lang="ts">
+  export default {
+    data(): {
+      dropdownOffset: number
+    } {
+      return {
+        dropdownOffset: 0
+      }
+    },
+    mounted() {
+      console.log(this.$refs.categoriesScroll)
+      this.$refs.categoriesScroll.onscroll = (_) => {
+        // console.log(this.$refs.categoriesScroll.offsetLeft)
+        console.log(this.$refs.categoriesScroll.scrollLeft)
+        this.dropdownOffset = this.$refs.categoriesScroll.scrollLeft
+        // console.log(this.$refs.categoriesScroll.clientLeft)
+      }
+    }
+  }
+</script>
+
 <template>
   <div class="mb-16">
 
@@ -45,10 +66,10 @@ const showModal = ref(false);
 
     <div class="hidden md:block bg-gray-50">
       <div class="container mx-auto" >
-        <div class="whitespace-nowrap overflow-x-scroll overflow-y-hidden" style="height: 40px;">
+        <div class="whitespace-nowrap overflow-x-scroll overflow-y-hidden" style="height: 40px;" ref="categoriesScroll">
           <div v-for="category in categories" class="dropdown inline-block" :key="category['id']">
             <div class="py-2 px-8">{{ category['label'] }}</div>
-            <ul>
+            <ul :style="`transform: translateX(-${dropdownOffset}px)`">
               <li v-for="tag in category.tags" :key="tag.id">{{ tag.label }}</li>
             </ul>
           </div>
@@ -125,12 +146,12 @@ const showModal = ref(false);
 
 
 .dropdown {
-  @apply relative;
+  /*@apply relative;*/
 }
 
 .dropdown ul {
   z-index: 1000;
-  @apply hidden absolute bg-gray-50 w-full;
+  @apply hidden absolute bg-gray-50;
 }
 
 .dropdown:hover ul {
