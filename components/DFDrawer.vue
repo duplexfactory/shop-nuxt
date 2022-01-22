@@ -111,7 +111,7 @@ export default {
   display: flex;
   margin-top: -8px !important;
   font-size: 40px;
-  font-weight: bold;
+  font-weight: 400;
   color: #000;
 }
 </style>
