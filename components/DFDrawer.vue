@@ -16,9 +16,9 @@ const {categories} = useTags();
         </div>
 
           <div v-for="category in categories" :key="category['id']" >
-              <button @click="selectedCategory = category['id']" class="block py-2">{{ category['label'] }}</button>
+              <button @click="toggleCategory(category['id'])" class="block py-2 text-pin" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
               <ul v-if="selectedCategory == category['id']">
-                  <li v-for="tag in category.tags" :key="tag.id" class="px-8">{{ tag.label }}</li>
+                  <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1">{{ tag.label }}</li>
               </ul>
           </div>
 
@@ -45,6 +45,9 @@ export default {
     hideSidebar() {
       // this.$store.dispatch('nav/toggleSidebar')
       this.$emit('toggleDrawer')
+    },
+    toggleCategory(categoryId: string) {
+      this.selectedCategory = this.selectedCategory == categoryId ? '' : categoryId;
     }
   },
   watch: {

@@ -1,11 +1,11 @@
 
 <template>
   <div>
-    <div class="sm:container mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between">
+    <div class="md:container mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between">
       <!-- left -->
       <div class="flex items-center flex-1">
 
-        <button @click="$emit('toggleDrawer')">
+        <button class="md:hidden" @click="$emit('toggleDrawer')">
           Drawer
         </button>
 
