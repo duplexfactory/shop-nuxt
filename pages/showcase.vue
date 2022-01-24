@@ -66,10 +66,9 @@
                 </div>
 
                 <div class="mt-4 flex">
-                    <tag v-for="i in [1, 2, 3]"
+                    <div v-for="i in [1, 2, 3]"
                          :key="i.toString()"
-                         class="mr-2"
-                         title="Tag 1"></tag>
+                         class="tag mr-2">Tag 1</div>
                 </div>
 
             </div>

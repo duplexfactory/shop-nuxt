@@ -28,10 +28,9 @@
         <div class="mt-2 font-semibold text-lg">{{ username }}</div>
         <div class="mt-1 2xl:mt-2 line-clamp-1"
              style="font-size: 0;">
-          <tag v-for="tag in tags"
+          <div v-for="tag in tags"
                :key="tag"
-               class="mr-1 2xl:mr-2"
-               :title="tagsLookup[tag]"></tag>
+               class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
         </div>
 
         <button class="mt-4 btn-primary btn-sm">探索</button>

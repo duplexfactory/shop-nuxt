@@ -15,7 +15,8 @@ const {
   mediaCount,
   mediaUrls,
   profilePicUrl,
-  tags
+  tags,
+  locations
 } = shop;
 const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
 const description = 'description';
@@ -34,15 +35,14 @@ const description = 'description';
 
         <div class="mt-2 2xl:mt-4 text-sm text-gray-500">
           <div>門市</div>
-          <div>旺角、銅鑼灣</div>
+          <div>{{ locations.join('、') }}</div>
         </div>
 
         <div class="mt-2 2xl:mt-4 line-clamp-2"
              style="font-size: 0;">
-          <tag v-for="tag in tags"
+          <div v-for="tag in tags"
                :key="tag"
-               class="mr-1 2xl:mr-2"
-               :title="tagsLookup[tag]"></tag>
+               class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
         </div>
 
         <div class="flex flex-row absolute" style="bottom: 0px;">

@@ -49,10 +49,9 @@
 
                 <div class="mt-2 2xl:mt-4 line-clamp-2"
                      style="font-size: 0;">
-                    <tag v-for="tag in tags"
+                    <div v-for="tag in tags"
                          :key="tag"
-                         class="mr-1 2xl:mr-2"
-                         :title="tagsLookup[tag]"></tag>
+                         class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
                 </div>
 
                 <nuxt-link :to="`/shop/${pk}`" class="hidden sm:block mt-2 2xl:mt-4 btn-outline btn-primary-hover absolute" style="bottom: 0px;">進入店鋪</nuxt-link>
