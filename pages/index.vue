@@ -33,16 +33,28 @@ const showModal = ref(false);
 <script lang="ts">
   export default {
     data(): {
-      dropdownOffset: number
+      dropdownOffset: number,
+      igEmbedLoaded: boolean
     } {
       return {
-        dropdownOffset: 0
+        dropdownOffset: 0,
+        igEmbedLoaded: false
       }
     },
     mounted() {
       const script = document.createElement("script");
       script.type = "text/javascript";
       script.src = "//www.instagram.com/embed.js";
+      script.onload = () => {
+        console.log('loaded');
+
+
+        document.querySelector("iframe").addEventListener( "load", (e) => {
+          console.log('iframe loaded');
+          this.igEmbedLoaded = true;
+
+        } );
+      };
       document.body.appendChild(script);
 
       console.log(this.$refs.categoriesScroll)
@@ -90,19 +102,11 @@ const showModal = ref(false);
 
       <div class="px-4 md:px-0">
         <div class="section-title">最新貼文</div>
-<!--        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4">-->
-<!--          <div class="col-span-1" v-for="media in latest" :key="media.id + '-embed-media-card'">-->
-<!--            <MediaCardIGEmbed style="width: 100%; min-width: 0px !important;"></MediaCardIGEmbed>-->
-<!--          </div>-->
-<!--        </div>-->
-
         <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4">
-          <div class="col-span-1 overflow-hidden hidden">
+          <div v-for="media in latest" :key="media.id + '-embed-media-card'" class="col-span-1 overflow-hidden" :class="{'hidden': !igEmbedLoaded}">
             <MediaCardIGEmbed style="min-width: 0px !important; width: 100% !important;"></MediaCardIGEmbed>
           </div>
         </div>
-
-
       </div>
 
 <!--      <div class="px-4 md:px-0">-->
