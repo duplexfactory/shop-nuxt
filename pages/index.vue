@@ -40,6 +40,11 @@ const showModal = ref(false);
       }
     },
     mounted() {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "//www.instagram.com/embed.js";
+      document.body.appendChild(script);
+
       console.log(this.$refs.categoriesScroll)
       this.$refs.categoriesScroll.onscroll = (_) => {
         // console.log(this.$refs.categoriesScroll.offsetLeft)
@@ -78,14 +83,32 @@ const showModal = ref(false);
     </div>
 
     <div class="sm:container mx-auto">
+
       <div class="section-title px-4 md:px-0">熱門店鋪</div>
       <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
       <div class="px-4 md:px-0">
         <div class="section-title">最新貼文</div>
-        <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>
+<!--        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4">-->
+<!--          <div class="col-span-1" v-for="media in latest" :key="media.id + '-embed-media-card'">-->
+<!--            <MediaCardIGEmbed style="width: 100%; min-width: 0px !important;"></MediaCardIGEmbed>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4">
+          <div class="col-span-1 overflow-hidden hidden">
+            <MediaCardIGEmbed style="min-width: 0px !important; width: 100% !important;"></MediaCardIGEmbed>
+          </div>
+        </div>
+
+
       </div>
+
+<!--      <div class="px-4 md:px-0">-->
+<!--        <div class="section-title">最新貼文</div>-->
+<!--        <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>-->
+<!--      </div>-->
 
       <div class="px-4 md:px-0">
         <div class="section-title">活躍店長</div>
