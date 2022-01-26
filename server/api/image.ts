@@ -18,14 +18,14 @@ export function decryptImageUrl(code: string) {
 export default async (req: IncomingMessage, res: ServerResponse) => {
     const {i} = await useQuery(req) as { i: string }
 
-    const url = decryptImageUrl(i);
-    console.log(url);
-    if (!url.startsWith("https://instagram."))
+    const url = new URL(decryptImageUrl(i))
+    const host = url.hostname
+    if (!host.includes("instagram") || !host.includes("cdn"))
         throw new Error()
 
     const headers = Object.assign({}, req.headers) as Record<string, string>
     delete headers.host
-    const f = await fetch(url, {headers: headers})
+    const f = await fetch(url.toString(), {headers: headers})
     res.writeHead(f.status, f.statusText, f.headers.raw())
     await pipe(f.body, res)
     res.end()
