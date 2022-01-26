@@ -87,6 +87,7 @@ export default {
     };
 
     const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+
   }
 }
 </script>
@@ -107,8 +108,9 @@ export default {
 
         <!--                          :media="media"-->
         <!--                          :shop="media.igPage"-->
-
         <MediaCardIGEmbed v-if="!swiperReady"></MediaCardIGEmbed>
+
+<!--        :postId="media.code"-->
         <MediaCardIGEmbed v-else
                           v-for="media in medias"
                           class="swiper-slide"

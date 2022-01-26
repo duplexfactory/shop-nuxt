@@ -71,9 +71,9 @@ const showModal = ref(false);
 
     <div class="hidden md:block bg-gray-50">
       <div class="container mx-auto" >
-        <div class="whitespace-nowrap overflow-x-scroll overflow-y-hidden" style="height: 40px;" ref="categoriesScroll">
+        <div class="whitespace-nowrap overflow-x-scroll" style="height: 40px; padding-top: 4px;" ref="categoriesScroll">
           <div v-for="category in categories" class="dropdown inline-block" :key="category['id']">
-            <div class="py-2 px-8">{{ category['label'] }}</div>
+            <div class="py-1 px-8">{{ category['label'] }}</div>
             <ul :style="`transform: translateX(-${dropdownOffset}px)`">
               <li v-for="tag in category.tags" :key="tag.id">{{ tag.label }}</li>
             </ul>

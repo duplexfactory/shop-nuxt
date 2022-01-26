@@ -5,6 +5,7 @@
 <!--  class="w-full"-->
   <div style="position: relative;" ref="blockquote-container" >
 <!--    height: 100% !important;-->
+    {{ postId }}
     <component :is="postId ? 'blockquote' : 'div'" class="instagram-media overflow-hidden"
                 data-instgrm-captioned
                 :data-instgrm-permalink="`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`"

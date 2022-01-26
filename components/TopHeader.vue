@@ -9,19 +9,34 @@
           Drawer
         </button>
 
-        <div class="mr-4">LOGO HERE</div>
+        <nuxt-link to="/" class="mr-4">LOGO HERE</nuxt-link>
 
         <button class="sm:hidden border py-2 pl-4 pr-8 text-sm text-gray-400">
           商店 或 貼文
         </button>
-        <div class="hidden sm:block flex-1 dropdown">
+        <div class="hidden sm:block flex-1">
           <div class="flex w-full">
-            <input @focusin="searchInputFocusIn" @focusout="searchInputFocusOut" v-model="searchText" class="search-input" style="max-width: 350px;" placeholder="商店 或 貼文" type="search" autocomplete="off" id="search" name="search" />
+            <div class="dropdown flex-1" style="max-width: 350px;">
+              <input @focusin="searchInputFocusIn" @focusout="searchInputFocusOut" v-model="searchText" class="search-input" placeholder="商店 或 貼文" type="search" autocomplete="off" id="search" name="search" />
+              <div v-if="showSearchDropdown && searchText !== ''" class="search-menu">
+                <template v-if="tagsSearchResult.length !== 0">
+                  <div class="px-4 py-2 text-sm bg-gray-50">分類</div>
+                  <div class="px-4 pb-2">
+                    <div class="line-clamp-2" style="font-size: 0px;">
+                      <!-- Use mousedown to take precedence over focusout -->
+                      <button @mousedown="tagPressed(tag.id)" v-for="tag in tagsSearchResult" :key="tag.id" class="tag mt-2 mr-4">{{ `#${tag.label}` }}</button>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
             <button class="border border-pink-400 btn-primary !rounded-none">搜尋</button>
           </div>
-          <ul v-if="showSearchDropdown">
-            <li v-for="category in categoriesSearchResult" :key="category.id" class="px-4 py-1">{{ category.label }}</li>
-          </ul>
+<!--          <ul v-if="showSearchDropdown" class="search-menu">-->
+<!--            <li v-for="category in categoriesSearchResult" :key="category.id" class="px-4 py-1">{{ category.label }}</li>-->
+<!--            <li v-for="tag in tagsSearchResult" :key="tag.id" class="px-4 py-1">{{ tag.label }}</li>-->
+<!--          </ul>-->
+
         </div>
 
       </div>
@@ -65,6 +80,9 @@ export default  {
     searchInputFocusOut: function () {
       this.showSearchDropdown = false;
     },
+    tagPressed: function(tagId: string) {
+      this.$router.push({path: '/search', query: { tag: tagId }});
+    }
   },
   watch: {
     searchText: function (searchText) {
@@ -79,7 +97,7 @@ export default  {
         if (c.id.includes(searchText) || c.label.includes(searchText)) {
           this.categoriesSearchResult.push(c);
         }
-        this.tagsSearchResult.push(...c.tags.filter((t) => t.id.includes(searchText) || t.label.includes(searchText)));
+        this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
       }
     }
   }
@@ -90,19 +108,19 @@ export default  {
 <style scoped>
 
 .search-input {
-  @apply border py-2 px-4 text-md flex-1;
+  @apply border py-2 px-4 text-md w-full;
 }
 
 .dropdown {
   @apply relative;
 }
 
-.dropdown ul {
+.dropdown .search-menu {
   z-index: 1000;
-  @apply absolute bg-gray-50;
+  @apply absolute bg-white w-full shadow-lg;
 }
 
-.dropdown ul li {
+.dropdown .search-menu li {
   @apply px-8 py-2 text-center;
 }
 

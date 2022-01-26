@@ -20,7 +20,7 @@ const categories = [{
         {"id": "bag", "label": "袋"},
         {"id": "suit", "label": "西裝"},
         {"id": "jewelry", "label": "珠寶"},
-        {"id": "underwear", "label": "内衣"},
+        {"id": "underwear", "label": "內衣"},
         {"id": "ancient", "label": "古著"}
     ]
 }, {
