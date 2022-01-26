@@ -11,6 +11,9 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/main.css'
   ],
+  publicRuntimeConfig: {
+    IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F"
+  },
   privateRuntimeConfig: {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,

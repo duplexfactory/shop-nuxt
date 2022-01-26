@@ -21,19 +21,3 @@ function idString(id: string | number) {
 export function toId(id: IdInput) {
     return idString((typeof id === "object") ? id.id : id);
 }
-
-export function mediaCollectionGroup() {
-    return getFirestore().collectionGroup("medias") as CollectionGroup<IgMedia>;
-}
-
-export function mediaCollection(id: IdInput) {
-    return pageCollection().doc(toId(id)).collection("medias") as CollectionReference<IgMedia>;
-}
-
-export function trayCollection(id: IdInput) {
-    return pageCollection().doc(toId(id)).collection("trays") as CollectionReference<IgTray>;
-}
-
-export function storyCollection(id: IdInput) {
-    return pageCollection().doc(toId(id)).collection("stories") as CollectionReference<IgStory>;
-}

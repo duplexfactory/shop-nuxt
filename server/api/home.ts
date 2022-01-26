@@ -1,5 +1,4 @@
-import {mediaCollectionGroup, pageCollection} from "~/server/firebase/collections";
-import IgPage from "~/models/IgPage";
+import {pageCollection} from "~/server/firebase/collections";
 
 export default async () => {
     const [hot, latest, active, physical] = await Promise.all([
@@ -10,18 +9,15 @@ export default async () => {
             .limit(5)
             .get()
             .then(ss => ss.data()),
-        mediaCollectionGroup()
-            .orderBy("takenAt", "desc")
+        pageCollection()
+            .orderBy("lastMedia", "desc")
             .limit(12)
             .get()
             .then(async (ss) => {
-                return await Promise.all(ss.docs.map(async (docSS) => {
-                    const igPage = await docSS.ref.parent.parent.get().then((igPageSS) => igPageSS.data()) as IgPage;
-                    return {
-                        ...docSS.data(),
-                        igPage
-                    }
-                }));
+                ss.data().map(igPage => ({
+                    ...igPage.medias[0],
+                    igPage
+                }))
             }),
         pageCollection()
             .where("deleted", "==", false)
