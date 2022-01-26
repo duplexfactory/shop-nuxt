@@ -26,7 +26,7 @@ const description = 'description';
   <div class="overflow-hidden border rounded-md grid grid-cols-2">
     <div class="p-4 col-span-1">
       <div class="relative h-full">
-        <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${profilePicUrl});`" style="height: 60px;"></div>
+        <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 60px;"></div>
 
         <div class="mt-1 2xl:mt-2 overflow-hidden">
           <div class="font-semibold text-lg truncate">{{ username }}</div>
@@ -54,12 +54,12 @@ const description = 'description';
     </div>
 
     <div class="col-span-1">
-      <div class="bg-gray-300 square-image-container" :style="`background-image: url(${mediaUrls[0]});`"></div>
+      <div class="bg-gray-300 square-image-container" :style="`background-image: url(${$encryptImageUrl(mediaUrls[0])});`"></div>
       <div class="bg-white" style="height: 2px;"/>
       <div class="flex flex-row">
-        <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>
+        <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${$encryptImageUrl(mediaUrls[1])});`"></div>
         <div style="width: 2px;"></div>
-        <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>
+        <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${$encryptImageUrl(mediaUrls[2])});`"></div>
       </div>
     </div>
   </div>
