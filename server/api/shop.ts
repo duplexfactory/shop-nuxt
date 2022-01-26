@@ -1,10 +1,10 @@
 import type {IncomingMessage, ServerResponse} from 'http'
-import {mediaCollection, pageCollection} from "~/server/firebase/collections";
+import {pageCollection} from "~/server/firebase/collections";
 import {useQuery} from 'h3'
 import type IgPage from "~/models/IgPage";
 import type IgMedia from "~/models/IgMedia";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ page: IgPage, medias: IgMedia[] }> {
+export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ page: IgPage }> {
     const {id} = await useQuery(req) as { id: string }
 
     const pageDoc = await pageCollection().doc(id).get()
@@ -15,7 +15,6 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
 
     return {
-        page: pageDoc.data(),
-        medias: await mediaCollection(id).get().then(m => m.data())
+        page: pageDoc.data()
     }
 }

@@ -22,6 +22,21 @@
     const description = 'description';
 </script>
 
+<script lang="ts">
+
+export default {
+  methods: {
+    imageUrl: function (url: string) {
+      console.log(url);
+      const encryptedUrl = this.$encryptImageUrl(url);
+      console.log(encryptedUrl);
+      return encryptedUrl;
+    }
+  }
+}
+
+</script>
+
 <template>
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
@@ -59,13 +74,16 @@
         </div>
 
         <div class="col-span-1">
-            <div class="bg-gray-300 square-image-container" :style="`background-image: url(${mediaUrls[0]});`"></div>
+          <client-only>
+            <div class="bg-gray-300 square-image-container" :style="`background-image: url(${imageUrl(mediaUrls[0])});`"></div>
             <div class="bg-white" style="height: 2px;"/>
             <div class="flex flex-row">
-                <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>
-                <div style="width: 2px;"></div>
-                <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>
+              <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${imageUrl(mediaUrls[1])});`"></div>
+              <div style="width: 2px;"></div>
+              <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${imageUrl(mediaUrls[2])});`"></div>
             </div>
+          </client-only>
+
         </div>
     </div>
 </template>

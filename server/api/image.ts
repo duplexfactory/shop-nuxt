@@ -3,13 +3,23 @@ import stream from "stream";
 import util from "util";
 import fetch from "node-fetch";
 import {useQuery} from "h3";
-import {decryptImageUrl} from "~/utils/imageUrl";
 
 const pipe = util.promisify(stream.pipeline);
 
+import cryptoJS from "crypto-js";
+import Utf8 from 'crypto-js/enc-utf8.js';
+import config from '#config';
+
+export function decryptImageUrl(code: string) {
+    const decrpyted = cryptoJS.AES.decrypt(code.replace(/-/g, "/").replace(/\./g, "+"), config.IMAGE_KEY, );
+    return decrpyted.toString(Utf8);
+}
+
 export default async (req: IncomingMessage, res: ServerResponse) => {
     const {i} = await useQuery(req) as { i: string }
-    const url = decryptImageUrl(i)
+
+    const url = decryptImageUrl(i);
+    console.log(url);
     if (!url.startsWith("https://instagram."))
         throw new Error()
 

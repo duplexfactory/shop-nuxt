@@ -11,7 +11,9 @@
     "nuxt3": "latest"
   },
   "dependencies": {
+    "@types/crypto-js": "^4.1.0",
     "@vueuse/nuxt": "^7.5.3",
+    "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
     "firebase-admin": "^10.0.1",
     "node-fetch": "^3.1.0",
