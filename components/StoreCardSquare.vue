@@ -27,9 +27,9 @@
 export default {
   methods: {
     imageUrl: function (url: string) {
-      console.log(url);
+      // console.log(url);
       const encryptedUrl = this.$encryptImageUrl(url);
-      console.log(encryptedUrl);
+      // console.log(encryptedUrl);
       return encryptedUrl;
     }
   }
@@ -74,15 +74,13 @@ export default {
         </div>
 
         <div class="col-span-1">
-          <client-only>
             <div class="bg-gray-300 square-image-container" :style="`background-image: url(${imageUrl(mediaUrls[0])});`"></div>
             <div class="bg-white" style="height: 2px;"/>
             <div class="flex flex-row">
-              <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${imageUrl(mediaUrls[1])});`"></div>
-              <div style="width: 2px;"></div>
-              <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${imageUrl(mediaUrls[2])});`"></div>
+                <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${imageUrl(mediaUrls[1])});`"></div>
+                <div style="width: 2px;"></div>
+                <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${imageUrl(mediaUrls[2])});`"></div>
             </div>
-          </client-only>
 
         </div>
     </div>
