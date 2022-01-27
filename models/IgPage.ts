@@ -21,7 +21,9 @@ export default interface IgPage {
     lastStory: number
     lastMedia: number
     lastFetch: number
+    nextFetch: number
     lastActivity: number
+    tier: number
 
     // sub-docs
     stories: IgStory[]
@@ -38,5 +40,6 @@ export default interface IgPage {
     activeScore: number;
 
     // denormalize
+    firstMediaCode: string;
     mediaUrls: string[];
 }

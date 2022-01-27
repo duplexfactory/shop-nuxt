@@ -1,15 +1,27 @@
 import config from "#config";
 import {cert, getApps, initializeApp} from "firebase-admin/app";
-import {QuerySnapshot} from "@google-cloud/firestore";
+import {Query, QuerySnapshot} from "@google-cloud/firestore";
 
 declare module "@google-cloud/firestore" {
     interface QuerySnapshot<T> {
         data(): T[];
     }
+
+    interface Query<T> {
+        pick<Ks extends keyof T>(...fields: Ks[]): Query<Pick<T, Ks>>
+    }
 }
 QuerySnapshot.prototype.data = function <T>(this: QuerySnapshot<T>) {
     return this.docs.map(doc => doc.data());
 };
+
+Query.prototype.pick = function <T, Ks extends keyof T>(this: Query<T>, ...fields: Ks[]) {
+    return this.select(...fields as string[]) as Query<Pick<T, Ks>>
+};
+
+export function fields<T extends object, Ks extends keyof T>(...fields: Ks[]): Ks[] {
+    return fields
+}
 
 export function initFirebase() {
     if (!getApps().length) {

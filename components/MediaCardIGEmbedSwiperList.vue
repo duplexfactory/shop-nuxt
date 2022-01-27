@@ -15,9 +15,7 @@ import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
 // configure Swiper to use modules
 Swiper.use([Navigation, Pagination]);
 
-type MediaWithShop = IgMedia & {
-  igPage: IgPage
-};
+type MediaWithShop = Pick<IgPage, "firstMediaCode" | "pk">;
 
 export default {
   components: {MediaCardIGEmbed, MediaCard, SwiperSlidesPlaceholder},
@@ -113,8 +111,8 @@ export default {
         <MediaCardIGEmbed v-else
                           v-for="media in medias"
                           class="swiper-slide"
-                          :postId="media.code"
-                          :key="media.id + '-post-card'"></MediaCardIGEmbed>
+                          :postId="media.firstMediaCode"
+                          :key="media.pk + '-post-card'"></MediaCardIGEmbed>
 
 
       </div>

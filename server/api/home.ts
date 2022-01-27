@@ -1,4 +1,19 @@
 import {pageCollection} from "~/server/firebase/collections";
+import IgPage from "~/models/IgPage";
+import {fields} from "~/server/firebase/init";
+
+const cardFields= [
+    "pk",
+    "username",
+    "fullName",
+    "lastActivity",
+    "followerCount",
+    "mediaCount",
+    "mediaUrls",
+    "profilePicUrl",
+    "tags",
+    "locations"
+] as const
 
 export default async () => {
     const [hot, latest, active, physical] = await Promise.all([
@@ -7,21 +22,21 @@ export default async () => {
             .where("private", "==", false)
             .orderBy("followerCount", "desc")
             .limit(21)
+            .pick(...cardFields)
             .get()
             .then(ss => ss.data()),
         pageCollection()
             .orderBy("lastMedia", "desc")
             .limit(12)
+            .pick("firstMediaCode", "pk")
             .get()
-            .then(async (ss) => ss.data().map(igPage => ({
-                ...igPage.medias[0],
-                igPage
-            }))),
+            .then(ss => ss.data()),
         pageCollection()
             .where("deleted", "==", false)
             .where("private", "==", false)
             .orderBy("activeScore", "desc")
             .limit(30)
+            .pick(...cardFields)
             .get()
             .then(ss => ss.data()),
         pageCollection()
@@ -30,6 +45,7 @@ export default async () => {
             .where("brickAndMortar", "==", true)
             .orderBy("activeScore", "desc")
             .limit(21)
+            .pick(...cardFields)
             .get()
             .then(ss => ss.data())
     ])
