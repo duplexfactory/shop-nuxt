@@ -4,7 +4,7 @@
     import dayjs from "dayjs";
 
     const {data} = await useFetch(`/api/shop`, {params: {id: useRoute().params.id}});
-    const {page, medias} = data.value as { page: IgPage, medias: IgMedia[] };
+    const {page} = data.value as { page: IgPage };
     const {tagsLookup} = useTags();
 
     const {
@@ -93,7 +93,8 @@ export default  {
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
 <!--                    {{ medias }}-->
-                  <MediaCard v-for="media in medias"
+<!--                  {{ medias }}-->
+                  <MediaCard v-for="media in page.medias"
                              class="col-span-1"
                              :media="media"
                              :shop="page"
