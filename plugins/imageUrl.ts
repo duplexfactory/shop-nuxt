@@ -9,7 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         provide: {
             encryptImageUrl: (url: string) => {
                 const code = AES.encrypt(url, config.IMAGE_KEY).toString().replace(/\//g, "-").replace(/\+/g, ".");
-                return "api/image?i=" + code;
+                return "/api/image?i=" + code;
             },
         }
     }

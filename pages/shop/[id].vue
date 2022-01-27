@@ -49,7 +49,7 @@ export default  {
         <div class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="rounded-full mr-8" style="aspect-ratio: 1; height: 120px;" :style="`background-image: url(${profilePicUrl});`"></div>
+                    <div class="rounded-full mr-8" style="aspect-ratio: 1; height: 120px;" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`"></div>
                     <div class="mt-4">
                         <div class="font-semibold text-xl truncate">{{ username }}</div>
                         <div class="mt-2 text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
