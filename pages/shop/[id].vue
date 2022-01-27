@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import IgPage from "../../models/IgPage";
-    import IgMedia from "../../models/IgMedia";
     import dayjs from "dayjs";
 
     const {data} = await useFetch(`/api/shop`, {params: {id: useRoute().params.id}});
@@ -26,10 +25,14 @@
 <script lang="ts">
 export default  {
     data(): {
-      selectedIndex: number
+      selectedIndex: number,
+      showModal: boolean,
+      showingMediaCode: string
     } {
       return {
-        selectedIndex: 0
+        selectedIndex: 0,
+        showModal: false,
+        showingMediaCode: ""
       }
     }
 }
@@ -37,14 +40,21 @@ export default  {
 
 <template>
     <div>
-<!--        &lt;!&ndash; Media modal &ndash;&gt;-->
-<!--        <transition name="modal">-->
-<!--            <MediaModal v-if="showModal" @close="showModal = false">-->
-<!--              <template v-slot:header>-->
-<!--                <h3>custom header</h3>-->
-<!--              </template>-->
-<!--            </MediaModal>-->
-<!--        </transition>-->
+        <!-- Media modal -->
+        <transition name="modal">
+            <MediaModal v-if="showModal" @close="showModal = false">
+              <template v-slot:header>
+                <h3>custom header</h3>
+              </template>
+              <template v-slot:body>
+                <div>
+                  {{showingMediaCode }}
+                  <MediaCardIGEmbed :post-id="showingMediaCode"></MediaCardIGEmbed>
+
+                </div>
+              </template>
+            </MediaModal>
+        </transition>
 
         <div class="container mx-auto">
             <section class="md:grid grid-cols-8">
@@ -96,6 +106,8 @@ export default  {
 <!--                  {{ medias }}-->
                   <MediaCard v-for="media in page.medias"
                              class="col-span-1"
+                             @click="showModal = true; showingMediaCode = media.code;"
+                             style="cursor: pointer"
                              :media="media"
                              :shop="page"
                              :key="media.id + '-post-card'"></MediaCard>

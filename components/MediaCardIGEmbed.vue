@@ -41,6 +41,21 @@ export default {
   //   }
   // },
   mounted() {
+    let scriptExists: boolean = false;
+    document.querySelectorAll("script").forEach((s) => {
+      if (s.src == '//www.instagram.com/embed.js') {
+        scriptExists = true;
+      }
+    });
+    if (!scriptExists) {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "//www.instagram.com/embed.js";
+      document.body.appendChild(script);
+    }
+
+
+
     // identify an element to observe
     // const elementToObserve = this.$refs['blockquote-container'];
 
