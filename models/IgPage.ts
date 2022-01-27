@@ -27,7 +27,7 @@ export default interface IgPage {
 
     // sub-docs
     stories: IgStory[]
-    medias: IgMedia[]
+    medias: IgMedia[] // max 252
     traies: IgTray[]
 
     // marked
@@ -40,6 +40,6 @@ export default interface IgPage {
     activeScore: number;
 
     // denormalize
-    firstMediaCode: string;
+    lastMediaData?: IgMedia;
     mediaUrls: string[];
 }

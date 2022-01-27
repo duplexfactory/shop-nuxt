@@ -28,7 +28,7 @@ export default async () => {
         pageCollection()
             .orderBy("lastMedia", "desc")
             .limit(12)
-            .pick("firstMediaCode", "pk")
+            .pick("lastMediaData", "pk", "username", "fullName")
             .get()
             .then(ss => ss.data()),
         pageCollection()
