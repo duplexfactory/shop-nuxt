@@ -10,6 +10,7 @@ const categories = [{
 }, {
     "id": "apparel",
     "label": "服飾",
+    "keywords": ["衣服"],
     "tags": [
         {"id": "men's", "label": "男裝"},
         {"id": "women's-clothing", "label": "女裝"},
@@ -20,19 +21,21 @@ const categories = [{
         {"id": "bag", "label": "袋"},
         {"id": "suit", "label": "西裝"},
         {"id": "jewelry", "label": "珠寶"},
-        {"id": "underwear", "label": "內衣"},
-        {"id": "ancient", "label": "古著"}
+        {"id": "underwear", "label": "內衣", "keywords": "内衣"},
+        {"id": "ancient", "label": "古著", "keywords": ["二手", "服"]},
+        {"id": "accessories", "label": "飾物", "keywords": {or: ["耳環", "髮夾", "頭箍", "手飾", "戒指", "手鏈", "頸鏈"]}},
     ]
 }, {
     "id": "cosmetic",
     "label": "美容",
     "tags": [
-        {"id": "nail", "label": "美甲"},
+        {"id": "nail", "label": "美甲", "keywords": {or: ["修甲", "gel甲", "Gel甲"]}},
         {"id": "skin-care", "label": "護膚"}
     ]
 }, {
     "id": "food",
     "label": "食物",
+    "disabled": true,
     "tags": [
         {"id": "buffet", "label": "散水餅"},
         {"id": "cake", "label": "蛋糕"},
@@ -43,10 +46,11 @@ const categories = [{
 }, {
     "id": "serve",
     "label": "服務",
+    "disabled": true,
     "tags": [
-        {"id": "hairstyle", "label": "髮型屋"},
+        {"id": "hairstyle", "label": "髮型屋", "keywords": {or: ["理髮", "剪髮"]}},
         {"id": "workshop", "label": "工作坊"},
-        {"id": "self-service", "label": "自拍舘"}
+        {"id": "self-service", "label": "自拍舘", "keywords": "攝影"}
     ]
 }, {
     "id": "stationery-boutique",
@@ -63,26 +67,31 @@ const categories = [{
 }, {
     "id": "pet",
     "label": "寵物",
-    "tags": [{"id": "pet-supplies", "label": "寵物用品"}, {"id": "pet-food", "label": "寵物食品"}]
+    "disabled": true,
+    "tags": [
+        {"id": "pet-supplies", "label": "寵物用品", "keywords": {or: [["寵", "品"], ["寵", "具"]]}},
+        {"id": "pet-food", "label": "寵物食品", "keywords": {or: [["寵", "食"], "飼料"]}}
+    ]
 }, {
     "id": "adult-products",
     "label": "成人用品",
     "tags": [
-        {"id": "sex-toys", "label": "性玩具"},
-        {"id": "sexy-underwear", "label": "情趣內衣"},
+        {"id": "sex-toys", "label": "性玩具", "keywords": [{or: ["成人", "性", "情趣"]}, {or: ["用品", "玩具"]}]},
+        {"id": "sexy-underwear", "label": "情趣內衣", "keywords": "情趣内衣"},
         {"id": "condom", "label": "安全套"}
     ]
 }, {
     "id": "universal",
     "label": "通用",
+    "disabled": true,
     "tags": [
-        {"id": "south-korea", "label": "韓國"},
+        {"id": "south-korea", "label": "韓國", "keywords": {or: ["韓國", "韓式"]}},
         {"id": "japan", "label": "日本"},
         {"id": "purchase", "label": "代購"},
         {"id": "second-hand", "label": "二手"},
         {"id": "customize", "label": "訂製"}
     ]
-}]
+}];
 
 const tagsLookup = categories.reduce((dict, cat) => {
     dict[cat.id] = cat.label;
