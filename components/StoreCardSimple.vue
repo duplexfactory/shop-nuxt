@@ -10,15 +10,10 @@
 
     const {
       username,
-      lastActivity,
-      followerCount,
-      mediaCount,
-      mediaUrls,
+      fullName,
       profilePicUrl,
       tags
     } = shop;
-    const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-    const description = 'description';
 </script>
 
 <template>
@@ -26,14 +21,15 @@
         <div class="bg-gray-300 rounded-full square-image-container mx-auto" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 100px;"></div>
 
         <div class="mt-2 font-semibold text-lg">{{ username }}</div>
-        <div class="mt-1 2xl:mt-2 line-clamp-1"
+        <div class="mt-1 text-gray-400 text-xs line-clamp-2" style="height: 2rem">{{ fullName }}</div>
+        <div class="mt-2 2xl:mt-2 line-clamp-1"
              style="font-size: 0;">
           <div v-for="tag in tags"
                :key="tag"
                class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
         </div>
 
-        <button class="mt-4 btn-primary btn-sm">探索</button>
+        <button class="mt-3 btn-primary btn-sm">探索</button>
 
     </div>
 </template>

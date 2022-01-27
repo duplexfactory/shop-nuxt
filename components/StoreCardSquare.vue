@@ -11,6 +11,7 @@
     const {
         pk,
         username,
+        fullName,
         lastActivity,
         followerCount,
         mediaCount,
@@ -47,7 +48,7 @@ export default {
                   <div class="font-semibold text-lg truncate">
                     <a class="hover:underline" :href="`https://www.instagram.com/${username}/`" target="_blank">{{ username }}</a>
                   </div>
-                  <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
+                  <div class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
                 </div>
 
                 <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
