@@ -16,6 +16,7 @@ export default interface IgPage {
 
     private: boolean
     deleted: boolean
+    adult: boolean
 
     lastStory: number
     lastMedia: number
