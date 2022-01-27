@@ -13,9 +13,7 @@ import {SwiperOptions} from "swiper/types/swiper-options";
 // configure Swiper to use modules
 Swiper.use([Navigation, Pagination]);
 
-type MediaWithShop = IgMedia & {
-  igPage: IgPage
-};
+type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
 
 export default {
   components: {SwiperSlidesPlaceholder},
@@ -75,7 +73,7 @@ export default {
     };
   },
   props: {
-    medias: Array as PropType<MediaWithShop[]>
+    simplePages: Array as PropType<SimplePage[]>
   },
   mounted() {
     // Navigation arrows
@@ -97,11 +95,11 @@ export default {
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
-        <MediaCard v-for="media in medias"
+        <MediaCard v-for="page in simplePages"
                    class="swiper-slide"
-                   :media="media"
-                   :shop="media.igPage"
-                   :key="media.id + '-post-card'"></MediaCard>
+                   :media="page.lastMediaData"
+                   :shop="page"
+                   :key="page.pk.toString() + '-post-card'"></MediaCard>
       </div>
       <!-- If we need pagination -->
       <div class="swiper-pagination" style="bottom: 0px !important;"></div>

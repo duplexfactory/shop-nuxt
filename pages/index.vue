@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
+import MediaCardSwiperList from "~/components/MediaCardSwiperList.vue";
 
 const header = ref('Nuxt 3 starter template')
 const {counter} = goSick();
@@ -16,7 +17,6 @@ const storeName = 'caseonlyy';
 
 const {data} = await useFetch(`/api/home`);
 const {hot, active, latest, physical} = data.value;
-
 const {categories} = useTags();
 
 const showModal = ref(false);
@@ -88,19 +88,20 @@ const showModal = ref(false);
       <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
-<!--      <div class="px-4 md:px-0">-->
-<!--        <div class="section-title">最新貼文</div>-->
+      <div class="px-4 md:px-0">
+        <div class="section-title">最新貼文</div>
 <!--        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4">-->
 <!--          <div v-for="media in latest" :key="media.id + '-embed-media-card'" class="col-span-1 overflow-hidden">-->
 <!--            <MediaCardIGEmbed></MediaCardIGEmbed>-->
 <!--          </div>-->
 <!--        </div>-->
-<!--      </div>-->
-
-      <div class="px-4 md:px-0">
-        <div class="section-title">最新貼文</div>
-        <MediaCardIGEmbedSwiperList :medias="latest"></MediaCardIGEmbedSwiperList>
+        <MediaCardSwiperList :simple-pages="latest"></MediaCardSwiperList>
       </div>
+
+<!--      <div class="px-4 md:px-0">-->
+<!--        <div class="section-title">最新貼文</div>-->
+<!--        <MediaCardIGEmbedSwiperList :medias="latest"></MediaCardIGEmbedSwiperList>-->
+<!--      </div>-->
 
 <!--      <div class="px-4 md:px-0">-->
 <!--        <div class="section-title">最新貼文</div>-->
