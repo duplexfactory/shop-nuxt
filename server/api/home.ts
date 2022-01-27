@@ -13,12 +13,10 @@ export default async () => {
             .orderBy("lastMedia", "desc")
             .limit(12)
             .get()
-            .then(async (ss) => {
-                ss.data().map(igPage => ({
-                    ...igPage.medias[0],
-                    igPage
-                }))
-            }),
+            .then(async (ss) => ss.data().map(igPage => ({
+                ...igPage.medias[0],
+                igPage
+            }))),
         pageCollection()
             .where("deleted", "==", false)
             .where("private", "==", false)

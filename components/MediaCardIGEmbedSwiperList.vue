@@ -110,11 +110,10 @@ export default {
         <!--                          :shop="media.igPage"-->
         <MediaCardIGEmbed v-if="!swiperReady"></MediaCardIGEmbed>
 
-<!--        :postId="media.code"-->
         <MediaCardIGEmbed v-else
                           v-for="media in medias"
                           class="swiper-slide"
-                          postId="CY7CJvONeHN"
+                          :postId="media.code"
                           :key="media.id + '-post-card'"></MediaCardIGEmbed>
 
 
