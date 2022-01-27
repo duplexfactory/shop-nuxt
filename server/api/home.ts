@@ -6,7 +6,7 @@ export default async () => {
             .where("deleted", "==", false)
             .where("private", "==", false)
             .orderBy("followerCount", "desc")
-            .limit(5)
+            .limit(21)
             .get()
             .then(ss => ss.data()),
         pageCollection()
@@ -21,7 +21,7 @@ export default async () => {
             .where("deleted", "==", false)
             .where("private", "==", false)
             .orderBy("activeScore", "desc")
-            .limit(12)
+            .limit(30)
             .get()
             .then(ss => ss.data()),
         pageCollection()
@@ -29,7 +29,7 @@ export default async () => {
             .where("private", "==", false)
             .where("brickAndMortar", "==", true)
             .orderBy("activeScore", "desc")
-            .limit(12)
+            .limit(21)
             .get()
             .then(ss => ss.data())
     ])
