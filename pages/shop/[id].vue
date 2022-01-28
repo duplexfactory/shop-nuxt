@@ -125,7 +125,21 @@ export default  {
             </section>
         </div>
 
-        <MediaModal v-model:showModal="showModal" :mediaCode="showingMediaCode"></MediaModal>
+        <!---->
+
+
+
+        <transition name="modal">
+            <MediaModal v-model:showModal="showModal" :mediaCode="showingMediaCode"></MediaModal>
+        </transition>
+
+
+
+
+
+
+
+
     </div>
 </template>
 
