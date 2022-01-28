@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 sm:px-0 sm:container mx-auto">
+  <div class="px-4 sm:container mx-auto">
 
     <div class="grid grid-cols-12 gap-8">
 
