@@ -4,7 +4,9 @@
 
     <DFDrawer @toggleDrawer="toggleDrawer" :open="drawerOpen"></DFDrawer>
 
-    <slot/>
+    <div class="flex-1">
+      <slot/>
+    </div>
 
     <bottom-footer></bottom-footer>
   </div>

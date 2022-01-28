@@ -10,23 +10,27 @@
 
     const {
         username,
+        fullName,
+        biography,
         lastActivity,
         followerCount,
         mediaCount,
         mediaUrls,
         profilePicUrl,
-        tags
+        tags,
+        brickAndMortar,
+        locations
     } = shop;
     const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-    const description = 'description';
 </script>
 
 <template>
     <div class="border rounded-md p-4 flex flex-row">
-        <div class="mr-4">
-            <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${profilePicUrl});`" style="height: 80px;"></div>
 
-            <div class="mt-2 font-semibold text-lg">{{ storeName }}</div>
+        <div class="mr-4">
+            <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 80px;"></div>
+
+            <div class="mt-2 font-semibold text-lg">{{ username }}</div>
             <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
             <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
@@ -49,16 +53,16 @@
             </div>
 
         </div>
-        <div class="">
-            <div class="text-gray-500">Tag line</div>
-            <div class="mt-2 text-gray-500">{{ description }}</div>
-            <div class="flex flex-row mt-2">
-                <div v-for="i in [1, 2, 3]" :key="i.toString()" class="bg-gray-300 mr-2" style="aspect-ratio: 1; height: 100px;"></div>
 
-                <div v-for="i in mediaUrls" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" :style="`background-image: url(${i});`"></div>
+        <div class="flex-1 text-sm overflow-hidden">
+            <div class="mt-2 text-gray-500 truncate">{{ fullName }}</div>
+            <div class="mt-2 text-gray-500 line-clamp-2">{{ biography }}</div>
+            <div v-if="brickAndMortar" class="mt-2 text-sm text-gray-500">
+                <div>{{ '門市：' + locations.join('、') }}</div>
             </div>
-
-
+            <div class="mt-4 flex flex-row">
+                <div v-for="i in mediaUrls" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" :style="`background-image: url(${$encryptImageUrl(i)});`"></div>
+            </div>
         </div>
 
     </div>
