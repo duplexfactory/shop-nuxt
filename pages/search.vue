@@ -34,7 +34,7 @@
       <div class="col-span-12 md:col-span-9">
         <div v-if="$route.query['keyword']" class="mb-4">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
 
-        <StoreCardRectangle :shop="page" class="mb-4"></StoreCardRectangle>
+        <StoreCardRectangle @click="$router.push(`/shop/${page.pk}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
       </div>
 
     </div>

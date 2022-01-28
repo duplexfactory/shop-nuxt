@@ -87,6 +87,12 @@ export default {
 }
 </script>
 
+<script setup lang="ts">
+  import {useShowingMediaCode, useShowMediaModal} from "~/composables/states";
+  const showMediaModal = useShowMediaModal();
+  const showingMediaCode = useShowingMediaCode();
+</script>
+
 <template>
   <div>
     <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>
@@ -96,6 +102,8 @@ export default {
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
         <MediaCard v-for="page in simplePages"
+                   @click="showMediaModal = true; showingMediaCode = page.lastMediaData.code;"
+                   style="cursor: pointer;"
                    class="swiper-slide"
                    :media="page.lastMediaData"
                    :shop="page"

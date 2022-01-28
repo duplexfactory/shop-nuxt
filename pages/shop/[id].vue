@@ -46,26 +46,26 @@
 
     const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
     const description = biography;
+
+    import {useShowingMediaCode, useShowMediaModal} from "~/composables/states";
+    const showModal = useShowMediaModal();
+    const showingMediaCode = useShowingMediaCode();
 </script>
 
 <script lang="ts">
 export default  {
     data(): {
       selectedIndex: number,
-      showModal: boolean,
-      showingMediaCode: string
     } {
       return {
         selectedIndex: 0,
-        showModal: false,
-        showingMediaCode: ""
       }
     }
 }
 </script>
 
 <template>
-    <div>
+    <div class="mb-16">
         <div class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
@@ -112,8 +112,6 @@ export default  {
                     <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1">評論</button>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
-<!--                    {{ medias }}-->
-<!--                  {{ medias }}-->
                   <MediaCard v-for="media in page.medias"
                              class="col-span-1"
                              @click="showModal = true; showingMediaCode = media.code;"
@@ -124,10 +122,6 @@ export default  {
                 </div>
             </section>
         </div>
-
-        <transition name="modal">
-            <MediaModal v-model:showModal="showModal" :mediaCode="showingMediaCode"></MediaModal>
-        </transition>
 
     </div>
 </template>

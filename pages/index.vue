@@ -19,8 +19,6 @@ const {data} = await useFetch(`/api/home`);
 const {hot, active, latest, physical} = data.value;
 const {categories} = useTags();
 
-const showModal = ref(false);
-
 // function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {
 //   const lastIndex = Math.ceil(slidesPerView) - 1;
 //   const marginStyle = index != lastIndex ? `margin-right: ${spaceBetween}px; ` : '';

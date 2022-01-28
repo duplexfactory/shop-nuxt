@@ -6,11 +6,22 @@
 
     <div class="flex-1">
       <slot/>
+
+      <transition name="modal">
+        <MediaModal v-model:showModal="showMediaModal" :mediaCode="showingMediaCode"></MediaModal>
+      </transition>
     </div>
 
     <bottom-footer></bottom-footer>
   </div>
 </template>
+
+<script setup lang="ts">
+  import {useShowingMediaCode, useShowMediaModal} from "~/composables/states";
+
+  const showMediaModal = useShowMediaModal();
+  const showingMediaCode = useShowingMediaCode();
+</script>
 
 <script lang="ts">
   export default {
