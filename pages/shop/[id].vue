@@ -43,14 +43,15 @@ export default  {
         <!-- Media modal -->
         <transition name="modal">
             <MediaModal v-if="showModal" @close="showModal = false">
-              <template v-slot:header>
-                <h3>custom header</h3>
-              </template>
               <template v-slot:body>
-                <div>
-                  {{showingMediaCode }}
-                  <MediaCardIGEmbed :post-id="showingMediaCode"></MediaCardIGEmbed>
+                <div class="grid grid-cols-8">
+                  <div class="col-span-4">
+                    <MediaCardIGEmbed :post-id="showingMediaCode" :fixed-aspect-ratio="0"></MediaCardIGEmbed>
+                  </div>
+                  <div class="col-span-4">
+                    <div class="text-lg md:text-2xl px-5 py-2 md:px-6 md:py-3">評論</div>
 
+                  </div>
                 </div>
               </template>
             </MediaModal>

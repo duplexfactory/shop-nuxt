@@ -21,3 +21,12 @@
 .tag {
     @apply inline-block text-pink-600 text-sm;
 }
+
+.btn-close {
+    line-height: 44px;
+    display: flex;
+    margin-top: -8px !important;
+    font-size: 40px;
+    font-weight: 400;
+    color: #000;
+}

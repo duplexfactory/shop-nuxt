@@ -3,13 +3,14 @@
 
 <!--  aspect-ratio: 0.5;-->
 <!--  class="w-full"-->
-  <div style="position: relative; aspect-ratio: 0.5;" ref="blockquote-container" >
+  <div style="position: relative;" :style="fixedAspectRatio !== 0 ? `aspect-ratio: ${fixedAspectRatio.toString()};` : ''" ref="blockquote-container" >
 <!--    height: 100% !important;-->
     <component :is="postId ? 'blockquote' : 'div'" class="instagram-media overflow-hidden"
                 data-instgrm-captioned
                 :data-instgrm-permalink="`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`"
                 data-instgrm-version="14"
-                style="min-width: 0px !important; width: 100% !important; height: 100% !important; margin: 1px; padding:0; background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);">
+                :style="fixedAspectRatio !== 0 ? 'height: 100% !important;' : ''"
+                style="min-width: 0px !important; width: 100% !important; margin: 1px; padding:0; background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);">
       <div style="padding:16px;">
         <a :href="`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
           <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
@@ -27,6 +28,7 @@ import {PropType} from "vue/dist/vue";
 
 const {postId} = defineProps({
   postId: String as PropType<String>,
+  fixedAspectRatio: { type: Number, default: 0.5 }
 })
 
 </script>
@@ -42,16 +44,23 @@ export default {
   // },
   mounted() {
     let scriptExists: boolean = false;
-    document.querySelectorAll("script").forEach((s) => {
-      if (s.src == '//www.instagram.com/embed.js') {
+    document.body.querySelectorAll("script").forEach((s) => {
+      console.log(s);
+      console.log(s.src);
+      if (s.src == 'http://www.instagram.com/embed.js') {
         scriptExists = true;
       }
     });
+    console.log(scriptExists);
     if (!scriptExists) {
       const script = document.createElement("script");
       script.type = "text/javascript";
       script.src = "//www.instagram.com/embed.js";
       document.body.appendChild(script);
+    }
+    else {
+      if (window['instgrm'])
+        window['instgrm'].Embeds.process();
     }
 
 

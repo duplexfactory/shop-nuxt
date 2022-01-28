@@ -44,10 +44,10 @@ const showModal = ref(false);
       }
     },
     mounted() {
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = "//www.instagram.com/embed.js";
-      document.body.appendChild(script);
+      // const script = document.createElement("script");
+      // script.type = "text/javascript";
+      // script.src = "//www.instagram.com/embed.js";
+      // document.body.appendChild(script);
 
       this.$refs.categoriesScroll.onscroll = (_) => {
         this.dropdownOffset = this.$refs.categoriesScroll.scrollLeft
