@@ -73,7 +73,7 @@ const {categories} = useTags();
           <div v-for="category in categories" class="dropdown inline-block" :key="category['id']">
             <div class="py-1 px-8">{{ category['label'] }}</div>
             <ul :style="`transform: translateX(-${dropdownOffset}px)`">
-              <li v-for="tag in category.tags" :key="tag.id">{{ tag.label }}</li>
+              <li v-for="tag in category.tags" :key="tag.id" @click="$router.push({path: '/search', query: { tag: tag.id }});" style="cursor: pointer;">{{ tag.label }}</li>              
             </ul>
           </div>
         </div>
