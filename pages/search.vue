@@ -10,7 +10,7 @@
           <button @click="toggleCategory(category['id'])" class="block py-1">{{ category['label'] }}</button>
           <ul v-if="selectedCategories.includes(category['id'])">
             <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" :class="{'text-pink-400': selectedTag == tag.id}">
-              <button @click="selectedTag = tag.id">{{ tag.label }}</button>
+              <button @click="selectTag(tag.id)">{{ tag.label }}</button>
             </li>
           </ul>
         </div>
@@ -34,6 +34,7 @@
       <div class="col-span-12 md:col-span-9">
         <div v-if="$route.query['keyword']" class="mb-4">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
 
+          {{ selectedTag }}
         <StoreCardRectangle @click="$router.push(`/shop/${page.pk}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
       </div>
 
@@ -67,6 +68,16 @@ const page = {
   "username":"vellichor_shop"
 };
 
+const route =  useRoute();
+const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
+
+watch(
+  route,
+  (route, prevRoute) => {
+    selectedTag.value = route.query['tag'] ? route.query['tag'] : ''
+  }
+)
+
 </script>
 
 <script lang="ts">
@@ -75,13 +86,21 @@ const page = {
       brickAndMortar: boolean,
       businessRegistration: boolean,
       selectedCategories: string[],
-      selectedTag: string,
     } {
+
+      const selectedCategories = [];
+      if (this.selectedTag !== '') {
+        const category = this.categories.find((c) => !!c.tags.find((t) => t.id == this.selectedTag));
+        console.log(category);
+        if (category) {
+          selectedCategories.push(category.id);
+        }
+      }
+
       return {
         brickAndMortar: false,
         businessRegistration: false,
-        selectedCategories: [],
-        selectedTag: ''
+        selectedCategories
       }
     },
     methods: {
@@ -92,6 +111,9 @@ const page = {
         else {
           this.selectedCategories.push(categoryId);
         }
+      },
+      selectTag(tag: string) {
+        this.$router.replace({query: { tag: tag }});
       }
     }
   }
