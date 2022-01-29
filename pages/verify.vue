@@ -64,7 +64,7 @@
                         怎樣認證？
                     </h2>
                     <h3 class="text-xl md:text-2xl font-bold mt-4">
-                        只需透過Instagram登入便可立即認證
+                        只需透過Instagram登入，無需額外設置
                     </h3>
 
                 </div>
