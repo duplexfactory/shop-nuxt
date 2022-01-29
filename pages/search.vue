@@ -27,7 +27,7 @@
           <input type="checkbox" id="business-registration" name="businessRegistration" v-model="businessRegistration">
           <label for="business-registration" class="pl-2">商業登記</label>
         </div>
-<!--        {{ businessRegistration }}-->
+        {{ businessRegistration }}
 
       </div>
 
@@ -69,12 +69,30 @@ const page = {
 };
 
 const route =  useRoute();
+const router =  useRouter();
 const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
+const businessRegistration = ref<boolean>(route.query['br'] === 'true');
 
 watch(
   route,
   (route, prevRoute) => {
     selectedTag.value = route.query['tag'] ? route.query['tag'] : ''
+  }
+)
+
+watch(
+  businessRegistration,
+  (br, prevBr) => {
+    const query = {
+      ...route.query
+    };
+    if (businessRegistration.value) {
+      query.br = 'true';
+    }
+    else {
+      delete query.br
+    }
+    router.replace({query})
   }
 )
 
@@ -84,7 +102,6 @@ watch(
   export default {
     data() : {
       brickAndMortar: boolean,
-      businessRegistration: boolean,
       selectedCategories: string[],
     } {
 
@@ -99,7 +116,6 @@ watch(
 
       return {
         brickAndMortar: false,
-        businessRegistration: false,
         selectedCategories
       }
     },
@@ -113,7 +129,11 @@ watch(
         }
       },
       selectTag(tag: string) {
-        this.$router.replace({query: { tag: tag }});
+        const query = {
+          ...this.$route.query
+        };
+        query.tag = tag;
+        this.$router.replace({query});
       }
     }
   }
