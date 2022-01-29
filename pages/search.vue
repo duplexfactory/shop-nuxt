@@ -27,14 +27,14 @@
           <input type="checkbox" id="business-registration" name="businessRegistration" v-model="businessRegistration">
           <label for="business-registration" class="pl-2">商業登記</label>
         </div>
-        {{ businessRegistration }}
+        <!--{{ businessRegistration }}-->
 
       </div>
 
       <div class="col-span-12 md:col-span-9">
         <div v-if="$route.query['keyword']" class="mb-4">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
 
-          {{ selectedTag }}
+          <!--{{ selectedTag }}-->
         <StoreCardRectangle @click="$router.push(`/shop/${page.pk}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
       </div>
 
@@ -72,6 +72,7 @@ const route =  useRoute();
 const router =  useRouter();
 const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
 const businessRegistration = ref<boolean>(route.query['br'] === 'true');
+const brickAndMortar = ref<boolean>(route.query['brick'] === 'true');
 
 watch(
   route,
@@ -96,12 +97,27 @@ watch(
   }
 )
 
+watch(
+  brickAndMortar,
+  (br, prevBr) => {
+    const query = {
+      ...route.query
+    };
+    if (brickAndMortar.value) {
+      query.brick = 'true';
+    }
+    else {
+      delete query.brick
+    }
+    router.replace({query})
+  }
+)
+
 </script>
 
 <script lang="ts">
   export default {
     data() : {
-      brickAndMortar: boolean,
       selectedCategories: string[],
     } {
 
@@ -115,7 +131,6 @@ watch(
       }
 
       return {
-        brickAndMortar: false,
         selectedCategories
       }
     },
