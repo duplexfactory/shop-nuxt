@@ -1,29 +1,32 @@
 <template>
   <div class="modal-mask" @click="$emit('close')">
-    <div class="modal-container container" @click.stop="">
+    <div class="px-0 sm:container mx-auto flex items-center h-full">
+      <div class="modal-container" @click.stop="">
 
-      <div class="modal-header">
-        <slot name="header">
-          <div class="w-full flex justify-end py-4">
-            <button @click="$emit('close')" class="btn-close">x</button>
-          </div>
-        </slot>
-      </div>
+        <div class="modal-header">
+          <slot name="header">
+            <div class="w-full flex justify-end py-4">
+              <button @click="$emit('close')" class="btn-close">x</button>
+            </div>
+          </slot>
+        </div>
 
-      <div class="modal-body">
-        <slot name="body">
-          default body
-        </slot>
-      </div>
+        <div class="modal-body">
+          <slot name="body">
+            default body
+          </slot>
+        </div>
 
-      <div class="modal-footer">
-        <slot name="footer">
-          <!--          <button class="modal-default-button" @click="$emit('close')">-->
-          <!--            OK-->
-          <!--          </button>-->
-        </slot>
+        <div class="modal-footer">
+          <slot name="footer">
+            <!--          <button class="modal-default-button" @click="$emit('close')">-->
+            <!--            OK-->
+            <!--          </button>-->
+          </slot>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -37,8 +40,6 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   /*display: table;*/
-
-  @apply flex items-center;
 }
 
 .modal-wrapper {
@@ -55,7 +56,7 @@
 
 .modal-container {
   /*width: 80%;*/
-  max-height: 80%;
+  max-height: 100%;
   overflow: auto;
   /*margin: 0px auto;*/
   padding: 0px 30px;
@@ -63,7 +64,14 @@
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   font-family: Helvetica, Arial, sans-serif;
-  @apply mx-auto;
+  /*@apply mx-auto;*/
+  @apply flex-1;
+}
+
+@screen sm {
+  .modal-container {
+    max-height: 80%;
+  }
 }
 
 .modal-header h3 {

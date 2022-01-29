@@ -19,12 +19,26 @@
 <script setup lang="ts">
   import {useShowingMediaCode, useShowMediaModal} from "~/composables/states";
 
-  const showMediaModal = useShowMediaModal();
+  const showMediaModal =  useShowMediaModal();
   const showingMediaCode = useShowingMediaCode();
+
+  watch(
+      showMediaModal,
+      (show, prevShow) => {
+          if (show) {
+              document.body.classList.add('overflow-hidden')
+          }
+          else {
+              document.body.classList.remove('overflow-hidden')
+          }
+      }
+  )
+
 </script>
 
 <script lang="ts">
   export default {
+
     data(): {
       drawerOpen: boolean
     } {
@@ -37,7 +51,7 @@
         console.log('toggleDrawer');
         this.drawerOpen = !this.drawerOpen;
       }
-    }
+    },
   }
 </script>
 

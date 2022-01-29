@@ -140,9 +140,9 @@ const {categories} = useTags();
 }
 
 @screen md {
-  .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
-    display: flex !important;
-  }
+    .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
+        display: flex !important;
+    }
 }
 
 </style>
