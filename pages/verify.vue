@@ -38,6 +38,8 @@
                     <!--</div>-->
                 <!--</div>-->
 
+                <img src="~assets/images/ig_shop.jpg"/>
+
 
 
             </div>
