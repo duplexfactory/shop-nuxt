@@ -3,7 +3,7 @@
     <div class="container mx-auto py-4">
 
       <div class="flex items-center">
-        <div class="mr-6">認證我的商店</div>
+        <nuxt-link to="/verify" class="mr-6">認證我的商店</nuxt-link>
         <div class="mr-6">提供商店資料</div>
         <div class="mr-6">關於我們</div>
       </div>

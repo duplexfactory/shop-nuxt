@@ -45,6 +45,16 @@
             </div>
         </section>
 
+        <section class="grid grid-cols-3">
+            <div class="col-span-1 rounded bg-white text-center p-4">
+                <div class="text-pink-400 text-xl font-semibold">拓展客源</div>
+                <div>更好的搜尋功能</div>
+            </div>
+
+            <div>提高可信性</div>
+            <div>更改資料</div>
+        </section>
+
         <section>
             <div class="md:grid grid-cols-2 gap-8">
                 <div class="col-span-1">
