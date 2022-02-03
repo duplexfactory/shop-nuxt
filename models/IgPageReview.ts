@@ -5,4 +5,5 @@ export default interface IgPageReview {
     created: number
 
     deleted: boolean
+    ip: string
 }
