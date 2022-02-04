@@ -1,22 +1,27 @@
 import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
-import IgPageReview from "~/models/IgPageReview";
-import {useQuery} from 'h3';
+import {useMethod, useBody} from 'h3';
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ reviews: IgPageReview[] }> {
-    const {id} = await useQuery(req) as { id: string };
+export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string }> {
 
-    const reviewSS = await reviewCollection()
-        .where("pagePk", "==", id)
-        .where("deleted", "==", false)
-        .orderBy("created", "desc")
-        .get();
-    const reviews = reviewSS.data();
+    if (useMethod(req) != "POST") {
+        res.statusCode = 405
+        res.end()
+        throw new Error()
+    }
 
-// .limit(21)
-// .pick(...cardFields)
+    const {pagePk, content, rating, ip} = await useBody<{ pagePk: number, content: string, rating: number, ip: string }>(req);
+    const review = {
+        pagePk,
+        rating,
+        content,
+        created: Date.now(),
+        deleted: false,
+        ip
+    };
 
+    const reference = await reviewCollection().add(review);
     return {
-        reviews
+        id: reference.id
     }
 }

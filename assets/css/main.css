@@ -30,3 +30,7 @@
     font-weight: 400;
     color: #000;
 }
+
+textarea {
+    outline-color: #f472b6;
+}
