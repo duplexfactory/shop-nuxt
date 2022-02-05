@@ -2,11 +2,12 @@ import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
 import IgPageReview from "~/models/IgPageReview";
 import {useQuery} from 'h3';
+import {QuerySnapshot} from "firebase-admin/firestore";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ reviews: (IgPageReview & {id: string}) [] }> {
     const {pagePk, mediaId} = await useQuery(req) as { pagePk: number | undefined, mediaId: string | undefined };
 
-    let reviewSS;
+    let reviewSS: QuerySnapshot<IgPageReview>;
     if (pagePk != undefined) {
         reviewSS = await reviewCollection()
             .where("pagePk", "==", pagePk)
