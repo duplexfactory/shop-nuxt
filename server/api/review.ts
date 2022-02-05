@@ -10,9 +10,10 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         throw new Error()
     }
 
-    const {pagePk, content, rating, ip} = await useBody<{ pagePk: number, content: string, rating: number, ip: string }>(req);
+    const {pagePk, mediaId, content, rating, ip} = await useBody<{ pagePk: number, mediaId: string | undefined, content: string, rating: number, ip: string }>(req);
     const review = {
         pagePk,
+        mediaId,
         rating,
         content,
         created: Date.now(),

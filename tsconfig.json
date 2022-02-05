@@ -3,6 +3,7 @@
   "compilerOptions": {
     "types": [
       "nuxt-windicss"
-    ]
+    ],
+    "strictNullChecks": true
   }
 }
