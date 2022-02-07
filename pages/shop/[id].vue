@@ -111,7 +111,7 @@ export default  {
                     <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</button>
                     <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1">評論</button>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
+                <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <MediaCard v-for="media in page.medias"
                              class="col-span-1"
                              @click="showModal = true; showingMediaCode = media.code;"
@@ -119,6 +119,13 @@ export default  {
                              :media="media"
                              :shop="page"
                              :key="media.id + '-post-card'"></MediaCard>
+                </div>
+                <div v-else>
+                  <template v-for="_ in [1, 1, 1]">
+                    <ReviewCard :review="{created: 1644232827, rating: 5, content: 'this is a review'}">
+                    </ReviewCard>
+                    <hr/>
+                  </template>
                 </div>
             </section>
         </div>
