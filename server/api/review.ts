@@ -10,15 +10,15 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         throw new Error()
     }
 
-    const {pagePk, mediaId, content, rating, ip} = await useBody<{ pagePk: number, mediaId: string | undefined, content: string, rating: number, ip: string }>(req);
+    const {pagePk, mediaCode, content, rating} = await useBody<{ pagePk: number, mediaCode: string | undefined, content: string, rating: number}>(req);
     const review = {
         pagePk,
-        mediaId,
+        mediaCode,
         rating,
         content,
         created: Date.now(),
         deleted: false,
-        ip
+        ip: req.connection.remoteAddress || req.socket.remoteAddress || ""
     };
 
     const reference = await reviewCollection().add(review);

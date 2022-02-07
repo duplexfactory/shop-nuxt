@@ -5,19 +5,19 @@ import {useQuery} from 'h3';
 import {QuerySnapshot} from "firebase-admin/firestore";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ reviews: (IgPageReview & {id: string}) [] }> {
-    const {pagePk, mediaId} = await useQuery(req) as { pagePk: number | undefined, mediaId: string | undefined };
+    const {pagePk, mediaCode} = await useQuery(req) as { pagePk: number | undefined, mediaCode: string | undefined };
 
     let reviewSS: QuerySnapshot<IgPageReview>;
-    if (pagePk != undefined) {
+    if (mediaCode != undefined) {
         reviewSS = await reviewCollection()
-            .where("pagePk", "==", pagePk)
+            .where("mediaCode", "==", mediaCode)
             .where("deleted", "==", false)
             .orderBy("created", "desc")
             .get();
     }
-    else if (mediaId != undefined) {
+    else if (pagePk != undefined) {
         reviewSS = await reviewCollection()
-            .where("mediaId", "==", mediaId)
+            .where("pagePk", "==", pagePk)
             .where("deleted", "==", false)
             .orderBy("created", "desc")
             .get();

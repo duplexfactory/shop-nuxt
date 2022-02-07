@@ -44,7 +44,10 @@ export default {
   methods: {
     async sendComment() {
       await $fetch('/api/review', { method: 'POST', body: {
-
+        pagePk,
+        mediaCode: this.mediaCode,
+        rating: this.rating,
+        content: this.content,
       }})
     }
   }
