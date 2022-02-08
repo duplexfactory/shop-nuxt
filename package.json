@@ -11,11 +11,14 @@
     "nuxt3": "latest"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.49.0",
+    "@aws-sdk/util-dynamodb": "^3.49.0",
     "@types/crypto-js": "^4.1.0",
     "@vueuse/nuxt": "^7.5.3",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
     "firebase-admin": "^10.0.1",
+    "mongodb": "^4.3.1",
     "node-fetch": "^3.1.0",
     "swiper": "^7.4.1"
   }
