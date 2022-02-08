@@ -1,5 +1,7 @@
 import config from "#config";
-import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
+import {DynamoDBClient, QueryCommand} from "@aws-sdk/client-dynamodb";
+import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
+import IgMedia from "~/models/IgMedia";
 // import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
 
 let init = false;
@@ -17,4 +19,15 @@ export async function initDynamo() {
         init = true;
     }
     return client;
+}
+
+export async function getPageMedias(pagePk: number) {
+    const res = await client.send(new QueryCommand({
+        TableName: "medias",
+        KeyConditionExpression: "pagePk = :pagePk",
+        ExpressionAttributeValues: marshall({":pagePk": pagePk}),
+        ScanIndexForward: false,
+    }));
+
+    return res.Items?.map(m => unmarshall(m)) as IgMedia[];
 }
