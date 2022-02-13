@@ -35,7 +35,10 @@
         <div v-if="$route.query['keyword']" class="mb-4">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
 
           <!--{{ selectedTag }}-->
-        <StoreCardRectangle @click="$router.push(`/shop/${page.pk}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
+<!--        {{ brickAndMortar }}-->
+<!--        {{ pages }}-->
+        <StoreCardRectangle v-for="page in pages" @click="$router.push(`/shop/${page.pk}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
+
       </div>
 
     </div>
@@ -45,7 +48,8 @@
 
 <script setup lang="ts">
 
-import StoreCardRectangle from "~/components/StoreCardRectangle.vue";
+import IgPage from "~/models/IgPage";
+import {PageSearch} from "~/models/PageSearch";
 
 const {
   categories
@@ -74,6 +78,20 @@ const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
 const businessRegistration = ref<boolean>(route.query['br'] === 'true');
 const brickAndMortar = ref<boolean>(route.query['brick'] === 'true');
 
+const {data} = await fetchResults();
+const pages = ref<PageSearch[]>(data.value.pages);
+
+async function fetchResults() {
+  return useFetch(`/api/search`, {params: {
+      // q,
+      // tag,
+      br: businessRegistration.value,
+      phy: brickAndMortar.value,
+      skip: 0,
+      limit: 10
+    }});
+}
+
 watch(
   route,
   (route, prevRoute) => {
@@ -83,7 +101,7 @@ watch(
 
 watch(
   businessRegistration,
-  (br, prevBr) => {
+  async (br, prevBr) => {
     const query = {
       ...route.query
     };
@@ -93,13 +111,17 @@ watch(
     else {
       delete query.br
     }
+
+    const {data} = await fetchResults();
+    pages.value = data.value.pages;
+
     router.replace({query})
   }
 )
 
 watch(
   brickAndMortar,
-  (br, prevBr) => {
+  async (br, prevBm) => {
     const query = {
       ...route.query
     };
@@ -109,9 +131,15 @@ watch(
     else {
       delete query.brick
     }
+
+    const {data} = await fetchResults();
+    pages.value = data.value.pages;
+
     router.replace({query})
   }
 )
+
+
 
 </script>
 

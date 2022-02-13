@@ -1,53 +1,66 @@
 <script setup lang="ts">
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
-    import dayjs from "dayjs";
+    import {PageSearch} from "~/models/PageSearch";
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
-        shop: Object as PropType<IgPage>
+        shop: Object as PropType<IgPage | PageSearch>
     })
+    //
+    // const {
+    //     username,
+    //     fullName,
+    //     biography,
+    //     lastActivity,
+    //     followerCount,
+    //     mediaCount,
+    //     mediaUrls,
+    //     profilePicUrl,
+    //     tags,
+    //     brickAndMortar,
+    //     locations,
+    // } = shop;
+    // const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
+</script>
 
-    const {
-        username,
-        fullName,
-        biography,
-        lastActivity,
-        followerCount,
-        mediaCount,
-        mediaUrls,
-        profilePicUrl,
-        tags,
-        brickAndMortar,
-        locations
-    } = shop;
-    const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
+<script lang="ts">
+
+import dayjs from "dayjs";
+
+export default {
+  computed: {
+    lastActive () {
+      return dayjs(this.shop.lastActivity * 1000).format('DD/MM/YYYY');
+    }
+  }
+}
 </script>
 
 <template>
     <div class="border rounded-md p-4 flex flex-row">
 
         <div class="mr-4">
-            <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 80px;"></div>
+<!--            <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 80px;"></div>-->
 
-            <div class="mt-2 font-semibold text-lg">{{ username }}</div>
+            <div class="mt-2 font-semibold text-lg">{{ shop.username }}</div>
             <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
             <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
                 <div class="text-center" style="flex: 1;">
                     <div>粉絲</div>
-                    <div>{{ followerCount.toLocaleString() }}</div>
+                    <div>{{ shop.followerCount.toLocaleString() }}</div>
                 </div>
                 <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
                 <div class="text-center" style="flex: 1;">
                     <div>貼文</div>
-                    <div>{{ mediaCount.toLocaleString() }}</div>
+                    <div>{{ shop.mediaCount.toLocaleString() }}</div>
                 </div>
             </div>
 
             <div class="mt-2 2xl:mt-4 line-clamp-2"
                  style="font-size: 0;">
-                <div v-for="tag in tags"
+                <div v-for="tag in shop.tags"
                      :key="tag"
                      class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
             </div>
@@ -55,14 +68,14 @@
         </div>
 
         <div class="flex-1 text-sm overflow-hidden">
-            <div class="mt-2 text-gray-500 truncate">{{ fullName }}</div>
-            <div class="mt-2 text-gray-500 line-clamp-2">{{ biography }}</div>
+            <div class="mt-2 text-gray-500 truncate">{{ shop.fullName }}</div>
+            <div class="mt-2 text-gray-500 line-clamp-2">{{ shop.biography }}</div>
             <div v-if="brickAndMortar" class="mt-2 text-sm text-gray-500">
-                <div>{{ '門市：' + locations.join('、') }}</div>
+                <div>{{ '門市：' + shop.locations.join('、') }}</div>
             </div>
-            <div class="mt-4 flex flex-row">
-                <div v-for="i in mediaUrls" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" :style="`background-image: url(${$encryptImageUrl(i)});`"></div>
-            </div>
+<!--            <div class="mt-4 flex flex-row">-->
+<!--                <div v-for="i in mediaUrls" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" :style="`background-image: url(${$encryptImageUrl(i)});`"></div>-->
+<!--            </div>-->
         </div>
 
     </div>
