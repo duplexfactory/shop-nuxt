@@ -12,6 +12,7 @@ const {media, shop} = defineProps({
 
 const {
   id,
+  code,
   coverImageUrl,
   caption,
 
@@ -25,9 +26,20 @@ const takenAtString = dayjs(takenAt * 1000).fromNow();
 
 </script>
 
+<script lang="ts">
+import {imageUrl} from "~/utils/imageUrl";
+
+export default {
+  methods: {
+    imageUrl: imageUrl
+  }
+}
+</script>
+
 <template>
   <div>
-    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${$encryptImageUrl(coverImageUrl)});`"></div>
+    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${$encryptImageUrl(imageUrl(code))});`"></div>
+    <!--    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${$encryptImageUrl(coverImageUrl)});`"></div>-->
     <div style="aspect-ratio: 1.5;" class="pt-2 overflow-hidden flex flex-col">
       <div class="text-sm whitespace-pre-wrap overflow-hidden line-clamp-7" style="flex-shrink: 1;">{{ caption }}</div>
       <div class="mt-2 text-sm text-gray-500 break-all line-clamp-1" style="flex-shrink: 0;">{{ takenAtString + ' • ' + shop.username }}</div>

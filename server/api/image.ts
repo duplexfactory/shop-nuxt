@@ -20,7 +20,9 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
 
     const url = new URL(decryptImageUrl(i))
     const host = url.hostname
-    if (!host.includes("instagram") || !host.includes("cdn"))
+    // if (!host.includes("instagram") || !host.includes("cdn"))
+    //     throw new Error()
+    if (!host.includes("instagram"))
         throw new Error()
 
     const headers = Object.assign({}, req.headers) as Record<string, string>
