@@ -18,7 +18,8 @@ export function decryptImageUrl(code: string) {
 export default async (req: IncomingMessage, res: ServerResponse) => {
     const {i} = await useQuery(req) as { i: string }
 
-    const url = new URL(decryptImageUrl(i))
+    // const url = new URL(decryptImageUrl(i))
+    const url = new URL(i)
     const host = url.hostname
     // if (!host.includes("instagram") || !host.includes("cdn"))
     //     throw new Error()

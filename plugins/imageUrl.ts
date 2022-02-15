@@ -11,6 +11,9 @@ export default defineNuxtPlugin((nuxtApp) => {
                 const code = AES.encrypt(url, config.IMAGE_KEY).toString().replace(/\//g, "-").replace(/\+/g, ".");
                 return "/api/image?i=" + code;
             },
+            imageUrl(code: string) {
+                return '/api/image?i=https://www.instagram.com/p/' + code + '/media/?size=l';
+            }
         }
     }
 });

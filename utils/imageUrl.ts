@@ -17,7 +17,3 @@
 //     const decrpyted = Buffer.concat([decipher.update(buffer), decipher.final()]);
 //     return decrpyted.toString();
 // }
-
-export function imageUrl(code: string) {
-    return 'https://www.instagram.com/p/' + code + '/media/?size=l';
-}
