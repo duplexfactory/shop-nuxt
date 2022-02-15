@@ -18,8 +18,11 @@ export class PageSearch {
 
     activeScore: number;
 
-    mediaUrls: string[];
+    mediaCodes: string[];
 
     nextFetch: number;
     fetching: boolean;
+    profilePicLastFetch: number;
+
+    lastActivity: number
 }

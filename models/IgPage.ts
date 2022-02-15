@@ -22,13 +22,14 @@ export default interface IgPage {
     lastMedia: number
     lastFetch: number
     nextFetch: number
+    profilePicLastFetch: number;
     lastActivity: number
     tier: number
 
     // sub-docs
     stories: IgStory[]
     medias: IgMedia[] // max 252
-    traies: IgTray[]
+    trays: IgTray[]
 
     // marked
     tags: string[];
@@ -42,4 +43,5 @@ export default interface IgPage {
     // denormalize
     lastMediaData?: IgMedia;
     mediaUrls: string[];
+    mediaCodes: string[];
 }
