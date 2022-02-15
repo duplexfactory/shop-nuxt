@@ -84,7 +84,7 @@ const pages = ref<PageSearch[]>(data.value.pages);
 async function fetchResults() {
   return useFetch(`/api/search`, {params: {
       // q,
-      // tag,
+      tag: selectedTag.value,
       br: businessRegistration.value,
       phy: brickAndMortar.value,
       skip: 0,
@@ -94,8 +94,11 @@ async function fetchResults() {
 
 watch(
   route,
-  (route, prevRoute) => {
+  async (route, prevRoute) => {
     selectedTag.value = route.query['tag'] ? route.query['tag'] : ''
+
+    const {data} = await fetchResults();
+    pages.value = data.value.pages;
   }
 )
 

@@ -70,7 +70,7 @@ export default {
         <div class="flex-1 text-sm overflow-hidden">
             <div class="mt-2 text-gray-500 truncate">{{ shop.fullName }}</div>
             <div class="mt-2 text-gray-500 line-clamp-2">{{ shop.biography }}</div>
-            <div v-if="brickAndMortar" class="mt-2 text-sm text-gray-500">
+            <div v-if="shop.brickAndMortar" class="mt-2 text-sm text-gray-500">
                 <div>{{ '門市：' + shop.locations.join('、') }}</div>
             </div>
 <!--            <div class="mt-4 flex flex-row">-->
