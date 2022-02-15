@@ -1,2 +1,2 @@
 export const useShowMediaModal = () => useState<boolean>('showMediaModal', () => false)
-export const useShowingMediaCode = () => useState<string>('showingMediaCode', () => '')
+export const useShowingMediaModalData = () => useState<{code: string, pagePk: number}>('showingMediaModalData', () => ({code: '', pagePk: 0}))

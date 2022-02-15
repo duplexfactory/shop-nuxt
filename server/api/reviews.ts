@@ -5,7 +5,7 @@ import {useQuery} from 'h3';
 import {QuerySnapshot} from "firebase-admin/firestore";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ reviews: (IgPageReview & {id: string}) [] }> {
-    const {pagePk, mediaCode} = await useQuery(req) as { pagePk: number | undefined, mediaCode: string | undefined };
+    const {pagePk, mediaCode} = await useQuery(req) as { pagePk: string | undefined, mediaCode: string | undefined };
 
     let reviewSS: QuerySnapshot<IgPageReview>;
     if (mediaCode != undefined) {
@@ -17,7 +17,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
     else if (pagePk != undefined) {
         reviewSS = await reviewCollection()
-            .where("pagePk", "==", pagePk)
+            .where("pagePk", "==", Number(pagePk))
             .where("deleted", "==", false)
             .orderBy("created", "desc")
             .get();

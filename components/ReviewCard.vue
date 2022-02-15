@@ -25,7 +25,7 @@
     },
     computed: {
       createdDateString: function () {
-        return dayjs(this.review.created * 1000).format('DD/MM/YYYY');
+        return dayjs(this.review.created).format('DD/MM/YYYY');
       }
     }
   }

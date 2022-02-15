@@ -24,26 +24,11 @@
     const description = 'description';
 </script>
 
-<script lang="ts">
-
-export default {
-  methods: {
-    imageUrl: function (url: string) {
-      // console.log(url);
-      const encryptedUrl = this.$encryptImageUrl(url);
-      // console.log(encryptedUrl);
-      return encryptedUrl;
-    }
-  }
-}
-
-</script>
-
 <template>
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
             <div class="relative h-full">
-                <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${imageUrl(profilePicUrl)});`" style="height: 60px;"></div>
+                <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 60px;"></div>
 
                 <div class="mt-1 2xl:mt-2 overflow-hidden">
                   <div class="font-semibold text-lg truncate">

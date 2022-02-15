@@ -8,7 +8,7 @@
       <slot/>
 
       <transition name="modal">
-        <MediaModal v-model:showModal="showMediaModal" :mediaCode="showingMediaCode"></MediaModal>
+        <MediaModal v-model:showModal="showMediaModal"></MediaModal>
       </transition>
     </div>
 
@@ -17,10 +17,10 @@
 </template>
 
 <script setup lang="ts">
-  import {useShowingMediaCode, useShowMediaModal} from "~/composables/states";
+  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
   const showMediaModal =  useShowMediaModal();
-  const showingMediaCode = useShowingMediaCode();
+  const showingMediaModalData = useShowingMediaModalData();
 
   watch(
       showMediaModal,

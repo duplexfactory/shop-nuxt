@@ -33,6 +33,7 @@
     // };
 
     const {
+        pk,
         username,
         lastActivity,
         biography,
@@ -47,19 +48,30 @@
     const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
     const description = biography;
 
-    import {useShowingMediaCode, useShowMediaModal} from "~/composables/states";
+    import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
     const showModal = useShowMediaModal();
-    const showingMediaCode = useShowingMediaCode();
+    const showingMediaModalData = useShowingMediaModalData();
 </script>
 
 <script lang="ts">
+import IgPageReview from "~/models/IgPageReview";
+
 export default  {
     data(): {
       selectedIndex: number,
+      reviews: IgPageReview[],
     } {
       return {
         selectedIndex: 0,
+        reviews: []
       }
+    },
+    methods: {
+        async fetchReviews() {
+          this.reviews = (await $fetch('/api/reviews', { method: 'GET', params: {
+            pagePk: this.pk,
+          }}))['reviews'];
+        }
     }
 }
 </script>
@@ -109,20 +121,20 @@ export default  {
             <section class="md:mt-8">
                 <div class="mb-4 text-lg md:text-2xl flex">
                     <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</button>
-                    <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1">評論</button>
+                    <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</button>
                 </div>
                 <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <MediaCard v-for="media in page.medias"
                              class="col-span-1"
-                             @click="showModal = true; showingMediaCode = media.code;"
+                             @click="showModal = true; showingMediaModalData = {code: media.code, pagePk: media.pagePk};"
                              style="cursor: pointer"
                              :media="media"
                              :shop="page"
                              :key="media.id + '-post-card'"></MediaCard>
                 </div>
                 <div v-else>
-                  <template v-for="_ in [1, 1, 1]">
-                    <ReviewCard :review="{created: 1644232827, rating: 5, content: 'this is a review'}">
+                  <template v-for="review in reviews">
+                    <ReviewCard :review="review">
                     </ReviewCard>
                     <hr/>
                   </template>

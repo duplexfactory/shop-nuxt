@@ -3,7 +3,7 @@
     <template v-slot:body>
       <div class="grid grid-cols-8">
         <div class="col-span-4">
-          <MediaCardIGEmbed :post-id="mediaCode" :fixed-aspect-ratio="0"></MediaCardIGEmbed>
+          <MediaCardIGEmbed :post-id="showingMediaModalData.code" :fixed-aspect-ratio="0"></MediaCardIGEmbed>
         </div>
         <div class="col-span-4">
           <div class="px-5 py-2 md:px-6 md:py-3">
@@ -22,10 +22,11 @@
 
 <script setup lang="ts">
 
-import Modal from "~/components/Modal.vue";
+import {useShowingMediaModalData} from "~/composables/states";
 
-const {mediaCode, showModal} = defineProps({
-  mediaCode: { type: String, default: "" },
+const showingMediaModalData = useShowingMediaModalData();
+
+const {showModal} = defineProps({
   showModal: { type: Boolean, default: false },
 })
 
@@ -43,9 +44,10 @@ export default {
   },
   methods: {
     async sendComment() {
+      console.log(this.showingMediaModalData);
       await $fetch('/api/review', { method: 'POST', body: {
-        // pagePk,
-        mediaCode: this.mediaCode,
+        pagePk: this.showingMediaModalData.pagePk,
+        mediaCode: this.showingMediaModalData.code,
         rating: this.rating,
         content: this.content,
       }})
