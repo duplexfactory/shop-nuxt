@@ -17,7 +17,7 @@
         <div class="hidden sm:block flex-1">
           <div class="flex w-full">
             <div class="dropdown flex-1" style="max-width: 350px;">
-              <input @focusin="searchInputFocusIn" @focusout="searchInputFocusOut" v-model="searchText" class="search-input" placeholder="商店 或 貼文" type="search" autocomplete="off" id="search" name="search" />
+              <input @keyup.enter="search" @focusin="searchInputFocusIn" @focusout="searchInputFocusOut" v-model="searchText" class="search-input" placeholder="商店 或 貼文" type="search" autocomplete="off" id="search" name="search" />
               <div v-if="showSearchDropdown && searchText !== ''" class="search-menu">
                 <template v-if="tagsSearchResult.length !== 0">
                   <div class="px-4 py-2 text-sm bg-gray-50">分類</div>
@@ -30,7 +30,7 @@
                 </template>
               </div>
             </div>
-            <button class="border border-pink-400 btn-primary !rounded-none">搜尋</button>
+            <button @click="search" class="border border-pink-400 btn-primary !rounded-none">搜尋</button>
           </div>
 <!--          <ul v-if="showSearchDropdown" class="search-menu">-->
 <!--            <li v-for="category in categoriesSearchResult" :key="category.id" class="px-4 py-1">{{ category.label }}</li>-->
@@ -82,11 +82,13 @@ export default  {
     },
     tagPressed: function(tagId: string) {
       this.$router.push({path: '/search', query: { tag: tagId }});
+    },
+    search: function () {
+      this.$router.push(`search?keyword=${this.searchText}`);
     }
   },
   watch: {
     searchText: function (searchText) {
-      console.log(searchText);
       this.categoriesSearchResult = [];
       this.tagsSearchResult = [];
       if (searchText === '') {
@@ -99,7 +101,7 @@ export default  {
         }
         this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
       }
-    }
+    },
   }
 }
 
