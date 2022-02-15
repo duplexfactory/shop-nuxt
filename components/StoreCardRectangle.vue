@@ -73,9 +73,9 @@ export default {
             <div v-if="shop.brickAndMortar" class="mt-2 text-sm text-gray-500">
                 <div>{{ '門市：' + shop.locations.join('、') }}</div>
             </div>
-<!--            <div class="mt-4 flex flex-row">-->
-<!--                <div v-for="i in mediaUrls" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" :style="`background-image: url(${$encryptImageUrl(i)});`"></div>-->
-<!--            </div>-->
+            <div class="mt-4 flex flex-row">
+                <div v-for="i in shop.mediaCodes" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" :style="`background-image: url(${$imageUrl(i)});`"></div>
+            </div>
         </div>
 
     </div>

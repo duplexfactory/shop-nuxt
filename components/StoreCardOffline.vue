@@ -15,6 +15,7 @@
         followerCount,
         mediaCount,
         mediaUrls,
+        mediaCodes,
         profilePicUrl,
         tags,
         locations
@@ -55,16 +56,16 @@
             </div>
         </div>
 
-        <div class="col-span-1">
+        <div class="col-span-1" v-if="mediaCodes">
             <div class="bg-gray-300 square-image-container"
-                 :style="`background-image: url(${$encryptImageUrl(mediaUrls[0])});`"></div>
+                 :style="`background-image: url(${$imageUrl(mediaCodes[0])});`"></div>
             <div class="bg-white" style="height: 2px;"/>
             <div class="flex flex-row">
                 <div class="bg-red-300 square-image-container" style="flex: 1;"
-                     :style="`background-image: url(${$encryptImageUrl(mediaUrls[1])});`"></div>
+                     :style="`background-image: url(${$imageUrl(mediaCodes[1])});`"></div>
                 <div style="width: 2px;"></div>
                 <div class="bg-green-300 square-image-container" style="flex: 1;"
-                     :style="`background-image: url(${$encryptImageUrl(mediaUrls[2])});`"></div>
+                     :style="`background-image: url(${$imageUrl(mediaCodes[2])});`"></div>
             </div>
         </div>
     </div>

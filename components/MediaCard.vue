@@ -26,19 +26,9 @@ const takenAtString = dayjs(takenAt * 1000).fromNow();
 
 </script>
 
-<script lang="ts">
-import {imageUrl} from "~/utils/imageUrl";
-
-export default {
-  methods: {
-    imageUrl: imageUrl
-  }
-}
-</script>
-
 <template>
   <div>
-    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${$encryptImageUrl(imageUrl(code))});`"></div>
+    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${$imageUrl(code)});`"></div>
     <!--    <div class="bg-gray-300 square-image-container rounded-md" :style="`background-image: url(${$encryptImageUrl(coverImageUrl)});`"></div>-->
     <div style="aspect-ratio: 1.5;" class="pt-2 overflow-hidden flex flex-col">
       <div class="text-sm whitespace-pre-wrap overflow-hidden line-clamp-7" style="flex-shrink: 1;">{{ caption }}</div>
