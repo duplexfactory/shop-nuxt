@@ -1,8 +1,10 @@
 <template>
   <div class="p-4">
-    <div v-for="_ in review.rating" class="inline-block">
-      x
-    </div>
+    <template v-for="(_, i) in Array(5)">
+      <img v-if="i < review.rating" class="inline-block" src="~assets/icons/star_filled.png"/>
+      <img v-else class="inline-block" src="~assets/icons/star.png"/>
+    </template>
+
     <div class="mt-2 text-xl">
       {{ review.content }}
     </div>
