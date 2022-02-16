@@ -10,6 +10,7 @@ const cardFields= [
     "followerCount",
     "mediaCount",
     "mediaUrls",
+    "mediaCodes",
     "profilePicUrl",
     "tags",
     "locations"
