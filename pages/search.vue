@@ -37,7 +37,7 @@
           <!--{{ selectedTag }}-->
 <!--        {{ brickAndMortar }}-->
 <!--        {{ pages }}-->
-        <StoreCardRectangle v-for="page in pages" @click="$router.push(`/shop/${page.pk}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
+        <StoreCardRectangle v-for="page in pages" @click="$router.push(`/shop/${page._id}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
 
       </div>
 
@@ -48,7 +48,6 @@
 
 <script setup lang="ts">
 
-import IgPage from "~/models/IgPage";
 import {PageSearch} from "~/models/PageSearch";
 
 const {
@@ -82,24 +81,50 @@ const {data} = await fetchResults();
 const pages = ref<PageSearch[]>(data.value.pages);
 
 async function fetchResults() {
-  return useFetch(`/api/search`, {params: {
-      // q,
-      tag: selectedTag.value,
-      br: businessRegistration.value,
-      phy: brickAndMortar.value,
-      skip: 0,
-      limit: 10
-    }});
+  const params = {
+    skip: 0,
+    limit: 10
+  };
+  if (route.query['keyword'] != "") {
+    params["q"] = route.query['keyword'];
+  }
+  if (selectedTag.value != "") {
+    params["tag"] = selectedTag.value;
+  }
+  if (businessRegistration.value != false) {
+    params["br"] = businessRegistration.value;
+  }
+  if (brickAndMortar.value != false) {
+    params["phy"] = brickAndMortar.value;
+  }
+  console.log(params);
+  return useFetch(`/api/search`, {params});
 }
 
 watch(
-  route,
-  async (route, prevRoute) => {
-    selectedTag.value = route.query['tag'] ? route.query['tag'] : ''
+    () => route.query,
+    async (q, prevQ) => {
+      if (q["tag"] != selectedTag.value) {
+        selectedTag.value = q["tag"];
+      }
 
-    const {data} = await fetchResults();
-    pages.value = data.value.pages;
-  }
+      const {data} = await fetchResults();
+      pages.value = data.value.pages;
+    }
+)
+
+watch(
+    selectedTag,
+    async (sT, prevST) => {
+      const query = {
+        ...route.query
+      };
+      if (selectedTag.value != '') {
+        query.tag = selectedTag.value;
+      }
+
+      router.replace({query});
+    }
 )
 
 watch(
@@ -115,16 +140,13 @@ watch(
       delete query.br
     }
 
-    const {data} = await fetchResults();
-    pages.value = data.value.pages;
-
     router.replace({query})
   }
 )
 
 watch(
   brickAndMortar,
-  async (br, prevBm) => {
+  async (bm, prevBm) => {
     const query = {
       ...route.query
     };
@@ -134,9 +156,6 @@ watch(
     else {
       delete query.brick
     }
-
-    const {data} = await fetchResults();
-    pages.value = data.value.pages;
 
     router.replace({query})
   }
@@ -152,10 +171,11 @@ watch(
       selectedCategories: string[],
     } {
 
+      console.log('asyncData');
+
       const selectedCategories = [];
       if (this.selectedTag !== '') {
         const category = this.categories.find((c) => !!c.tags.find((t) => t.id == this.selectedTag));
-        console.log(category);
         if (category) {
           selectedCategories.push(category.id);
         }
@@ -175,11 +195,7 @@ watch(
         }
       },
       selectTag(tag: string) {
-        const query = {
-          ...this.$route.query
-        };
-        query.tag = tag;
-        this.$router.replace({query});
+        this.selectedTag = tag;
       }
     }
   }

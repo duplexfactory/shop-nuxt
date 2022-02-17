@@ -38,12 +38,15 @@ export default {
 </script>
 
 <template>
-    <div class="border rounded-md p-4 flex flex-row">
+    <div class="border rounded-md p-4 grid grid-cols-12 gap-8">
 
-        <div class="mr-4">
+        <div class="col-span-3">
 <!--            <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 80px;"></div>-->
 
-            <div class="mt-2 font-semibold text-lg">{{ shop.username }}</div>
+            <div class="mt-2 font-semibold text-lg truncate">
+              <a class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
+            </div>
+
             <div class="text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
             <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
@@ -67,7 +70,7 @@ export default {
 
         </div>
 
-        <div class="flex-1 text-sm overflow-hidden">
+        <div class="col-span-8 text-sm overflow-hidden">
             <div class="mt-2 text-gray-500 truncate">{{ shop.fullName }}</div>
             <div class="mt-2 text-gray-500 line-clamp-2">{{ shop.biography }}</div>
             <div v-if="shop.brickAndMortar" class="mt-2 text-sm text-gray-500">

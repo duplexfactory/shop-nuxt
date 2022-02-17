@@ -81,10 +81,23 @@ export default  {
       this.showSearchDropdown = false;
     },
     tagPressed: function(tagId: string) {
-      this.$router.push({path: '/search', query: { tag: tagId }});
+      let query = this.$route.path == "/search" ? {...this.$route.query} : {};
+      Object.assign(query, { tag: tagId });
+      this.$router.push({path: '/search', query});
     },
     search: function () {
-      this.$router.push(`search?keyword=${this.searchText}`);
+      let query = this.$route.path == "/search" ? {...this.$route.query} : {};
+      if (this.searchText != "") {
+        query["keyword"] = this.searchText;
+      }
+      else {
+        delete query["keyword"];
+      }
+
+      this.$router.push({
+        path: "/search",
+        query
+      });
     }
   },
   watch: {
