@@ -126,7 +126,7 @@ export default  {
                 <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <MediaCard v-for="media in page.medias"
                              class="col-span-1"
-                             @click="showModal = true; showingMediaModalData = {code: media.code, pagePk: media.pagePk};"
+                             @click="showModal = true; showingMediaModalData = {code: media.code, pagePk: media.pagePk, username: page.username};"
                              style="cursor: pointer"
                              :media="media"
                              :shop="page"
