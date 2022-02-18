@@ -24,5 +24,5 @@ export default defineNuxtConfig({
     DYNAMODB_REGION: process.env.DYNAMODB_REGION,
   },
   ssr: true,
-  plugins: []
+  plugins: [],
 } as NuxtConfig);
