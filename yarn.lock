@@ -1100,6 +1100,11 @@
     protobufjs "^6.10.0"
     yargs "^16.2.0"
 
+"@jambonn/vue-lazyload@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@jambonn/vue-lazyload/-/vue-lazyload-1.0.9.tgz#3b2271e41860a8d9728d1898d9c997b749052d95"
+  integrity sha512-V9AnxDTAS1+q5LpTWtvyEN2bo1skvSzPRbFfP7Z1qhfEQRQouSwReEkbEb5B5M4MDEM1UIE0kxlsvOcCkon8DQ==
+
 "@mapbox/node-pre-gyp@^1.0.5":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.8.tgz#32abc8a5c624bc4e46c43d84dfb8b26d33a96f58"
@@ -5535,6 +5540,11 @@ parseurl@~1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
   integrity sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==
+
+patch-vue-directive-ssr@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/patch-vue-directive-ssr/-/patch-vue-directive-ssr-0.0.1.tgz#2eac731f59cdb766d4d613bc24e522ded6ff1bb8"
+  integrity sha512-n84llktHah+EXUGo+RvmTJcAQJQVW0kHHHiJ34ZSLijzhHi32zCMjCc5VAFv4jmdC91bpaYGPk0cDW1D8hQ3GQ==
 
 path-exists@^4.0.0:
   version "4.0.0"

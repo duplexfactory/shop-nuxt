@@ -8,7 +8,6 @@ const {tagsLookup} = useTags()
 const {media, shop, swiperCard} = defineProps({
   media: Object as PropType<IgMedia>,
   shop: Object as PropType<Partial<IgPage>>,
-  swiperCard: { type: Boolean, default: false }
 })
 
 const {
@@ -29,10 +28,7 @@ const takenAtString = dayjs(takenAt * 1000).fromNow();
 
 <template>
   <div>
-    <div class="bg-gray-300 square-image-container rounded-md overflow-hidden">
-      <img v-if="swiperCard" class="w-full h-full swiper-lazy" :data-src="$imageUrl(code)"/>
-      <img v-else class="w-full h-full" :src="$imageUrl(code)"/>
-    </div>
+    <div class="bg-gray-300 square-image-container rounded-md overflow-hidden" v-lazy:background-image="$imageUrl(code)"></div>
     <div style="aspect-ratio: 1.5;" class="pt-2 overflow-hidden flex flex-col">
       <div class="text-sm whitespace-pre-wrap overflow-hidden line-clamp-7" style="flex-shrink: 1;">{{ caption }}</div>
       <div class="mt-2 text-sm text-gray-500 break-all line-clamp-1" style="flex-shrink: 0;">{{ takenAtString + ' • ' + shop.username }}</div>

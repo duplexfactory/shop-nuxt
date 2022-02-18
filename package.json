@@ -8,11 +8,13 @@
   },
   "devDependencies": {
     "nuxt-windicss": "^2.0.0",
-    "nuxt3": "latest"
+    "nuxt3": "latest",
+    "patch-vue-directive-ssr": "^0.0.1"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.49.0",
     "@aws-sdk/util-dynamodb": "^3.49.0",
+    "@jambonn/vue-lazyload": "^1.0.9",
     "@types/crypto-js": "^4.1.0",
     "@vueuse/nuxt": "^7.5.3",
     "crypto-js": "^4.1.1",

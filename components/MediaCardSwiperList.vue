@@ -4,15 +4,13 @@ import Swiper, { Navigation, Pagination, Lazy } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/lazy';
 import {PropType} from "vue";
-import IgMedia from "~/models/IgMedia";
 import IgPage from "~/models/IgPage";
 import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
 
 // configure Swiper to use modules
-Swiper.use([Navigation, Pagination, Lazy]);
+Swiper.use([Navigation, Pagination]);
 
 type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
 
@@ -28,9 +26,6 @@ export default {
         // Optional parameters
         // direction: 'vertical',
         // loop: true,
-
-        preloadImages: false,
-        lazy: true,
 
         on: {
           init: () => {
@@ -109,7 +104,6 @@ export default {
                    @click="showMediaModal = true; showingMediaModalData = {code: page.lastMediaData.code, pagePk: page.pk}"
                    style="cursor: pointer;"
                    class="swiper-slide"
-                   :swiperCard="true"
                    :media="page.lastMediaData"
                    :shop="page"
                    :key="page.pk.toString() + '-post-card'"></MediaCard>

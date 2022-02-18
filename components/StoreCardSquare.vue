@@ -61,12 +61,12 @@
         </div>
 
         <div class="col-span-1" v-if="mediaCodes">
-            <div class="bg-gray-300 square-image-container" :style="`background-image: url(${$imageUrl(mediaCodes[0])});`"></div>
+            <div class="bg-gray-300 square-image-container" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
             <div class="bg-white" style="height: 2px;"/>
             <div class="flex flex-row">
-                <div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${$imageUrl(mediaCodes[1])});`"></div>
+                <div class="bg-red-300 square-image-container" style="flex: 1;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
                 <div style="width: 2px;"></div>
-                <div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${$imageUrl(mediaCodes[2])});`"></div>
+                <div class="bg-green-300 square-image-container" style="flex: 1;" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
             </div>
 
         </div>
