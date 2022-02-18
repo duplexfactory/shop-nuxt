@@ -56,6 +56,7 @@
 
 .modal-container {
   /*width: 80%;*/
+  height: 100%;
   max-height: 100%;
   overflow: auto;
   /*margin: 0px auto;*/
