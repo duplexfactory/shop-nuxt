@@ -28,6 +28,10 @@
                     </div>
                   </div>
                 </template>
+                <template v-if="quickSearchResults.length !== 0">
+                  <div class="px-4 py-2 text-sm bg-gray-50">搜尋結果</div>
+                  <button @mousedown="quickSearchResultPressed(result._id)" class="px-4 py-2 text-sm block" v-for="result in quickSearchResults">{{ result.username }}</button>
+                </template>
               </div>
             </div>
             <button @click="search" class="border border-pink-400 btn-primary !rounded-none">搜尋</button>
@@ -53,11 +57,17 @@
 
 <script setup lang="ts">
 
+import useSearch from "~/composables/useSearch";
+
 const {categories} = useTags();
+const {search: quickSearch} = useSearch();
 
 </script>
 
 <script lang="ts">
+
+import {PageSearchQuery} from "~/models/PageSearchQuery";
+import {PageSearch} from "~/models/PageSearch";
 
 export default  {
   data(): {
@@ -65,12 +75,14 @@ export default  {
     searchText: string,
     categoriesSearchResult: {id: string, label: string, tags: {id: string, label: string}[]}[],
     tagsSearchResult: {id: string, label: string}[],
+    quickSearchResults: PageSearch[]
   } {
     return {
       showSearchDropdown: false,
       searchText: '',
       categoriesSearchResult: [],
       tagsSearchResult: [],
+      quickSearchResults: []
     }
   },
   methods: {
@@ -84,6 +96,9 @@ export default  {
       let query = this.$route.path == "/search" ? {...this.$route.query} : {};
       Object.assign(query, { tag: tagId });
       this.$router.push({path: '/search', query});
+    },
+    quickSearchResultPressed: function(pagePk: number) {
+      this.$router.push({path: `/shop/${pagePk}`});
     },
     search: function () {
       let query = this.$route.path == "/search" ? {...this.$route.query} : {};
@@ -101,7 +116,7 @@ export default  {
     }
   },
   watch: {
-    searchText: function (searchText) {
+    searchText: async function (searchText) {
       this.categoriesSearchResult = [];
       this.tagsSearchResult = [];
       if (searchText === '') {
@@ -114,6 +129,10 @@ export default  {
         }
         this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
       }
+
+      this.quickSearchResults = await this.quickSearch(new PageSearchQuery(
+          searchText,
+      ));
     },
   }
 }

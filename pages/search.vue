@@ -49,6 +49,8 @@
 <script setup lang="ts">
 
 import {PageSearch} from "~/models/PageSearch";
+import {PageSearchQuery} from "~/models/PageSearchQuery";
+import useSearch from "~/composables/useSearch";
 
 const {
   categories
@@ -71,45 +73,37 @@ const page = {
   "username":"vellichor_shop"
 };
 
-const route =  useRoute();
-const router =  useRouter();
+const route = useRoute();
+const router = useRouter();
 const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
 const businessRegistration = ref<boolean>(route.query['br'] === 'true');
 const brickAndMortar = ref<boolean>(route.query['brick'] === 'true');
 
-const {data} = await fetchResults();
-const pages = ref<PageSearch[]>(data.value.pages);
-
+const {search} = useSearch();
 async function fetchResults() {
-  const params = {
-    skip: 0,
-    limit: 10
-  };
-  if (route.query['keyword'] != "") {
-    params["q"] = route.query['keyword'];
-  }
-  if (selectedTag.value != "") {
-    params["tag"] = selectedTag.value;
-  }
-  if (businessRegistration.value != false) {
-    params["br"] = businessRegistration.value;
-  }
-  if (brickAndMortar.value != false) {
-    params["phy"] = brickAndMortar.value;
-  }
-  console.log(params);
-  return useFetch(`/api/search`, {params});
+  return search(new PageSearchQuery(
+      route.query['keyword'] != "" ? route.query['keyword'] : undefined,
+      selectedTag.value != "" ? selectedTag.value : undefined,
+      businessRegistration.value == true ? true : undefined,
+      brickAndMortar.value == true ? true : undefined,
+  ));
 }
+
+const p = await fetchResults();
+const pages = ref<PageSearch[]>(p);
 
 watch(
     () => route.query,
     async (q, prevQ) => {
-      if (q["tag"] != selectedTag.value) {
-        selectedTag.value = q["tag"];
+      if (route.path != "/search") {
+        return;
       }
 
-      const {data} = await fetchResults();
-      pages.value = data.value.pages;
+      if (q["tag"] != selectedTag.value) {
+        selectedTag.value = q["tag"] as string;
+      }
+
+      pages.value = await fetchResults();
     }
 )
 
