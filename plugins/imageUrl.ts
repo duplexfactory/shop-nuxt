@@ -12,7 +12,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 return "/api/image?i=" + code;
             },
             imageUrl: (code: string) => {
-                return nuxtApp.$encryptImageUrl('https://www.instagram.com/p/' + code + '/media/?size=l');
+                return nuxtApp.$encryptImageUrl('https://www.instagram.com/p/' + code + '/media/?size=m');
             }
         }
     }
