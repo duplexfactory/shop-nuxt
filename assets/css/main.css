@@ -6,6 +6,10 @@
     @apply btn text-white bg-pink-400;
 }
 
+.btn-primary:disabled {
+    @apply text-white bg-gray-200 text-gray-400 cursor-default;
+}
+
 .btn-outline {
     @apply btn text-pink-400 border border-pink-400;
 }
@@ -33,4 +37,8 @@
 
 textarea {
     outline-color: #f472b6;
+}
+
+.black-to-yellow-filter {
+    filter: invert(70%) sepia(100%) hue-rotate(15deg) saturate(5);
 }

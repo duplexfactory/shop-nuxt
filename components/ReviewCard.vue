@@ -1,8 +1,8 @@
 <template>
   <div class="p-4">
     <template v-for="(_, i) in Array(5)">
-      <img v-if="i < review.rating" class="inline-block" src="~assets/icons/star_filled.png"/>
-      <img v-else class="inline-block" src="~assets/icons/star.png"/>
+      <img v-if="i < review.rating" class="inline-block black-to-yellow-filter" style="width: 28px; height: 28px;" src="~assets/icons/star_filled.png"/>
+      <img v-else class="inline-block" style="width: 28px; height: 28px; filter: invert(70%)" src="~assets/icons/star.png"/>
     </template>
 
     <div class="mt-2 text-xl">
@@ -33,4 +33,5 @@
   }
 </script>
 <style scoped>
+
 </style>

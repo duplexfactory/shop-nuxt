@@ -7,20 +7,32 @@
         </div>
         <div class="col-span-4">
           <div class="mt-4 md:mt-0">
-            <div class="text-lg md:text-2xl">評論</div>
+            <div class="flex items-center">
+              <div class="text-lg md:text-2xl">評論</div>
+              <button @click="isShowingCreateComment = true" class="ml-2 btn btn-sm btn-outline">撰寫評論</button>
+            </div>
+
+            <div class="overflow-hidden">
+              <transition name="accordion">
+                <div v-if="isShowingCreateComment" class="mt-2 bg-gray-100 p-4 rounded-md">
+                  <div class="flex justify-between">
+                    <LazyReviewStars v-model:rating="rating" :disabled="isSendingComment" class="inline"></LazyReviewStars>
+                    <button :disabled="isSendingComment" @click="isShowingCreateComment = false">close</button>
+                  </div>
+                  <div class="mt-2 w-full">
+                    <textarea :disabled="isSendingComment" placeholder="在此輸入你的評論" v-model="content" class="w-full border rounded-md p-2" rows="4"></textarea>
+                    <button :disabled="isSendingComment" @click="sendComment" class="mt-2 btn btn-primary">{{ isSendingComment ? "發送中" : "發送" }}</button>
+                  </div>
+                </div>
+              </transition>
+            </div>
+
 
             <template v-for="review in reviews">
               <ReviewCard :review="review">
               </ReviewCard>
               <hr/>
             </template>
-
-            <LazyReviewStars v-model:rating="rating"></LazyReviewStars>
-
-            <div class="mt-4 lg:flex items-start w-full">
-              <textarea placeholder="撰寫評論" v-model="content" class="flex-1 w-full lg:mr-4 border rounded-md p-2" rows="4"></textarea>
-              <button @click="sendComment" class="mt-2 lg:mt-0 btn btn-primary">發送</button>
-            </div>
 
 
           </div>
@@ -41,6 +53,11 @@ const props = defineProps({
   showModal: { type: Boolean, default: false },
 });
 
+const isSendingComment = ref<boolean>(false);
+const isShowingCreateComment = ref<boolean>(false);
+const rating = ref<number>(0);
+const content = ref<string>("");
+
 const reviews = ref<IgPageReview[]>([]);
 watch(
     () => props.showModal,
@@ -53,6 +70,13 @@ watch(
             mediaCode: showingMediaModalData.value.code,
           }}))['reviews'];
       }
+      else {
+        // Reset.
+        isSendingComment.value = false;
+        isShowingCreateComment.value = false;
+        rating.value = 0;
+        content.value = "";
+      }
     }
 )
 
@@ -62,23 +86,33 @@ watch(
 
 export default {
   // pagePk, ip
-  data(): { content: string, rating: number } {
-    return {
-      content: "",
-      rating: 0,
-    };
-  },
   methods: {
     async sendComment() {
-      await $fetch('/api/review', { method: 'POST', body: {
-        pagePk: this.showingMediaModalData.pagePk,
-        mediaCode: this.showingMediaModalData.code,
-        rating: this.rating,
-        content: this.content,
-      }})
+      this.isSendingComment = true;
+      console.log(this.rating);
+      console.log(this.content);
+      // await $fetch('/api/review', { method: 'POST', body: {
+      //   pagePk: this.showingMediaModalData.pagePk,
+      //   mediaCode: this.showingMediaModalData.code,
+      //   rating: this.rating,
+      //   content: this.content,
+      // }})
     }
   }
 }
 
 </script>
 
+<style scoped>
+
+.accordion-enter-active,
+.accordion-leave-active {
+  transition: all 0.5s ease;
+}
+
+.accordion-enter-from,
+.accordion-leave-to {
+  transform: translateY(-100%);
+}
+
+</style>

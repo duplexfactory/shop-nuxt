@@ -4,7 +4,7 @@
       <img v-if="hovering ? (i < hoverRating) : (i < rating)"
            @mouseenter="hoverStar(i)"
            @click="clickStar(i)"
-           class="inline-block"
+           class="inline-block black-to-yellow-filter"
            src="~assets/icons/star_filled.png"
            style="width: 28px; height: 28px;"/>
       <img v-else
@@ -12,7 +12,7 @@
            @click="clickStar(i)"
            class="inline-block"
            src="~assets/icons/star.png"
-           style="width: 28px; height: 28px;"/>
+           style="width: 28px; height: 28px; filter: invert(70%)"/>
     </template>
   </div>
 </template>
@@ -22,6 +22,7 @@
 export default {
   props: {
     rating: { type: Number, default: 0 },
+    disabled: { type: Boolean, default: false }
   },
   data(): { hoverRating: number, hovering: boolean } {
     return {
@@ -31,12 +32,15 @@ export default {
   },
   methods: {
     toggleHoverStars(hovering: boolean) {
+      if (this.disabled) return;
       this.hovering = hovering;
     },
     hoverStar(i: number) {
+      if (this.disabled) return;
       this.hoverRating = i + 1;
     },
     clickStar(i: number) {
+      if (this.disabled) return;
       this.$emit('update:rating', i + 1);
     },
   }
