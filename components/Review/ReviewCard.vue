@@ -1,14 +1,14 @@
 <template>
-  <div class="p-4">
+  <div class="py-4">
     <template v-for="(_, i) in Array(5)">
       <img v-if="i < review.rating" class="inline-block black-to-yellow-filter" style="width: 28px; height: 28px;" src="~assets/icons/star_filled.png"/>
-      <img v-else class="inline-block" style="width: 28px; height: 28px; filter: invert(70%)" src="~assets/icons/star.png"/>
+      <img v-else class="inline-block filter invert-70" style="width: 28px; height: 28px;" src="~assets/icons/star.png"/>
     </template>
 
-    <div class="mt-2 text-xl">
+    <div class="mt-2 text-lg md:text-xl">
       {{ review.content }}
     </div>
-    <div class="mt-2 text-gray-400">
+    <div class="mt-2 text-sm md:text-lg text-gray-400">
       {{ createdDateString }}
     </div>
   </div>

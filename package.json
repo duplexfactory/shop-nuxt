@@ -15,6 +15,7 @@
     "@aws-sdk/client-dynamodb": "^3.49.0",
     "@aws-sdk/util-dynamodb": "^3.49.0",
     "@jambonn/vue-lazyload": "^1.0.9",
+    "@meforma/vue-toaster": "^1.3.0",
     "@types/crypto-js": "^4.1.0",
     "@vueuse/nuxt": "^7.5.3",
     "crypto-js": "^4.1.1",

@@ -1,10 +1,5 @@
 <script setup lang="ts">
-    import IgPage from "../../models/IgPage";
-    import dayjs from "dayjs";
-    import MediaModal from "~/components/MediaModal.vue";
 
-    const {data} = await useFetch(`/api/shop`, {params: {id: useRoute().params.id}});
-    const {page} = data.value as { page: IgPage };
     const {tagsLookup} = useTags();
 
     // const page = {
@@ -32,6 +27,12 @@
     //   "username":"susu.cha"
     // };
 
+    // Page Data Init
+    import IgPage from "../../models/IgPage";
+    import dayjs from "dayjs";
+
+    const {data} = await useFetch(`/api/shop`, {params: {id: useRoute().params.id}});
+    const {page} = data.value as { page: IgPage };
     const {
         pk,
         username,
@@ -44,35 +45,55 @@
         brickAndMortar,
         locations
     } = page
-
     const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
     const description = biography;
 
+    // Media Modal
     import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+
     const showModal = useShowMediaModal();
     const showingMediaModalData = useShowingMediaModalData();
+
+    // Reviews
+    import IgPageReview from "~/models/IgPageReview";
+
+    const reviews = ref<IgPageReview[]>([]);
+
+    async function fetchReviews() {
+      reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
+          pagePk: pk,
+        }}))['reviews'];
+    }
+
+    // Create Review
+    import useCreateReview from "~/composables/useCreateReview";
+
+    const {
+      reviewingPagePk,
+      isCreatingReview,
+      rating,
+      content,
+      createReview,
+    } = useCreateReview();
+    reviewingPagePk.value = pk;
+
+    async function sendReview() {
+      await createReview();
+      await fetchReviews();
+    }
 </script>
 
 <script lang="ts">
-import IgPageReview from "~/models/IgPageReview";
+
 
 export default  {
     data(): {
       selectedIndex: number,
-      reviews: IgPageReview[],
     } {
       return {
         selectedIndex: 0,
-        reviews: []
       }
     },
-    methods: {
-        async fetchReviews() {
-          this.reviews = (await $fetch('/api/reviews', { method: 'GET', params: {
-            pagePk: this.pk,
-          }}))['reviews'];
-        }
-    }
 }
 </script>
 
@@ -132,12 +153,17 @@ export default  {
                              :shop="page"
                              :key="media.id + '-post-card'"></MediaCard>
                 </div>
-                <div v-else>
-                  <template v-for="review in reviews">
-                    <ReviewCard :review="review">
-                    </ReviewCard>
-                    <hr/>
-                  </template>
+                <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
+                  <div class="col-span-1 lg:order-2">
+                    <div class="text-lg">撰寫評論</div>
+                    <ReviewCreateCard v-model:rating="rating" v-model:content="content" :isCreatingReview="isCreatingReview" @create-review="sendReview()"></ReviewCreateCard>
+                  </div>
+                  <div class="col-span-1 lg:order-1">
+                    <template v-for="review in reviews">
+                      <ReviewCard :review="review"></ReviewCard>
+                      <hr/>
+                    </template>
+                  </div>
                 </div>
             </section>
         </div>

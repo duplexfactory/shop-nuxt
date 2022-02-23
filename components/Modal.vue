@@ -80,9 +80,9 @@
   color: #42b983;
 }
 
-.modal-body {
-  margin: 20px 0;
-}
+/*.modal-body {*/
+/*  margin: 20px 0;*/
+/*}*/
 
 .modal-default-button {
   display: block;

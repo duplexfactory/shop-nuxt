@@ -1,10 +1,9 @@
 import {defineNuxtPlugin, useRuntimeConfig} from "#app";
-import cryptoJS from "crypto-js";
-import Utf8 from 'crypto-js/enc-utf8.js';
 import AES from 'crypto-js/aes.js';
 
 export default defineNuxtPlugin((nuxtApp) => {
     const config = useRuntimeConfig();
+    console.log('use imageUrl');
     return {
         provide: {
             encryptImageUrl: (url: string) => {

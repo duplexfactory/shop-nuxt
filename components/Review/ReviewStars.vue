@@ -10,9 +10,9 @@
       <img v-else
            @mouseenter="hoverStar(i)"
            @click="clickStar(i)"
-           class="inline-block"
+           class="inline-block filter invert-70"
            src="~assets/icons/star.png"
-           style="width: 28px; height: 28px; filter: invert(70%)"/>
+           style="width: 28px; height: 28px;"/>
     </template>
   </div>
 </template>
