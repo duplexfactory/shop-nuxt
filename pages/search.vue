@@ -34,10 +34,15 @@
       <div class="col-span-12 md:col-span-9">
         <div v-if="$route.query['keyword']" class="mb-4">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
 
+
+        <div>
+          <div v-for="(_, i) in Array(Math.ceil(searchResultTotalCount / 10)).fill(0)">{{ i + 1 }}</div>
+        </div>
+
           <!--{{ selectedTag }}-->
 <!--        {{ brickAndMortar }}-->
 <!--        {{ pages }}-->
-        <StoreCardRectangle v-for="page in pages" @click="$router.push(`/shop/${page._id}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
+        <StoreCardRectangle v-for="page in searchResults" @click="$router.push(`/shop/${page._id}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
 
       </div>
 
@@ -79,18 +84,20 @@ const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
 const businessRegistration = ref<boolean>(route.query['br'] === 'true');
 const brickAndMortar = ref<boolean>(route.query['brick'] === 'true');
 
-const {search} = useSearch();
+const {
+  searchResults,
+  searchResultTotalCount,
+  search
+} = useSearch();
 async function fetchResults() {
-  return search(new PageSearchQuery(
+  await search(new PageSearchQuery(
       route.query['keyword'] != "" ? route.query['keyword'] : undefined,
       selectedTag.value != "" ? selectedTag.value : undefined,
       businessRegistration.value == true ? true : undefined,
       brickAndMortar.value == true ? true : undefined,
   ));
 }
-
-const p = await fetchResults();
-const pages = ref<PageSearch[]>(p);
+await fetchResults();
 
 watch(
     () => route.query,
@@ -103,7 +110,7 @@ watch(
         selectedTag.value = q["tag"] as string;
       }
 
-      pages.value = await fetchResults();
+      await fetchResults();
     }
 )
 

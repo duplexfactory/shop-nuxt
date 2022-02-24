@@ -28,9 +28,9 @@
                     </div>
                   </div>
                 </template>
-                <template v-if="quickSearchResults.length !== 0">
+                <template v-if="searchResults.length !== 0">
                   <div class="px-4 py-2 text-sm bg-gray-50">搜尋結果</div>
-                  <button @mousedown="quickSearchResultPressed(result._id)" class="px-4 py-2 text-sm block" v-for="result in quickSearchResults">{{ result.username }}</button>
+                  <button @mousedown="quickSearchResultPressed(result._id)" class="px-4 py-2 text-sm block" v-for="result in searchResults">{{ result.username }}</button>
                 </template>
               </div>
             </div>
@@ -60,7 +60,11 @@
 import useSearch from "~/composables/useSearch";
 
 const {categories} = useTags();
-const {search: quickSearch} = useSearch();
+const {
+  searchResults,
+  searchResultTotalCount,
+  search: quickSearch
+} = useSearch();
 
 </script>
 
@@ -75,14 +79,12 @@ export default  {
     searchText: string,
     categoriesSearchResult: {id: string, label: string, tags: {id: string, label: string}[]}[],
     tagsSearchResult: {id: string, label: string}[],
-    quickSearchResults: PageSearch[]
   } {
     return {
       showSearchDropdown: false,
       searchText: '',
       categoriesSearchResult: [],
       tagsSearchResult: [],
-      quickSearchResults: []
     }
   },
   methods: {
@@ -130,7 +132,7 @@ export default  {
         this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
       }
 
-      this.quickSearchResults = await this.quickSearch(new PageSearchQuery(
+      await this.quickSearch(new PageSearchQuery(
           searchText,
       ));
     },

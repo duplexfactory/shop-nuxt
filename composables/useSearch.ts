@@ -3,9 +3,13 @@ import {PageSearchQuery} from "~/models/PageSearchQuery";
 import {PaginationQuery} from "~/models/PaginationQuery";
 
 export default function () {
-    // const count = ref(0);
+
+    const searchResults = ref<PageSearch[]>([]);
+    const searchResultTotalCount = ref<number>(0);
+
     // const double = computed(() => count.value * 2)
-    async function search(q: PageSearchQuery, p: PaginationQuery = new PaginationQuery()): Promise<PageSearch[]> {
+
+    async function search(q: PageSearchQuery, p: PaginationQuery = new PaginationQuery()) {
         const params = {
             ...p
         };
@@ -23,9 +27,18 @@ export default function () {
         }
 
         const {data} = await useFetch(`/api/search`, {params});
-        return data.value.pages;
+        searchResultTotalCount.value = data.value.count;
+
+        if (p.skip === 0) {
+            searchResults.value = data.value.pages;
+        }
+        else {
+            searchResults.value.push(...data.value.pages);
+        }
     }
     return {
+        searchResults,
+        searchResultTotalCount,
         search
     }
 }
