@@ -3,6 +3,7 @@
 
     <div class="grid grid-cols-4 gap-8">
 
+      <!-- Left filter column -->
       <div class="col-span-1 p-4 hidden md:block">
 
         <div class="font-semibold mb-2">分類</div>
@@ -35,6 +36,15 @@
 
       <div class="col-span-4 md:col-span-3">
 
+        <div class="md:hidden mb-2 text-sm">
+          <select class="border rounded-sm" :value="selectedTag" @change="selectTag($event.target.value)">
+            <option value="" disabled selected>篩選分類</option>
+            <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
+              <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
+            </optgroup>
+          </select>
+        </div>
+
         <div class="flex items-center mb-4">
           <div v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
           <div class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 個結果)</div>
@@ -56,6 +66,7 @@
         </div>
 
 
+        <!-- Bottom Pagination -->
         <div class="flex justify-center">
           <Pagination v-model:currentPage="currentPage"
                       :records="searchResultTotalCount"

@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="text-sm">
     <div class="hidden sm:block">
       <button v-for="(_, i) in Array(Math.min(Math.ceil(records / perPage) , 10)).fill(0)"
               :key="'paginate-' + i"
-              class="px-1 text-sm"
+              class="px-1"
               :class="currentPage === i + offset  ? 'underline text-pink-400' : 'text-gray-500'"
               @click="pageClicked(i + offset)">{{ i + offset }}</button>
     </div>
