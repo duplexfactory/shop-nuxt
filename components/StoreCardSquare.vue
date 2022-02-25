@@ -5,7 +5,8 @@
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
-        shop: Object as PropType<IgPage>
+        shop: Object as PropType<IgPage>,
+        showLocations: {type: Boolean, default: false}
     })
 
     const {
@@ -18,17 +19,19 @@
         mediaUrls,
         mediaCodes,
         profilePicUrl,
-        tags
+        tags,
+        locations
     } = shop;
     const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
     const description = 'description';
+
 </script>
 
 <template>
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
             <div class="relative h-full">
-                <div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 60px;"></div>
+                <div class="bg-gray-300 rounded-full square-image-container" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>
 
                 <div class="mt-1 2xl:mt-2 overflow-hidden">
                   <div class="font-semibold text-lg truncate">
@@ -37,7 +40,13 @@
                   <div class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
                 </div>
 
-                <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
+                <!-- Offline show locations -->
+                <div v-if="showLocations" class="mt-2 2xl:mt-4 text-sm text-gray-500">
+                  <div>門市</div>
+                  <div>{{ locations.join('、') }}</div>
+                </div>
+                <!-- Online show followers -->
+                <div v-else class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
                     <div class="text-center" style="flex: 1;">
                         <div>粉絲</div>
                         <div>{{ followerCount.toLocaleString() }}</div>

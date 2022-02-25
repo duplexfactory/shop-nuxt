@@ -29,12 +29,13 @@ export default function () {
         const {data} = await useFetch(`/api/search`, {params});
         searchResultTotalCount.value = data.value.count;
 
-        if (p.skip === 0) {
-            searchResults.value = data.value.pages;
-        }
-        else {
-            searchResults.value.push(...data.value.pages);
-        }
+        searchResults.value = data.value.pages;
+        // if (p.skip === 0) {
+        //     searchResults.value = data.value.pages;
+        // }
+        // else {
+        //     searchResults.value.push(...data.value.pages);
+        // }
     }
     return {
         searchResults,

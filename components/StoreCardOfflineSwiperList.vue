@@ -9,12 +9,13 @@ import {PropType} from "vue";
 import IgPage from '~/models/IgPage';
 import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
+import StoreCardSquare from "~/components/StoreCardSquare.vue";
 
 // configure Swiper to use modules
 Swiper.use([Navigation, FreeMode, Pagination]);
 
 export default {
-  components: {SwiperSlidesPlaceholder},
+  components: {StoreCardSquare, SwiperSlidesPlaceholder},
   data() : {
     swiperReady: boolean,
     swiperOptions: SwiperOptions
@@ -97,10 +98,11 @@ export default {
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
-        <StoreCardOffline v-for="shop in shops"
+        <StoreCardSquare v-for="shop in shops"
                           class="swiper-slide"
                           :shop="shop"
-                          :key="shop.ig_username + '-store-card-sq'"></StoreCardOffline>
+                          :showLocations="true"
+                          :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
       </div>
       <!-- If we need pagination -->
       <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>

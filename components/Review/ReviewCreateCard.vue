@@ -7,7 +7,7 @@
           <button v-if="isCollapsible" :disabled="isCreatingReview" @click="$emit('update:show', false)">關閉</button>
         </div>
         <div class="mt-2 w-full">
-          <textarea :value="content" @change="$emit('update:content', $event.target.value)" :disabled="isCreatingReview" placeholder="在此輸入你的評論" class="w-full border rounded-md p-2" rows="4"></textarea>
+          <textarea :value="content" @input="$emit('update:content', $event.target.value)" :disabled="isCreatingReview" placeholder="在此輸入你的評論" class="w-full border rounded-md p-2" rows="4"></textarea>
           <button :disabled="isCreatingReview" @click="$emit('create-review')" class="mt-2 btn btn-primary">{{ isCreatingReview ? "發送中" : "發送" }}</button>
         </div>
       </div>

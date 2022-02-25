@@ -18,7 +18,7 @@
 
 <template>
     <div class="p-4 text-center">
-        <div class="bg-gray-300 rounded-full square-image-container mx-auto" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`" style="height: 100px;"></div>
+        <div class="bg-gray-300 rounded-full square-image-container mx-auto" v-lazy:background-image="profilePicUrl" style="height: 100px;"></div>
 
         <div class="mt-2 font-semibold text-lg">{{ username }}</div>
         <div class="mt-1 text-gray-400 text-xs line-clamp-2" style="height: 2rem">{{ fullName }}</div>

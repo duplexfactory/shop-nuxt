@@ -1,13 +1,15 @@
 <template>
-  <div class="px-4 sm:container mx-auto">
+  <div class="px-4 sm:container mx-auto mb-16">
 
-    <div class="grid grid-cols-12 gap-8">
+    <div class="grid grid-cols-4 gap-8">
 
-      <div class="col-span-3 p-4 hidden md:block">
+      <div class="col-span-1 p-4 hidden md:block">
 
         <div class="font-semibold mb-2">分類</div>
         <div v-for="category in categories" :key="category['id']" class="text-sm">
-          <button @click="toggleCategory(category['id'])" class="block py-1">{{ category['label'] }}</button>
+          <button @click="toggleCategory(category['id'])"
+                  class="block py-1"
+                  :class="{'text-pink-400': category.tags.map((t) => t.id).includes(selectedTag)}">{{ category['label'] }}</button>
           <ul v-if="selectedCategories.includes(category['id'])">
             <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" :class="{'text-pink-400': selectedTag == tag.id}">
               <button @click="selectTag(tag.id)">{{ tag.label }}</button>
@@ -31,18 +33,35 @@
 
       </div>
 
-      <div class="col-span-12 md:col-span-9">
-        <div v-if="$route.query['keyword']" class="mb-4">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
+      <div class="col-span-4 md:col-span-3">
 
+        <div class="flex items-center mb-4">
+          <div v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
+          <div class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 個結果)</div>
 
-        <div>
-          <div v-for="(_, i) in Array(Math.ceil(searchResultTotalCount / 10)).fill(0)">{{ i + 1 }}</div>
+          <div class="flex-1"></div>
+
+          <Pagination v-model:currentPage="currentPage"
+                      :records="searchResultTotalCount"
+                      :per-page="10"
+                      @pageChanged="pageChanged"/>
         </div>
 
-          <!--{{ selectedTag }}-->
-<!--        {{ brickAndMortar }}-->
-<!--        {{ pages }}-->
-        <StoreCardRectangle v-for="page in searchResults" @click="$router.push(`/shop/${page._id}`)" style="cursor: pointer" :shop="page" class="mb-4"></StoreCardRectangle>
+        <div v-for="page in searchResults" :key="page._id.toString()">
+          <StoreCardRectangle @click="$router.push(`/shop/${page._id}`)"
+                              style="cursor: pointer"
+                              :shop="page"
+                              class="mb-4"></StoreCardRectangle>
+          <hr class="sm:hidden mb-4"/>
+        </div>
+
+
+        <div class="flex justify-center">
+          <Pagination v-model:currentPage="currentPage"
+                      :records="searchResultTotalCount"
+                      :per-page="10"
+                      @pageChanged="pageChanged"/>
+        </div>
 
       </div>
 
@@ -53,30 +72,30 @@
 
 <script setup lang="ts">
 
-import {PageSearch} from "~/models/PageSearch";
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import useSearch from "~/composables/useSearch";
+import {PaginationQuery} from "~/models/PaginationQuery";
 
 const {
   categories
 } = useTags();
 
-const page = {
-  "_id": 10115857802,
-  lastActivity: 0,
-  "adult":false,
-  "biography":"韓系 | 日系 | 復古\n付款: \nFPS/Payme/Alipay/BOC\n取貨:\n面交/旺角dream catcher格仔自取/順豐到付\n買滿200減$20💕\n全店買滿400元包順豐❤\n歡迎DM查詢商品/落單\n#服裝 #衣服 #服飾店",
-  "brickAndMortar":true,
-  "businessRegistration":true,
-  "followerCount":242,
-  "followingCount":48,
-  "fullName":"vellichor香港平價女裝店✨套裝|上衣|下裝|飾品",
-  "locations":["旺角"],
-  "mediaCount":21,
-  "mediaUrls":["https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-15/e35/209209710_138399534968591_8687751114042506050_n.jpg?se=8&_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=111&_nc_ohc=3dn8Nn8l2xkAX9RXoHx&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjYwNjU3NTIzMDUxMjgzMzAzNw%3D%3D.2-ccb7-4&oh=00_AT-Z250Ds64c1dasw0YFZx29H916pyUr8CkWOiYY7Sbgbw&oe=61F8C467&_nc_sid=6136e7","https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-15/e35/209340396_321975122802093_6881023015381483978_n.jpg?se=7&_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=109&_nc_ohc=z4sWX83GLXYAX-JZpJ9&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjYwNjU3MDQ4NzM0MjIyMjQ0MQ%3D%3D.2-ccb7-4&oh=00_AT-h8E_aWpZOFe52lbgOAXO8u24LdKF7-vvssRjyEZiAvw&oe=61F9D87A&_nc_sid=6136e7","https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-15/e35/186826697_320565473026296_5575303328309618653_n.jpg?se=8&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=100&_nc_ohc=EHkBPMVIxQYAX9tqgjY&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjU3NjMwOTcxMTMyNzI4NjQwNg%3D%3D.2-ccb7-4&oh=00_AT-5nbU1532nN5f0s2e_rOK-dU39V2dSL-Yh8dQ1w_a4hw&oe=61F9EBB9&_nc_sid=6136e7"],"profilePicUrl":"https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-19/s150x150/137274571_440337453676552_6988806912843198605_n.jpg?_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=104&_nc_ohc=6sJ-KJ5LBc4AX8iS8Ds&edm=AEF8tYYBAAAA&ccb=7-4&oh=00_AT9F9FnGHdkAWK1nMbkwc8nT6UrBE5Xwd33s4y6j-f6PMg&oe=61F8CC9A&_nc_sid=a9513d",
-  "tags":["apparel","women's-clothing"],
-  "username":"vellichor_shop"
-};
+// const page = {
+//   "_id": 10115857802,
+//   lastActivity: 0,
+//   "adult":false,
+//   "biography":"韓系 | 日系 | 復古\n付款: \nFPS/Payme/Alipay/BOC\n取貨:\n面交/旺角dream catcher格仔自取/順豐到付\n買滿200減$20💕\n全店買滿400元包順豐❤\n歡迎DM查詢商品/落單\n#服裝 #衣服 #服飾店",
+//   "brickAndMortar":true,
+//   "businessRegistration":true,
+//   "followerCount":242,
+//   "followingCount":48,
+//   "fullName":"vellichor香港平價女裝店✨套裝|上衣|下裝|飾品",
+//   "locations":["旺角"],
+//   "mediaCount":21,
+//   "mediaUrls":["https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-15/e35/209209710_138399534968591_8687751114042506050_n.jpg?se=8&_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=111&_nc_ohc=3dn8Nn8l2xkAX9RXoHx&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjYwNjU3NTIzMDUxMjgzMzAzNw%3D%3D.2-ccb7-4&oh=00_AT-Z250Ds64c1dasw0YFZx29H916pyUr8CkWOiYY7Sbgbw&oe=61F8C467&_nc_sid=6136e7","https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-15/e35/209340396_321975122802093_6881023015381483978_n.jpg?se=7&_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=109&_nc_ohc=z4sWX83GLXYAX-JZpJ9&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjYwNjU3MDQ4NzM0MjIyMjQ0MQ%3D%3D.2-ccb7-4&oh=00_AT-h8E_aWpZOFe52lbgOAXO8u24LdKF7-vvssRjyEZiAvw&oe=61F9D87A&_nc_sid=6136e7","https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-15/e35/186826697_320565473026296_5575303328309618653_n.jpg?se=8&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=100&_nc_ohc=EHkBPMVIxQYAX9tqgjY&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjU3NjMwOTcxMTMyNzI4NjQwNg%3D%3D.2-ccb7-4&oh=00_AT-5nbU1532nN5f0s2e_rOK-dU39V2dSL-Yh8dQ1w_a4hw&oe=61F9EBB9&_nc_sid=6136e7"],"profilePicUrl":"https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-19/s150x150/137274571_440337453676552_6988806912843198605_n.jpg?_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=104&_nc_ohc=6sJ-KJ5LBc4AX8iS8Ds&edm=AEF8tYYBAAAA&ccb=7-4&oh=00_AT9F9FnGHdkAWK1nMbkwc8nT6UrBE5Xwd33s4y6j-f6PMg&oe=61F8CC9A&_nc_sid=a9513d",
+//   "tags":["apparel","women's-clothing"],
+//   "username":"vellichor_shop"
+// };
 
 const route = useRoute();
 const router = useRouter();
@@ -89,15 +108,22 @@ const {
   searchResultTotalCount,
   search
 } = useSearch();
-async function fetchResults() {
+async function fetchResults(p: PaginationQuery = new PaginationQuery()) {
   await search(new PageSearchQuery(
       route.query['keyword'] != "" ? route.query['keyword'] : undefined,
       selectedTag.value != "" ? selectedTag.value : undefined,
       businessRegistration.value == true ? true : undefined,
       brickAndMortar.value == true ? true : undefined,
-  ));
+  ), p);
 }
 await fetchResults();
+
+const currentPage = ref<number>(1);
+async function pageChanged() {
+  await fetchResults(new PaginationQuery(
+      (currentPage.value - 1) * 10
+  ));
+}
 
 watch(
     () => route.query,
@@ -162,8 +188,6 @@ watch(
   }
 )
 
-
-
 </script>
 
 <script lang="ts">
@@ -183,7 +207,7 @@ watch(
       }
 
       return {
-        selectedCategories
+        selectedCategories,
       }
     },
     methods: {
