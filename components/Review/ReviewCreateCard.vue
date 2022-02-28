@@ -36,17 +36,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-
-.accordion-enter-active,
-.accordion-leave-active {
-  @apply transition duration-500 ease-in-out;
-}
-
-.accordion-enter-from,
-.accordion-leave-to {
-  @apply transform -translate-y-full;
-}
-
-</style>

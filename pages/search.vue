@@ -50,27 +50,37 @@
         <div class="md:hidden mb-2 text-sm">
           <button @click="isMobileFiltersShown = !isMobileFiltersShown"
                   class="flex items-center"
-                  :class="{'text-pink-400': (selectedTag !== '') || brickAndMortar || businessRegistration}">
+                  :class="{'text-pink-400': isMobileFilterActive}">
             篩選
-            <img v-if="isMobileFiltersShown" class="inline-block" src="~assets/icons/chevron_up.png" style="width: 20px; height: 20px;"/>
-            <img v-else class="inline-block" src="~assets/icons/chevron_down.png" style="width: 20px; height: 20px;"/>
+            <img v-if="isMobileFiltersShown"
+                 class="inline-block"
+                 :class="{'black-to-pink-filter': isMobileFilterActive}"
+                 src="~assets/icons/chevron_up.png" style="width: 20px; height: 20px;"/>
+            <img v-else
+                 class="inline-block"
+                 :class="{'black-to-pink-filter': isMobileFilterActive}"
+                 src="~assets/icons/chevron_down.png" style="width: 20px; height: 20px;"/>
           </button>
-          <div v-if="isMobileFiltersShown" class="bg-gray-100 rounded-md p-2 mt-2">
-            <select class="border rounded-sm" :value="selectedTag" @change="selectTag($event.target.value)">
-              <option value="" selected>所有分類</option>
-              <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
-                <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
-              </optgroup>
-            </select>
+          <div class="overflow-hidden">
+            <transition name="accordion">
+              <div v-if="isMobileFiltersShown" class="bg-gray-100 rounded-md p-2 mt-2">
+                <select class="border rounded-sm" :value="selectedTag" @change="selectTag($event.target.value)">
+                  <option value="" selected>所有分類</option>
+                  <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
+                    <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
+                  </optgroup>
+                </select>
 
-            <div class="mt-2">
-              <input type="checkbox" id="brick-and-mortar-mobile" name="brickAndMortarMobile" v-model="brickAndMortar">
-              <label for="brick-and-mortar-mobile" class="pl-2">實體商店</label>
-            </div>
-            <div class="mt-2">
-              <input type="checkbox" id="business-registration-mobile" name="businessRegistrationMobile" v-model="businessRegistration">
-              <label for="business-registration-mobile" class="pl-2">商業登記</label>
-            </div>
+                <div class="mt-2">
+                  <input type="checkbox" id="brick-and-mortar-mobile" name="brickAndMortarMobile" v-model="brickAndMortar">
+                  <label for="brick-and-mortar-mobile" class="pl-2">實體商店</label>
+                </div>
+                <div class="mt-2">
+                  <input type="checkbox" id="business-registration-mobile" name="businessRegistrationMobile" v-model="businessRegistration">
+                  <label for="business-registration-mobile" class="pl-2">商業登記</label>
+                </div>
+              </div>
+            </transition>
           </div>
         </div>
 
@@ -246,6 +256,11 @@ watch(
 
       return {
         selectedCategories,
+      }
+    },
+    computed: {
+      isMobileFilterActive() {
+        return (this.selectedTag !== '') || this.brickAndMortar || this.businessRegistration;
       }
     },
     methods: {

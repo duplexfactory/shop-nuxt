@@ -42,3 +42,17 @@ textarea {
 .black-to-yellow-filter {
     filter: invert(70%) sepia(100%) hue-rotate(15deg) saturate(5);
 }
+
+.black-to-pink-filter {
+    filter: invert(70%) sepia(100%) hue-rotate(290deg) saturate(5);
+}
+
+.accordion-enter-active,
+.accordion-leave-active {
+    @apply transition duration-500 ease-in-out;
+}
+
+.accordion-enter-from,
+.accordion-leave-to {
+    @apply transform -translate-y-full;
+}
