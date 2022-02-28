@@ -10,6 +10,11 @@
       <transition name="modal">
         <MediaModal v-model:showModal="showMediaModal"></MediaModal>
       </transition>
+
+      <transition name="modal">
+        <SearchModal v-model:showModal="showSearchModal"></SearchModal>
+      </transition>
+
     </div>
 
     <bottom-footer></bottom-footer>
@@ -22,15 +27,19 @@
   const showMediaModal =  useShowMediaModal();
   const showingMediaModalData = useShowingMediaModalData();
 
+  const showSearchModal =  useShowSearchModal();
+
   watch(
       showMediaModal,
       (show, prevShow) => {
-          if (show) {
-              document.body.classList.add('overflow-hidden')
-          }
-          else {
-              document.body.classList.remove('overflow-hidden')
-          }
+          show ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
+      }
+  )
+
+  watch(
+      showSearchModal,
+      (show, prevShow) => {
+        show ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
       }
   )
 

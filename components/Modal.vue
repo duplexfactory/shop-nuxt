@@ -5,7 +5,7 @@
 
         <div class="modal-header">
           <slot name="header">
-            <div class="w-full flex justify-end py-4">
+            <div class="w-full flex justify-end py-4 px-4">
               <button @click="$emit('close')" class="btn-close">x</button>
             </div>
           </slot>
@@ -60,7 +60,6 @@
   max-height: 100%;
   overflow: auto;
   /*margin: 0px auto;*/
-  padding: 0px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);

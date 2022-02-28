@@ -11,9 +11,11 @@
 
         <nuxt-link to="/" class="mr-4">LOGO HERE</nuxt-link>
 
-        <button class="sm:hidden border py-2 pl-4 pr-8 text-sm text-gray-400">
+        <!-- Mobile Search Button -->
+        <button @click="showSearchModal = true" class="sm:hidden border py-2 pl-4 pr-8 text-sm text-gray-400">
           商店 或 貼文
         </button>
+        <!-- Desktop Search Button -->
         <div class="hidden sm:block flex-1">
           <div class="flex w-full">
             <div class="dropdown flex-1" style="max-width: 350px;">
@@ -58,6 +60,7 @@
 <script setup lang="ts">
 
 import useSearch from "~/composables/useSearch";
+import {useShowSearchModal} from "~/composables/states";
 
 const {categories} = useTags();
 const {
@@ -65,6 +68,8 @@ const {
   searchResultTotalCount,
   search: quickSearch
 } = useSearch();
+
+const showSearchModal = useShowSearchModal();
 
 </script>
 
