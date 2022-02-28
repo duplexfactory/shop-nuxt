@@ -24,26 +24,15 @@
           <input type="checkbox" id="brick-and-mortar" name="brickAndMortar" v-model="brickAndMortar">
           <label for="brick-and-mortar" class="pl-2">實體商店</label>
         </div>
-<!--        {{ brickAndMortar }}-->
 
         <div class="mt-4">
           <input type="checkbox" id="business-registration" name="businessRegistration" v-model="businessRegistration">
           <label for="business-registration" class="pl-2">商業登記</label>
         </div>
-        <!--{{ businessRegistration }}-->
 
       </div>
 
       <div class="col-span-4 md:col-span-3">
-
-        <div class="md:hidden mb-2 text-sm">
-          <select class="border rounded-sm" :value="selectedTag" @change="selectTag($event.target.value)">
-            <option value="" disabled selected>篩選分類</option>
-            <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
-              <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
-            </optgroup>
-          </select>
-        </div>
 
         <div class="flex items-center mb-4">
           <div v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
@@ -55,6 +44,34 @@
                       :records="searchResultTotalCount"
                       :per-page="10"
                       @pageChanged="pageChanged"/>
+        </div>
+
+        <!-- Mobile filter -->
+        <div class="md:hidden mb-2 text-sm">
+          <button @click="isMobileFiltersShown = !isMobileFiltersShown"
+                  class="flex items-center"
+                  :class="{'text-pink-400': (selectedTag !== '') || brickAndMortar || businessRegistration}">
+            篩選
+            <img v-if="isMobileFiltersShown" class="inline-block" src="~assets/icons/chevron_up.png" style="width: 20px; height: 20px;"/>
+            <img v-else class="inline-block" src="~assets/icons/chevron_down.png" style="width: 20px; height: 20px;"/>
+          </button>
+          <div v-if="isMobileFiltersShown" class="bg-gray-100 rounded-md p-2 mt-2">
+            <select class="border rounded-sm" :value="selectedTag" @change="selectTag($event.target.value)">
+              <option value="" selected>所有分類</option>
+              <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
+                <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
+              </optgroup>
+            </select>
+
+            <div class="mt-2">
+              <input type="checkbox" id="brick-and-mortar-mobile" name="brickAndMortarMobile" v-model="brickAndMortar">
+              <label for="brick-and-mortar-mobile" class="pl-2">實體商店</label>
+            </div>
+            <div class="mt-2">
+              <input type="checkbox" id="business-registration-mobile" name="businessRegistrationMobile" v-model="businessRegistration">
+              <label for="business-registration-mobile" class="pl-2">商業登記</label>
+            </div>
+          </div>
         </div>
 
         <div v-for="page in searchResults" :key="page._id.toString()">
@@ -136,6 +153,11 @@ async function pageChanged() {
   ));
 }
 
+const isMobileFiltersShown = ref<boolean>(false);
+function clearFilters() {
+
+}
+
 watch(
     () => route.query,
     async (q, prevQ) => {
@@ -143,8 +165,10 @@ watch(
         return;
       }
 
-      if (q["tag"] != selectedTag.value) {
-        selectedTag.value = q["tag"] as string;
+      if (q["tag"] != undefined) {
+        if (q["tag"] != selectedTag.value) {
+          selectedTag.value = q["tag"] as string;
+        }
       }
 
       await fetchResults();
@@ -159,6 +183,9 @@ watch(
       };
       if (selectedTag.value != '') {
         query.tag = selectedTag.value;
+      }
+      else {
+        delete query.tag
       }
 
       router.replace({query});
