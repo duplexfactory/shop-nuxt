@@ -2,14 +2,18 @@
   <LazyModal v-if="props.showModal" @close="closeModal">
     <template v-slot:header>
       <div class="flex">
-        <button @click="closeModal">back</button>
+        <button style="aspect-ratio: 1;" @click="closeModal">
+          <i class="sio-angle-left text-2xl"></i>
+        </button>
         <input @keyup.enter="search"
                v-model="searchText"
                class="search-input"
                placeholder="搜尋 商店 或 貼文"
                type="search"
                autocomplete="off"/>
-        <button @click="search" class="border border-pink-400 btn-primary !rounded-none">搜尋</button>
+        <button @click="search" class="bg-pink-400 text-white px-2">
+          <i class="sio-search text-xl"></i>
+        </button>
       </div>
     </template>
 
@@ -27,7 +31,7 @@
 
         <template v-if="searchResults.length !== 0">
           <div class="px-4 py-2 text-sm bg-gray-50">搜尋結果</div>
-          <button @click="quickSearchResultPressed(result._id)" class="px-4 py-2 text-sm block" v-for="result in searchResults">{{ result.username }}</button>
+          <button @click="quickSearchResultPressed(result._id)" class="px-4 py-2 text-sm block w-full text-left" v-for="result in searchResults">{{ result.username }}</button>
         </template>
       </div>
     </template>
@@ -36,8 +40,6 @@
 
 <script setup lang="ts">
 
-import useSearch from "~/composables/useSearch";
-
 const props = defineProps({
   showModal: { type: Boolean, default: false },
 });
@@ -45,6 +47,10 @@ const props = defineProps({
 const searchText = ref<string>("");
 
 const {categories} = useTags();
+const tagsSearchResult = ref<{id: string, label: string}[]>([]);
+tagsSearchResult.value = categories.map((c) => c.tags).flat();
+
+import useSearch from "~/composables/useSearch";
 const {
   searchResults,
   searchResultTotalCount,
@@ -55,19 +61,9 @@ const {
 <script lang="ts">
 
 import {PageSearchQuery} from "~/models/PageSearchQuery";
+import {PaginationQuery} from "~/models/PaginationQuery";
 
 export default  {
-  data(): {
-    searchText: string,
-    categoriesSearchResult: {id: string, label: string, tags: {id: string, label: string}[]}[],
-    tagsSearchResult: {id: string, label: string}[],
-  } {
-    return {
-      searchText: '',
-      categoriesSearchResult: [],
-      tagsSearchResult: [],
-    }
-  },
   methods: {
     closeModal: function() {
       this.$emit('update:showModal', false)
@@ -97,26 +93,26 @@ export default  {
         path: "/search",
         query
       });
+
+      this.closeModal();
     }
   },
   watch: {
     searchText: async function (searchText) {
-      this.categoriesSearchResult = [];
       this.tagsSearchResult = [];
       if (searchText === '') {
+        this.tagsSearchResult = this.categories.map((c) => c.tags).flat();
+        this.searchResults = [];
         return;
       }
 
       for (const c of this.categories as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
-        if (c.id.includes(searchText) || c.label.includes(searchText)) {
-          this.categoriesSearchResult.push(c);
-        }
         this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
       }
 
       await this.quickSearch(new PageSearchQuery(
           searchText,
-      ));
+      ), new PaginationQuery(0, 20));
     },
   }
 }

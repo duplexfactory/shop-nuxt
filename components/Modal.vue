@@ -6,7 +6,9 @@
         <div class="modal-header">
           <slot name="header">
             <div class="w-full flex justify-end py-4 px-4">
-              <button @click="$emit('close')" class="btn-close">x</button>
+              <button class="flex items-center" @click="$emit('close')">
+                <i class="sio-cancel text-2xl"></i>
+              </button>
             </div>
           </slot>
         </div>

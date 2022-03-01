@@ -24,44 +24,26 @@
 <script setup lang="ts">
   import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
+  // Media Modal
   const showMediaModal =  useShowMediaModal();
   const showingMediaModalData = useShowingMediaModalData();
+  watch(showMediaModal, (show, prevShow) => toggleOverflow(show))
 
+  // Search Modal
   const showSearchModal =  useShowSearchModal();
+  watch(showSearchModal, (show, prevShow) => toggleOverflow(show))
 
-  watch(
-      showMediaModal,
-      (show, prevShow) => {
-          show ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
-      }
-  )
-
-  watch(
-      showSearchModal,
-      (show, prevShow) => {
-        show ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
-      }
-  )
-
-</script>
-
-<script lang="ts">
-  export default {
-
-    data(): {
-      drawerOpen: boolean
-    } {
-      return {
-        drawerOpen: false
-      }
-    },
-    methods: {
-      toggleDrawer() {
-        console.log('toggleDrawer');
-        this.drawerOpen = !this.drawerOpen;
-      }
-    },
+  // Drawer
+  const drawerOpen = ref<boolean>(false);
+  function toggleDrawer() {
+    drawerOpen.value = !drawerOpen.value;
+    toggleOverflow(drawerOpen.value);
   }
+
+  function toggleOverflow(hidden: boolean) {
+    hidden ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
+  }
+
 </script>
 
 <style>

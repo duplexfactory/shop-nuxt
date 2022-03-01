@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="md:container mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between">
@@ -6,7 +5,7 @@
       <div class="flex items-center flex-1 mr-8">
 
         <button class="md:hidden" @click="$emit('toggleDrawer')">
-          Drawer
+          <i class="sio-menu text-2xl"></i>
         </button>
 
         <nuxt-link to="/" class="mr-4">LOGO HERE</nuxt-link>
@@ -15,7 +14,7 @@
         <button @click="showSearchModal = true" class="sm:hidden border py-2 pl-4 pr-8 text-sm text-gray-400">
           商店 或 貼文
         </button>
-        <!-- Desktop Search Button -->
+        <!-- Desktop Search Input -->
         <div class="hidden sm:block flex-1">
           <div class="flex w-full">
             <div class="dropdown flex-1" style="max-width: 350px;">

@@ -34,7 +34,7 @@
 
       <div class="col-span-4 md:col-span-3">
 
-        <div class="flex items-center mb-4">
+        <div class="flex items-center mb-2 md:mb-4">
           <div v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
           <div class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 個結果)</div>
 
@@ -52,14 +52,13 @@
                   class="flex items-center"
                   :class="{'text-pink-400': isMobileFilterActive}">
             篩選
-            <img v-if="isMobileFiltersShown"
-                 class="inline-block"
-                 :class="{'black-to-pink-filter': isMobileFilterActive}"
-                 src="~assets/icons/chevron_up.png" style="width: 20px; height: 20px;"/>
-            <img v-else
-                 class="inline-block"
-                 :class="{'black-to-pink-filter': isMobileFilterActive}"
-                 src="~assets/icons/chevron_down.png" style="width: 20px; height: 20px;"/>
+            <i v-if="isMobileFiltersShown"
+               class="sio-angle-up text-xl"
+               :class="{'text-pink-400': isMobileFilterActive}"
+            ></i>
+            <i v-else
+               class="sio-angle-down text-xl"
+               :class="{'text-pink-400': isMobileFilterActive}"></i>
           </button>
           <div class="overflow-hidden">
             <transition name="accordion">

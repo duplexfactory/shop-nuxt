@@ -12,13 +12,15 @@ const {categories} = useTags();
     <transition name="slide-side">
       <div v-if="open" class="sidenav">
         <div class="flex justify-end">
-          <div @click="hideSidebar" class="cursor-pointer close-btn">&times;</div>
+          <button @click="hideSidebar">
+            <i class="sio-cancel text-2xl"></i>
+          </button>
         </div>
 
           <div v-for="category in categories" :key="category['id']" >
               <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
               <ul v-if="selectedCategory == category['id']">
-                  <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1">{{ tag.label }}</li>
+                  <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>
               </ul>
           </div>
 
@@ -43,19 +45,14 @@ export default {
   },
   methods: {
     hideSidebar() {
-      // this.$store.dispatch('nav/toggleSidebar')
       this.$emit('toggleDrawer')
     },
     toggleCategory(categoryId: string) {
       this.selectedCategory = this.selectedCategory == categoryId ? '' : categoryId;
-    }
-  },
-  watch: {
-    '$route.fullPath': {
-      handler: function (v, o) {
-        (this as any).$emit('closeDrawer');
-      },
-      deep: true
+    },
+    tagPressed(tagId: string) {
+      this.$router.push({path: '/search', query: { tag: tagId }});
+      this.hideSidebar();
     }
   },
   computed: {
@@ -106,12 +103,4 @@ export default {
   transform: translateX(-100%);
 }
 
-.close-btn {
-  line-height: 44px;
-  display: flex;
-  margin-top: -8px !important;
-  font-size: 40px;
-  font-weight: 400;
-  color: #000;
-}
 </style>

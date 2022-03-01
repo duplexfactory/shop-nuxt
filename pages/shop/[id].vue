@@ -37,6 +37,7 @@
         pk,
         username,
         lastActivity,
+        fullName,
         biography,
         followerCount,
         mediaCount,
@@ -102,15 +103,13 @@ export default  {
         <div class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="rounded-full mr-8" style="aspect-ratio: 1; height: 120px;" :style="`background-image: url(${$encryptImageUrl(profilePicUrl)});`"></div>
-                    <div class="mt-4">
+                    <div class="bg-gray-300 rounded-full square-image-container mr-8" v-lazy:background-image="profilePicUrl" style="height: 100px;"></div>
+                    <div class="mt-2">
                         <div class="font-semibold text-xl truncate">{{ username }}</div>
                         <div class="mt-2 text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
-                </div>
 
-                <div class="py-4 col-span-5 lg:col-span-6 text-sm md:text-lg">
-                    <div class="text-gray-500 flex">
+                    <div class="mt-2 flex text-gray-500 text-sm md:text-lg">
                       <div class="flex">
                         <div class="text-center" style="flex: 1;">
                           <div>粉絲</div>
@@ -124,18 +123,21 @@ export default  {
                       </div>
                     </div>
 
-                    <div class="mt-4 line-clamp-2" style="font-size: 0;">
-                        <div v-for="tag in tags"
-                             :key="tag"
-                             class="tag mr-1 2xl:mr-2 !md:text-lg">{{ `#${tagsLookup[tag]}` }}</div>
+                    <div v-if="brickAndMortar" class="mt-2 text-gray-500 text-sm md:text-lg">
+                      {{ '門市：' + locations.join('、') }}
                     </div>
+                    <!--                    <button class="btn btn-outline">我知道</button>-->
 
-                    <div v-if="brickAndMortar" class="mt-4 text-gray-500">
-                        <div>門市</div>
-                        <div>{{ locations.join('、') }}</div>
+                    <div class="mt-2 line-clamp-2" style="font-size: 0;">
+                      <div v-for="tag in tags"
+                           :key="tag"
+                           class="tag mr-1 2xl:mr-2 !md:text-lg">{{ `#${tagsLookup[tag]}` }}</div>
                     </div>
-      <!--                    <button class="btn btn-outline">我知道</button>-->
+                </div>
 
+                <div class="py-4 col-span-5 lg:col-span-6">
+                    <div class="text-gray-500">{{ fullName }}</div>
+                    <div class="mt-2 text-gray-500 whitespace-pre-wrap">{{ biography }}</div>
                 </div>
             </section>
 
@@ -163,6 +165,10 @@ export default  {
                       <ReviewCard :review="review"></ReviewCard>
                       <hr/>
                     </template>
+                    <!-- No Reviews -->
+                    <div v-if="reviews.length == 0" class="mt-2 p-6 bg-gray-100 rounded-md text-lg text-center">
+                      暫時沒有任何評論
+                    </div>
                   </div>
                 </div>
             </section>

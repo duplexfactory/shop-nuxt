@@ -9,6 +9,7 @@
     })
 
     const {
+      pk,
       username,
       fullName,
       profilePicUrl,
@@ -18,6 +19,7 @@
 
 <template>
     <div class="p-4 text-center">
+
         <div class="bg-gray-300 rounded-full square-image-container mx-auto" v-lazy:background-image="profilePicUrl" style="height: 100px;"></div>
 
         <div class="mt-2 font-semibold text-lg">{{ username }}</div>
@@ -29,7 +31,9 @@
                class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
         </div>
 
-        <button class="mt-3 btn-primary btn-sm">探索</button>
+        <div class="mt-3">
+          <nuxt-link :to="`/shop/${pk}`" class="btn-primary btn-sm">探索</nuxt-link>
+        </div>
 
     </div>
 </template>
