@@ -1,0 +1,10 @@
+
+.sio-star:before { content: '\e800'; } /* '' */
+.sio-star-filled:before { content: '\e801'; } /* '' */
+.sio-search:before { content: '\e802'; } /* '' */
+.sio-cancel:before { content: '\e803'; } /* '' */
+.sio-menu:before { content: '\e804'; } /* '' */
+.sio-angle-left:before { content: '\f104'; } /* '' */
+.sio-angle-right:before { content: '\f105'; } /* '' */
+.sio-angle-up:before { content: '\f106'; } /* '' */
+.sio-angle-down:before { content: '\f107'; } /* '' */
