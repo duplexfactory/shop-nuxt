@@ -46,5 +46,20 @@
 
 </script>
 
-<style>
-</style>
+<script lang="ts">
+  import throttle from "lodash.throttle";
+
+  export default {
+    mounted() {
+      window.addEventListener("resize", throttle(() => {
+        console.log("throttled")
+        if (window.innerWidth >= 640) {
+          // SM
+          if (this.showSearchModal) {
+            this.showSearchModal = false;
+          }
+        }
+      }, 500));
+    }
+  }
+</script>

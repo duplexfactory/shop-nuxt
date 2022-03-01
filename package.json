@@ -4,7 +4,8 @@
     "deploy": "yarn build && cp package.deploy.json .output/ && wrangler publish",
     "dev": "nuxi dev",
     "build": "nuxi build",
-    "start": "node .output/server/index.mjs"
+    "start": "node .output/server/index.mjs",
+    "patch": "yarn add -D patch-vue-directive-ssr"
   },
   "devDependencies": {
     "nuxt-windicss": "^2.0.0",
@@ -17,10 +18,12 @@
     "@jambonn/vue-lazyload": "^1.0.9",
     "@meforma/vue-toaster": "^1.3.0",
     "@types/crypto-js": "^4.1.0",
+    "@types/lodash.throttle": "^4.1.6",
     "@vueuse/nuxt": "^7.5.3",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
     "firebase-admin": "^10.0.1",
+    "lodash.throttle": "^4.1.1",
     "mongodb": "^4.3.1",
     "node-fetch": "^3.1.0",
     "swiper": "^7.4.1"
