@@ -75,10 +75,10 @@ const categories = [{
 }, {
     "id": "adult-products",
     "label": "成人用品",
-    "audlt": true,
+    "adult": true,
     "tags": [
         {"id": "sex-toys", "label": "性玩具", "keywords": [{or: ["成人", "性", "情趣"]}, {or: ["用品", "玩具"]}]},
-        {"id": "sexy-underwear", "label": "情趣內衣"},
+        {"id": "sexy-underwear", "label": "情趣內衣", "keywords": "情趣内衣"},
         {"id": "condom", "label": "安全套"}
     ]
 }, {
