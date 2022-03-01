@@ -3,8 +3,8 @@ const categories = [{
     "label": "手作",
     "tags": [
         {"id": "candle", "label": "蠟燭"},
-        {"id": "hand-strap", "label": "手繩"},
-        {"id": "eternal-life", "label": "永生花"},
+        {"id": "bracelet-macrame", "label": "手繩"},
+        {"id": "preserved-flower", "label": "永生花"},
         {"id": "leather", "label": "皮革"}
     ]
 }, {
@@ -16,13 +16,13 @@ const categories = [{
         {"id": "women's-clothing", "label": "女裝"},
         {"id": "cap", "label": "帽"},
         {"id": "shoe", "label": "鞋"},
-        {"id": "jewelry", "label": "首飾"},
+        {"id": "adornment", "label": "首飾"},
         {"id": "famous-brand", "label": "名牌"},
         {"id": "bag", "label": "袋"},
         {"id": "suit", "label": "西裝"},
         {"id": "jewelry", "label": "珠寶"},
-        {"id": "underwear", "label": "內衣", "keywords": "内衣"},
-        {"id": "ancient", "label": "古著", "keywords": ["二手", "服"]},
+        {"id": "underwear", "label": "內衣"},
+        {"id": "vintage", "label": "古著", "keywords": ["二手", "服"]},
         {"id": "accessories", "label": "飾物", "keywords": {or: ["耳環", "髮夾", "頭箍", "手飾", "戒指", "手鏈", "頸鏈"]}},
     ]
 }, {
@@ -37,7 +37,7 @@ const categories = [{
     "label": "食物",
     "disabled": true,
     "tags": [
-        {"id": "buffet", "label": "散水餅"},
+        {"id": "farewell-cake", "label": "散水餅"},
         {"id": "cake", "label": "蛋糕"},
         {"id": "tea", "label": "茶"},
         {"id": "manual-beer", "label": "手工啤酒"},
@@ -61,7 +61,7 @@ const categories = [{
         {"id": "stationery", "label": "文具"},
         {"id": "model", "label": "模型"},
         {"id": "periphery", "label": "周邊"},
-        {"id": "silver-bag", "label": "銀包"},
+        {"id": "wallet", "label": "銀包"},
         {"id": "computer-bag", "label": "電腦袋"}
     ]
 }, {
@@ -75,10 +75,10 @@ const categories = [{
 }, {
     "id": "adult-products",
     "label": "成人用品",
-    "adult": true,
+    "audlt": true,
     "tags": [
         {"id": "sex-toys", "label": "性玩具", "keywords": [{or: ["成人", "性", "情趣"]}, {or: ["用品", "玩具"]}]},
-        {"id": "sexy-underwear", "label": "情趣內衣", "keywords": "情趣内衣"},
+        {"id": "sexy-underwear", "label": "情趣內衣"},
         {"id": "condom", "label": "安全套"}
     ]
 }, {
