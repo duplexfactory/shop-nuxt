@@ -1,6 +1,7 @@
 import {PageSearch} from "~/models/PageSearch";
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import {PaginationQuery} from "~/models/PaginationQuery";
+import {useShowAgeRestrictedContent} from "~/composables/states";
 
 export default function () {
 
@@ -8,6 +9,8 @@ export default function () {
     const searchResultTotalCount = ref<number>(0);
 
     // const double = computed(() => count.value * 2)
+
+    const showAgeRestrictedContent = useShowAgeRestrictedContent();
 
     async function search(q: PageSearchQuery, p: PaginationQuery = new PaginationQuery()) {
         const params = {
@@ -24,6 +27,10 @@ export default function () {
         }
         if (q.phy !== undefined) {
             params["phy"] = q.phy;
+        }
+        console.log(showAgeRestrictedContent.value)
+        if (showAgeRestrictedContent.value) {
+            params["adult"] = "true";
         }
 
         const {data} = await useFetch(`/api/search`, {params});

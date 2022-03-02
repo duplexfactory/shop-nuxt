@@ -15,8 +15,9 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         br,
         phy,
         skip,
-        limit
-    } = await useQuery(req) as { q?: string, tag?: string, br?: string, phy?: string, skip: string, limit: string };
+        limit,
+        adult
+    } = await useQuery(req) as { q?: string, tag?: string, br?: string, phy?: string, skip: string, limit: string, adult: string };
 
     const f: Filter<PageSearch> = q ? {
         $or: [
@@ -29,6 +30,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     if (tag) f.tags = tag;
     if (br) f.businessRegistration = true;
     if (phy) f.brickAndMortar = true;
+    if (adult !== "true") f.adult = false;
 
     await initMongo();
 
