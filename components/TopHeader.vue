@@ -60,9 +60,9 @@
 <script setup lang="ts">
 
 import useSearch from "~/composables/useSearch";
-import {useShowAgeRestrictedContent, useShowAgeRestrictedModal, useShowSearchModal} from "~/composables/states";
+import {useShowSearchModal} from "~/composables/states";
 
-const {categories} = useTags();
+const {ageRestrictedCategories} = useTags();
 const {
   searchResults,
   searchResultTotalCount,
@@ -129,7 +129,7 @@ export default  {
         return;
       }
 
-      for (const c of this.categories as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
+      for (const c of this.ageRestrictedCategories as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
         if (c.id.includes(searchText) || c.label.includes(searchText)) {
           this.categoriesSearchResult.push(c);
         }

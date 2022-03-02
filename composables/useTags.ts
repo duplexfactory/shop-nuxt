@@ -101,6 +101,17 @@ const tagsLookup = categories.reduce((dict, cat) => {
     return dict;
 }, {} as Record<string, string>)
 
+import {useShowAgeRestrictedContent} from "~/composables/states";
+
 export default function () {
-    return {categories, tagsLookup};
+
+    const showAgeRestrictedContent = useShowAgeRestrictedContent();
+
+    const ageRestrictedCategories = computed(() => categories.filter((c) => showAgeRestrictedContent.value || c["adult"] == false || c["adult"] == undefined))
+
+    return {
+        categories,
+        ageRestrictedCategories,
+        tagsLookup
+    };
 }

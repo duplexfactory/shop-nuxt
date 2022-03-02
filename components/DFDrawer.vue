@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useShowAgeRestrictedModal} from "~/composables/states";
 
-const {categories} = useTags();
+const {ageRestrictedCategories} = useTags();
 
 const showAgeRestrictedModal = useShowAgeRestrictedModal();
 
@@ -23,7 +23,7 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
 
         <div class="p-4 flex-1 overflow-y-auto">
           <template v-if="selectedBottomTabIndex == 0">
-            <div v-for="category in categories" :key="category['id']" >
+            <div v-for="category in ageRestrictedCategories" :key="category['id']" >
               <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
               <ul v-if="selectedCategory == category['id']">
                 <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>

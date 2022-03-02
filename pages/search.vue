@@ -7,7 +7,7 @@
       <div class="col-span-1 p-4 hidden md:block">
 
         <div class="font-semibold mb-2">分類</div>
-        <div v-for="category in categories" :key="category['id']" class="text-sm">
+        <div v-for="category in ageRestrictedCategories" :key="category['id']" class="text-sm">
           <button @click="toggleCategory(category['id'])"
                   class="block py-1"
                   :class="{'text-pink-400': category.tags.map((t) => t.id).includes(selectedTag)}">{{ category['label'] }}</button>
@@ -65,7 +65,7 @@
               <div v-if="isMobileFiltersShown" class="bg-gray-100 rounded-md p-2 mt-2">
                 <select class="border rounded-sm" :value="selectedTag" @change="selectTag($event.target.value)">
                   <option value="" selected>所有分類</option>
-                  <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
+                  <optgroup v-for="category in ageRestrictedCategories" :key="category['id']" :label="category['label']">
                     <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
                   </optgroup>
                 </select>
@@ -114,7 +114,7 @@ import useSearch from "~/composables/useSearch";
 import {PaginationQuery} from "~/models/PaginationQuery";
 
 const {
-  categories
+  ageRestrictedCategories
 } = useTags();
 
 // const page = {
@@ -245,7 +245,7 @@ watch(
 
       const selectedCategories = [];
       if (this.selectedTag !== '') {
-        const category = this.categories.find((c) => !!c.tags.find((t) => t.id == this.selectedTag));
+        const category = this.ageRestrictedCategories.find((c) => !!c.tags.find((t) => t.id == this.selectedTag));
         if (category) {
           selectedCategories.push(category.id);
         }

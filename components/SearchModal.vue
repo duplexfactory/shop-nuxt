@@ -46,9 +46,10 @@ const props = defineProps({
 
 const searchText = ref<string>("");
 
-const {categories} = useTags();
+const {ageRestrictedCategories} = useTags();
 const tagsSearchResult = ref<{id: string, label: string}[]>([]);
-tagsSearchResult.value = categories.map((c) => c.tags).flat();
+
+tagsSearchResult.value = ageRestrictedCategories.value.map((c) => c.tags).flat();
 
 import useSearch from "~/composables/useSearch";
 const {
@@ -101,12 +102,12 @@ export default  {
     searchText: async function (searchText) {
       this.tagsSearchResult = [];
       if (searchText === '') {
-        this.tagsSearchResult = this.categories.map((c) => c.tags).flat();
+        this.tagsSearchResult = this.ageRestrictedCategories.map((c) => c.tags).flat();
         this.searchResults = [];
         return;
       }
 
-      for (const c of this.categories as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
+      for (const c of this.ageRestrictedCategories as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
         this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
       }
 
