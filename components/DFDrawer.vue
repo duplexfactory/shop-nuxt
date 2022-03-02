@@ -11,21 +11,36 @@ const {categories} = useTags();
 
     <transition name="slide-side">
       <div v-if="open" class="sidenav">
-        <div class="flex justify-end">
+
+        <div class="px-4 pt-4 flex justify-end">
           <button @click="hideSidebar">
             <i class="sio-cancel text-2xl"></i>
           </button>
         </div>
 
+        <div class="p-4 flex-1 overflow-y-auto">
           <div v-for="category in categories" :key="category['id']" >
-              <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
-              <ul v-if="selectedCategory == category['id']">
-                  <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>
-              </ul>
+            <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
+            <ul v-if="selectedCategory == category['id']">
+              <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>
+            </ul>
           </div>
+        </div>
+
+        <div class="flex">
+          <button v-for="(tab, i) in bottomTabs"
+                 :key="tab"
+                 :class="{'border-pink-400': selectedBottomTabIndex == i}"
+                 class="border-top-4 flex-1 text-center p-2"
+                 @click="selectedBottomTabIndex = i">
+            {{ tab }}
+          </button>
+        </div>
+
 
       </div>
     </transition>
+
   </div>
 </template>
 
@@ -35,9 +50,16 @@ export default {
   components: {  },
   data() : {
     selectedCategory: string,
+    bottomTabs: string[],
+    selectedBottomTabIndex: number
   } {
     return {
-      selectedCategory: ''
+      selectedCategory: "",
+      bottomTabs: [
+          "分類",
+          "設定"
+      ],
+      selectedBottomTabIndex: 0
     }
   },
   props: {
@@ -68,7 +90,6 @@ export default {
   width: 100%;
 }
 .sidenav {
-  height: 100%;
   width: 300px;
   background-color: #fff;
   z-index: 10000;
@@ -76,9 +97,8 @@ export default {
   top: 0;
   left: 0;
   box-sizing: border-box;
-  /*padding-left: 30px;*/
-  /*padding-right: 30px;*/
-  padding: 30px;
+
+  @apply h-full flex flex-col overflow-hidden;
 }
 .sidenav span {
   /*position: absolute;*/

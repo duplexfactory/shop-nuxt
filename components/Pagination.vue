@@ -41,7 +41,6 @@ export default {
   },
   watch: {
     records: function (current, prev) {
-      console.log('records changed');
       this.$emit("update:currentPage", 1);
     },
     perPage: function (current, prev) {

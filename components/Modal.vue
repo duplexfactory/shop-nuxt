@@ -5,7 +5,7 @@
 
         <div class="modal-header">
           <slot name="header">
-            <div class="w-full flex justify-end py-4 px-4">
+            <div class="w-full flex justify-end p-4">
               <button class="flex items-center" @click="$emit('close')">
                 <i class="sio-cancel text-2xl"></i>
               </button>
@@ -73,6 +73,7 @@
 @screen sm {
   .modal-container {
     max-height: 80%;
+    height: auto;
   }
 }
 

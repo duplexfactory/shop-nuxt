@@ -243,8 +243,6 @@ watch(
       selectedCategories: string[],
     } {
 
-      console.log('asyncData');
-
       const selectedCategories = [];
       if (this.selectedTag !== '') {
         const category = this.categories.find((c) => !!c.tags.find((t) => t.id == this.selectedTag));

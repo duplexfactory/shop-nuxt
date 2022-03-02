@@ -15,6 +15,10 @@
         <SearchModal v-model:showModal="showSearchModal"></SearchModal>
       </transition>
 
+      <transition name="modal">
+        <AgeRestrictedModal></AgeRestrictedModal>
+      </transition>
+
     </div>
 
     <bottom-footer></bottom-footer>
@@ -52,7 +56,6 @@
   export default {
     mounted() {
       window.addEventListener("resize", throttle(() => {
-        console.log("throttled")
         if (window.innerWidth >= 640) {
           // SM
           if (this.showSearchModal) {
