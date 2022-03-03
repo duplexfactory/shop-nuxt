@@ -20,6 +20,8 @@
                 // direction: 'vertical',
                 // loop: true,
 
+                observer: true,
+
                 spaceBetween: 16,
                 slidesPerView: 2,
                 slidesPerGroup: 2,
