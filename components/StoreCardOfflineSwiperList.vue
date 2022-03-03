@@ -102,7 +102,7 @@ export default {
                           class="swiper-slide"
                           :shop="shop"
                           :showLocations="true"
-                          :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
+                          :key="shop.username + '-store-card-sq'"></StoreCardSquare>
       </div>
       <!-- If we need pagination -->
       <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>

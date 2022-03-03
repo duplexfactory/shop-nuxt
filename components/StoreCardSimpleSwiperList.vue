@@ -71,7 +71,7 @@
             <StoreCardSimple v-for="shop in shops"
                              class="swiper-slide"
                              :shop="shop"
-                             :key="shop.ig_username + '-store-card-simple'"></StoreCardSimple>
+                             :key="shop.username + '-store-card-simple'"></StoreCardSimple>
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>

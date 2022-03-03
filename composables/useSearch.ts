@@ -28,7 +28,7 @@ export default function () {
         if (q.phy !== undefined) {
             params["phy"] = q.phy;
         }
-        console.log(showAgeRestrictedContent.value)
+
         if (showAgeRestrictedContent.value) {
             params["adult"] = "true";
         }

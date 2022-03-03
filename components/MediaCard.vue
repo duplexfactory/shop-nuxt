@@ -5,7 +5,7 @@ import IgPage from "~/models/IgPage";
 import dayjs from "dayjs";
 
 const {tagsLookup} = useTags()
-const {media, shop, swiperCard} = defineProps({
+const {media, shop} = defineProps({
   media: Object as PropType<IgMedia>,
   shop: Object as PropType<Partial<IgPage>>,
 })

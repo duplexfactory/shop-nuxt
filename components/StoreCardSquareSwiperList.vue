@@ -111,7 +111,7 @@
           <StoreCardSquare v-for="shop in shops"
                            class="swiper-slide"
                            :shop="shop"
-                           :key="shop.ig_username + '-store-card-sq'"></StoreCardSquare>
+                           :key="shop.username + '-store-card-sq'"></StoreCardSquare>
         </div>
 
         <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
