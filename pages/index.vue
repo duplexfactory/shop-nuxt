@@ -2,26 +2,41 @@
 
 import {useShowAgeRestrictedContent} from "~/composables/states";
 
-const header = ref('Nuxt 3 starter template')
-const {counter} = goSick();
+const {ageRestrictedCategories} = useTags();
+const showAgeRestrictedContent = useShowAgeRestrictedContent();
 
-const storeName = 'caseonlyy';
+async function fetchHomeData() {
+  const params = {};
+  if (showAgeRestrictedContent.value) {
+    params["adult"] = true
+  }
+  return useFetch(`/api/home`, {params});
+}
 
-// const res = await useFetch(`/api/shop?id=${storeName}`);
-// console.log(res.data.value);
+const {data} = await fetchHomeData();
+const {hot, active, latest, physical} = toRefs(data.value);
+
+watch(
+    showAgeRestrictedContent,
+    async (show, prevShow) => {
+      const {data} = await fetchHomeData();
+      const {hot: _hot, active: _active, latest: _latest, physical: _physical} = data.value;
+      console.log(_physical)
+      hot.value = _hot;
+      active.value = _active;
+      latest.value = _latest;
+      physical.value = _physical;
+    }
+)
+
+
+
+// const header = ref('Nuxt 3 starter template')
+// const {counter} = goSick();
 
 // let res = await fetch(`https://www.instagram.com/${storeName}/?__a=1`);
 // res = await res.text();
 // const data = JSON.parse(res);
-
-const {ageRestrictedCategories} = useTags();
-const showAgeRestrictedContent = useShowAgeRestrictedContent();
-const params = {};
-if (showAgeRestrictedContent.value) {
-  params["adult"] = true
-}
-const {data} = await useFetch(`/api/home`, {params});
-const {hot, active, latest, physical} = data.value;
 
 // function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {
 //   const lastIndex = Math.ceil(slidesPerView) - 1;
@@ -106,6 +121,7 @@ const {hot, active, latest, physical} = data.value;
 
       <div class="section-title px-4 md:px-0">實體店鋪</div>
       <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>
+
     </div>
 
   </div>
