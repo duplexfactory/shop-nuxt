@@ -3,7 +3,7 @@
   "scripts": {
     "deploy": "yarn build && cp package.deploy.json .output/ && wrangler publish",
     "dev": "nuxi dev",
-    "build": "nuxi build",
+    "build": "yarn patch && nuxi build",
     "start": "node .output/server/index.mjs",
     "patch": "yarn add -D patch-vue-directive-ssr"
   },
