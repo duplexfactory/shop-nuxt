@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
-import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
-import MediaCardSwiperList from "~/components/MediaCardSwiperList.vue";
+import {useShowAgeRestrictedContent} from "~/composables/states";
 
 const header = ref('Nuxt 3 starter template')
 const {counter} = goSick();
@@ -15,9 +14,14 @@ const storeName = 'caseonlyy';
 // res = await res.text();
 // const data = JSON.parse(res);
 
-const {data} = await useFetch(`/api/home`);
-const {hot, active, latest, physical} = data.value;
 const {ageRestrictedCategories} = useTags();
+const showAgeRestrictedContent = useShowAgeRestrictedContent();
+const params = {};
+if (showAgeRestrictedContent.value) {
+  params["adult"] = true
+}
+const {data} = await useFetch(`/api/home`, {params});
+const {hot, active, latest, physical} = data.value;
 
 // function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {
 //   const lastIndex = Math.ceil(slidesPerView) - 1;
