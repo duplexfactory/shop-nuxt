@@ -43,7 +43,8 @@ export default defineNuxtConfig({
     '@/assets/font/css/shop-it-out-ie7-codes.css',
   ],
   publicRuntimeConfig: {
-    IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F"
+    IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F",
+    IMG_PROXY: process.env.IMG_PROXY
   },
   privateRuntimeConfig: {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
