@@ -3,7 +3,7 @@ import colors from 'windicss/colors'
 import plugin from 'windicss/plugin'
 
 export default defineConfig({
-  safelist: 'hidden xs:hidden sm:hidden lg:hidden xl:hidden 2xl:hidden xs:flex sm:flex lg:flex xl:flex 2xl:flex',
+  safelist: 'hidden xs:hidden sm:hidden lg:hidden xl:hidden 2xl:hidden xs:flex sm:flex lg:flex xl:flex 2xl:flex swiper swiper-padding swiper-pagination swiper-pagination-bullet-active swiper-button-prev swiper-button-next',
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
