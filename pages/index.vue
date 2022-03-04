@@ -128,20 +128,20 @@ watch(
 <style>
 
 .swiper-padding .swiper {
-  @apply px-4 md:px-0;
+  @apply px-4 md:px-0 !important;
 }
 
 .swiper-pagination .swiper-pagination-bullet-active {
-  @apply bg-pink-400;
+  @apply bg-pink-400 !important;
 }
 
 .swiper-button-next, .swiper-button-prev {
-  display: none;
-  @apply text-pink-400;
+  display: none !important;
+  @apply text-pink-400 !important;
 }
 
 .swiper-button-next::after, .swiper-button-prev::after {
-  font-size: 32px;
+  font-size: 32px !important;
 }
 
 @screen md {
