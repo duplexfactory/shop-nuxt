@@ -30,5 +30,5 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     const f = await fetch(url.toString(), {headers: headers})
     res.writeHead(f.status, f.statusText, f.headers.raw())
     await pipe(f.body, res)
-    res.end()
+    // res.end()
 }
