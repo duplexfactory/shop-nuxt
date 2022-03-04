@@ -8,11 +8,11 @@
       <slot/>
 
       <transition name="modal">
-        <MediaModal v-model:showModal="showMediaModal"></MediaModal>
+        <LazyMediaModal v-if="showMediaModal" v-model:showModal="showMediaModal"></LazyMediaModal>
       </transition>
 
       <transition name="modal">
-        <SearchModal v-model:showModal="showSearchModal"></SearchModal>
+        <LazySearchModal v-if="showSearchModal" v-model:showModal="showSearchModal"></LazySearchModal>
       </transition>
 
       <transition name="modal">
@@ -34,7 +34,7 @@
   watch(showMediaModal, (show, prevShow) => toggleOverflow(show))
 
   // Search Modal
-  const showSearchModal =  useShowSearchModal();
+  const showSearchModal = useShowSearchModal();
   watch(showSearchModal, (show, prevShow) => toggleOverflow(show))
 
   // Drawer

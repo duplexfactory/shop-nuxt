@@ -112,9 +112,7 @@ watch(
 
       <div class="px-4 md:px-0">
         <div class="section-title">活躍店長</div>
-        <client-only>
-          <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
-        </client-only>
+        <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
       </div>
 
       <div class="section-title px-4 md:px-0">實體店鋪</div>
