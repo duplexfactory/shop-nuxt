@@ -10,26 +10,24 @@ async function fetchHomeData() {
   if (showAgeRestrictedContent.value) {
     params["adult"] = true
   }
-  return useFetch(`/api/home`, {params});
+  const {data} = await useFetch(`/api/home`, {params});
+  const {hot: _hot, active: _active, latest: _latest, physical: _physical} = data.value;
+  hot.value = _hot;
+  active.value = _active;
+  latest.value = _latest;
+  physical.value = _physical;
 }
 
-const {data} = await fetchHomeData();
-const {hot, active, latest, physical} = toRefs(data.value);
+const hot = ref([]);
+const active = ref([]);
+const latest = ref([]);
+const physical = ref([]);
+fetchHomeData();
 
 watch(
     showAgeRestrictedContent,
-    async (show, prevShow) => {
-      const {data} = await fetchHomeData();
-      const {hot: _hot, active: _active, latest: _latest, physical: _physical} = data.value;
-      console.log(_physical)
-      hot.value = _hot;
-      active.value = _active;
-      latest.value = _latest;
-      physical.value = _physical;
-    }
+    async (show, prevShow) => fetchHomeData()
 )
-
-
 
 // const header = ref('Nuxt 3 starter template')
 // const {counter} = goSick();

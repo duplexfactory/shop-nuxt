@@ -153,7 +153,7 @@ async function fetchResults(p: PaginationQuery = new PaginationQuery()) {
       brickAndMortar.value == true ? true : undefined,
   ), p);
 }
-await fetchResults();
+fetchResults();
 
 const currentPage = ref<number>(1);
 async function pageChanged() {
