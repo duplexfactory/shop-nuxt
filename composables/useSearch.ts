@@ -33,10 +33,10 @@ export default function () {
             params["adult"] = "true";
         }
 
-        const {data} = await useFetch(`/api/search`, {params});
-        searchResultTotalCount.value = data.value.count;
+        const data = await $fetch(`/api/search`, {params});
+        searchResultTotalCount.value = data.count;
 
-        searchResults.value = data.value.pages;
+        searchResults.value = data.pages;
         // if (p.skip === 0) {
         //     searchResults.value = data.value.pages;
         // }
