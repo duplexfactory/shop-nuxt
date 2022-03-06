@@ -70,14 +70,18 @@ export default {
   props: {
     shops: Array as PropType<IgPage[]>
   },
-  mounted() {
-    // Navigation arrows
-    this.swiperOptions.navigation = {
-      nextEl: this.$refs.swiperButtonNext,
-      prevEl: this.$refs.swiperButtonPrev,
-    };
+  methods: {
+    loadSwiper() {
+      console.log("loadSwiper");
 
-    const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+      // Navigation arrows
+      this.swiperOptions.navigation = {
+        nextEl: this.$refs.swiperButtonNext,
+        prevEl: this.$refs.swiperButtonPrev,
+      };
+
+      const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+    }
   }
 }
 </script>
@@ -90,26 +94,30 @@ export default {
       </template>
     </swiper-slides-placeholder>
 
-    <!-- Slider main container -->
-    <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
-      <!-- Additional required wrapper -->
-      <div class="swiper-wrapper pb-8">
-        <!-- Slides -->
-        <StoreCardSquare v-for="shop in shops"
-                          class="swiper-slide"
-                          :shop="shop"
-                          :showLocations="true"
-                          :key="shop.username + '-store-card-sq'"></StoreCardSquare>
+    <lazy-component @show="loadSwiper">
+      <!-- Slider main container -->
+      <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper pb-8">
+          <!-- Slides -->
+          <StoreCardSquare v-for="shop in shops"
+                           class="swiper-slide"
+                           :shop="shop"
+                           :showLocations="true"
+                           :key="shop.username + '-store-card-sq'"></StoreCardSquare>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
+
+        <!-- If we need navigation buttons -->
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
+
+        <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+        <!--        <div class="swiper-scrollbar"></div>-->
       </div>
-      <!-- If we need pagination -->
-      <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
+    </lazy-component>
 
-      <!-- If we need navigation buttons -->
-      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-      <div ref="swiperButtonNext" class="swiper-button-next"></div>
 
-      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-      <!--        <div class="swiper-scrollbar"></div>-->
-    </div>
   </div>
 </template>
