@@ -146,12 +146,17 @@ const {
   search
 } = useSearch();
 async function fetchResults(p: PaginationQuery = new PaginationQuery()) {
-  await search(new PageSearchQuery(
-      route.query['keyword'] != "" ? route.query['keyword'] : undefined,
-      selectedTag.value != "" ? selectedTag.value : undefined,
-      businessRegistration.value == true ? true : undefined,
-      brickAndMortar.value == true ? true : undefined,
-  ), p);
+  try {
+    await search(new PageSearchQuery(
+        route.query['keyword'] != "" ? route.query['keyword'] : undefined,
+        selectedTag.value != "" ? selectedTag.value : undefined,
+        businessRegistration.value == true ? true : undefined,
+        brickAndMortar.value == true ? true : undefined,
+    ), p);
+  }
+  catch (e) {
+    console.log(e);
+  }
 }
 await fetchResults();
 
