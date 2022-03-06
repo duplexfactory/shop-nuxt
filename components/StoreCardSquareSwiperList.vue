@@ -96,13 +96,13 @@
 
 <template>
     <div>
-      <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder pb-8">
+      <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder pb-8">
         <template v-slot:default="slotProps">
           <div class="h-full w-full bg-loading"></div>
         </template>
       </swiper-slides-placeholder>
       <!-- Slider main container -->
-      <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
+      <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper pb-8">
           <!-- Slides -->
