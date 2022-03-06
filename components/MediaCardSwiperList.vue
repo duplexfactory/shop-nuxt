@@ -6,7 +6,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {PropType} from "vue";
 import IgPage from "~/models/IgPage";
-import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
 
 // configure Swiper to use modules
@@ -15,7 +14,6 @@ Swiper.use([Navigation, Pagination]);
 type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
 
 export default {
-  components: {SwiperSlidesPlaceholder},
   data() : {
     swiperReady: boolean,
     swiperOptions: SwiperOptions

@@ -19,14 +19,12 @@
     import "swiper/css/free-mode";
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
-    import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
     import {SwiperOptions} from "swiper/types/swiper-options";
 
     // configure Swiper to use modules
     Swiper.use([Navigation, FreeMode, Pagination]);
 
     export default {
-        components: {SwiperSlidesPlaceholder},
         data() : {
           swiperReady: boolean,
           swiperOptions: SwiperOptions

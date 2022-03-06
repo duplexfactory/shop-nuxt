@@ -7,15 +7,12 @@ import 'swiper/css/pagination';
 import "swiper/css/free-mode";
 import {PropType} from "vue";
 import IgPage from '~/models/IgPage';
-import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
-import StoreCardSquare from "~/components/StoreCardSquare.vue";
 
 // configure Swiper to use modules
 Swiper.use([Navigation, FreeMode, Pagination]);
 
 export default {
-  components: {StoreCardSquare, SwiperSlidesPlaceholder},
   data() : {
     swiperReady: boolean,
     swiperOptions: SwiperOptions
