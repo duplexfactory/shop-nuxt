@@ -46,13 +46,10 @@ export default {
   mounted() {
     let scriptExists: boolean = false;
     document.body.querySelectorAll("script").forEach((s) => {
-      // console.log(s);
-      // console.log(s.src);
       if (s.src.includes('www.instagram.com/embed.js')) {
         scriptExists = true;
       }
     });
-    // console.log(scriptExists);
     if (!scriptExists) {
       const script = document.createElement("script");
       script.type = "text/javascript";

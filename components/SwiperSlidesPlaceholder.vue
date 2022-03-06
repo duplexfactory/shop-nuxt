@@ -23,24 +23,29 @@ export default {
       let spaceBetween: number | undefined = this.swiperOptions.spaceBetween;
       let slidesPerView: number | undefined = this.swiperOptions.slidesPerView;
 
-      const a = [];
+      const a = [{
+        classBreakpoint: '',
+        nextClassBreakpoint: 'lg',
+        spaceBetween,
+        slidesPerView
+      }];
       for (const key of Object.keys(this.swiperOptions.breakpoints)) {
         if (!isNaN(Number(key))) {
           const width = Number(key);
           spaceBetween = this.swiperOptions.breakpoints[Number(key)].spaceBetween;
           slidesPerView = this.swiperOptions.breakpoints[Number(key)].slidesPerView;
-          let classBreakpoint = '';
-          let nextClassBreakpoint = '';
+          let classBreakpoint;
+          let nextClassBreakpoint;
           if (width == 1024) {
-            classBreakpoint = 'lg';
+            classBreakpoint = 'hidden lg:';
             nextClassBreakpoint = 'xl';
           }
           else if (width == 1280) {
-            classBreakpoint = 'xl';
+            classBreakpoint = 'hidden xl:';
             nextClassBreakpoint = '2xl';
           }
           else if (width == 1536) {
-            classBreakpoint = '2xl';
+            classBreakpoint = 'hidden 2xl:';
             nextClassBreakpoint = '';
           }
           a.push({
@@ -60,10 +65,9 @@ export default {
 <template>
 
   <div class="w-full">
-    <div v-for="config in configs()" class="w-full" :class="`hidden ${config.classBreakpoint}:flex ${config.nextClassBreakpoint}:hidden`">
+    <div v-for="config in configs()" class="w-full" :class="`${config.classBreakpoint}flex ${config.nextClassBreakpoint}:hidden`">
       <template v-for="(_, i) of Array(Math.ceil(config.slidesPerView)).fill(0)">
-        <div class="bg-red-300"
-             :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
+        <div :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
           <slot></slot>
         </div>
       </template>

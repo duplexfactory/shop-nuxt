@@ -87,7 +87,7 @@ export default {
 
 <template>
   <div>
-    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>
@@ -116,19 +116,3 @@ export default {
     </div>
   </div>
 </template>
-<style scoped>
-    .bg-loading {
-      background: #eee;
-      background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-      border-radius: 5px;
-      background-size: 200% 100%;
-      animation: 1.5s shine linear infinite;
-    }
-
-    @keyframes shine {
-      to {
-        background-position-x: -200%;
-      }
-    }
-
-</style>

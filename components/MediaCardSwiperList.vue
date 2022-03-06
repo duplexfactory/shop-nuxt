@@ -1,5 +1,5 @@
 <script lang="ts">
-import Swiper, { Navigation, Pagination, Lazy } from 'swiper';
+import Swiper, { Navigation, Pagination } from 'swiper';
 // import Swiper and modules styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -94,7 +94,11 @@ export default {
 
 <template>
   <div>
-    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>
+    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
+      <template v-slot:default="slotProps">
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
     <!-- Slider main container -->
     <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
       <!-- Additional required wrapper -->
