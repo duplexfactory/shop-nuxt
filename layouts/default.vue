@@ -21,7 +21,10 @@
 
     </div>
 
-    <bottom-footer></bottom-footer>
+    <lazy-component @show="showFooter = true;">
+      <LazyBottomFooter v-if="showFooter"></LazyBottomFooter>
+    </lazy-component>
+
   </div>
 </template>
 
@@ -47,6 +50,9 @@
   function toggleOverflow(hidden: boolean) {
     hidden ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
   }
+
+  // Show Footer
+  const showFooter = ref(false);
 
 </script>
 
