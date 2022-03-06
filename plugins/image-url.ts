@@ -3,7 +3,6 @@ import AES from 'crypto-js/aes.js';
 
 export default defineNuxtPlugin((nuxtApp) => {
     const config = useRuntimeConfig();
-    console.log('use imageUrl');
     return {
         provide: {
             encryptImageUrl: (url: string) => {

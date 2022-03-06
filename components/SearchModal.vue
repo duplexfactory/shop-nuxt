@@ -1,5 +1,5 @@
 <template>
-  <LazyModal v-if="props.showModal" @close="closeModal">
+  <LazyModal @close="closeModal">
     <template v-slot:header>
       <div class="flex">
         <button style="aspect-ratio: 1;" @click="closeModal">

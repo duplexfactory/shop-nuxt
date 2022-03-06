@@ -1,5 +1,5 @@
 <template>
-  <LazyModal v-if="props.showModal" @close="$emit('update:showModal', false)">
+  <LazyModal @close="$emit('update:showModal', false)">
     <template v-slot:body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">

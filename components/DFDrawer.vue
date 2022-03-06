@@ -8,7 +8,7 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
 </script>
 
 <template>
-  <div class="sidenav-container">
+  <div class="w-full h-full">
 
     <div v-if="open" class="backdrop" @click="hideSidebar"></div>
 
@@ -102,10 +102,7 @@ export default {
 
 
 <style scoped>
-.sidenav-container {
-  height: 100%;
-  width: 100%;
-}
+
 .sidenav {
   width: 300px;
   background-color: #fff;
@@ -123,13 +120,13 @@ export default {
   /*top: 20px;*/
 }
 .backdrop {
-  width: 100%;
-  height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;
+
+  @apply h-full w-full;
 }
 .slide-side-enter-active,
 .slide-side-leave-active {
