@@ -48,7 +48,7 @@ export default {
     document.body.querySelectorAll("script").forEach((s) => {
       // console.log(s);
       // console.log(s.src);
-      if (s.src == 'http://www.instagram.com/embed.js') {
+      if (s.src.includes('www.instagram.com/embed.js')) {
         scriptExists = true;
       }
     });
