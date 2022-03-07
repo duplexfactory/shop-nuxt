@@ -5,24 +5,27 @@ import {useShowAgeRestrictedContent} from "~/composables/states";
 const {ageRestrictedCategories} = useTags();
 const showAgeRestrictedContent = useShowAgeRestrictedContent();
 
+const hot = ref([]);
+const active = ref([]);
+const latest = ref([]);
+const physical = ref([]);
+
+fetchHomeData();
+
 async function fetchHomeData() {
   const params = {};
   if (showAgeRestrictedContent.value) {
     params["adult"] = true
   }
-  const {data} = await useFetch(`/api/home`, {params});
-  const {hot: _hot, active: _active, latest: _latest, physical: _physical} = data.value;
-  hot.value = _hot;
-  active.value = _active;
-  latest.value = _latest;
-  physical.value = _physical;
+  const {data} = useLazyFetch(`/api/home`, {params, server: false});
+  watch(data, (newData) => {
+    const {hot: _hot, active: _active, latest: _latest, physical: _physical} = newData;
+    hot.value = _hot;
+    active.value = _active;
+    latest.value = _latest;
+    physical.value = _physical;
+  })
 }
-
-const hot = ref([]);
-const active = ref([]);
-const latest = ref([]);
-const physical = ref([]);
-fetchHomeData();
 
 watch(
     showAgeRestrictedContent,
