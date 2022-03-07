@@ -6,7 +6,8 @@ export default {
   components: {},
   props: {
     swiperOptions: Object as PropType<SwiperOptions>,
-    slideAspectRatio: Number
+    slideAspectRatio: { type: Number, default: 0 },
+    height: { type: Number, default: 0 },
   },
 
   methods: {
@@ -15,7 +16,13 @@ export default {
       if (index == lastIndex) {
         return 'flex: 1;';
       }
-      return `aspect-ratio: ${this.slideAspectRatio}; margin-right: ${spaceBetween}px; width: calc(${100 / slidesPerView}% - ${(spaceBetween * (slidesPerView - 1) / slidesPerView)}px);`;
+
+      if (this.slideAspectRatio !== 0) {
+        return `aspect-ratio: ${this.slideAspectRatio}; margin-right: ${spaceBetween}px; width: calc(${100 / slidesPerView}% - ${(spaceBetween * (slidesPerView - 1) / slidesPerView)}px);`;
+      }
+      else {
+        return `margin-right: ${spaceBetween}px; height: ${this.height}px; flex: 1;`;
+      }
     },
 
     configs(): { classBreakpoint: string; nextClassBreakpoint: string, spaceBetween: number; slidesPerView: number; }[] {

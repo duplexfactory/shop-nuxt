@@ -88,13 +88,13 @@ export default {
 
 <template>
   <div>
-    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || simplePages.length === 0" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>
     </swiper-slides-placeholder>
     <!-- Slider main container -->
-    <div :class="{'hidden': !swiperReady}" class="swiper" ref="swiper">
+    <div :class="{'hidden': !swiperReady || simplePages.length === 0}" class="swiper" ref="swiper">
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
@@ -119,24 +119,3 @@ export default {
   </div>
 
 </template>
-<style scoped>
-.swiper-pagination .swiper-pagination-bullet-active {
-  @apply bg-pink-400;
-}
-
-.swiper-button-next, .swiper-button-prev {
-  display: none;
-  @apply text-pink-400;
-}
-
-.swiper-button-next::after, .swiper-button-prev::after {
-  font-size: 32px;
-}
-
-@screen md {
-  .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
-    display: flex !important;
-  }
-}
-
-</style>

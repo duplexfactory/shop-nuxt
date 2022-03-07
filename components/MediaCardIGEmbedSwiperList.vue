@@ -129,24 +129,3 @@ export default {
   </div>
 
 </template>
-<style scoped>
-.swiper-pagination .swiper-pagination-bullet-active {
-  @apply bg-pink-400;
-}
-
-.swiper-button-next, .swiper-button-prev {
-  display: none;
-  @apply text-pink-400;
-}
-
-.swiper-button-next::after, .swiper-button-prev::after {
-  font-size: 32px;
-}
-
-@screen md {
-  .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
-    display: flex !important;
-  }
-}
-
-</style>
