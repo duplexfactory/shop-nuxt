@@ -8,48 +8,44 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="sidenav">
 
-    <div v-if="open" class="backdrop" @click="hideSidebar"></div>
+    <Teleport to="body">
+      <div v-if="open" class="backdrop" @click="hideSidebar"></div>
+    </Teleport>
 
-    <transition name="slide-side">
-      <div v-if="open" class="sidenav">
+    <div class="px-4 pt-4 flex justify-end">
+      <button @click="hideSidebar">
+        <i class="sio-cancel text-2xl"></i>
+      </button>
+    </div>
 
-        <div class="px-4 pt-4 flex justify-end">
-          <button @click="hideSidebar">
-            <i class="sio-cancel text-2xl"></i>
-          </button>
+    <div class="p-4 flex-1 overflow-y-auto">
+      <template v-if="selectedBottomTabIndex == 0">
+        <div v-for="category in ageRestrictedCategories" :key="category['id']" >
+          <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
+          <ul v-if="selectedCategory == category['id']">
+            <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>
+          </ul>
         </div>
-
-        <div class="p-4 flex-1 overflow-y-auto">
-          <template v-if="selectedBottomTabIndex == 0">
-            <div v-for="category in ageRestrictedCategories" :key="category['id']" >
-              <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
-              <ul v-if="selectedCategory == category['id']">
-                <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>
-              </ul>
-            </div>
-          </template>
-          <template v-else>
-            <AgeRestrictionToggle />
-          </template>
+      </template>
+      <template v-else>
+        <AgeRestrictionToggle />
+      </template>
 
 
-        </div>
+    </div>
 
-        <div class="flex">
-          <button v-for="(tab, i) in bottomTabs"
-                 :key="tab"
-                 :class="{'border-pink-400': selectedBottomTabIndex == i}"
-                 class="border-top-4 flex-1 text-center p-2"
-                 @click="selectedBottomTabIndex = i">
-            {{ tab }}
-          </button>
-        </div>
+    <div class="flex">
+      <button v-for="(tab, i) in bottomTabs"
+              :key="tab"
+              :class="{'border-pink-400': selectedBottomTabIndex == i}"
+              class="border-top-4 flex-1 text-center p-2"
+              @click="selectedBottomTabIndex = i">
+        {{ tab }}
+      </button>
+    </div>
 
-
-      </div>
-    </transition>
 
   </div>
 </template>

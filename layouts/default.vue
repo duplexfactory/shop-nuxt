@@ -2,7 +2,9 @@
   <div class="min-h-screen flex flex-col">
     <top-header @toggleDrawer="toggleDrawer"></top-header>
 
-    <DFDrawer @toggleDrawer="toggleDrawer" :open="drawerOpen"></DFDrawer>
+    <transition name="slide-side">
+      <LazyDFDrawer v-if="drawerOpen" @toggleDrawer="toggleDrawer" :open="drawerOpen"></LazyDFDrawer>
+    </transition>
 
     <div class="flex-1">
       <slot/>
