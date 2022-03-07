@@ -140,6 +140,14 @@ const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
 const businessRegistration = ref<boolean>(route.query['br'] === 'true');
 const brickAndMortar = ref<boolean>(route.query['brick'] === 'true');
 
+const selectedCategories = ref<string[]>([]);
+if (selectedTag.value !== '') {
+    const category = ageRestrictedCategories.value.find((c) => !!c.tags.find((t) => t.id == selectedTag.value));
+    if (category) {
+        selectedCategories.value.push(category.id);
+    }
+}
+
 const {
   searchResults,
   searchResultTotalCount,
@@ -244,22 +252,6 @@ watch(
 
 <script lang="ts">
   export default {
-    data() : {
-      selectedCategories: string[],
-    } {
-
-      const selectedCategories = [];
-      if (this.selectedTag !== '') {
-        const category = this.ageRestrictedCategories.find((c) => !!c.tags.find((t) => t.id == this.selectedTag));
-        if (category) {
-          selectedCategories.push(category.id);
-        }
-      }
-
-      return {
-        selectedCategories,
-      }
-    },
     computed: {
       isMobileFilterActive() {
         return (this.selectedTag !== '') || this.brickAndMortar || this.businessRegistration;
