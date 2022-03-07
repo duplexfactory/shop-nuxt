@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             },
             imageUrl: (code: string) => {
                 // return nuxtApp.$encryptImageUrl('https://www.instagram.com/p/' + code + '/media/?size=m');
-                return config.IMG_PROXY + code;
+                return `${config.IMG_PROXY}/image/${code}`;
             }
         }
     }

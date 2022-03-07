@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   meta: {
     title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器丨Shopitout',
     link: [
-      {rel: 'preconnect dns-prefetch', href: 'https://shopitout.duplexfactory.com'},
+      {rel: 'preconnect dns-prefetch', href: process.env.IMG_PROXY},
     ],
     meta: [
       {charset: 'utf-8'},
