@@ -10,7 +10,7 @@
       <slot/>
 
       <transition name="modal">
-        <LazyMediaModal v-if="showMediaModal" v-model:showModal="showMediaModal"></LazyMediaModal>
+        <LazyMediaModal v-if="showMediaModal"></LazyMediaModal>
       </transition>
 
       <transition name="modal">

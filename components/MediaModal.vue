@@ -1,5 +1,5 @@
 <template>
-  <LazyModal @close="$emit('update:showModal', false)">
+  <LazyModal @close="close">
     <template v-slot:body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
@@ -35,15 +35,16 @@
 
 <script setup lang="ts">
 
-import {useShowingMediaModalData} from "~/composables/states";
 import IgPageReview from "~/models/IgPageReview";
 import useCreateReview from "~/composables/useCreateReview";
+
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+
+// Media Modal
+const showMediaModal =  useShowMediaModal();
 const showingMediaModalData = useShowingMediaModalData();
 
-const props = defineProps({
-  showModal: { type: Boolean, default: false },
-});
-
+// Create Review
 const {
   reviewingCode,
   reviewingPagePk,
@@ -54,20 +55,19 @@ const {
   resetCreateReview
 } = useCreateReview();
 const isShowingCreateReview = ref<boolean>(false);
+reviewingCode.value = showingMediaModalData.value.code;
+reviewingPagePk.value = showingMediaModalData.value.pagePk;
 
 const reviews = ref<IgPageReview[]>([]);
+await fetchReviews();
+
 watch(
-    () => props.showModal,
+    () => showingMediaModalData.value,
     async (show, prevShow) => {
       if (show) {
         reviewingCode.value = showingMediaModalData.value.code;
         reviewingPagePk.value = showingMediaModalData.value.pagePk;
         await fetchReviews();
-      }
-      else {
-        resetCreateReview();
-        isShowingCreateReview.value = false;
-        reviews.value = [];
       }
     }
 )
@@ -82,6 +82,14 @@ async function sendReview() {
   await createReview();
   isShowingCreateReview.value = false;
   await fetchReviews();
+}
+
+function close() {
+  resetCreateReview();
+  isShowingCreateReview.value = false;
+  reviews.value = [];
+
+  showMediaModal.value = false;
 }
 
 </script>

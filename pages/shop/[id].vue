@@ -31,23 +31,15 @@
     import IgPage from "../../models/IgPage";
     import dayjs from "dayjs";
 
-    const {data} = await useFetch(`/api/shop`, {params: {id: useRoute().params.id}});
-    const {page} = data.value as { page: IgPage };
-    const {
-        pk,
-        username,
-        lastActivity,
-        fullName,
-        biography,
-        followerCount,
-        mediaCount,
-        profilePicUrl,
-        tags,
-        brickAndMortar,
-        locations
-    } = page
-    const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-    const description = biography;
+    const page = ref(null);
+    const lastActive = ref("");
+    const {data} = useLazyFetch(`/api/shop`, {params: {id: useRoute().params.id}, server: false});
+    watch(data, (newData) => {
+      const {page: _page} = newData;
+      page.value = _page
+      lastActive.value = dayjs(_page.lastActivity * 1000).format('DD/MM/YYYY');
+      reviewingPagePk.value = _page.pk;
+    })
 
     // Media Modal
     import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
@@ -62,7 +54,7 @@
 
     async function fetchReviews() {
       reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
-          pagePk: pk,
+          pagePk: page.value.pk,
         }}))['reviews'];
     }
 
@@ -76,7 +68,6 @@
       content,
       createReview,
     } = useCreateReview();
-    reviewingPagePk.value = pk;
 
     async function sendReview() {
       await createReview();
@@ -100,12 +91,12 @@ export default  {
 
 <template>
     <div class="mb-16">
-        <div class="container mx-auto">
+        <div v-if="page !== null" class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="bg-gray-300 rounded-full square-image-container mr-8" v-lazy:background-image="profilePicUrl" style="height: 100px;"></div>
+                    <div class="bg-gray-300 rounded-full square-image-container mr-8" v-lazy:background-image="page.profilePicUrl" style="height: 100px;"></div>
                     <div class="mt-2">
-                        <div class="font-semibold text-xl truncate">{{ username }}</div>
+                        <div class="font-semibold text-xl truncate">{{ page.username }}</div>
                         <div class="mt-2 text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
 
@@ -113,31 +104,31 @@ export default  {
                       <div class="flex">
                         <div class="text-center" style="flex: 1;">
                           <div>粉絲</div>
-                          <div>{{ followerCount.toLocaleString() }}</div>
+                          <div>{{ page.followerCount.toLocaleString() }}</div>
                         </div>
                         <div class="bg-gray-300 mx-4" style="width: 1px;"></div>
                         <div class="text-center" style="flex: 1;">
                           <div>貼文</div>
-                          <div>{{ mediaCount.toLocaleString() }}</div>
+                          <div>{{ page.mediaCount.toLocaleString() }}</div>
                         </div>
                       </div>
                     </div>
 
-                    <div v-if="brickAndMortar" class="mt-2 text-gray-500 text-sm md:text-lg">
-                      {{ '門市：' + locations.join('、') }}
+                    <div v-if="page.brickAndMortar" class="mt-2 text-gray-500 text-sm md:text-lg">
+                      {{ '門市：' + page.locations.join('、') }}
                     </div>
                     <!--                    <button class="btn btn-outline">我知道</button>-->
 
                     <div class="mt-2 line-clamp-2" style="font-size: 0;">
-                      <div v-for="tag in tags"
+                      <div v-for="tag in page.tags"
                            :key="tag"
                            class="tag mr-1 2xl:mr-2 !md:text-lg">{{ `#${tagsLookup[tag]}` }}</div>
                     </div>
                 </div>
 
                 <div class="py-4 col-span-5 lg:col-span-6">
-                    <div class="text-gray-500">{{ fullName }}</div>
-                    <div class="mt-2 text-gray-500 whitespace-pre-wrap">{{ biography }}</div>
+                    <div class="text-gray-500">{{ page.fullName }}</div>
+                    <div class="mt-2 text-gray-500 whitespace-pre-wrap">{{ page.biography }}</div>
                 </div>
             </section>
 
