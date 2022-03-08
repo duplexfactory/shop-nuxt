@@ -43,7 +43,9 @@ export default {
 
 
       <div class="col-span-3">
-            <div class="hidden sm:block bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${shop.profilePicUrl});`" style="height: 70px;"></div>
+            <div class="hidden sm:block bg-gray-300 rounded-full square-image-container"
+                 v-lazy:background-image="shop.profilePicUrl"
+                 style="height: 70px;"></div>
 
             <div class="sm:mt-2 font-semibold text-lg truncate">
               <a class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
@@ -79,7 +81,10 @@ export default {
               {{ '門市：' + shop.locations.join('、') }}
             </div>
             <div class="mt-2 sm:mt-4 flex flex-row">
-                <div v-for="i in shop.mediaCodes" :key="i.toString()" class="bg-gray-300 mr-2 square-image-container" style="height: 100px;" v-lazy:background-image="$imageUrl(i)"></div>
+                <div v-for="i in shop.mediaCodes" :key="i.toString()"
+                     class="bg-gray-300 mr-2 square-image-container"
+                     style="height: 100px;"
+                     v-lazy:background-image="$imageUrl(i)"></div>
             </div>
         </div>
 
