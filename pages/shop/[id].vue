@@ -41,6 +41,9 @@
       reviewingPagePk.value = _page.pk;
     })
 
+    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {id: useRoute().params.id}, server: false});
+    const medias = computed(() => mediaData.value.medias || []);
+
     // Media Modal
     import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
@@ -138,7 +141,7 @@ export default  {
                     <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</button>
                 </div>
                 <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
-                  <MediaCard v-for="media in page.medias"
+                  <MediaCard v-for="media in medias"
                              class="col-span-1"
                              @click="showModal = true; showingMediaModalData = {code: media.code, pagePk: media.pagePk, username: page.username};"
                              style="cursor: pointer"
