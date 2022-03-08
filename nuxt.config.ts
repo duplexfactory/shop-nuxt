@@ -47,7 +47,8 @@ export default defineNuxtConfig({
   ],
   publicRuntimeConfig: {
     IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F",
-    IMG_PROXY: process.env.IMG_PROXY
+    IMG_PROXY: process.env.IMG_PROXY,
+    DOMAIN: process.env.DOMAIN
   },
   privateRuntimeConfig: {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,

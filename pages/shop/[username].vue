@@ -31,19 +31,27 @@
     import IgPage from "../../models/IgPage";
     import dayjs from "dayjs";
 
+    const config = useRuntimeConfig();
+    const route = useRoute();
 
-    const {data} = useLazyFetch(`/api/shop`, {params: {username: useRoute().params.username}});
+    const {data} = useLazyFetch(`/api/shop`, {params: {username: route.params.username}});
     const page = computed(() => data.value ? data.value.page : null);
-    const lastActive = computed(() => page !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
+    const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
 
-    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: useRoute().params.username}});
+    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: route.params.username}});
     const medias = computed(() => mediaData.value ? mediaData.value.medias : []);
 
     // Meta
     useMeta({
-      title: `${useRoute().params.username} | IG Shop 推薦及評論平台 | Shopitout`,
+      title: `${route.params.username} | IG Shop 推薦及評論平台 | Shopitout`,
       meta: [
-        {property: 'og:title', hid: 'og:title', content: `${useRoute().params.username} | IG Shop 推薦及評論平台 | Shopitout`},
+        {name: 'description', hid: 'description', content: `${page.value !== null ? page.value.fullName : ""}`},
+        {property: 'og:title', hid: 'og:title', content: `${route.params.username} | IG Shop 推薦及評論平台 | Shopitout`},
+        {property: 'og:url', hid: 'og:url', content: `${config.DOMAIN}/shop/${route.params.username}`},
+        {property: 'og:image', hid: 'og:image', content: `${page.value !== null ? page.value.profilePicUrl : ""}`},
+        {property: 'og:image:height', hid: 'og:image:height', content: '150'},
+        {property: 'og:image:width', hid: 'og:image:width', content: '150'},
+        {property: 'og:description', hid: 'og:description', content: `${page.value !== null ? page.value.fullName : ""}`}
       ]
     })
 
