@@ -83,14 +83,15 @@
           </div>
         </div>
 
-        <div v-for="page in searchResults" :key="page._id.toString()">
-          <StoreCardRectangle @click="$router.push(`/shop/${page._id}`)"
-                              style="cursor: pointer"
-                              :shop="page"
-                              class="mb-4"></StoreCardRectangle>
-          <hr class="sm:hidden mb-4"/>
-        </div>
-
+        <template v-if="!searchPending">
+          <div v-for="page in searchResults" :key="page._id.toString()">
+            <StoreCardRectangle @click="$router.push(`/shop/${page._id}`)"
+                                style="cursor: pointer"
+                                :shop="page"
+                                class="mb-4"></StoreCardRectangle>
+            <hr class="sm:hidden mb-4"/>
+          </div>
+        </template>
 
         <!-- Bottom Pagination -->
         <div class="flex justify-center">
@@ -151,26 +152,23 @@ if (selectedTag.value !== '') {
 const {
   searchResults,
   searchResultTotalCount,
+  searchPending,
   search
 } = useSearch();
 async function fetchResults(p: PaginationQuery = new PaginationQuery()) {
-  try {
-    await search(new PageSearchQuery(
-        route.query['keyword'] != "" ? route.query['keyword'] : undefined,
-        selectedTag.value != "" ? selectedTag.value : undefined,
-        businessRegistration.value == true ? true : undefined,
-        brickAndMortar.value == true ? true : undefined,
-    ), p);
-  }
-  catch (e) {
-    console.log(e);
-  }
+  await search(new PageSearchQuery(
+      route.query['keyword'] != "" ? route.query['keyword'] : undefined,
+      selectedTag.value != "" ? selectedTag.value : undefined,
+      businessRegistration.value == true ? true : undefined,
+      brickAndMortar.value == true ? true : undefined,
+  ), p);
 }
+
 await fetchResults();
 
 const currentPage = ref<number>(1);
-async function pageChanged() {
-  await fetchResults(new PaginationQuery(
+function pageChanged() {
+  fetchResults(new PaginationQuery(
       (currentPage.value - 1) * 10
   ));
 }
@@ -193,7 +191,7 @@ watch(
         }
       }
 
-      await fetchResults();
+      fetchResults();
     }
 )
 

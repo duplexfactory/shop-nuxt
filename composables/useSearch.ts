@@ -7,6 +7,7 @@ export default function () {
 
     const searchResults = ref<PageSearch[]>([]);
     const searchResultTotalCount = ref<number>(0);
+    const searchPending = ref<boolean>(false);
 
     // const double = computed(() => count.value * 2)
 
@@ -33,10 +34,16 @@ export default function () {
             params["adult"] = "true";
         }
 
-        const data = await $fetch(`/api/search`, {params});
-        searchResultTotalCount.value = data.count;
+        const {data} = useLazyFetch(`/api/search`, {params, server: false});
+        searchPending.value = true;
+        watch(data, (newData) => {
+            const {count, pages} = newData;
+            searchResultTotalCount.value = count;
+            searchResults.value = pages;
 
-        searchResults.value = data.pages;
+            searchPending.value = false;
+        })
+
         // if (p.skip === 0) {
         //     searchResults.value = data.value.pages;
         // }
@@ -47,6 +54,7 @@ export default function () {
     return {
         searchResults,
         searchResultTotalCount,
+        searchPending,
         search
     }
 }
