@@ -41,7 +41,7 @@
       reviewingPagePk.value = _page.pk;
     })
 
-    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: useRoute().params.username}, server: false});
+    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: useRoute().params.username}});
     const medias = computed(() => mediaData.value.medias || []);
 
     // Meta
