@@ -98,11 +98,6 @@
 
 <template>
     <div>
-      <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :height="268" :swiper-options="swiperOptions" class="pb-8">
-        <template v-slot:default="slotProps">
-          <div class="h-full w-full bg-loading"></div>
-        </template>
-      </swiper-slides-placeholder>
       <lazy-component @show="loadSwiper">
         <!-- Slider main container -->
         <div :class="{'hidden': !swiperReady || shops.length === 0}"  class="swiper" ref="swiper">
@@ -125,5 +120,10 @@
           <!--        <div class="swiper-scrollbar"></div>-->
         </div>
       </lazy-component>
+      <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :height="268" :swiper-options="swiperOptions" class="pb-8">
+        <template v-slot:default="slotProps">
+          <div class="h-full w-full bg-loading"></div>
+        </template>
+      </swiper-slides-placeholder>
     </div>
 </template>

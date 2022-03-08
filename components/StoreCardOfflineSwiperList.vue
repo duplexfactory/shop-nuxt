@@ -94,12 +94,6 @@ export default {
 
 <template>
   <div>
-    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder pb-8">
-      <template v-slot:default="slotProps">
-        <div class="h-full w-full bg-loading"></div>
-      </template>
-    </swiper-slides-placeholder>
-
     <lazy-component @show="loadSwiper">
       <!-- Slider main container -->
       <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
@@ -124,6 +118,11 @@ export default {
       </div>
     </lazy-component>
 
+    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder pb-8">
+      <template v-slot:default="slotProps">
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
 
   </div>
 </template>
