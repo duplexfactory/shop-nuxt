@@ -25,7 +25,20 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
 
     const data = pageDoc.data();
-    let page: IgPage = data instanceof Array ? data.at(0) : data;
+    let page: IgPage;
+    if (data instanceof Array) {
+        if (data.length !== 0) {
+            page = data[0]
+        }
+        else {
+            res.statusCode = 404
+            res.end()
+            throw new Error()
+        }
+    }
+    else {
+        page = data;
+    }
 
     // const now = Date.now()
     // if (now - page.profilePicLastFetch > 2 * 24 * 60 * 60 * 1000) {
