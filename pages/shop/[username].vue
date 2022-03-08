@@ -42,7 +42,7 @@
     })
 
     const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: useRoute().params.username}});
-    const medias = computed(() => mediaData.value.medias || []);
+    const medias = computed(() => mediaData.value && mediaData.value.medias ? mediaData.value.medias : []);
 
     // Meta
     useMeta({
