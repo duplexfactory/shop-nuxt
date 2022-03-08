@@ -31,7 +31,7 @@
                 </template>
                 <template v-if="searchResults.length !== 0">
                   <div class="px-4 py-2 text-sm bg-gray-50">搜尋結果</div>
-                  <button @mousedown="quickSearchResultPressed(result._id)" class="px-4 py-2 text-sm block" v-for="result in searchResults">{{ result.username }}</button>
+                  <button @mousedown="quickSearchResultPressed(result.username)" class="px-4 py-2 text-sm block" v-for="result in searchResults">{{ result.username }}</button>
                 </template>
               </div>
             </div>
@@ -103,8 +103,8 @@ export default  {
       Object.assign(query, { tag: tagId });
       this.$router.push({path: '/search', query});
     },
-    quickSearchResultPressed: function(pagePk: number) {
-      this.$router.push({path: `/shop/${pagePk}`});
+    quickSearchResultPressed: function(username: string) {
+      this.$router.push({path: `/shop/${username}`});
     },
     search: function () {
       let query = this.$route.path == "/search" ? {...this.$route.query} : {};

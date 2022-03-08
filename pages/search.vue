@@ -85,7 +85,7 @@
 
         <template v-if="!searchPending">
           <div v-for="page in searchResults" :key="page._id.toString()">
-            <StoreCardRectangle @click="$router.push(`/shop/${page._id}`)"
+            <StoreCardRectangle @click="$router.push(`/shop/${page.username}`)"
                                 style="cursor: pointer"
                                 :shop="page"
                                 class="mb-4"></StoreCardRectangle>

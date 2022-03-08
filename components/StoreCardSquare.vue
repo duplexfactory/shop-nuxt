@@ -64,7 +64,7 @@
                          class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
                 </div>
 
-                <nuxt-link :to="`/shop/${pk}`"
+                <nuxt-link :to="`/shop/${username}`"
                            class="absolute block mt-2 2xl:mt-4 btn-outline btn-primary-hover btn-sm sm:btn" style="bottom: 0px;">進入店鋪</nuxt-link>
             </div>
         </div>

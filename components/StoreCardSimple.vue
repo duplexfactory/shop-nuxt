@@ -32,7 +32,7 @@
         </div>
 
         <div class="mt-3">
-          <nuxt-link :to="`/shop/${pk}`" class="btn-primary btn-sm">探索</nuxt-link>
+          <nuxt-link :to="`/shop/${username}`" class="btn-primary btn-sm">探索</nuxt-link>
         </div>
 
     </div>

@@ -33,7 +33,7 @@
 
     const page = ref(null);
     const lastActive = ref("");
-    const {data} = useLazyFetch(`/api/shop`, {params: {id: useRoute().params.id}, server: false});
+    const {data} = useLazyFetch(`/api/shop`, {params: {id: useRoute().params.username}, server: false});
     watch(data, (newData) => {
       const {page: _page} = newData;
       page.value = _page
@@ -41,7 +41,7 @@
       reviewingPagePk.value = _page.pk;
     })
 
-    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {id: useRoute().params.id}, server: false});
+    const {data: mediaData} = useLazyFetch(`/api/media`, {params: {id: useRoute().params.username}, server: false});
     const medias = computed(() => mediaData.value.medias || []);
 
     // Media Modal
