@@ -46,12 +46,12 @@
                 </div>
                 <!-- Online show followers -->
                 <div v-else class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
-                    <div class="text-center" style="flex: 1;">
+                    <div class="text-center flex-1">
                         <div>粉絲</div>
                         <div>{{ followerCount.toLocaleString() }}</div>
                     </div>
                     <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
-                    <div class="text-center" style="flex: 1;">
+                    <div class="text-center flex-1">
                         <div>貼文</div>
                         <div>{{ mediaCount.toLocaleString() }}</div>
                     </div>
@@ -71,13 +71,10 @@
 
         <div class="col-span-1" v-if="mediaCodes">
             <div class="bg-gray-300 square-image-container" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
-            <div class="bg-white" style="height: 2px;"/>
-            <div class="flex flex-row">
-                <div class="bg-red-300 square-image-container" style="flex: 1;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
-                <div style="width: 2px;"></div>
-                <div class="bg-green-300 square-image-container" style="flex: 1;" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
+            <div class="flex" style="margin-top: 2px;">
+                <div class="bg-gray-300 square-image-container flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
+                <div class="bg-gray-300 square-image-container flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
             </div>
-
         </div>
     </div>
 </template>
