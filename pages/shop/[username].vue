@@ -44,6 +44,14 @@
     const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: useRoute().params.username}, server: false});
     const medias = computed(() => mediaData.value.medias || []);
 
+    // Meta
+    useMeta({
+      title: `${useRoute().params.username} | IG Shop 推薦及評論平台 | Shopitout`,
+      meta: [
+        {property: 'og:title', hid: 'og:title', content: `${useRoute().params.username} | IG Shop 推薦及評論平台 | Shopitout`},
+      ]
+    })
+
     // Media Modal
     import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 

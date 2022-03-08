@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "nuxt-windicss",
   ],
   meta: {
-    title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器丨Shopitout',
+    title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shopitout',
     link: [
       {rel: 'preconnect dns-prefetch', href: process.env.IMG_PROXY},
     ],
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       {name: 'theme-color', content: '#f472b6'},
       {name: 'keywords', content: 'Shopitout, ig shop, ig shop衫, instagram, 網店, ig shop商業登記, ig shop推薦, ig shop攻略'},
       {property: 'og:locale', hid: 'og:locale', content: 'zh_HK'},
-      {property: 'og:title', hid: 'og:title', content: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器丨Shopitout'},
+      {property: 'og:title', hid: 'og:title', content: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shopitout'},
       // {property: 'og:url', hid: 'og:url', content: process.env.DOMAIN_WEB},
       // {
       //   property: 'og:image',
