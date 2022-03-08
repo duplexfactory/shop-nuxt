@@ -31,18 +31,13 @@
     import IgPage from "../../models/IgPage";
     import dayjs from "dayjs";
 
-    const page = ref(null);
-    const lastActive = ref("");
-    const {data} = useLazyFetch(`/api/shop`, {params: {username: useRoute().params.username}, server: false});
-    watch(data, (newData) => {
-      const {page: _page} = newData;
-      page.value = _page
-      lastActive.value = dayjs(_page.lastActivity * 1000).format('DD/MM/YYYY');
-      reviewingPagePk.value = _page.pk;
-    })
+
+    const {data} = useLazyFetch(`/api/shop`, {params: {username: useRoute().params.username}});
+    const page = computed(() => data.value ? data.value.page : null);
+    const lastActive = computed(() => page !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
 
     const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: useRoute().params.username}});
-    const medias = computed(() => mediaData.value && mediaData.value.medias ? mediaData.value.medias : []);
+    const medias = computed(() => mediaData.value ? mediaData.value.medias : []);
 
     // Meta
     useMeta({
@@ -81,6 +76,7 @@
     } = useCreateReview();
 
     async function sendReview() {
+      reviewingPagePk.value = page.value.pk;
       await createReview();
       await fetchReviews();
     }
