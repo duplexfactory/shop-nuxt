@@ -188,13 +188,26 @@ function clearFilters() {
 useMeta(computed(() => {
 
   let title = "", metaDescription = "";
+  const tail = "你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。";
   if (route.query['keyword'] && route.query['keyword'] != "") {
     title = `${route.query['keyword']} | IG Shop 推薦及評論平台 | Shopitout`;
-    metaDescription = `${route.query['keyword']}的搜尋結果 - 共${searchResultTotalCount.value}個。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
+    metaDescription = `${route.query['keyword']}的搜尋結果 - 共${searchResultTotalCount.value}個。${tail}`;
   }
   else if (selectedTag.value != "") {
     title = `${tagsLookup[selectedTag.value]} IG Shop 一覽 | Shopitout 推薦及評論平台`;
-    metaDescription = `共${searchResultTotalCount.value}個${tagsLookup[selectedTag.value]} IG Shop。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
+    metaDescription = `共${searchResultTotalCount.value}個${tagsLookup[selectedTag.value]} IG Shop。${tail}`;
+  }
+  else if (businessRegistration.value) {
+    title = `持商業登記 | IG Shop 推薦及評論平台 | Shopitout`;
+    metaDescription = `共${searchResultTotalCount.value}個持商業登記的 IG Shop。${tail}`;
+  }
+  else if (brickAndMortar.value != "") {
+    title = `門市實體店 | IG Shop 推薦及評論平台 | Shopitout`;
+    metaDescription = `共${searchResultTotalCount.value}個有門市實體店的 IG Shop。${tail}`;
+  }
+  else {
+    title = `推薦 IG Shop | IG Shop 推薦及評論平台 | Shopitout`;
+    metaDescription = tail;
   }
 
   return {
