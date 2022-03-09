@@ -160,8 +160,8 @@ const {
   searchPending,
   search
 } = useSearch();
-async function fetchResults(p: PaginationQuery = new PaginationQuery()) {
-  await search(new PageSearchQuery(
+function fetchResults(p: PaginationQuery = new PaginationQuery()) {
+  search(new PageSearchQuery(
       route.query['keyword'] != "" ? route.query['keyword'] : undefined,
       selectedTag.value != "" ? selectedTag.value : undefined,
       businessRegistration.value == true ? true : undefined,
@@ -169,7 +169,7 @@ async function fetchResults(p: PaginationQuery = new PaginationQuery()) {
   ), p);
 }
 
-await fetchResults();
+fetchResults();
 
 const currentPage = ref<number>(1);
 function pageChanged() {
@@ -187,13 +187,13 @@ function clearFilters() {
 useMeta(computed(() => {
 
   let title = "", metaDescription = "";
-  if (route.query['keyword'] != "") {
+  if (route.query['keyword'] && route.query['keyword'] != "") {
     title = `${route.query['keyword']} | IG Shop 推薦及評論平台 | Shopitout`;
     metaDescription = `${route.query['keyword']}的搜尋結果 - 共${searchResultTotalCount.value}個。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
   }
   else if (selectedTag.value != "") {
     title = `${selectedTag.value} IG Shop 一覽 | Shopitout 推薦及評論平台`;
-    metaDescription = `共${searchResultTotalCount.value}個${route.query['keyword']} IG Shop。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
+    metaDescription = `共${searchResultTotalCount.value}個${selectedTag.value} IG Shop。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
   }
 
   return {

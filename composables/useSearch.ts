@@ -2,12 +2,26 @@ import {PageSearch} from "~/models/PageSearch";
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import {PaginationQuery} from "~/models/PaginationQuery";
 import {useShowAgeRestrictedContent} from "~/composables/states";
+import type {Ref} from "vue";
 
 export default function () {
 
-    const searchResults = ref<PageSearch[]>([]);
-    const searchResultTotalCount = ref<number>(0);
-    const searchPending = ref<boolean>(false);
+    let searchPending = ref(false);
+
+    const searchData: Ref<Ref<{pages: PageSearch[], count: number}>> = ref(null);
+    const searchDataBuffer: Ref<{pages: PageSearch[], count: number}> = ref(null);
+    const safeSearchData = computed(() => {
+        if (searchPending.value && !!searchDataBuffer.value) {
+            return searchDataBuffer.value;
+        }
+        else if (!!searchData.value && !!searchData.value.value) {
+            return searchData.value.value;
+        }
+        return {
+            pages: [],
+            count: 0
+        };
+    })
 
     // const double = computed(() => count.value * 2)
 
@@ -34,15 +48,12 @@ export default function () {
             params["adult"] = "true";
         }
 
-        const {data} = useLazyFetch(`/api/search`, {params, server: false});
-        searchPending.value = true;
-        watch(data, (newData) => {
-            const {count, pages} = newData;
-            searchResultTotalCount.value = count;
-            searchResults.value = pages;
-
-            searchPending.value = false;
-        })
+        const {data, pending} = useLazyFetch(`/api/search`, {params});
+        if (!!searchData.value && !!searchData.value.value) {
+            searchDataBuffer.value = searchData.value.value;
+        }
+        searchData.value = data;
+        searchPending = pending;
 
         // if (p.skip === 0) {
         //     searchResults.value = data.value.pages;
@@ -52,8 +63,8 @@ export default function () {
         // }
     }
     return {
-        searchResults,
-        searchResultTotalCount,
+        searchResults: computed(() => safeSearchData.value.pages),
+        searchResultTotalCount: computed(() => safeSearchData.value.count),
         searchPending,
         search
     }
