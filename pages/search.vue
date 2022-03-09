@@ -113,6 +113,7 @@
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import useSearch from "~/composables/useSearch";
 import {PaginationQuery} from "~/models/PaginationQuery";
+import {computed} from "@vue/reactivity";
 
 const {
   ageRestrictedCategories
@@ -134,6 +135,10 @@ const {
 //   "tags":["apparel","women's-clothing"],
 //   "username":"vellichor_shop"
 // };
+
+
+
+// Page Data Init
 
 const route = useRoute();
 const router = useRouter();
@@ -177,6 +182,30 @@ const isMobileFiltersShown = ref<boolean>(false);
 function clearFilters() {
 
 }
+
+// Meta
+useMeta(computed(() => {
+
+  let title = "", metaDescription = "";
+  if (route.query['keyword'] != "") {
+    title = `${route.query['keyword']} | IG Shop 推薦及評論平台 | Shopitout`;
+    metaDescription = `${route.query['keyword']}的搜尋結果 - 共${searchResultTotalCount.value}個。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
+  }
+  else if (selectedTag.value != "") {
+    title = `${selectedTag.value} IG Shop 一覽 | Shopitout 推薦及評論平台`;
+    metaDescription = `共${searchResultTotalCount.value}個${route.query['keyword']} IG Shop。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
+  }
+
+  return {
+    title,
+    meta: [
+      {name: 'description', hid: 'description', content: metaDescription},
+      {property: 'og:title', hid: 'og:title', content: title},
+      // {property: 'og:url', hid: 'og:url', content: `${config.DOMAIN}/shop/${route.params.username}`},
+      {property: 'og:description', hid: 'og:description', content: metaDescription}
+    ]
+  }
+}))
 
 watch(
     () => route.query,
