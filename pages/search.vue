@@ -116,7 +116,8 @@ import {PaginationQuery} from "~/models/PaginationQuery";
 import {computed} from "@vue/reactivity";
 
 const {
-  ageRestrictedCategories
+  ageRestrictedCategories,
+  tagsLookup
 } = useTags();
 
 // const page = {
@@ -192,8 +193,8 @@ useMeta(computed(() => {
     metaDescription = `${route.query['keyword']}的搜尋結果 - 共${searchResultTotalCount.value}個。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
   }
   else if (selectedTag.value != "") {
-    title = `${selectedTag.value} IG Shop 一覽 | Shopitout 推薦及評論平台`;
-    metaDescription = `共${searchResultTotalCount.value}個${selectedTag.value} IG Shop。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
+    title = `${tagsLookup[selectedTag.value]} IG Shop 一覽 | Shopitout 推薦及評論平台`;
+    metaDescription = `共${searchResultTotalCount.value}個${tagsLookup[selectedTag.value]} IG Shop。你想找的 IG Shop 資訊盡在 Shopitout。IG Shop 推薦及評論平台。`;
   }
 
   return {
