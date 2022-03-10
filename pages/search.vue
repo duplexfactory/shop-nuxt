@@ -201,7 +201,7 @@ useMeta(computed(() => {
     title = `持商業登記 | IG Shop 推薦及評論平台 | Shopitout`;
     metaDescription = `共${searchResultTotalCount.value}個持商業登記的 IG Shop。${tail}`;
   }
-  else if (brickAndMortar.value != "") {
+  else if (brickAndMortar.value) {
     title = `門市實體店 | IG Shop 推薦及評論平台 | Shopitout`;
     metaDescription = `共${searchResultTotalCount.value}個有門市實體店的 IG Shop。${tail}`;
   }
