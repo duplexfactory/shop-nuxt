@@ -170,9 +170,10 @@ export default  {
                     </div>
                 </div>
 
-                <div class="col-span-5 lg:col-span-6 pt-4">
-                    <h2 class="font-semibold text-gray-500">{{ page.fullName }}</h2>
-                    <h3 class="mt-2 text-gray-500 whitespace-pre-wrap">{{ page.biography }}</h3>
+                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-500">
+                    <h2 class="font-semibold">{{ page.fullName }}</h2>
+                    <h3 class="mt-2 whitespace-pre-wrap">{{ page.biography }}</h3>
+                    <a class="hover:underline" :href="page.externalUrl" target="_blank">{{ page.externalUrl }}</a>
                 </div>
 
                 <div class="col-span-8 text-gray-400 text-xs py-4">
