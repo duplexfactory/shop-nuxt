@@ -120,9 +120,15 @@ export default  {
         <div v-if="page !== null" class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="bg-gray-300 rounded-full square-image-container mr-8" v-lazy:background-image="page.profilePicUrl" style="height: 100px;"></div>
+                    <div class="rounded-full bg-gray-300 square-image-container mr-8"
+                         style="height: 100px;">
+                      <img class="h-full w-full"
+                           :alt="page.username"
+                           v-lazy="page.profilePicUrl"/>
+                    </div>
+
                     <div class="mt-2">
-                        <div class="font-semibold text-xl truncate">{{ page.username }}</div>
+                        <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
                         <div class="mt-2 text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
 
@@ -153,15 +159,15 @@ export default  {
                 </div>
 
                 <div class="py-4 col-span-5 lg:col-span-6">
-                    <div class="text-gray-500">{{ page.fullName }}</div>
-                    <div class="mt-2 text-gray-500 whitespace-pre-wrap">{{ page.biography }}</div>
+                    <h2 class="text-gray-500">{{ page.fullName }}</h2>
+                    <h3 class="mt-2 text-gray-500 whitespace-pre-wrap">{{ page.biography }}</h3>
                 </div>
             </section>
 
             <section class="md:mt-8">
                 <div class="mb-4 text-lg md:text-2xl flex">
-                    <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</button>
-                    <button class="px-5 py-2 md:px-6 md:py-3" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</button>
+                    <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</h2>
+                    <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
                 </div>
                 <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <MediaCard v-for="media in medias"
@@ -198,6 +204,10 @@ export default  {
 
 .tab-selected {
   @apply border-bottom-4 border-pink-400;
+}
+
+img:not([src]) {
+  visibility: hidden;
 }
 
 </style>

@@ -6,7 +6,7 @@
       <!-- Left filter column -->
       <div class="col-span-1 p-4 hidden md:block">
 
-        <div class="font-semibold mb-2">分類</div>
+        <h2 class="font-semibold mb-2">分類</h2>
         <div v-for="category in ageRestrictedCategories" :key="category['id']" class="text-sm">
           <button @click="toggleCategory(category['id'])"
                   class="block py-1"
@@ -20,23 +20,23 @@
 
         <hr class="my-4"/>
 
-        <div>
+        <h2>
           <input type="checkbox" id="brick-and-mortar" name="brickAndMortar" v-model="brickAndMortar">
           <label for="brick-and-mortar" class="pl-2">實體商店</label>
-        </div>
+        </h2>
 
-        <div class="mt-4">
+        <h2 class="mt-4">
           <input type="checkbox" id="business-registration" name="businessRegistration" v-model="businessRegistration">
           <label for="business-registration" class="pl-2">商業登記</label>
-        </div>
+        </h2>
 
       </div>
 
       <div class="col-span-4 md:col-span-3">
 
         <div class="flex items-center mb-2 md:mb-4">
-          <div v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</div>
-          <div class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 個結果)</div>
+          <h2 v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
+          <h1 class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 間商店)</h1>
 
           <div class="flex-1"></div>
 

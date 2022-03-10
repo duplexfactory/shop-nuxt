@@ -100,8 +100,7 @@ export default {
         <!-- Slides -->
         <MediaCard v-for="page in simplePages"
                    @click="showMediaModal = true; showingMediaModalData = {code: page.lastMediaData.code, pagePk: page.pk, username: page.username}"
-                   style="cursor: pointer;"
-                   class="swiper-slide"
+                   class="cursor-pointer swiper-slide"
                    :media="page.lastMediaData"
                    :shop="page"
                    :key="page.pk.toString() + '-post-card'"></MediaCard>

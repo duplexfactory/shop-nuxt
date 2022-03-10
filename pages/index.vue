@@ -102,23 +102,23 @@ watch(
 
     <div class="sm:container mx-auto">
 
-      <div class="section-title px-4 md:px-0">熱門店鋪</div>
+      <h2 class="section-title px-4 md:px-0">熱門店鋪</h2>
       <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
       <div class="px-4 md:px-0">
-        <div class="section-title">最新貼文</div>
+        <h2 class="section-title">最新貼文</h2>
         <MediaCardSwiperList :simple-pages="latest"></MediaCardSwiperList>
       </div>
       <!--        <MediaCardIGEmbedSwiperList :medias="latest"></MediaCardIGEmbedSwiperList>-->
       <!--        <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>-->
 
       <div class="px-4 md:px-0">
-        <div class="section-title">活躍店長</div>
+        <h2 class="section-title">活躍店長</h2>
         <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
       </div>
 
-      <div class="section-title px-4 md:px-0">實體店鋪</div>
+      <h2 class="section-title px-4 md:px-0">實體店鋪</h2>
       <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>
 
     </div>
