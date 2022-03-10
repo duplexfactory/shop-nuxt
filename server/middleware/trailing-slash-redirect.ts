@@ -13,6 +13,7 @@ export default function (req, res, next) {
             res.writeHead(301, { Location: req.url.slice(0, -1) });
         }
         res.end();
+        next();
     }
     else {
         next();
