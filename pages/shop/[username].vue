@@ -72,6 +72,17 @@
     const showModal = useShowMediaModal();
     const showingMediaModalData = useShowingMediaModalData();
 
+    function showMediaModal(mediaCode) {
+      if (page.value != null) {
+        showModal.value = true;
+        showingMediaModalData.value = {
+          code: mediaCode,
+          pagePk: page.value.pk,
+          username: page.value.username
+        };
+      }
+    }
+
     // Reviews
     import IgPageReview from "~/models/IgPageReview";
 
@@ -129,7 +140,7 @@ export default  {
 
                     <div class="mt-2">
                         <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
-                        <div class="mt-2 text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
+                        <div class="mt-2 text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
 
                     <div class="mt-2 flex text-gray-500 text-sm md:text-lg">
@@ -158,13 +169,18 @@ export default  {
                     </div>
                 </div>
 
-                <div class="py-4 col-span-5 lg:col-span-6">
+                <div class="col-span-5 lg:col-span-6 pt-4">
                     <h2 class="text-gray-500">{{ page.fullName }}</h2>
                     <h3 class="mt-2 text-gray-500 whitespace-pre-wrap">{{ page.biography }}</h3>
                 </div>
+
+                <div class="col-span-8 text-gray-400 text-xs py-4">
+                  <div><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
+                  <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
+                </div>
             </section>
 
-            <section class="md:mt-8">
+            <section class="md:mt-4">
                 <div class="mb-4 text-lg md:text-2xl flex">
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</h2>
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
@@ -172,7 +188,7 @@ export default  {
                 <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <MediaCard v-for="media in medias"
                              class="col-span-1"
-                             @click="showModal = true; showingMediaModalData = {code: media.code, pagePk: media.pagePk, username: page.username};"
+                             @click="showMediaModal(media.code)"
                              style="cursor: pointer"
                              :media="media"
                              :shop="page"
@@ -185,7 +201,7 @@ export default  {
                   </div>
                   <div class="col-span-1 lg:order-1">
                     <template v-for="review in reviews">
-                      <ReviewCard :review="review"></ReviewCard>
+                      <ReviewCard :review="review" :checkMediaButton="true" @showMedia="showMediaModal(review.mediaCode)"></ReviewCard>
                       <hr/>
                     </template>
                     <!-- No Reviews -->

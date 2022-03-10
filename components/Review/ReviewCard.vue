@@ -8,30 +8,25 @@
     <div class="mt-2 text-lg md:text-xl">
       {{ review.content }}
     </div>
-    <div class="mt-2 text-sm md:text-lg text-gray-400">
+    <div class="mt-2 text-sm md:text-lg text-gray-400 flex justify-between">
       {{ createdDateString }}
+      <button v-if="review.mediaCode && checkMediaButton" @click="$emit('showMedia')">查看相關貼文<i class="sio-angle-right"></i></button>
     </div>
   </div>
 </template>
-<!--<script lang="ts" setup>-->
+<script lang="ts" setup>
 
-<!--</script>-->
-<script lang="ts">
-  import {PropType} from "vue";
-  import IgPageReview from "~/models/IgPageReview";
-  import dayjs from "dayjs";
+import {PropType} from "vue";
+import IgPageReview from "~/models/IgPageReview";
+import dayjs from "dayjs";
 
-  export default {
-    props: {
-      review: Object as PropType<IgPageReview>
-    },
-    computed: {
-      createdDateString: function () {
-        return dayjs(this.review.created).format('DD/MM/YYYY');
-      }
-    }
-  }
+const {review, pageUsername} = defineProps({
+  review: Object as PropType<IgPageReview>,
+  checkMediaButton: { type: Boolean, default: false },
+});
+
+const createdDateString = computed(() => {
+  return review != null ? dayjs(review.created).format('DD/MM/YYYY') : 0;
+})
+
 </script>
-<style scoped>
-
-</style>
