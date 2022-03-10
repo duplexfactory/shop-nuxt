@@ -33,14 +33,35 @@
 <script setup lang="ts">
   import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
+  // Meta
+  const config = useRuntimeConfig();
+  const route = useRoute();
+
+  useMeta(computed(() => {
+    if (route.path !== '/') {
+      let canonical = route.fullPath;
+      if (route.path.endsWith('/')) {
+        canonical = canonical.replace(route.path, route.path.slice(0, -1));
+      }
+      return {
+        link: [
+          {rel: 'canonical', href: config.DOMAIN + canonical},
+        ]
+      }
+    }
+    else {
+      return {}
+    }
+  }));
+
   // Media Modal
   const showMediaModal =  useShowMediaModal();
   const showingMediaModalData = useShowingMediaModalData();
-  watch(showMediaModal, (show, prevShow) => toggleOverflow(show))
+  watch(showMediaModal, (show, prevShow) => toggleOverflow(show));
 
   // Search Modal
   const showSearchModal = useShowSearchModal();
-  watch(showSearchModal, (show, prevShow) => toggleOverflow(show))
+  watch(showSearchModal, (show, prevShow) => toggleOverflow(show));
 
   // Drawer
   const drawerOpen = ref<boolean>(false);
