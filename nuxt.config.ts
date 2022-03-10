@@ -61,4 +61,7 @@ export default defineNuxtConfig({
   },
   ssr: true,
   plugins: [],
+  ignore: [
+    "pages/hidden/*"
+  ]
 } as NuxtConfig);
