@@ -140,29 +140,30 @@ export default  {
 
                     <div class="mt-2">
                         <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
-                        <div class="mt-2 text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
+                        <div class="text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
 
-                    <div class="mt-2 flex text-gray-500 text-sm md:text-lg">
-                      <div class="flex">
-                        <div class="text-center" style="flex: 1;">
-                          <div>粉絲</div>
-                          <div>{{ page.followerCount.toLocaleString() }}</div>
-                        </div>
-                        <div class="bg-gray-300 mx-4" style="width: 1px;"></div>
-                        <div class="text-center" style="flex: 1;">
-                          <div>貼文</div>
-                          <div>{{ page.mediaCount.toLocaleString() }}</div>
-                        </div>
+                    <div class="my-4 flex text-gray-500 text-sm">
+                      <div class="text-center flex-1">
+                        <div>粉絲</div>
+                        <div>{{ page.followerCount.toLocaleString() }}</div>
+                      </div>
+                      <div class="bg-gray-300 mx-4" style="width: 1px;"></div>
+                      <div class="text-center flex-1">
+                        <div>貼文</div>
+                        <div>{{ page.mediaCount.toLocaleString() }}</div>
                       </div>
                     </div>
 
-                    <div v-if="page.brickAndMortar" class="mt-2 text-gray-500 text-sm md:text-lg">
+                    <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
+                      持商業登記
+                    </div>
+                    <div v-if="page.brickAndMortar" class="mb-2 text-gray-500 text-sm">
                       {{ '門市：' + page.locations.join('、') }}
                     </div>
                     <!--                    <button class="btn btn-outline">我知道</button>-->
 
-                    <div class="mt-2 line-clamp-2" style="font-size: 0;">
+                    <div class="mb-2 line-clamp-2" style="font-size: 0;">
                       <div v-for="tag in page.tags"
                            :key="tag"
                            class="tag mr-1 2xl:mr-2 !md:text-lg">{{ `#${tagsLookup[tag]}` }}</div>
@@ -170,7 +171,7 @@ export default  {
                 </div>
 
                 <div class="col-span-5 lg:col-span-6 pt-4">
-                    <h2 class="text-gray-500">{{ page.fullName }}</h2>
+                    <h2 class="font-semibold text-gray-500">{{ page.fullName }}</h2>
                     <h3 class="mt-2 text-gray-500 whitespace-pre-wrap">{{ page.biography }}</h3>
                 </div>
 
