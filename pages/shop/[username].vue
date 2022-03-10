@@ -120,7 +120,7 @@ export default  {
         <div v-if="page !== null" class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="rounded-full bg-gray-300 square-image-container mr-8"
+                    <div class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
                          style="height: 100px;">
                       <img class="h-full w-full"
                            :alt="page.username"
