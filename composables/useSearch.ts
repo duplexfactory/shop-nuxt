@@ -6,12 +6,12 @@ import type {Ref} from "vue";
 
 export default function () {
 
-    let searchPending = ref(false);
+    let searchPending:Ref<Ref<boolean>> = ref(null);
 
     const searchData: Ref<Ref<{pages: PageSearch[], count: number}>> = ref(null);
     const searchDataBuffer: Ref<{pages: PageSearch[], count: number}> = ref(null);
     const safeSearchData = computed(() => {
-        if (searchPending.value && !!searchDataBuffer.value) {
+        if (searchPending.value != null && searchPending.value.value && !!searchDataBuffer.value) {
             return searchDataBuffer.value;
         }
         else if (!!searchData.value && !!searchData.value.value) {
@@ -53,7 +53,7 @@ export default function () {
             searchDataBuffer.value = searchData.value.value;
         }
         searchData.value = data;
-        searchPending = pending;
+        searchPending.value = pending;
 
         // if (p.skip === 0) {
         //     searchResults.value = data.value.pages;
@@ -65,7 +65,7 @@ export default function () {
     return {
         searchResults: computed(() => safeSearchData.value.pages),
         searchResultTotalCount: computed(() => safeSearchData.value.count),
-        searchPending,
+        searchPending: computed(() => searchPending.value != null && searchPending.value.value),
         search
     }
 }
