@@ -3,9 +3,15 @@ import {useQuery} from 'h3'
 import type IgMedia from "~/models/IgMedia";
 import {getPageMedias, initDynamo} from "~/server/dynamodb";
 import {initMongo, pageSearchCollection} from "~/server/mongodb";
+import dayjs from "dayjs";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ medias: IgMedia[] }> {
-    let {id, username} = await useQuery(req) as { id: string, username: string }
+    let {
+        id,
+        username,
+        limit,
+        before
+    } = await useQuery(req) as { id: string, username: string, limit: string, before: string }
 
     let queryId: number
     if (id) {
@@ -18,6 +24,6 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
 
     initDynamo();
     return {
-        medias: await getPageMedias(queryId)
+        medias: await getPageMedias(queryId, limit ? Number(limit) : undefined, before ? Number(before) : dayjs().unix())
     }
 }
