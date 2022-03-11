@@ -38,6 +38,24 @@
     const {data} = useLazyFetch(`/api/shop`, {params: {username: route.params.username}});
     const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
     const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
+    const whatsapp = computed(() => {
+      let bestPhone = "";
+      if (page.value != null) {
+        const possiblePhones = page.value.biography.matchAll(/(?<=\D|$)(\d{8}|\d{11})(?=\D|$)/g);
+        const whatsappIndex = page.value.biography.toLowerCase().indexOf("whatsapp");
+        let bestPhoneIndex = page.value.biography.length
+        for (const p of possiblePhones) {
+          if (whatsappIndex == -1) {
+            return p[0];
+          }
+          if (whatsappIndex < p.index && p.index < bestPhoneIndex) {
+            bestPhone = p[0];
+            bestPhoneIndex = p.index
+          }
+        }
+      }
+      return bestPhone;
+    })
 
     const {data: mediaData} = useLazyFetch(`/api/media`, {params: {username: route.params.username}});
     const medias = computed(() => mediaData.value ? mediaData.value.medias : []);
@@ -155,11 +173,14 @@ export default  {
                       </div>
                     </div>
 
-                    <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
-                      持商業登記
+                    <div v-if="whatsapp.length != 0" class="mb-2 text-gray-500 text-sm">
+                      {{ "WhatsApp: " }}<a target="_blank" :href="`https://api.whatsapp.com/send/?phone=${whatsapp.length == 8 ? '852' : ''}${whatsapp}`">{{ whatsapp }}</a>
                     </div>
                     <div v-if="page.brickAndMortar" class="mb-2 text-gray-500 text-sm">
-                      {{ '門市：' + page.locations.join('、') }}
+                      {{ '門市: ' + page.locations.join('、') }}
+                    </div>
+                    <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
+                      持商業登記
                     </div>
                     <!--                    <button class="btn btn-outline">我知道</button>-->
 
