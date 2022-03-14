@@ -1,9 +1,64 @@
 import {defineNuxtConfig, NuxtConfig} from "nuxt3";
+const path = require('path')
+const fs = require('fs-extra')
 
 export default defineNuxtConfig({
   buildModules: [
     "@vueuse/nuxt",
     "nuxt-windicss",
+  ],
+  modules: [
+    function (moduleOptions, nuxtInstance) {
+      // Init cache
+      // a file "sitemap-routes.json" is written to "dist" dir on "build" mode
+
+      const jsonStaticRoutesPath = !nuxtInstance.options.dev
+          ? path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes.json'))
+          : null
+      const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false })
+      const globalCache = { staticRoutes }
+
+      console.log('123');
+      console.log(Object.keys(nuxtInstance));
+
+      nuxtInstance['__module_container__'].extendRoutes((routes) => {
+
+        // Create a cache for static routes
+        // globalCache.staticRoutes = getStaticRoutes(routes)
+        globalCache.staticRoutes = ['1', '2']
+
+        // On run cmd "build"
+        if (!nuxtInstance.options.dev) {
+          // Save static routes
+          fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
+        }
+      })
+
+      // nuxtInstance.addHooks({
+      //   'build:done': (builder) => {
+      //     console.log('build:done');
+      //     console.log(Object.keys(builder.nuxt));
+      //   },
+      // })
+      //
+      // nuxtInstance.addHooks({
+      //   'modules:done': (moduleContainer) => {
+      //     moduleContainer.nuxt['__module_container__'].extendRoutes((routes) => {
+      //
+      //       // Create a cache for static routes
+      //       // globalCache.staticRoutes = getStaticRoutes(routes)
+      //       globalCache.staticRoutes = ['1', '2']
+      //
+      //       // On run cmd "build"
+      //       if (!nuxtInstance.options.dev) {
+      //         // Save static routes
+      //         fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
+      //       }
+      //     })
+      //   }
+      // })
+
+    }
   ],
   meta: {
     title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shopitout',
