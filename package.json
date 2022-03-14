@@ -17,6 +17,7 @@
     "@aws-sdk/util-dynamodb": "^3.49.0",
     "@jambonn/vue-lazyload": "^1.0.9",
     "@meforma/vue-toaster": "^1.3.0",
+    "@nuxtjs/sitemap": "^2.4.0",
     "@types/crypto-js": "^4.1.0",
     "@types/lodash.throttle": "^4.1.6",
     "@vueform/toggle": "^2.0.1",

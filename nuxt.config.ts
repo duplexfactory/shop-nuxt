@@ -64,5 +64,22 @@ export default defineNuxtConfig({
   plugins: [],
   ignore: [
     "pages/hidden/*"
+  ],
+  sitemap: function() {
+    // console.log(this);
+    return {
+      path: '/sitemap.xml',
+      hostname: process.env.DOMAIN,
+      cacheTime: 1000 * 60 * 60 * 6,
+      routes() {
+        return ['123'];
+        // console.log('123');
+        // console.log(this);
+        // return ['123', '456', ...Object.keys(this)]
+      }
+    }
+  },
+  modules: [
+    '@nuxtjs/sitemap'
   ]
 } as NuxtConfig);
