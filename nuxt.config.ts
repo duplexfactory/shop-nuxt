@@ -1,4 +1,5 @@
 import {defineNuxtConfig, NuxtConfig} from "nuxt3";
+import {ModuleContainer} from "@nuxt/schema";
 const path = require('path')
 const fs = require('fs-extra')
 
@@ -14,18 +15,16 @@ export default defineNuxtConfig({
 
       const jsonStaticRoutesPath = !nuxtInstance.options.dev
           ? path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes.json'))
-          : null
-      const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false })
-      const globalCache = { staticRoutes }
+          : null;
+      const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
+      const globalCache = { staticRoutes };
 
-      console.log('123');
-      console.log(Object.keys(nuxtInstance));
-
-      nuxtInstance['__module_container__'].extendRoutes((routes) => {
+      (this as any as ModuleContainer).extendRoutes((routes) => {
+      // nuxtInstance['__module_container__'].extendRoutes((routes) => {
 
         // Create a cache for static routes
         // globalCache.staticRoutes = getStaticRoutes(routes)
-        globalCache.staticRoutes = ['1', '2']
+        globalCache.staticRoutes = ['1', '2', '3']
 
         // On run cmd "build"
         if (!nuxtInstance.options.dev) {
