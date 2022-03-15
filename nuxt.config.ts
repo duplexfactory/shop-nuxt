@@ -169,15 +169,15 @@ export default defineNuxtConfig({
         const r = await createRoutesCache({staticRoutes: () => excludeRoutes(options.exclude, globalCache.staticRoutes)}, options).get('routes')
         const xml = await createSitemap(options, r, base).toXML()
         nuxtInstance.addHooks({
-          // 'build:before': async (builder) => {
-          //   await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('public', 'sitemap.xml')), xml)
-          // },
-          'build:done': async (builder) => {
-            await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'server', 'sitemap.xml')), xml),
-            await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'client', 'sitemap.xml')), xml)
-            await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('.output', 'public', 'sitemap.xml')), xml)
-            await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('.output', 'public', '_nuxt', 'sitemap.xml')), xml)
+          'build:before': async (builder) => {
+            await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('public', 'sitemap.xml')), xml)
           },
+          // 'build:done': async (builder) => {
+          //   await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'server', 'sitemap.xml')), xml),
+          //   await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'client', 'sitemap.xml')), xml)
+          //   await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('.output', 'public', 'sitemap.xml')), xml)
+          //   await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('.output', 'public', '_nuxt', 'sitemap.xml')), xml)
+          // },
         })
       })
     },
