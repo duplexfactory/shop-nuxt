@@ -1,4 +1,7 @@
 import {defineNuxtConfig, NuxtConfig} from "nuxt3";
+import {ModuleContainer} from "@nuxt/schema";
+const path = require('path')
+const fs = require('fs-extra')
 
 export default defineNuxtConfig({
   buildModules: [
@@ -67,19 +70,107 @@ export default defineNuxtConfig({
   ],
   sitemap: function() {
     // console.log(this);
+    // console.log(Object.keys(this));
+    const nuxtInstance = this.nuxt;
     return {
       path: '/sitemap.xml',
       hostname: process.env.DOMAIN,
       cacheTime: 1000 * 60 * 60 * 6,
       routes() {
-        return ['123'];
-        // console.log('123');
-        // console.log(this);
-        // return ['123', '456', ...Object.keys(this)]
+        const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
+        const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
+        return [...staticRoutes];
       }
     }
   },
   modules: [
+    function (moduleOptions, nuxtInstance) {
+      // Init cache
+      // a file "sitemap-routes.json" is written to "dist" dir on "build" mode
+
+      // const jsonStaticRoutesPath = !nuxtInstance.options.dev
+      //     ? path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'))
+      //     : null;
+      const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
+      const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
+      const globalCache = { staticRoutes };
+
+      /**
+       * Get static routes from Nuxt router and ignore dynamic routes
+       *
+       * @param   {Object} router
+       * @returns {Array}
+       */
+      function getStaticRoutes(router) {
+        return flattenStaticRoutes(router)
+      }
+
+      /**
+       * Recursively flatten all static routes and their nested routes
+       *
+       * @param   {Object} router
+       * @param   {string} path
+       * @param   {Array}  routes
+       * @returns {Array}
+       */
+      function flattenStaticRoutes(router, path = '', routes = []) {
+        router.forEach((route) => {
+
+          // Skip dynamic routes
+          if ([':', '*'].some((c) => route.path.includes(c))) {
+            return
+          }
+
+          // Nested routes
+          if (route.children.length) {
+            return flattenStaticRoutes(route.children, path + route.path + '/', routes)
+          }
+          // Normalize url (without trailing slash)
+          route.url = path.length && !route.path.length ? path.slice(0, -1) : path + route.path
+
+          routes.push(route)
+        })
+        return routes
+      }
+
+      (this as any as ModuleContainer).extendRoutes((routes) => {
+        // nuxtInstance['__module_container__'].extendRoutes((routes) => {
+
+        // Create a cache for static routes
+        globalCache.staticRoutes = getStaticRoutes(routes)
+
+        // On run cmd "build"
+        // if (!nuxtInstance.options.dev) {
+          // Save static routes
+          fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
+        // }
+      })
+
+      // nuxtInstance.addHooks({
+      //   'build:done': (builder) => {
+      //     console.log('build:done');
+      //     console.log(Object.keys(builder.nuxt));
+      //   },
+      // })
+      //
+      // nuxtInstance.addHooks({
+      //   'modules:done': (moduleContainer) => {
+      //     moduleContainer.nuxt['__module_container__'].extendRoutes((routes) => {
+      //
+      //       // Create a cache for static routes
+      //       // globalCache.staticRoutes = getStaticRoutes(routes)
+      //       globalCache.staticRoutes = ['1', '2']
+      //
+      //       // On run cmd "build"
+      //       if (!nuxtInstance.options.dev) {
+      //         // Save static routes
+      //         fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
+      //       }
+      //     })
+      //   }
+      // })
+
+    },
     '@nuxtjs/sitemap'
   ]
 } as NuxtConfig);
