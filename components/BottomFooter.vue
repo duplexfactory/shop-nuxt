@@ -7,7 +7,7 @@
 <!--                <div class="mr-6">提供商店資料</div>-->
                 <nuxt-link to="/takedown" class="mr-6">移除商店資料</nuxt-link>
 <!--                <div class="mr-6">關於我們</div>-->
-                <div class="mr-6">私隱條款</div>
+                <nuxt-link to="/privacy-policy" class="mr-6">私隱條款</nuxt-link>
             </div>
 
             <hr class="my-2"/>
