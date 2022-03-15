@@ -6,7 +6,7 @@ export default function (req, res, next) {
     // // Don't forget to call next at the end if your middleware is not an endpoint!
     // next()
 
-    if (req.url != '/' && !req.url.match(/^((?!\?).)*(?<!\/|\.js|\.css|\.txt|\.xml)(\?.*\=.*)*$/)) {
+    if (req.url != '/' && !req.url.match(/^((?!\?).)*((?<!\/)|(?<=\.js|\.css|\.txt|\.xml))(\?.*\=.*)*$/)) {
         if (req.url.match(/\/\?/)) {
             res.writeHead(301, { Location: req.url.replace('/?', '?') });
         } else {
