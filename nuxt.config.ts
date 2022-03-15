@@ -87,10 +87,14 @@ export default defineNuxtConfig({
         // const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
         // const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
         // return [...staticRoutes];
-
-        const { pages }: {pages: { username: string }[]} = await $fetch(`${process.env.DOMAIN}/api/sitemap-data`);
-        // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
-        return pages.map((p) => `/shop/${p.username}`)
+        try {
+          const { pages }: {pages: { username: string }[]} = await $fetch(`${process.env.DOMAIN}/api/sitemap-data`);
+          // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
+          return pages.map((p) => `/shop/${p.username}`)
+        }
+        catch (e) {
+          return []
+        }
       }
     }
   },
