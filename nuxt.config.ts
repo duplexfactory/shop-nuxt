@@ -82,6 +82,9 @@ export default defineNuxtConfig({
       path: '/sitemap.xml',
       hostname: process.env.DOMAIN,
       cacheTime: 1000 * 60 * 60 * 6,
+      exclude: [
+        '/hidden/**',
+      ],
       async routes() {
         // console.log(nuxtInstance.options);
         // const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));

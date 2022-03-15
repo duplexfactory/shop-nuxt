@@ -35,3 +35,5 @@ dist
 wrangler.toml
 
 .env
+
+public/sitemap.xml
