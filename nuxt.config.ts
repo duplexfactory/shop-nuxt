@@ -3,6 +3,8 @@ import {ModuleContainer} from "@nuxt/schema";
 const path = require('path')
 const fs = require('fs-extra')
 
+import { createSitemap, createSitemapIndex } from "@nuxtjs/sitemap/lib/builder";
+
 export default defineNuxtConfig({
   buildModules: [
     "@vueuse/nuxt",
@@ -84,7 +86,28 @@ export default defineNuxtConfig({
     }
   },
   modules: [
-    function (moduleOptions, nuxtInstance) {
+    async function (moduleOptions, nuxtInstance) {
+
+      const base = nuxtInstance.options.router.base
+      async function initOptions(nuxtInstance, moduleOptions) {
+        if (nuxtInstance.options.sitemap === false || moduleOptions === false) {
+          return false
+        }
+
+        let options = nuxtInstance.options.sitemap || moduleOptions
+
+        if (typeof options === 'function') {
+          options = await options.call(nuxtInstance)
+        }
+
+        if (options === false) {
+          return false
+        }
+
+        return Array.isArray(options) ? options : [options]
+      }
+      const options = await initOptions(nuxtInstance, moduleOptions)
+
       // Init cache
       // a file "sitemap-routes.json" is written to "dist" dir on "build" mode
 
@@ -95,32 +118,16 @@ export default defineNuxtConfig({
       const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
       const globalCache = { staticRoutes };
 
-      /**
-       * Get static routes from Nuxt router and ignore dynamic routes
-       *
-       * @param   {Object} router
-       * @returns {Array}
-       */
+      // Fix static routes empty.
       function getStaticRoutes(router) {
         return flattenStaticRoutes(router)
       }
-
-      /**
-       * Recursively flatten all static routes and their nested routes
-       *
-       * @param   {Object} router
-       * @param   {string} path
-       * @param   {Array}  routes
-       * @returns {Array}
-       */
       function flattenStaticRoutes(router, path = '', routes = []) {
         router.forEach((route) => {
-
           // Skip dynamic routes
           if ([':', '*'].some((c) => route.path.includes(c))) {
             return
           }
-
           // Nested routes
           if (route.children && route.children.length) {
             return flattenStaticRoutes(route.children, path + route.path + '/', routes)
@@ -133,7 +140,7 @@ export default defineNuxtConfig({
         return routes
       }
 
-      (this as any as ModuleContainer).extendRoutes((routes) => {
+      (this as any as ModuleContainer).extendRoutes(async (routes) => {
         // nuxtInstance['__module_container__'].extendRoutes((routes) => {
 
         // Create a cache for static routes
@@ -141,9 +148,21 @@ export default defineNuxtConfig({
 
         // On run cmd "build"
         // if (!nuxtInstance.options.dev) {
-          // Save static routes
-          fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
+        //   // Save static routes
+        //   fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
         // }
+
+        const xml = await createSitemap(options[0], globalCache.staticRoutes, base).toXML()
+        // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'client/sitemap.xml')), xml)
+        // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'server/sitemap.xml')), xml)
+
+        nuxtInstance.addHooks({
+          'build:before': async (builder) => {
+            // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'client/sitemap.xml')), xml)
+            // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'server/sitemap.xml')), xml)
+            await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('public', 'sitemap.xml')), xml)
+          },
+        })
       })
 
       // nuxtInstance.addHooks({
@@ -171,6 +190,6 @@ export default defineNuxtConfig({
       // })
 
     },
-    '@nuxtjs/sitemap'
+    // '@nuxtjs/sitemap'
   ]
 } as NuxtConfig);
