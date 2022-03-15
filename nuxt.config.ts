@@ -122,7 +122,7 @@ export default defineNuxtConfig({
           }
 
           // Nested routes
-          if (route.children.length) {
+          if (route.children && route.children.length) {
             return flattenStaticRoutes(route.children, path + route.path + '/', routes)
           }
           // Normalize url (without trailing slash)
