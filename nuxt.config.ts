@@ -3,7 +3,7 @@ import {ModuleContainer} from "@nuxt/schema";
 const path = require('path')
 const fs = require('fs-extra')
 
-import { createSitemap, createSitemapIndex } from "@nuxtjs/sitemap/lib/builder";
+import { createSitemap } from "@nuxtjs/sitemap/lib/builder";
 
 export default defineNuxtConfig({
   buildModules: [
@@ -71,18 +71,17 @@ export default defineNuxtConfig({
     "pages/hidden/*"
   ],
   sitemap: function() {
-    // console.log(this);
-    // console.log(Object.keys(this));
-    const nuxtInstance = this.nuxt;
+    // const nuxtInstance = this.nuxt;
     return {
       path: '/sitemap.xml',
       hostname: process.env.DOMAIN,
       cacheTime: 1000 * 60 * 60 * 6,
-      routes() {
-        const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
-        const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
-        return [...staticRoutes];
-      }
+      // routes() {
+      //   // console.log(nuxtInstance.options);
+      //   const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
+      //   const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
+      //   return [...staticRoutes];
+      // }
     }
   },
   modules: [
@@ -114,9 +113,9 @@ export default defineNuxtConfig({
       // const jsonStaticRoutesPath = !nuxtInstance.options.dev
       //     ? path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'))
       //     : null;
-      const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
-      const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
-      const globalCache = { staticRoutes };
+      // const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
+      // const globalCache = { staticRoutes };
+      const globalCache = { staticRoutes: [] };
 
       // Fix static routes empty.
       function getStaticRoutes(router) {
@@ -141,7 +140,6 @@ export default defineNuxtConfig({
       }
 
       (this as any as ModuleContainer).extendRoutes(async (routes) => {
-        // nuxtInstance['__module_container__'].extendRoutes((routes) => {
 
         // Create a cache for static routes
         globalCache.staticRoutes = getStaticRoutes(routes)
@@ -153,43 +151,12 @@ export default defineNuxtConfig({
         // }
 
         const xml = await createSitemap(options[0], globalCache.staticRoutes, base).toXML()
-        // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'client/sitemap.xml')), xml)
-        // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'server/sitemap.xml')), xml)
-
         nuxtInstance.addHooks({
           'build:before': async (builder) => {
-            // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'client/sitemap.xml')), xml)
-            // await fs.outputFile(path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'server/sitemap.xml')), xml)
             await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('public', 'sitemap.xml')), xml)
           },
         })
       })
-
-      // nuxtInstance.addHooks({
-      //   'build:done': (builder) => {
-      //     console.log('build:done');
-      //     console.log(Object.keys(builder.nuxt));
-      //   },
-      // })
-      //
-      // nuxtInstance.addHooks({
-      //   'modules:done': (moduleContainer) => {
-      //     moduleContainer.nuxt['__module_container__'].extendRoutes((routes) => {
-      //
-      //       // Create a cache for static routes
-      //       // globalCache.staticRoutes = getStaticRoutes(routes)
-      //       globalCache.staticRoutes = ['1', '2']
-      //
-      //       // On run cmd "build"
-      //       if (!nuxtInstance.options.dev) {
-      //         // Save static routes
-      //         fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
-      //       }
-      //     })
-      //   }
-      // })
-
     },
-    // '@nuxtjs/sitemap'
   ]
 } as NuxtConfig);

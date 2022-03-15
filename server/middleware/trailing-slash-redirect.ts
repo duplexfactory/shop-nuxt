@@ -6,18 +6,17 @@ export default function (req, res, next) {
     // // Don't forget to call next at the end if your middleware is not an endpoint!
     // next()
 
-    next();
-    // if (req.url != '/' && !req.url.match(/^((?!\?).)*(?<!\/|\.js|\.css|\.txt)(\?.*\=.*)*$/)) {
-    //     if (req.url.match(/\/\?/)) {
-    //         res.writeHead(301, { Location: req.url.replace('/?', '?') });
-    //     } else {
-    //         res.writeHead(301, { Location: req.url.slice(0, -1) });
-    //     }
-    //     res.end();
-    //     next();
-    // }
-    // else {
-    //     next();
-    // }
+    if (req.url != '/' && !req.url.match(/^((?!\?).)*(?<!\/|\.js|\.css|\.txt|\.xml)(\?.*\=.*)*$/)) {
+        if (req.url.match(/\/\?/)) {
+            res.writeHead(301, { Location: req.url.replace('/?', '?') });
+        } else {
+            res.writeHead(301, { Location: req.url.slice(0, -1) });
+        }
+        res.end();
+        next();
+    }
+    else {
+        next();
+    }
 
 }
