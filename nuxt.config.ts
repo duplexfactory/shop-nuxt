@@ -6,6 +6,9 @@ const path = require('path')
 const fs = require('fs-extra')
 
 import { createSitemap } from "@nuxtjs/sitemap/lib/builder";
+import { createRoutesCache } from "@nuxtjs/sitemap/lib/cache";
+import { excludeRoutes } from "@nuxtjs/sitemap/lib/routes";
+import { setDefaultSitemapOptions } from "@nuxtjs/sitemap/lib/options";
 import { $fetch } from "ohmyfetch";
 
 export default defineNuxtConfig({
@@ -79,18 +82,21 @@ export default defineNuxtConfig({
       path: '/sitemap.xml',
       hostname: process.env.DOMAIN,
       cacheTime: 1000 * 60 * 60 * 6,
-      // routes() {
-      //   // console.log(nuxtInstance.options);
-      //   const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
-      //   const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
-      //   return [...staticRoutes];
-      // }
+      async routes() {
+        // console.log(nuxtInstance.options);
+        // const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
+        // const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
+        // return [...staticRoutes];
+
+        const { pages }: {pages: { username: string }[]} = await $fetch(`${process.env.DOMAIN}/api/sitemap-data`);
+        // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
+        return pages.map((p) => `/shop/${p.username}`)
+      }
     }
   },
   modules: [
     async function (moduleOptions, nuxtInstance) {
-      //
-      // const test = await $fetch(`${process.env.DOMAIN}/api/home`);
+
       // console.log(test);
 
       const base = nuxtInstance.options.router.base
@@ -111,7 +117,7 @@ export default defineNuxtConfig({
 
         return Array.isArray(options) ? options : [options]
       }
-      const options = await initOptions(nuxtInstance, moduleOptions)
+      const options = setDefaultSitemapOptions((await initOptions(nuxtInstance, moduleOptions))[0], nuxtInstance)
 
       // Init cache
       // a file "sitemap-routes.json" is written to "dist" dir on "build" mode
@@ -156,7 +162,8 @@ export default defineNuxtConfig({
         //   fs.outputJsonSync(jsonStaticRoutesPath, globalCache.staticRoutes)
         // }
 
-        const xml = await createSitemap(options[0], globalCache.staticRoutes, base).toXML()
+        const r = await createRoutesCache({staticRoutes: () => excludeRoutes(options.exclude, globalCache.staticRoutes)}, options).get('routes')
+        const xml = await createSitemap(options, r, base).toXML()
         nuxtInstance.addHooks({
           // 'build:before': async (builder) => {
           //   await fs.outputFile(path.resolve(nuxtInstance.options.rootDir, path.join('public', 'sitemap.xml')), xml)
