@@ -11,6 +11,8 @@ import { excludeRoutes } from "@nuxtjs/sitemap/lib/routes";
 import { setDefaultSitemapOptions } from "@nuxtjs/sitemap/lib/options";
 import { $fetch } from "ohmyfetch";
 
+import {categories} from "./data/categories";
+
 export default defineNuxtConfig({
   buildModules: [
     "@vueuse/nuxt",
@@ -90,10 +92,22 @@ export default defineNuxtConfig({
         // const jsonStaticRoutesPath = path.resolve(nuxtInstance.options.buildDir, path.join('dist', 'sitemap-routes-patch.json'));
         // const staticRoutes = fs.readJsonSync(jsonStaticRoutesPath, { throws: false });
         // return [...staticRoutes];
+
         try {
+
+          const searchBase = '/search'
+          const searchPaths = [
+            'brick=true',
+            'br=true',
+            ...categories.map((c) => c.tags).flat().map((t) => `tag=${t.id}`)
+          ].map((q) => `${searchBase}?${q}`)
+
           const { pages }: {pages: { username: string }[]} = await $fetch(`${process.env.DOMAIN}/api/sitemap-data`);
           // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
-          return pages.map((p) => `/shop/${p.username}`)
+          return [
+              ...searchPaths,
+              ...pages.map((p) => `/shop/${p.username}`)
+          ]
         }
         catch (e) {
           return []
