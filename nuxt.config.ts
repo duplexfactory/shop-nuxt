@@ -1,17 +1,20 @@
 import {defineNuxtConfig, NuxtConfig} from "nuxt3";
 import {ModuleContainer} from "@nuxt/schema";
 
-
+// Sitemap
 const path = require('path')
 const fs = require('fs-extra')
-
 import { createSitemap } from "@nuxtjs/sitemap/lib/builder";
 import { createRoutesCache } from "@nuxtjs/sitemap/lib/cache";
 import { excludeRoutes } from "@nuxtjs/sitemap/lib/routes";
 import { setDefaultSitemapOptions } from "@nuxtjs/sitemap/lib/options";
 import { $fetch } from "ohmyfetch";
-
 import {categories} from "./data/categories";
+
+// Hidden paths
+import { resolve } from 'path'
+import { createCommonJS } from 'mlly'
+const { __dirname } = createCommonJS(import.meta.url)
 
 export default defineNuxtConfig({
   buildModules: [
@@ -198,5 +201,36 @@ export default defineNuxtConfig({
         })
       })
     },
-  ]
+  ],
+  hooks: {
+    'pages:extend'(pages) {
+
+      if (!process.env.DEV) {
+        return;
+      }
+
+      const root = resolve(__dirname, 'hidden/pages');
+
+      function traverse(dir: string) {
+        const children = fs.readdirSync(resolve(root, dir));
+        const files = children.filter(file => fs.lstatSync(resolve(root, dir, file)).isFile());
+        const dirs = children.filter(file => !fs.lstatSync(resolve(root, dir, file)).isFile());
+
+        for (const d of dirs) {
+          traverse(dir.length ? `${dir}/${d}` : d);
+        }
+
+        for (const fileName of files) {
+          const routeName = fileName.replace('.vue', '');
+          pages.push({
+            name: routeName,
+            path: `/${dir}/${routeName}`,
+            file: resolve(root, dir, fileName)
+          })
+        }
+      }
+
+      traverse('');
+    }
+  }
 } as NuxtConfig);
