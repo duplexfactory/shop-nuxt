@@ -8,7 +8,7 @@
           <i class="sio-menu text-2xl"></i>
         </button>
 
-        <nuxt-link to="/" class="mr-4">LOGO HERE</nuxt-link>
+        <nuxt-link to="/" class="mr-4"><img style="width: 100px;" src="~assets/images/logo.png"/></nuxt-link>
 
         <!-- Mobile Search Button -->
         <button @click="showSearchModal = true" class="sm:hidden border py-2 pl-4 pr-8 text-sm text-gray-400">
