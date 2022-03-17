@@ -3,6 +3,7 @@ import {PageSearchQuery} from "~/models/PageSearchQuery";
 import {PaginationQuery} from "~/models/PaginationQuery";
 import {useShowAgeRestrictedContent} from "~/composables/states";
 import type {Ref} from "vue";
+import throttle from "lodash.throttle";
 
 export default function () {
 
@@ -62,10 +63,12 @@ export default function () {
         //     searchResults.value.push(...data.value.pages);
         // }
     }
+
+    const _search = throttle(search, 700)
     return {
         searchResults: computed(() => safeSearchData.value.pages),
         searchResultTotalCount: computed(() => safeSearchData.value.count),
         searchPending: computed(() => searchPending.value != null && searchPending.value.value),
-        search
+        search: _search
     }
 }
