@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto self-center pb-28">
+    <div class="container mx-auto self-center mt-56 md:mt-64">
         <div class="text-pink-500 text-8xl font-bold w-full text-center mb-4">
             404
         </div>
