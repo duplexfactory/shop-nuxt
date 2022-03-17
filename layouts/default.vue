@@ -6,7 +6,7 @@
       <LazyDFDrawer v-if="drawerOpen" @toggleDrawer="toggleDrawer" :open="drawerOpen"></LazyDFDrawer>
     </transition>
 
-    <div class="flex-1">
+    <div class="flex-1 relative">
       <slot/>
 
       <transition name="modal">

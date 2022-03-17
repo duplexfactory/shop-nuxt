@@ -1,11 +1,13 @@
 <template>
-    <div class="container mx-auto self-center mt-56 md:mt-64">
+    <div class="absolute flex flex-col justify-center" style="min-height: 100%; min-width: 100%">
+      <div class="container mx-auto">
         <div class="text-pink-500 text-8xl font-bold w-full text-center mb-4">
-            404
+          404
         </div>
         <div class="text-gray-600 text-xl w-full text-center">
-            頁面不存在或已被移除
+          頁面不存在或已被移除
         </div>
+      </div>
     </div>
 </template>
 
