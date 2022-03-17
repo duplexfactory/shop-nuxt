@@ -79,18 +79,21 @@
         },
         methods: {
           loadSwiper() {
-            if (!this.swiperLoaded && this.$refs.swiper) {
+            this.$nextTick(() => {
+              if (!this.swiperLoaded && this.$refs.swiper) {
 
-              this.swiperLoaded = true;
+                this.swiperLoaded = true;
 
-              // Navigation arrows
-              this.swiperOptions.navigation = {
-                nextEl: this.$refs.swiperButtonNext,
-                prevEl: this.$refs.swiperButtonPrev,
-              };
+                // Navigation arrows
+                this.swiperOptions.navigation = {
+                  nextEl: this.$refs.swiperButtonNext,
+                  prevEl: this.$refs.swiperButtonPrev,
+                };
 
-              const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
-            }
+                const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+              }
+            })
+
           }
         }
     }
