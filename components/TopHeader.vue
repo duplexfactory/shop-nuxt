@@ -31,7 +31,7 @@
                 </template>
                 <template v-if="searchResults.length !== 0">
                   <div class="px-4 py-2 text-sm bg-gray-50">搜尋結果</div>
-                  <button @mousedown="quickSearchResultPressed(result.username)" class="px-4 py-2 text-sm block" v-for="result in searchResults">{{ result.username }}</button>
+                  <button @mousedown="quickSearchResultPressed(result.username)" class="px-4 py-2 text-sm block" v-for="result in searchResults.slice(0, 10)">{{ result.username }}</button>
                 </template>
               </div>
             </div>
@@ -76,6 +76,7 @@ const showSearchModal = useShowSearchModal();
 <script lang="ts">
 
 import {PageSearchQuery} from "~/models/PageSearchQuery";
+import {PaginationQuery} from "~/models/PaginationQuery";
 
 export default  {
   data(): {
@@ -138,7 +139,7 @@ export default  {
 
       await this.quickSearch(new PageSearchQuery(
           searchText,
-      ));
+      ), new PaginationQuery(0, 11));
     },
   }
 }
