@@ -49,9 +49,9 @@ export default defineNuxtConfig({
       },
       {property: 'og:site_name', hid: 'og:site_name', content: 'Shopitout'},
     ],
-    script: [
-      {type: 'text/javascript', src: "/js/tinymce/js/tinymce/tinymce.min.js", body: true}
-    ]
+    // script: [
+    //   {type: 'text/javascript', src: "/js/tinymce/js/tinymce/tinymce.min.js", body: true}
+    // ]
   },
   windicss: {
     analyze: true
