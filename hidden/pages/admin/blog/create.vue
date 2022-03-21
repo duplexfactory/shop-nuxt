@@ -1,8 +1,21 @@
 <template>
   <div class="container mx-auto pb-8">
+
+    <div class="mb-4 text-right">
+      <button class="btn btn-primary" @click="save">Save</button>
+    </div>
+
+    <div class="mb-4 flex">
+      <input class="flex-1" type="text" name="title" placeholder="Title">
+    </div>
+
+    <div class="mb-4 flex">
+      <input class="flex-1 mr-4" type="text" name="slug" placeholder="Slug">
+      <input class="flex-1" type="text" name="metaTitle" placeholder="Meta Title">
+    </div>
+
     <div class="mb-4">
       <button class="btn btn-primary mr-4" @click="loadTiny">Load TinyMCE</button>
-      <button class="btn btn-primary" @click="save">Save</button>
     </div>
 
     <textarea id="myTextarea"></textarea>
@@ -37,5 +50,12 @@ function save() {
 </script>
 
 <style scoped>
+input {
+  @apply rounded-md border py-2 px-4 text-md;
+}
+
+input:focus {
+  @apply outline-none border-pink-400;
+}
 
 </style>
