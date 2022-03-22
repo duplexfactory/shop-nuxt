@@ -1,3 +1,5 @@
+Favicon generated from favicon.ico using Lobster font.
+
 # Nuxt 3 Minimal Starter with VueUse and WindiCSS
 
 Documents
