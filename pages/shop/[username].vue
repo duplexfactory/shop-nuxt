@@ -101,10 +101,10 @@
       }
       const metaDescription = `${route.params.username}的IG Shop門市、評論、商業登記、相片及貼文${metaDescLocation}。${metaDescFullname}`;
       return {
-        title: `${route.params.username} | IG Shop 推薦及評論平台 | Shopitout`,
+        title: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`,
         meta: [
           {name: 'description', hid: 'description', content: metaDescription},
-          {property: 'og:title', hid: 'og:title', content: `${route.params.username} | IG Shop 推薦及評論平台 | Shopitout`},
+          {property: 'og:title', hid: 'og:title', content: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`},
           {property: 'og:url', hid: 'og:url', content: `${config.DOMAIN}/shop/${route.params.username}`},
           {property: 'og:image', hid: 'og:image', content: `${page.value !== null ? page.value.profilePicUrl : ""}`},
           {property: 'og:image:height', hid: 'og:image:height', content: '150'},

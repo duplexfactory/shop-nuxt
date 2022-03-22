@@ -34,7 +34,7 @@
                 </p>
                 <h2>4. 查詢或刪除個人資料</h2>
                 <p>
-                    閣下有權查詢閣下個人資料的內容、及更改任何不準確及不及時的資料及要求刪除您的資料。相關需求可以Instagram信息發送至 <a href="https://www.instagram.com/xxxx/">＠xxxx</a>。
+                    閣下有權查詢閣下個人資料的內容、及更改任何不準確及不及時的資料及要求刪除您的資料。相關需求可以Instagram信息發送至 <a href="https://www.instagram.com/shoperuse/">＠shoperuse</a>。
                 </p>
             </div>
         </div>

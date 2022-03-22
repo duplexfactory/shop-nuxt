@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     "nuxt-windicss",
   ],
   meta: {
-    title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shopitout',
+    title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shoperuse',
     link: [
       {rel: 'preconnect dns-prefetch', href: process.env.IMG_PROXY},
     ],
@@ -30,10 +30,10 @@ export default defineNuxtConfig({
       {charset: 'utf-8'},
       {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0'},
       {name: 'theme-color', content: '#f472b6'},
-      {name: 'description', content: 'Shopitout是一個IG Shop評論平台及搜尋器，整理及分類香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！'},
-      {name: 'keywords', content: 'Shopitout, ig shop, ig shop衫, instagram, 網店, ig shop商業登記, ig shop推薦, ig shop攻略'},
+      {name: 'description', content: 'Shoperuse是一個IG Shop評論平台及搜尋器，整理及分類香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！'},
+      {name: 'keywords', content: 'Shoperuse, ig shop, ig shop衫, instagram, 網店, ig shop商業登記, ig shop推薦, ig shop攻略'},
       {property: 'og:locale', hid: 'og:locale', content: 'zh_HK'},
-      {property: 'og:title', hid: 'og:title', content: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shopitout'},
+      {property: 'og:title', hid: 'og:title', content: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shoperuse'},
       // {property: 'og:url', hid: 'og:url', content: process.env.DOMAIN_WEB},
       // {
       //   property: 'og:image',
@@ -45,9 +45,9 @@ export default defineNuxtConfig({
       {
         property: 'og:description',
         hid: 'og:description',
-        content: 'Shopitout是一個IG Shop評論平台及搜尋器，整理及分類香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！'
+        content: 'Shoperuse是一個IG Shop評論平台及搜尋器，整理及分類香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！'
       },
-      {property: 'og:site_name', hid: 'og:site_name', content: 'Shopitout'},
+      {property: 'og:site_name', hid: 'og:site_name', content: 'Shoperuse'},
     ],
     // script: [
     //   {type: 'text/javascript', src: "/js/tinymce/js/tinymce/tinymce.min.js", body: true}
