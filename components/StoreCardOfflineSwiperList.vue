@@ -9,9 +9,6 @@ import {PropType} from "vue";
 import IgPage from '~/models/IgPage';
 import {SwiperOptions} from "swiper/types/swiper-options";
 
-// configure Swiper to use modules
-Swiper.use([Navigation, FreeMode, Pagination]);
-
 export default {
   data() : {
     swiperLoaded: boolean,
@@ -22,6 +19,9 @@ export default {
       swiperLoaded: false,
       swiperReady: false,
       swiperOptions: {
+
+        modules: [Navigation, FreeMode, Pagination],
+
         // Optional parameters
         // direction: 'vertical',
         // loop: true,

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
     // import Swiper and modules styles
     import 'swiper/css';
     import 'swiper/css/navigation';
@@ -7,9 +7,6 @@
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
     import {SwiperOptions} from "swiper/types/swiper-options";
-
-    // configure Swiper to use modules
-    Swiper.use([Navigation, Pagination]);
 
     export default {
         data() : {
@@ -21,6 +18,8 @@
             swiperLoaded: false,
             swiperReady: false,
             swiperOptions: {
+              modules: [Navigation, Pagination],
+
               // Optional parameters
               // direction: 'vertical',
               // loop: true,

@@ -1,5 +1,5 @@
 <script lang="ts">
-import Swiper, { Navigation, Pagination } from 'swiper';
+import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
 // import Swiper and modules styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -12,9 +12,6 @@ import {SwiperOptions} from "swiper/types/swiper-options";
 import MediaCard from "~/components/MediaCard.vue";
 import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
 
-// configure Swiper to use modules
-Swiper.use([Navigation, Pagination]);
-
 type MediaWithShop = Pick<IgPage, "lastMediaData" | "pk">;
 
 export default {
@@ -26,6 +23,8 @@ export default {
     return {
       swiperReady: false,
       swiperOptions: {
+        modules: [Navigation, Pagination],
+
         // Optional parameters
         // direction: 'vertical',
         // loop: true,

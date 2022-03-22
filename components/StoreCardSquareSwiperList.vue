@@ -21,9 +21,6 @@
     import IgPage from '~/models/IgPage';
     import {SwiperOptions} from "swiper/types/swiper-options";
 
-    // configure Swiper to use modules
-    Swiper.use([Navigation, FreeMode, Pagination]);
-
     export default {
         data() : {
           swiperReady: boolean,
@@ -32,6 +29,8 @@
             return {
                 swiperReady: false,
                 swiperOptions: {
+
+                      modules: [Navigation, FreeMode, Pagination],
                       // Optional parameters
                       // direction: 'vertical',
                       // loop: true,
@@ -68,10 +67,6 @@
                         }
                       },
 
-                      pagination: {
-                        el: '.swiper-pagination',
-                      },
-
                       // // And if we need scrollbar
                       // scrollbar: {
                       //   el: '.swiper-scrollbar',
@@ -83,10 +78,16 @@
             shops: Array as PropType<IgPage[]>
         },
         mounted() {
+            console.log("Store card square swiper list mounted");
+
             // Navigation arrows
             this.swiperOptions.navigation = {
               nextEl: this.$refs.swiperButtonNext,
               prevEl: this.$refs.swiperButtonPrev,
+            };
+
+            this.swiperOptions.pagination = {
+              el: this.$refs.swiperPagination
             };
 
             const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
@@ -112,7 +113,7 @@
                            :key="shop.username + '-store-card-sq'"></StoreCardSquare>
         </div>
 
-        <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
+        <div ref="swiperPagination" class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
         <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
