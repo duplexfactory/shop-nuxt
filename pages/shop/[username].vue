@@ -65,6 +65,42 @@
       return bestPhone;
     })
 
+    class PageInfoRow {
+      iconClass: string;
+      value: string;
+      constructor(iconClass: string, value: string) {
+        this.iconClass = iconClass;
+        this.value = value;
+      }
+    }
+    const pageInfoRows = computed(() => {
+
+      return [
+        new PageInfoRow("sio-phone", "9999 9999"), // hide if no phone call
+        new PageInfoRow("sio-whatsapp", "9999 9999"),
+        new PageInfoRow("sio-wechat", "9999 9999"),
+        new PageInfoRow("sio-mail-alt", "xxx@email.com"),
+
+        // Only for brick and mortar.
+        new PageInfoRow("sio-location", "旺角xx街"),
+        new PageInfoRow("sio-clock", "10am - 7pm 營業"),
+
+        new PageInfoRow("sio-link", "www.abc.com"),
+        new PageInfoRow("sio-instagram", "@relatedIG"),
+        new PageInfoRow("sio-doc-text-inv", "持商業登記"),
+        new PageInfoRow("sio-money", "接受 八達通、現金 （不設退款）"),
+        new PageInfoRow("sio-paper-plane", "全球免郵之類"),
+        new PageInfoRow("sio-facebook-squared", "My facebook"),
+        new PageInfoRow("sio-calendar-empty", "Since 1997"),
+        new PageInfoRow("sio-id-card", "食物製造牌照號碼 1234567"),
+
+        // Need update
+        new PageInfoRow("", "Signal 9999 9999"),
+        new PageInfoRow("", "全單8折"),
+        new PageInfoRow("", "不回IG DM"),
+      ];
+    })
+
     // Medias
     let mediaPending = ref(false);
     const medias = ref([]);
@@ -211,17 +247,6 @@ export default  {
                       </div>
                     </div>
 
-                    <div v-if="whatsapp.length != 0" class="mb-2 text-gray-500 text-sm">
-                      {{ "WhatsApp: " }}<a target="_blank" :href="`https://api.whatsapp.com/send/?phone=${whatsapp.length == 8 ? '852' : ''}${whatsapp}`">{{ whatsapp }}</a>
-                    </div>
-                    <div v-if="page.brickAndMortar" class="mb-2 text-gray-500 text-sm">
-                      {{ '門市: ' + page.locations.join('、') }}
-                    </div>
-                    <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
-                      持商業登記
-                    </div>
-                    <!--                    <button class="btn btn-outline">我知道</button>-->
-
                     <div class="mb-2 line-clamp-2" style="font-size: 0;">
                       <div v-for="tag in page.tags"
                            :key="tag"
@@ -229,16 +254,33 @@ export default  {
                     </div>
                 </div>
 
-                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-500">
+                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-400 text-xs">
+
+                  <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
+                    <i class="mr-2" :class="pageInfoRow.iconClass"></i><span>{{ pageInfoRow.value }}</span>
+                  </div>
+                  <div v-if="whatsapp.length != 0" class="mb-2 text-gray-500 text-sm">
+                    {{ "WhatsApp: " }}<a target="_blank" :href="`https://api.whatsapp.com/send/?phone=${whatsapp.length == 8 ? '852' : ''}${whatsapp}`">{{ whatsapp }}</a>
+                  </div>
+                  <div v-if="page.brickAndMortar" class="mb-2 text-gray-500 text-sm">
+                    {{ '門市: ' + page.locations.join('、') }}
+                  </div>
+                  <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
+                    持商業登記
+                  </div>
+                  <!--                    <button class="btn btn-outline">我知道</button>-->
+
+                  <div><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
+                  <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
+                </div>
+
+                <div class="col-span-8 py-4 text-gray-500">
                     <h2 class="font-semibold">{{ page.fullName }}</h2>
                     <h3 class="mt-2 whitespace-pre-wrap">{{ page.biography }}</h3>
                     <a class="hover:underline" :href="page.externalUrl" target="_blank">{{ page.externalUrl }}</a>
                 </div>
 
-                <div class="col-span-8 text-gray-400 text-xs py-4">
-                  <div><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
-                  <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
-                </div>
+
             </section>
 
             <section class="md:mt-4">
