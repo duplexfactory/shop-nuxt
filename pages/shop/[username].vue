@@ -78,19 +78,19 @@
 
     const pageInfoRows = computed(() => {
 
+      // Contact
       const rows = [
         new PageInfoRow("sio-phone", "9999 9999"),
       ];
-
       if (whatsapp.value.length != 0) {
         rows.push(new PageInfoRow("sio-whatsapp", whatsapp.value, `https://api.whatsapp.com/send/?phone=${whatsapp.value.length == 8 ? '852' : ''}${whatsapp.value}`))
       }
-
       rows.push(
         new PageInfoRow("sio-wechat", "9999 9999"),
         new PageInfoRow("sio-mail-alt", "xxx@email.com"),
-      )
+      );
 
+      // Brick and mortar
       if (page.value.brickAndMortar) {
         // page.locations.join('、')
         rows.push(
@@ -99,23 +99,28 @@
         )
       }
 
-      rows.push(
-        new PageInfoRow("sio-link", "www.abc.com"),
-        new PageInfoRow("sio-instagram", "@relatedIG"),
-      )
-
+      // Proof
       if (page.value.businessRegistration) {
         rows.push(
             new PageInfoRow("sio-doc-text-inv", "持商業登記"),
         )
       }
+      rows.push(
+        new PageInfoRow("sio-id-card", "食物製造牌照號碼 1234567"),
+      )
 
       rows.push(
+        // Purchase
         new PageInfoRow("sio-money", "接受 八達通、現金 （不設退款）"),
         new PageInfoRow("sio-paper-plane", "全球免郵之類"),
+
+        // Links
+        new PageInfoRow("sio-link", "www.abc.com"),
+        new PageInfoRow("sio-instagram", "@relatedIG"),
         new PageInfoRow("sio-facebook-squared", "My facebook"),
+
+        // Other info
         new PageInfoRow("sio-calendar-empty", "Since 1997"),
-        new PageInfoRow("sio-id-card", "食物製造牌照號碼 1234567"),
 
         // Need update
         new PageInfoRow("", "Signal 9999 9999"),
