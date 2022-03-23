@@ -107,7 +107,7 @@ watch(
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
       <div class="px-4 md:px-0">
-        <h2 class="section-title">最新貼文</h2>
+        <h2 class="section-title">熱門產品</h2>
         <MediaCardSwiperList :simple-pages="latest"></MediaCardSwiperList>
       </div>
       <!--        <MediaCardIGEmbedSwiperList :medias="latest"></MediaCardIGEmbedSwiperList>-->
