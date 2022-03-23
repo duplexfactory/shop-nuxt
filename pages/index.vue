@@ -118,8 +118,10 @@ watch(
         <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
       </div>
 
-      <h2 class="section-title px-4 md:px-0">實體店鋪</h2>
-      <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>
+<!--      <h2 class="section-title px-4 md:px-0">實體店鋪</h2>-->
+<!--      <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>-->
+      <h2 class="section-title px-4 md:px-0">最新貼文</h2>
+      <MediaCardIGEmbedSwiperList :medias="latest"></MediaCardIGEmbedSwiperList>
 
     </div>
 
