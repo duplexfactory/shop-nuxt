@@ -68,26 +68,49 @@
     class PageInfoRow {
       iconClass: string;
       value: string;
-      constructor(iconClass: string, value: string) {
+      link?: string;
+      constructor(iconClass: string, value: string, link?: string) {
         this.iconClass = iconClass;
         this.value = value;
+        this.link = link;
       }
     }
+
     const pageInfoRows = computed(() => {
 
-      return [
-        new PageInfoRow("sio-phone", "9999 9999"), // hide if no phone call
-        new PageInfoRow("sio-whatsapp", "9999 9999"),
+      const rows = [
+        new PageInfoRow("sio-phone", "9999 9999"),
+      ];
+
+      if (whatsapp.value.length != 0) {
+        rows.push(new PageInfoRow("sio-whatsapp", whatsapp.value, `https://api.whatsapp.com/send/?phone=${whatsapp.value.length == 8 ? '852' : ''}${whatsapp.value}`))
+      }
+
+      rows.push(
         new PageInfoRow("sio-wechat", "9999 9999"),
         new PageInfoRow("sio-mail-alt", "xxx@email.com"),
+      )
 
-        // Only for brick and mortar.
-        new PageInfoRow("sio-location", "旺角xx街"),
-        new PageInfoRow("sio-clock", "10am - 7pm 營業"),
+      if (page.value.brickAndMortar) {
+        // page.locations.join('、')
+        rows.push(
+            new PageInfoRow("sio-location", "旺角xx街"),
+            new PageInfoRow("sio-clock", "10am - 7pm 營業"),
+        )
+      }
 
+      rows.push(
         new PageInfoRow("sio-link", "www.abc.com"),
         new PageInfoRow("sio-instagram", "@relatedIG"),
-        new PageInfoRow("sio-doc-text-inv", "持商業登記"),
+      )
+
+      if (page.value.businessRegistration) {
+        rows.push(
+            new PageInfoRow("sio-doc-text-inv", "持商業登記"),
+        )
+      }
+
+      rows.push(
         new PageInfoRow("sio-money", "接受 八達通、現金 （不設退款）"),
         new PageInfoRow("sio-paper-plane", "全球免郵之類"),
         new PageInfoRow("sio-facebook-squared", "My facebook"),
@@ -98,7 +121,9 @@
         new PageInfoRow("", "Signal 9999 9999"),
         new PageInfoRow("", "全單8折"),
         new PageInfoRow("", "不回IG DM"),
-      ];
+      )
+
+      return rows;
     })
 
     // Medias
@@ -221,7 +246,7 @@ export default  {
 <template>
     <div class="mb-16">
         <div v-if="!!page" class="container mx-auto">
-            <section class="md:grid grid-cols-8">
+            <section class="md:grid grid-cols-8 lg:(px-16 gap-x-16)">
                 <div class="col-span-3 lg:col-span-2 pr-4">
                     <div class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
                          style="height: 100px;">
@@ -257,16 +282,8 @@ export default  {
                 <div class="col-span-5 lg:col-span-6 pt-4 text-gray-400 text-xs">
 
                   <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
-                    <i class="mr-2" :class="pageInfoRow.iconClass"></i><span>{{ pageInfoRow.value }}</span>
-                  </div>
-                  <div v-if="whatsapp.length != 0" class="mb-2 text-gray-500 text-sm">
-                    {{ "WhatsApp: " }}<a target="_blank" :href="`https://api.whatsapp.com/send/?phone=${whatsapp.length == 8 ? '852' : ''}${whatsapp}`">{{ whatsapp }}</a>
-                  </div>
-                  <div v-if="page.brickAndMortar" class="mb-2 text-gray-500 text-sm">
-                    {{ '門市: ' + page.locations.join('、') }}
-                  </div>
-                  <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
-                    持商業登記
+                    <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                    <component :is="pageInfoRow.link ? 'a' : 'span'" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
                   </div>
                   <!--                    <button class="btn btn-outline">我知道</button>-->
 
@@ -274,13 +291,11 @@ export default  {
                   <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
                 </div>
 
-                <div class="col-span-8 py-4 text-gray-500">
+                <div class="col-span-8 py-4 text-gray-500 text-sm">
                     <h2 class="font-semibold">{{ page.fullName }}</h2>
                     <h3 class="mt-2 whitespace-pre-wrap">{{ page.biography }}</h3>
                     <a class="hover:underline" :href="page.externalUrl" target="_blank">{{ page.externalUrl }}</a>
                 </div>
-
-
             </section>
 
             <section class="md:mt-4">
