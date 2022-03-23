@@ -17,6 +17,16 @@ import { createCommonJS } from 'mlly'
 const { __dirname } = createCommonJS(import.meta.url)
 
 export default defineNuxtConfig({
+  webpack: {
+    terser: {
+      // https://github.com/terser/terser#compress-options
+      terserOptions: {
+        compress: {
+          drop_console: true
+        }
+      }
+    }
+  },
   buildModules: [
     "@vueuse/nuxt",
     "nuxt-windicss",
