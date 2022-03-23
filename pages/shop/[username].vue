@@ -131,6 +131,8 @@
       return rows;
     })
 
+    const verifiedPage = false;
+
     // Medias
     let mediaPending = ref(false);
     const medias = ref([]);
@@ -232,6 +234,7 @@
       await createReview();
       await fetchReviews();
     }
+
 </script>
 
 <script lang="ts">
@@ -253,7 +256,7 @@ export default  {
         <div v-if="!!page" class="container mx-auto">
             <section class="md:grid grid-cols-8 lg:(px-16 gap-x-16)">
                 <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
+                    <div v-if="verifiedPage" class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
                          style="height: 100px;">
                       <img class="h-full w-full"
                            :alt="page.username"
@@ -296,7 +299,7 @@ export default  {
                   <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
                 </div>
 
-                <div class="col-span-8 py-4 text-gray-500 text-sm">
+                <div v-if="verifiedPage" class="col-span-8 py-4 text-gray-500 text-sm">
                     <h2 class="font-semibold">{{ page.fullName }}</h2>
                     <h3 class="mt-2 whitespace-pre-wrap">{{ page.biography }}</h3>
                     <a class="hover:underline" :href="page.externalUrl" target="_blank">{{ page.externalUrl }}</a>
@@ -314,10 +317,19 @@ export default  {
                                   class="col-span-1"
                                   style="aspect-ratio: 3/5"
                                   @show="showMedia(i)">
-                    <MediaCard @click="showMediaModal(media.code)"
+                    <MediaCard v-if="verifiedPage"
+                               @click="showMediaModal(media.code)"
                                style="cursor: pointer"
                                :media="media"
                                :shop="page"></MediaCard>
+                    <MediaCardIGEmbed
+                        v-else
+                        :post-id="media.code"
+                        :fixed-aspect-ratio="3/5"
+                        :username="page.username"></MediaCardIGEmbed>
+
+
+
                   </lazy-component>
                 </div>
                 <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
