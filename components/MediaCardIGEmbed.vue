@@ -5,6 +5,10 @@
 <!--  class="w-full"-->
   <div style="position: relative;" :style="fixedAspectRatio !== 0 ? `aspect-ratio: ${fixedAspectRatio.toString()};` : ''" ref="blockquote-container" >
 <!--    height: 100% !important;-->
+    <div v-if="topBar" class="text-xs md:text-sm text-gray-400 flex justify-between border p-2">
+      <div class="text-pink-700">HK$ 1000</div>
+      <button @click="$emit('showMediaModal')">查看詳情及評論<i class="sio-angle-right"></i></button>
+    </div>
     <component :is="postId ? 'blockquote' : 'div'" class="instagram-media overflow-hidden"
                 :data-instgrm-captioned="captioned ? true : null"
                 :data-instgrm-permalink="`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`"
@@ -28,12 +32,18 @@
 <script setup lang="ts">
 import {PropType} from "vue/dist/vue";
 
-const {postId} = defineProps({
+const {
+  postId,
+  fixedAspectRatio,
+  username,
+  captioned
+} = defineProps({
   postId: String as PropType<String>,
   fixedAspectRatio: { type: Number, default: 0.5 },
   username: { type: String, default: "" },
   delegateScript: { type: Boolean, default: false },
-  captioned: { type: Boolean, default: false }
+  captioned: { type: Boolean, default: false },
+  topBar: { type: Boolean, default: false },
 })
 
 </script>
