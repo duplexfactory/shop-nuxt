@@ -315,18 +315,23 @@ export default  {
                   <lazy-component v-for="(media, i) in medias"
                                   :key="media.id + '-post-card'"
                                   class="col-span-1"
-                                  style="aspect-ratio: 3/5"
-                                  @show="showMedia(i)">
+                                  style="aspect-ratio: 3/5">
                     <MediaCard v-if="verifiedPage"
                                @click="showMediaModal(media.code)"
                                style="cursor: pointer"
                                :media="media"
                                :shop="page"></MediaCard>
-                    <MediaCardIGEmbed
-                        v-else
-                        :post-id="media.code"
-                        :fixed-aspect-ratio="3/5"
-                        :username="page.username"></MediaCardIGEmbed>
+                    <template v-else>
+                      <div class="mt-2 text-xs md:text-lg text-gray-400 flex justify-between">
+                        <div></div>
+                        <button @click="showMediaModal(media.code)">查看詳情及評論<i class="sio-angle-right"></i></button>
+                      </div>
+                      <MediaCardIGEmbed
+                          :post-id="media.code"
+                          :fixed-aspect-ratio="3/4.5"
+                          :username="page.username"></MediaCardIGEmbed>
+                    </template>
+
 
 
 
