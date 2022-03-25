@@ -17,7 +17,7 @@ interface _IgPageExtraData {
     refund: string,
     discount: string,
     shopSince: string,
-    foodLicence: boolean
+    foodLicence: string | boolean
 }
 
 type IgPageExtraData = Partial<_IgPageExtraData>;

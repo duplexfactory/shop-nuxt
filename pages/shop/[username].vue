@@ -94,36 +94,48 @@
         if (!!extraData.email) {
           rows.push( new PageInfoRow("sio-mail-alt", extraData.email),);
         }
-      }
 
-      // Brick and mortar
-      if (page.value.brickAndMortar) {
-        // page.locations.join('、')
-        rows.push(
-            new PageInfoRow("sio-location", "旺角xx街"),
-            new PageInfoRow("sio-clock", "10am - 7pm 營業"),
-        )
-      }
+        // Brick and mortar
+        if (!!extraData.address) {
+          rows.push(
+              new PageInfoRow("sio-location", extraData.address, `https://google.com/maps/search/${encodeURIComponent(extraData.address)}`),
+          )
+        }
+        else if (!!page.value && page.value.locations.length !== 0) {
+          rows.push(
+              new PageInfoRow("sio-location", page.value.locations.join('、')),
+          )
+        }
+        if (!!extraData.openHours)
+          rows.push(new PageInfoRow("sio-clock", extraData.openHours))
 
-      // Proof
-      if (page.value.businessRegistration) {
-        rows.push(
-            new PageInfoRow("sio-doc-text-inv", "持商業登記"),
-        )
-      }
-      rows.push(
-        new PageInfoRow("sio-id-card", "食物製造牌照號碼 1234567"),
-      )
+        // Proof
+        if (page.value.businessRegistration)
+          rows.push(new PageInfoRow("sio-doc-text-inv", "持商業登記"))
 
-      rows.push(
+        if (!!extraData.foodLicence) {
+          if (extraData.foodLicence === true)
+            rows.push(new PageInfoRow("sio-id-card", "持食物製造牌照"))
+          else
+            rows.push(new PageInfoRow("sio-id-card", `食物製造牌照號碼 ${extraData.foodLicence}`))
+        }
+
         // Purchase
-        new PageInfoRow("sio-money", "接受 八達通、現金 （不設退款）"),
-        new PageInfoRow("sio-paper-plane", "全球免郵之類"),
+        if (!!extraData.paymentMethods && extraData.paymentMethods.length !== 0)
+          rows.push(new PageInfoRow("sio-money", `接受 ${extraData.paymentMethods.join('、')} （不設退款）`))
+        if (!!extraData.mailing)
+          rows.push(new PageInfoRow("sio-paper-plane", extraData.mailing)) // 全球免郵之類
 
         // Links
-        new PageInfoRow("sio-link", "www.abc.com"),
-        new PageInfoRow("sio-instagram", "@relatedIG"),
-        new PageInfoRow("sio-facebook-squared", "My facebook"),
+        if (!!extraData.link)
+          rows.push(new PageInfoRow("sio-link", extraData.link, extraData.link))
+        if (!!extraData.relatedPage)
+          rows.push(new PageInfoRow("sio-instagram", `@${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage}/`))
+        if (!!extraData.facebook)
+          rows.push(new PageInfoRow("sio-facebook-squared", extraData.facebook, `https://www.facebook.com/${extraData.facebook}/`))
+      }
+
+      rows.push(
 
         // Other info
         new PageInfoRow("sio-calendar-empty", "Since 1997"),
@@ -137,7 +149,7 @@
       return rows;
     })
 
-    const verifiedPage = false;
+    const verifiedPage = true;
 
     // Medias
     let mediaPending = ref(false);
