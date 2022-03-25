@@ -69,7 +69,7 @@
 
     const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
 
-    const verifiedPage = true;
+    const verifiedPage = false;
 
     // Medias
     let mediaPending = ref(false);
@@ -254,7 +254,8 @@ export default  {
                   <lazy-component v-for="(media, i) in medias"
                                   :key="media.id + '-post-card'"
                                   class="col-span-1"
-                                  style="aspect-ratio: 3/5">
+                                  style="aspect-ratio: 3/5"
+                                  @show="showMedia(i)">
                     <MediaCard v-if="verifiedPage"
                                @click="showMediaModal(media.code)"
                                style="cursor: pointer"
