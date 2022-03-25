@@ -2,6 +2,8 @@
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
     import {PageSearch} from "~/models/PageSearch";
+    import {computed} from "@vue/reactivity";
+    import dayjs from "dayjs";
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
@@ -22,19 +24,11 @@
     //     locations,
     // } = shop;
     // const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-</script>
 
-<script lang="ts">
+    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
+    const lastActive = computed(() => dayjs(shop.lastActivity * 1000).format('DD/MM/YYYY'));
 
-import dayjs from "dayjs";
-
-export default {
-  computed: {
-    lastActive () {
-      return dayjs(this.shop.lastActivity * 1000).format('DD/MM/YYYY');
-    }
-  }
-}
+    const verifiedPage = true;
 </script>
 
 <template>
@@ -74,7 +68,7 @@ export default {
 
         </div>
 
-        <div class="col-span-8 text-sm overflow-hidden">
+      <div v-if="verifiedPage" class="col-span-8 text-sm overflow-hidden">
             <div class="mt-2 text-gray-500 truncate">{{ shop.fullName }}</div>
             <div class="mt-2 text-gray-500 line-clamp-2">{{ shop.biography }}</div>
             <div v-if="shop.brickAndMortar" class="mt-2 text-sm text-gray-500">
@@ -87,6 +81,9 @@ export default {
                      v-lazy:background-image="$imageUrl(i)"></div>
             </div>
         </div>
+      <div v-else class="col-span-8 text-sm flex flex-col flex-wrap">
+
+      </div>
 
     </div>
 
