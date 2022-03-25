@@ -85,10 +85,16 @@
       if (whatsapp.value.length != 0) {
         rows.push(new PageInfoRow("sio-whatsapp", whatsapp.value, `https://api.whatsapp.com/send/?phone=${whatsapp.value.length == 8 ? '852' : ''}${whatsapp.value}`))
       }
-      rows.push(
-        new PageInfoRow("sio-wechat", "9999 9999"),
-        new PageInfoRow("sio-mail-alt", "xxx@email.com"),
-      );
+
+      const extraData = page.value.extraData;
+      if (!!extraData) {
+        if (!!extraData.wechat) {
+          rows.push(new PageInfkaren_tongpoyuoRow("sio-wechat", extraData.wechat),);
+        }
+        if (!!extraData.email) {
+          rows.push( new PageInfoRow("sio-mail-alt", extraData.email),);
+        }
+      }
 
       // Brick and mortar
       if (page.value.brickAndMortar) {
