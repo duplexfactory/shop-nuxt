@@ -95,6 +95,10 @@ export default defineNuxtConfig({
     "pages/hidden/*"
   ],
   sitemap: function() {
+    if (process.env.DEV) {
+      return false;
+    }
+
     // const nuxtInstance = this.nuxt;
     return {
       path: '/sitemap.xml',
@@ -139,7 +143,9 @@ export default defineNuxtConfig({
   modules: [
     async function (moduleOptions, nuxtInstance) {
 
-      // console.log(test);
+      if (process.env.DEV) {
+        return;
+      }
 
       const base = nuxtInstance.options.router.base
       async function initOptions(nuxtInstance, moduleOptions) {
