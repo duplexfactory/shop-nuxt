@@ -78,22 +78,27 @@
 
     const pageInfoRows = computed(() => {
 
-      // Contact
-      const rows = [
-        new PageInfoRow("sio-phone", "9999 9999"),
-      ];
-      if (whatsapp.value.length != 0) {
-        rows.push(new PageInfoRow("sio-whatsapp", whatsapp.value, `https://api.whatsapp.com/send/?phone=${whatsapp.value.length == 8 ? '852' : ''}${whatsapp.value}`))
-      }
-
+      const rows = [];
       const extraData = page.value.extraData;
       if (!!extraData) {
-        if (!!extraData.wechat) {
+
+        // Contact
+        let phone = "";
+        if (!!extraData.phone)
+          phone += `${extraData.phone} `;
+        if (extraData.noPhoneCall)
+          phone += "不接來電";
+        if (phone.length !== 0)
+          rows.push(new PageInfoRow("sio-phone", phone));
+
+        if (!!extraData.whatsapp)
+          rows.push(new PageInfoRow("sio-whatsapp", extraData.whatsapp, `https://api.whatsapp.com/send/?phone=${extraData.whatsapp.length == 8 ? '852' : ''}${extraData.whatsapp}`))
+        if (!!extraData.signal)
+          rows.push(new PageInfoRow("", `Signal ${extraData.signal}`, `https://signal.me/#p/+${extraData.signal}`),);
+        if (!!extraData.wechat)
           rows.push(new PageInfoRow("sio-wechat", extraData.wechat),);
-        }
-        if (!!extraData.email) {
+        if (!!extraData.email)
           rows.push( new PageInfoRow("sio-mail-alt", extraData.email),);
-        }
 
         // Brick and mortar
         if (!!extraData.address) {
@@ -121,30 +126,32 @@
         }
 
         // Purchase
+        let purchase = "";
         if (!!extraData.paymentMethods && extraData.paymentMethods.length !== 0)
-          rows.push(new PageInfoRow("sio-money", `接受 ${extraData.paymentMethods.join('、')} （不設退款）`))
+          purchase = `接受 ${extraData.paymentMethods.join('、')} `;
+        if (!!extraData.refund)
+          purchase += `（${extraData.refund}）`;
+        if (purchase.length !== 0)
+          rows.push(new PageInfoRow("sio-money", purchase));
         if (!!extraData.mailing)
-          rows.push(new PageInfoRow("sio-paper-plane", extraData.mailing)) // 全球免郵之類
+          rows.push(new PageInfoRow("sio-paper-plane", extraData.mailing)); // 全球免郵之類
+        if (!!extraData.discount)
+          rows.push(new PageInfoRow("", extraData.discount)); // 全單8折
 
         // Links
         if (!!extraData.link)
-          rows.push(new PageInfoRow("sio-link", extraData.link, extraData.link))
+          rows.push(new PageInfoRow("sio-link", extraData.link, extraData.link));
         if (!!extraData.relatedPage)
-          rows.push(new PageInfoRow("sio-instagram", `@${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage}/`))
+          rows.push(new PageInfoRow("sio-instagram", `@${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage}/`));
         if (!!extraData.facebook)
-          rows.push(new PageInfoRow("sio-facebook-squared", extraData.facebook, `https://www.facebook.com/${extraData.facebook}/`))
-      }
-
-      rows.push(
+          rows.push(new PageInfoRow("sio-facebook-squared", extraData.facebook, `https://www.facebook.com/${extraData.facebook}/`));
 
         // Other info
-        new PageInfoRow("sio-calendar-empty", "Since 1997"),
-
-        // Need update
-        new PageInfoRow("", "Signal 9999 9999"),
-        new PageInfoRow("", "全單8折"),
-        new PageInfoRow("", "不回IG DM"),
-      )
+        if (!!extraData.shopSince)
+          rows.push(new PageInfoRow("sio-calendar-empty", `Since ${extraData.shopSince}`))
+        if (extraData.noIgDM)
+          rows.push(new PageInfoRow("", "不回IG DM"))
+      }
 
       return rows;
     })
@@ -305,16 +312,16 @@ export default  {
                     </div>
                 </div>
 
-                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-400 text-xs">
+                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-500 text-xs">
 
                   <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
                     <i class="mr-2" :class="pageInfoRow.iconClass"></i>
-                    <component :is="pageInfoRow.link ? 'a' : 'span'" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+                    <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
                   </div>
                   <!--                    <button class="btn btn-outline">我知道</button>-->
 
-                  <div><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
-                  <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
+                  <div class="text-gray-400"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
+                  <div class="text-gray-400"><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
                 </div>
 
                 <div v-if="verifiedPage" class="col-span-8 py-4 text-gray-500 text-sm">
