@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+    import {throwError} from "#app";
+
     const {tagsLookup} = useTags();
 
     // const page = {
@@ -35,7 +37,13 @@
     const config = useRuntimeConfig();
     const route = useRoute();
 
-    const {data} = useLazyFetch(`/api/shop`, {params: {username: route.params.username}});
+    const {data, error} = await useLazyFetch(`/api/shop`, {params: {username: route.params.username}})
+    if (!!error && !!error.value) {
+      const error = new Error();
+      (error as any).statusCode = 404;
+      throwError(error)
+    }
+
     const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
     const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
     const whatsapp = computed(() => {
@@ -176,7 +184,7 @@ export default  {
 
 <template>
     <div class="mb-16">
-        <div v-if="page !== null" class="container mx-auto">
+        <div v-if="!!page" class="container mx-auto">
             <section class="md:grid grid-cols-8">
                 <div class="col-span-3 lg:col-span-2 pr-4">
                     <div class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"

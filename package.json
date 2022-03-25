@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "nuxt-windicss": "^2.0.0",
-    "nuxt3": "latest",
+    "nuxt3": "^3.0.0-27468803.23e7afb",
     "patch-vue-directive-ssr": "^0.0.1"
   },
   "dependencies": {

@@ -19,6 +19,12 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     } else {
         await initMongo();
         const p = await pageSearchCollection.findOne({username}, {projection: {_id: 1}});
+        if (!p) {
+            // Page deleted
+            res.statusCode = 404
+            res.end()
+            throw new Error()
+        }
         queryId = p._id
     }
 

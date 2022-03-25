@@ -131,6 +131,11 @@ export default defineNuxtConfig({
       }
     }
   },
+  postcss: {
+    plugins: {
+      cssnano: false
+    }
+  },
   modules: [
     async function (moduleOptions, nuxtInstance) {
 
