@@ -233,7 +233,7 @@ export default  {
                   </div>
                   <!--                    <button class="btn btn-outline">我知道</button>-->
 
-                  <div class="text-gray-400"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
+                  <div class="text-gray-400 mt-4"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
                   <div class="text-gray-400"><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
                 </div>
 
