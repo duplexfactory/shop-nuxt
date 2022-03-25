@@ -58,7 +58,9 @@ export default defineNuxtConfig({
         content: 'Shoperuse是一個IG Shop評論平台及搜尋器，整理及分類香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！'
       },
       {property: 'og:site_name', hid: 'og:site_name', content: 'Shoperuse'},
-    ],
+    ].concat(process.env.DEV ? [
+      {name: 'robots', content: 'none'},
+    ] : []),
     // script: [
     //   {type: 'text/javascript', src: "/js/tinymce/js/tinymce/tinymce.min.js", body: true}
     // ]
