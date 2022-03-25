@@ -1,3 +1,5 @@
+import IgPageExtraData from "~/models/IgPageExtraData";
+
 export class PageSearch {
     _id: number;
     username: string;
@@ -25,4 +27,6 @@ export class PageSearch {
     profilePicLastFetch: number;
 
     lastActivity: number
+
+    extraData: IgPageExtraData
 }

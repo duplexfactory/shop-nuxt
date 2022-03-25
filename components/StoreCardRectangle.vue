@@ -4,6 +4,7 @@
     import {PageSearch} from "~/models/PageSearch";
     import {computed} from "@vue/reactivity";
     import dayjs from "dayjs";
+    import PageInfoRow from "~/models/PageInfoRow";
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
@@ -28,7 +29,7 @@
     const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
     const lastActive = computed(() => dayjs(shop.lastActivity * 1000).format('DD/MM/YYYY'));
 
-    const verifiedPage = true;
+    const verifiedPage = false;
 </script>
 
 <template>
@@ -37,11 +38,12 @@
 
 
       <div class="col-span-3">
-            <div class="hidden sm:block bg-gray-300 rounded-full square-image-container"
+            <div v-if="verifiedPage"
+                 class="hidden sm:(block mb-2) bg-gray-300 rounded-full square-image-container"
                  v-lazy:background-image="shop.profilePicUrl"
                  style="height: 70px;"></div>
 
-            <div class="sm:mt-2 font-semibold text-lg truncate">
+            <div class="font-semibold text-lg truncate">
               <a class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
             </div>
 
@@ -81,8 +83,12 @@
                      v-lazy:background-image="$imageUrl(i)"></div>
             </div>
         </div>
-      <div v-else class="col-span-8 text-sm flex flex-col flex-wrap">
-
+      <!-- flex flex-col flex-wrap -->
+      <div v-else class="col-span-8 text-gray-500 text-xs mt-2 sm:mt-0">
+        <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
+          <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+          <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+        </div>
       </div>
 
     </div>

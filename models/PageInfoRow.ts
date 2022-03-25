@@ -1,5 +1,6 @@
 import IgPageExtraData from "~/models/IgPageExtraData";
 import IgPage from "~/models/IgPage";
+import {PageSearch} from "~/models/PageSearch";
 
 export default class PageInfoRow {
     iconClass: string;
@@ -11,7 +12,7 @@ export default class PageInfoRow {
         this.link = link;
     }
 
-    static rowsFromPage(page: IgPage): PageInfoRow[] {
+    static rowsFromPage(page: IgPage | PageSearch): PageInfoRow[] {
         const extraData = page.extraData;
         if (!!extraData) {
             const rows = [];
