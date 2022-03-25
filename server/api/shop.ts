@@ -39,6 +39,12 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     else {
         page = data;
     }
+    
+    if (page.deleted) {
+        res.statusCode = 404
+        res.end()
+        throw new Error()
+    }
 
     // const now = Date.now()
     // if (now - page.profilePicLastFetch > 2 * 24 * 60 * 60 * 1000) {
