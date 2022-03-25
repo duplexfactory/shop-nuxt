@@ -7,7 +7,7 @@
           <slot name="header">
             <div class="w-full flex justify-end p-4">
               <button class="flex items-center" @click="$emit('close')">
-                <i class="sio-cancel text-2xl"></i>
+                <i class="spr-cancel text-2xl"></i>
               </button>
             </div>
           </slot>

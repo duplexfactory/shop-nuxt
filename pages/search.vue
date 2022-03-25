@@ -53,11 +53,11 @@
                   :class="{'text-pink-400': isMobileFilterActive}">
             篩選
             <i v-if="isMobileFiltersShown"
-               class="sio-angle-up text-xl"
+               class="spr-angle-up text-xl"
                :class="{'text-pink-400': isMobileFilterActive}"
             ></i>
             <i v-else
-               class="sio-angle-down text-xl"
+               class="spr-angle-down text-xl"
                :class="{'text-pink-400': isMobileFilterActive}"></i>
           </button>
           <div class="overflow-hidden">

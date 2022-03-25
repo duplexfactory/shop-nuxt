@@ -7,7 +7,7 @@
 <!--    height: 100% !important;-->
     <div v-if="topBar" class="text-xs md:text-sm text-gray-400 flex justify-between border p-2">
       <div class="text-pink-700">HK$ 1000</div>
-      <button @click="$emit('showMediaModal')">查看詳情及評論<i class="sio-angle-right"></i></button>
+      <button @click="$emit('showMediaModal')">查看詳情及評論<i class="spr-angle-right"></i></button>
     </div>
     <component :is="postId ? 'blockquote' : 'div'" class="instagram-media overflow-hidden"
                 :data-instgrm-captioned="captioned ? true : null"

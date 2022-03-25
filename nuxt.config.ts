@@ -69,11 +69,11 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/main.css',
     '@/assets/font/css/animation.css',
-    '@/assets/font/css/shop-it-out.css',
-    '@/assets/font/css/shop-it-out-codes.css',
-    '@/assets/font/css/shop-it-out-embedded.css',
-    '@/assets/font/css/shop-it-out-ie7.css',
-    '@/assets/font/css/shop-it-out-ie7-codes.css',
+    '@/assets/font/css/shoperuse.css',
+    '@/assets/font/css/shoperuse-codes.css',
+    '@/assets/font/css/shoperuse-embedded.css',
+    '@/assets/font/css/shoperuse-ie7.css',
+    '@/assets/font/css/shoperuse-ie7-codes.css',
   ],
   publicRuntimeConfig: {
     IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F",

@@ -10,7 +10,7 @@
     </div>
     <div class="mt-2 text-sm md:text-lg text-gray-400 flex justify-between">
       {{ createdDateString }}
-      <button v-if="review.mediaCode && checkMediaButton" @click="$emit('showMedia')">查看相關貼文<i class="sio-angle-right"></i></button>
+      <button v-if="review.mediaCode && checkMediaButton" @click="$emit('showMedia')">查看相關貼文<i class="spr-angle-right"></i></button>
     </div>
   </div>
 </template>

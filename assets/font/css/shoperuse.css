@@ -1,0 +1,82 @@
+@font-face {
+  font-family: 'shoperuse';
+  src: url('../font/shoperuse.eot?35217154');
+  src: url('../font/shoperuse.eot?35217154#iefix') format('embedded-opentype'),
+       url('../font/shoperuse.woff2?35217154') format('woff2'),
+       url('../font/shoperuse.woff?35217154') format('woff'),
+       url('../font/shoperuse.ttf?35217154') format('truetype'),
+       url('../font/shoperuse.svg?35217154#shoperuse') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'shoperuse';
+    src: url('../font/shoperuse.svg?35217154#shoperuse') format('svg');
+  }
+}
+*/
+[class^="spr-"]:before, [class*=" spr-"]:before {
+  font-family: "shoperuse";
+  font-style: normal;
+  font-weight: normal;
+  speak: never;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.spr-star:before { content: '\e800'; } /* '' */
+.spr-star-filled:before { content: '\e801'; } /* '' */
+.spr-search:before { content: '\e802'; } /* '' */
+.spr-cancel:before { content: '\e803'; } /* '' */
+.spr-menu:before { content: '\e804'; } /* '' */
+.spr-phone:before { content: '\e805'; } /* '' */
+.spr-location:before { content: '\e806'; } /* '' */
+.spr-clock:before { content: '\e807'; } /* '' */
+.spr-link:before { content: '\e808'; } /* '' */
+.spr-signal:before { content: '\e809'; } /* '' */
+.spr-block:before { content: '\e80a'; } /* '' */
+.spr-tag:before { content: '\e80b'; } /* '' */
+.spr-money:before { content: '\f0d6'; } /* '' */
+.spr-mail-alt:before { content: '\f0e0'; } /* '' */
+.spr-angle-left:before { content: '\f104'; } /* '' */
+.spr-angle-right:before { content: '\f105'; } /* '' */
+.spr-angle-up:before { content: '\f106'; } /* '' */
+.spr-angle-down:before { content: '\f107'; } /* '' */
+.spr-calendar-empty:before { content: '\f133'; } /* '' */
+.spr-doc-text-inv:before { content: '\f15c'; } /* '' */
+.spr-instagram:before { content: '\f16d'; } /* '' */
+.spr-wechat:before { content: '\f1d7'; } /* '' */
+.spr-paper-plane:before { content: '\f1d8'; } /* '' */
+.spr-whatsapp:before { content: '\f232'; } /* '' */
+.spr-id-card:before { content: '\f2c2'; } /* '' */
+.spr-facebook-squared:before { content: '\f308'; } /* '' */
