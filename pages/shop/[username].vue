@@ -89,7 +89,7 @@
       const extraData = page.value.extraData;
       if (!!extraData) {
         if (!!extraData.wechat) {
-          rows.push(new PageInfkaren_tongpoyuoRow("sio-wechat", extraData.wechat),);
+          rows.push(new PageInfoRow("sio-wechat", extraData.wechat),);
         }
         if (!!extraData.email) {
           rows.push( new PageInfoRow("sio-mail-alt", extraData.email),);
