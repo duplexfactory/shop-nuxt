@@ -192,8 +192,8 @@ export default  {
 <template>
     <div class="mb-16">
         <div v-if="!!page" class="container mx-auto">
-            <section class="md:grid grid-cols-8 lg:(px-16 gap-x-16)">
-                <div class="col-span-3 lg:col-span-2 pr-4">
+            <section class="md:grid grid-cols-8 lg:(px-16)">
+                <div class="col-span-3 lg:(col-span-2)">
                     <div v-if="verifiedPage" class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
                          style="height: 100px;">
                       <img class="h-full w-full"
@@ -225,7 +225,7 @@ export default  {
                     </div>
                 </div>
 
-                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-500 text-xs">
+                <div class="col-span-5 lg:col-span-6 pt-4 md:pl-8 text-gray-500 text-xs">
 
                   <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
                     <i class="mr-2" :class="pageInfoRow.iconClass"></i>
