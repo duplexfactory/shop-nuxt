@@ -75,7 +75,7 @@ export default class PageInfoRow {
             if (!!extraData.link)
                 rows.push(new PageInfoRow("spr-link", extraData.link, extraData.link));
             if (!!extraData.relatedPage)
-                rows.push(new PageInfoRow("spr-instagram", `@${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage}/`));
+                rows.push(new PageInfoRow("spr-instagram", `${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage.slice(1)}/`));
             if (!!extraData.facebook)
                 rows.push(new PageInfoRow("spr-facebook-squared", extraData.facebook, `https://www.facebook.com/${extraData.facebook}/`));
 
