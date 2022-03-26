@@ -89,6 +89,12 @@
           <i class="mr-2" :class="pageInfoRow.iconClass"></i>
           <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
         </div>
+        <div class="mt-2 sm:mt-4 flex flex-row">
+          <div v-for="i in shop.mediaCodes" :key="i.toString()"
+               class="bg-gray-300 mr-2 square-image-container"
+               style="height: 100px;"
+               v-lazy:background-image="$imageUrl(i)"></div>
+        </div>
       </div>
 
     </div>
