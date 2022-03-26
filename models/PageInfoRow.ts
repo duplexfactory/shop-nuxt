@@ -51,23 +51,23 @@ export default class PageInfoRow {
             if (page.businessRegistration)
                 rows.push(new PageInfoRow("spr-doc-text-inv", "持商業登記"))
 
-            if (!!extraData.foodLicence) {
-                if (extraData.foodLicence === true)
-                    rows.push(new PageInfoRow("spr-id-card", "持食物製造牌照"))
+            if (!!extraData.licence) {
+                if (extraData.licence === true)
+                    rows.push(new PageInfoRow("spr-id-card", "持有牌照"))
                 else
-                    rows.push(new PageInfoRow("spr-id-card", `食物製造牌照號碼 ${extraData.foodLicence}`))
+                    rows.push(new PageInfoRow("spr-id-card", `牌照號碼 ${extraData.licence}`))
             }
 
             // Purchase
             let purchase = "";
             if (!!extraData.paymentMethods && extraData.paymentMethods.length !== 0)
                 purchase = `接受 ${extraData.paymentMethods.join('、')} `;
-            if (!!extraData.refund)
-                purchase += `（${extraData.refund}）`;
+            if (!!extraData.noRefund)
+                purchase += "（不設退款）";
             if (purchase.length !== 0)
                 rows.push(new PageInfoRow("spr-money", purchase));
             if (!!extraData.mailing)
-                rows.push(new PageInfoRow("spr-paper-plane", extraData.mailing)); // 全球免郵之類
+                rows.push(new PageInfoRow("spr-paper-plane", extraData.mailing.join("、"))); // 全球免郵之類
             if (!!extraData.discount)
                 rows.push(new PageInfoRow("spr-tag", extraData.discount)); // 全單8折
 
