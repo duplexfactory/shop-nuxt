@@ -60,12 +60,6 @@ import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
                 el: '.swiper-pagination',
               },
 
-              // Navigation arrows
-              navigation: {
-                nextEl: this.$refs.swiperButtonNext,
-                prevEl: this.$refs.swiperButtonPrev,
-              },
-
               // // And if we need scrollbar
               // scrollbar: {
               //   el: '.swiper-scrollbar',

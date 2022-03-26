@@ -17,10 +17,12 @@ type MediaWithShop = Pick<IgPage, "lastMediaData" | "pk">;
 export default {
   components: {MediaCardIGEmbed, MediaCard, SwiperSlidesPlaceholder},
   data() : {
+    swiperLoaded: boolean,
     swiperReady: boolean,
     swiperOptions: SwiperOptions
   } {
     return {
+      swiperLoaded: false,
       swiperReady: false,
       swiperOptions: {
         modules: [Navigation, Pagination],
@@ -34,6 +36,8 @@ export default {
             this.swiperReady = true;
           },
         },
+
+        observer: true,
 
         spaceBetween: 16,
         slidesPerView: 2,
@@ -76,15 +80,24 @@ export default {
   props: {
     medias: Array as PropType<MediaWithShop[]>
   },
-  mounted() {
-    // Navigation arrows
-    this.swiperOptions.navigation = {
-      nextEl: this.$refs.swiperButtonNext,
-      prevEl: this.$refs.swiperButtonPrev,
-    };
+  methods: {
+    loadSwiper() {
+      this.$nextTick(() => {
+        if (!this.swiperLoaded && this.$refs.swiper) {
 
-    const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+          this.swiperLoaded = true;
 
+          // Navigation arrows
+          this.swiperOptions.navigation = {
+            nextEl: this.$refs.swiperButtonNext,
+            prevEl: this.$refs.swiperButtonPrev,
+          };
+
+          const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+        }
+      })
+
+    }
   }
 }
 </script>
@@ -92,39 +105,33 @@ export default {
 <template>
   <div>
 <!--    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>-->
-    <!-- Slider main container -->
-    <div class="swiper" ref="swiper">
-      <!-- Additional required wrapper -->
-      <div class="swiper-wrapper pb-8">
-        <!-- Slides -->
-<!--        <MediaCard v-for="media in medias"-->
-<!--                   class="swiper-slide"-->
-<!--                   :media="media"-->
-<!--                   :shop="media.igPage"-->
-<!--                   :key="media.id + '-post-card'"></MediaCard>-->
+    <lazy-component @show="loadSwiper">
+      <!-- Slider main container -->
+      <div :class="{'hidden': !swiperReady || medias.length === 0}" class="swiper" ref="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper pb-8">
+          <!-- Slides -->
 
-        <!--                          :media="media"-->
-        <!--                          :shop="media.igPage"-->
-        <MediaCardIGEmbed v-if="!swiperReady"></MediaCardIGEmbed>
+          <MediaCardIGEmbed v-for="media in medias"
+                            class="swiper-slide"
+                            :postId="media.lastMediaData.code"
+                            :key="media.pk + '-post-card'"></MediaCardIGEmbed>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
-        <MediaCardIGEmbed v-else
-                          v-for="media in medias"
-                          class="swiper-slide"
-                          :postId="media.lastMediaData.code"
-                          :key="media.pk + '-post-card'"></MediaCardIGEmbed>
-
-
+        <!-- If we need navigation buttons -->
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
       </div>
-      <!-- If we need pagination -->
-      <div class="swiper-pagination" style="bottom: 0px !important;"></div>
+    </lazy-component>
+    <swiper-slides-placeholder v-if="!swiperReady || medias.length === 0" :slideAspectRatio="0.5" :swiper-options="swiperOptions" class="pb-8">
+      <template v-slot:default="slotProps">
+<!--        <MediaCardIGEmbed class="h-full w-full"></MediaCardIGEmbed>-->
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
 
-      <!-- If we need navigation buttons -->
-      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-      <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-      <!--        <div class="swiper-scrollbar"></div>-->
-    </div>
   </div>
 
 </template>
