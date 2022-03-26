@@ -43,7 +43,7 @@ export default {
 
         observer: true,
 
-        spaceBetween: 16,
+        spaceBetween: 0,
         slidesPerView: 2,
         slidesPerGroup: 2,
 
@@ -138,8 +138,8 @@ const showingMediaModalData = useShowingMediaModalData();
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
-        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-        <div ref="swiperButtonNext" class="swiper-button-next"></div>
+        <div ref="swiperButtonPrev" class="swiper-button-prev" style="display: flex !important;"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next" style="display: flex !important;"></div>
 
       </div>
     </lazy-component>

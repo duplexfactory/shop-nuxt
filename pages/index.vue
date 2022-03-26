@@ -112,8 +112,10 @@ watch(
 <!--      </div>-->
 
 <!--      <h2 class="section-title px-4 md:px-0">最新貼文</h2>-->
-      <h2 class="section-title px-4 md:px-0">熱門產品</h2>
-      <MediaCardIGEmbedSwiperList :simple-pages="latest"></MediaCardIGEmbedSwiperList>
+      <div class="px-4 md:px-0">
+        <h2 class="section-title">熱門產品</h2>
+        <MediaCardIGEmbedSwiperList :simple-pages="latest"></MediaCardIGEmbedSwiperList>
+      </div>
 
       <div class="px-4 md:px-0">
         <h2 class="section-title">活躍店長</h2>
