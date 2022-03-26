@@ -1,3 +1,5 @@
+import { backOff } from "exponential-backoff";
+
 export default function () {
     let scriptExists: boolean = false;
     document.body.querySelectorAll("script").forEach((s) => {
@@ -11,8 +13,17 @@ export default function () {
         script.src = "//www.instagram.com/embed.js";
         document.body.appendChild(script);
     }
-    else {
-        if (window['instgrm'])
+
+    backOff(() => {
+        return new Promise((resolve, reject) => {
+            if (document.getElementsByTagName("blockquote").length === 0)
+                throw "DOM not loaded";
             window['instgrm'].Embeds.process();
-    }
+            resolve('foo');
+        });
+    }).then(() => {
+
+    }).catch((e) => {
+
+    });
 }
