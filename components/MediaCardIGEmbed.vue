@@ -3,9 +3,9 @@
 
 <!--  aspect-ratio: 0.5;-->
 <!--  class="w-full"-->
-  <div style="position: relative;" :style="fixedAspectRatio !== 0 ? `aspect-ratio: ${fixedAspectRatio.toString()};` : ''" ref="blockquote-container" >
+  <div class="overflow-hidden border" style="position: relative;" :style="fixedAspectRatio !== 0 ? `aspect-ratio: ${fixedAspectRatio.toString()};` : ''" ref="blockquote-container" >
 <!--    height: 100% !important;-->
-    <div v-if="topBar" class="text-xs md:text-sm text-gray-400 flex justify-between border p-2">
+    <div v-if="topBar" class="text-xs md:text-sm text-gray-400 flex justify-between p-2">
       <div class="text-pink-700">HK$ 1000</div>
       <button @click="$emit('showMediaModal')">查看詳情及評論<i class="spr-angle-right"></i></button>
     </div>
@@ -14,7 +14,7 @@
                 :data-instgrm-permalink="`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`"
                 data-instgrm-version="14"
                 :style="fixedAspectRatio !== 0 ? 'height: 100% !important;' : ''"
-                style="min-width: 0px !important; width: 100% !important; margin: 1px; padding:0; background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);">
+                style="min-width: 0px !important; width: 100% !important; margin: 1px; padding:0; background:#FFF; border:0; border-radius:3px;">
       <div style="padding:16px;">
         <a :href="`https://www.instagram.com/p/${postId}/?utm_source=ig_embed&amp;utm_campaign=loading`" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
           <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
