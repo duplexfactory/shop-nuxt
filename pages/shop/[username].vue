@@ -249,26 +249,26 @@ export default  {
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</h2>
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
                 </div>
-                <div v-if="selectedIndex == 0" :class="verifiedPage ? 'grid-cols-2' : 'grid-cols-1'" class="grid md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
+                <div v-if="selectedIndex == 0" :class="verifiedPage ? 'grid' : 'md:grid'" class="grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <!-- lazy component ratio for taking up space before scrolling to it -->
                   <lazy-component v-for="(media, i) in medias"
                                   :key="media.id + '-post-card'"
                                   class="col-span-1"
-                                  style="aspect-ratio: 3/5"
+                                  :style="verifiedPage ? 'aspect-ratio: 3/5' : ''"
                                   @show="showMedia(i)">
                     <MediaCard v-if="verifiedPage"
                                @click="showMediaModal(media.code)"
                                style="cursor: pointer"
                                :media="media"
                                :shop="page"></MediaCard>
-                    <template v-else>
-                      <MediaCardIGEmbed
-                          @showMediaModal="showMediaModal(media.code)"
-                          top-bar
-                          :post-id="media.code"
-                          :fixed-aspect-ratio="0"
-                          :username="page.username"></MediaCardIGEmbed>
-                    </template>
+                    <MediaCardIGEmbed
+                        v-else
+                        class="mb-4 md:mb-0"
+                        @showMediaModal="showMediaModal(media.code)"
+                        top-bar
+                        :post-id="media.code"
+                        :fixed-aspect-ratio="0"
+                        :username="page.username"></MediaCardIGEmbed>
                   </lazy-component>
                 </div>
                 <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
