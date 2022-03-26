@@ -20,6 +20,8 @@ const {
   commentCount,
 
   takenAt,
+
+  price,
 } = media;
 
 const takenAtString = dayjs(takenAt * 1000).fromNow();
@@ -31,7 +33,7 @@ const takenAtString = dayjs(takenAt * 1000).fromNow();
     <div class="bg-gray-300 square-image-container rounded-md overflow-hidden" v-lazy:background-image="$imageUrl(code)"></div>
     <div style="aspect-ratio: 1.5;" class="pt-2 overflow-hidden flex flex-col">
       <div class="text-sm whitespace-pre-wrap overflow-hidden line-clamp-7" style="flex-shrink: 1;">{{ caption }}</div>
-      <div class="mt-2 text-pink-700">HK$ 1000</div>
+      <div v-if="!!price" class="mt-2 text-pink-700">HK$ {{ price }}</div>
       <div class="mt-2 text-sm text-gray-500 break-all line-clamp-1" style="flex-shrink: 0;">{{ takenAtString + ' • ' + shop.username }}</div>
     </div>
 

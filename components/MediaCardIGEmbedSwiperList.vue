@@ -128,6 +128,7 @@ const showingMediaModalData = useShowingMediaModalData();
                             @showMediaModal="showMediaModal = true; showingMediaModalData = {code: media.lastMediaData.code, pagePk: media.pk, username: media.username}"
                             class="swiper-slide"
                             top-bar
+                            :price="media.lastMediaData.price"
                             :delegate-script="true"
                             :postId="media.lastMediaData.code"
                             :key="media.pk + '-post-card'"></MediaCardIGEmbed>

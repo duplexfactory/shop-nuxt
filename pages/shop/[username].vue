@@ -265,6 +265,7 @@ export default  {
                         v-else
                         class="mb-4 md:mb-0"
                         @showMediaModal="showMediaModal(media.code)"
+                        :price="media.price"
                         top-bar
                         :post-id="media.code"
                         :fixed-aspect-ratio="0"
