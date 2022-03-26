@@ -31,7 +31,7 @@
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
             <div class="relative h-full">
-                <div class="hidden sm:block bg-gray-300 rounded-full square-image-container" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>
+<!--                <div class="hidden sm:block bg-gray-300 rounded-full square-image-container" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>-->
 
                 <div class="mt-1 2xl:mt-2 overflow-hidden">
                   <div class="font-semibold text-lg truncate">
