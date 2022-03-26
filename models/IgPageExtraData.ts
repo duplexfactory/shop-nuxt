@@ -10,14 +10,14 @@ interface _IgPageExtraData {
     relatedPage: string,
     br: boolean, // IgPage.businessRegistration
     paymentMethods: string[],
-    mailing: string,
+    mailing: string[],
     noPhoneCall: boolean,
     noIgDM: boolean,
     facebook: string,
-    refund: string,
+    noRefund: boolean,
     discount: string,
     shopSince: string,
-    foodLicence: boolean
+    licence: string | boolean
 }
 
 type IgPageExtraData = Partial<_IgPageExtraData>;
