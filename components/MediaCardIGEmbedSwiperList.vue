@@ -11,6 +11,7 @@ import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
 import MediaCard from "~/components/MediaCard.vue";
 import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
+import loadIGEmbeds from "~/utils/loadIGEmbeds";
 
 type MediaWithShop = Pick<IgPage, "lastMediaData" | "pk">;
 
@@ -34,6 +35,9 @@ export default {
         on: {
           init: () => {
             this.swiperReady = true;
+            this.$nextTick(() => {
+              loadIGEmbeds();
+            })
           },
         },
 
@@ -114,6 +118,7 @@ export default {
 
           <MediaCardIGEmbed v-for="media in medias"
                             class="swiper-slide"
+                            :delegate-script="true"
                             :postId="media.lastMediaData.code"
                             :key="media.pk + '-post-card'"></MediaCardIGEmbed>
         </div>

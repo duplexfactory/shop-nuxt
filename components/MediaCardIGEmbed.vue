@@ -29,12 +29,15 @@ import {PropType} from "vue/dist/vue";
 const {postId} = defineProps({
   postId: String as PropType<String>,
   fixedAspectRatio: { type: Number, default: 0.5 },
-  username: { type: String, default: "" }
+  username: { type: String, default: "" },
+  delegateScript: { type: Boolean, default: false },
 })
 
 </script>
 
 <script lang="ts">
+import loadIGEmbeds from "~/utils/loadIGEmbeds";
+
 export default {
   // data(): {
   //   igEmbedLoaded: boolean
@@ -44,24 +47,12 @@ export default {
   //   }
   // },
   mounted() {
-    let scriptExists: boolean = false;
-    document.body.querySelectorAll("script").forEach((s) => {
-      if (s.src.includes('www.instagram.com/embed.js')) {
-        scriptExists = true;
-      }
-    });
-    if (!scriptExists) {
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = "//www.instagram.com/embed.js";
-      document.body.appendChild(script);
-    }
-    else {
-      if (window['instgrm'])
-        window['instgrm'].Embeds.process();
+
+    if (this.delegateScript) {
+      return;
     }
 
-
+    loadIGEmbeds();
 
     // identify an element to observe
     // const elementToObserve = this.$refs['blockquote-container'];
