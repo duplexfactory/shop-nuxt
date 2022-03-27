@@ -31,6 +31,7 @@
 
     // Page Data Init
     import IgPage from "../../models/IgPage";
+    import PageInfoRow from "../../models/PageInfoRow";
     import dayjs from "dayjs";
     import {computed} from "@vue/reactivity";
 
@@ -64,6 +65,11 @@
       }
       return bestPhone;
     })
+
+
+    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
+
+    const verifiedPage = false;
 
     // Medias
     let mediaPending = ref(false);
@@ -166,6 +172,7 @@
       await createReview();
       await fetchReviews();
     }
+
 </script>
 
 <script lang="ts">
@@ -185,9 +192,9 @@ export default  {
 <template>
     <div class="mb-16">
         <div v-if="!!page" class="container mx-auto">
-            <section class="md:grid grid-cols-8">
-                <div class="col-span-3 lg:col-span-2 pr-4">
-                    <div class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
+            <section class="md:grid grid-cols-8 lg:(px-16)">
+                <div class="col-span-3 lg:(col-span-2)">
+                    <div v-if="verifiedPage" class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
                          style="height: 100px;">
                       <img class="h-full w-full"
                            :alt="page.username"
@@ -211,17 +218,6 @@ export default  {
                       </div>
                     </div>
 
-                    <div v-if="whatsapp.length != 0" class="mb-2 text-gray-500 text-sm">
-                      {{ "WhatsApp: " }}<a target="_blank" :href="`https://api.whatsapp.com/send/?phone=${whatsapp.length == 8 ? '852' : ''}${whatsapp}`">{{ whatsapp }}</a>
-                    </div>
-                    <div v-if="page.brickAndMortar" class="mb-2 text-gray-500 text-sm">
-                      {{ '門市: ' + page.locations.join('、') }}
-                    </div>
-                    <div v-if="page.businessRegistration" class="mb-2 text-gray-500 text-sm">
-                      持商業登記
-                    </div>
-                    <!--                    <button class="btn btn-outline">我知道</button>-->
-
                     <div class="mb-2 line-clamp-2" style="font-size: 0;">
                       <div v-for="tag in page.tags"
                            :key="tag"
@@ -229,15 +225,22 @@ export default  {
                     </div>
                 </div>
 
-                <div class="col-span-5 lg:col-span-6 pt-4 text-gray-500">
+                <div class="col-span-5 lg:col-span-6 pt-4 md:pl-8 text-gray-500 text-xs">
+
+                  <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
+                    <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                    <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+                  </div>
+                  <!--                    <button class="btn btn-outline">我知道</button>-->
+
+                  <div class="text-gray-400 mt-4"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
+                  <div class="text-gray-400"><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
+                </div>
+
+                <div v-if="verifiedPage" class="col-span-8 py-4 text-gray-500 text-sm">
                     <h2 class="font-semibold">{{ page.fullName }}</h2>
                     <h3 class="mt-2 whitespace-pre-wrap">{{ page.biography }}</h3>
                     <a class="hover:underline" :href="page.externalUrl" target="_blank">{{ page.externalUrl }}</a>
-                </div>
-
-                <div class="col-span-8 text-gray-400 text-xs py-4">
-                  <div><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
-                  <div><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
                 </div>
             </section>
 
@@ -246,16 +249,27 @@ export default  {
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</h2>
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
                 </div>
-                <div v-if="selectedIndex == 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
+                <div v-if="selectedIndex == 0" :class="verifiedPage ? 'grid' : 'md:grid'" class="grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
+                  <!-- lazy component ratio for taking up space before scrolling to it -->
                   <lazy-component v-for="(media, i) in medias"
                                   :key="media.id + '-post-card'"
                                   class="col-span-1"
-                                  style="aspect-ratio: 3/5"
+                                  :style="verifiedPage ? 'aspect-ratio: 3/5' : ''"
                                   @show="showMedia(i)">
-                    <MediaCard @click="showMediaModal(media.code)"
+                    <MediaCard v-if="verifiedPage"
+                               @click="showMediaModal(media.code)"
                                style="cursor: pointer"
                                :media="media"
                                :shop="page"></MediaCard>
+                    <MediaCardIGEmbed
+                        v-else
+                        class="mb-4 md:mb-0"
+                        @showMediaModal="showMediaModal(media.code)"
+                        :price="media.price"
+                        top-bar
+                        :post-id="media.code"
+                        :fixed-aspect-ratio="0"
+                        :username="page.username"></MediaCardIGEmbed>
                   </lazy-component>
                 </div>
                 <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">

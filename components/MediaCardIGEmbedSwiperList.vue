@@ -11,16 +11,19 @@ import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
 import MediaCard from "~/components/MediaCard.vue";
 import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
+import loadIGEmbeds from "~/utils/loadIGEmbeds";
 
-type MediaWithShop = Pick<IgPage, "lastMediaData" | "pk">;
+type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
 
 export default {
   components: {MediaCardIGEmbed, MediaCard, SwiperSlidesPlaceholder},
   data() : {
+    swiperLoaded: boolean,
     swiperReady: boolean,
     swiperOptions: SwiperOptions
   } {
     return {
+      swiperLoaded: false,
       swiperReady: false,
       swiperOptions: {
         modules: [Navigation, Pagination],
@@ -32,10 +35,15 @@ export default {
         on: {
           init: () => {
             this.swiperReady = true;
+            this.$nextTick(() => {
+              loadIGEmbeds();
+            })
           },
         },
 
-        spaceBetween: 16,
+        observer: true,
+
+        spaceBetween: 0,
         slidesPerView: 2,
         slidesPerGroup: 2,
 
@@ -74,57 +82,98 @@ export default {
     };
   },
   props: {
-    medias: Array as PropType<MediaWithShop[]>
+    simplePages: Array as PropType<SimplePage[]>
   },
-  mounted() {
-    // Navigation arrows
-    this.swiperOptions.navigation = {
-      nextEl: this.$refs.swiperButtonNext,
-      prevEl: this.$refs.swiperButtonPrev,
-    };
+  methods: {
+    loadSwiper() {
+      this.$nextTick(() => {
+        if (!this.swiperLoaded && this.$refs.swiper) {
 
-    const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+          this.swiperLoaded = true;
 
+          // Navigation arrows
+          this.swiperOptions.navigation = {
+            nextEl: this.$refs.swiperButtonNext,
+            prevEl: this.$refs.swiperButtonPrev,
+          };
+
+          const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
+        }
+      })
+
+    }
   }
 }
 </script>
 
+<script setup lang="ts">
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+const showMediaModal = useShowMediaModal();
+const showingMediaModalData = useShowingMediaModalData();
+</script>
+
+
 <template>
   <div>
 <!--    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>-->
-    <!-- Slider main container -->
-    <div class="swiper" ref="swiper">
-      <!-- Additional required wrapper -->
-      <div class="swiper-wrapper pb-8">
-        <!-- Slides -->
-<!--        <MediaCard v-for="media in medias"-->
-<!--                   class="swiper-slide"-->
-<!--                   :media="media"-->
-<!--                   :shop="media.igPage"-->
-<!--                   :key="media.id + '-post-card'"></MediaCard>-->
 
-        <!--                          :media="media"-->
-        <!--                          :shop="media.igPage"-->
-        <MediaCardIGEmbed v-if="!swiperReady"></MediaCardIGEmbed>
+    <lazy-component @show="loadSwiper">
+      <!-- Slider main container -->
+      <div :class="{'hidden': !swiperReady || simplePages.length === 0}" class="swiper" ref="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper pb-8">
+          <!-- Slides -->
 
-        <MediaCardIGEmbed v-else
-                          v-for="media in medias"
-                          class="swiper-slide"
-                          :postId="media.lastMediaData.code"
-                          :key="media.pk + '-post-card'"></MediaCardIGEmbed>
+          <MediaCardIGEmbed v-for="media in simplePages"
+                            @showMediaModal="showMediaModal = true; showingMediaModalData = {code: media.lastMediaData.code, pagePk: media.pk, username: media.username}"
+                            class="swiper-slide"
+                            top-bar
+                            :fixedAspectRatio="0"
+                            :price="media.lastMediaData.price"
+                            :delegate-script="true"
+                            :postId="media.lastMediaData.code"
+                            :key="media.pk + '-post-card'"></MediaCardIGEmbed>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
+        <!-- If we need navigation buttons -->
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
 
       </div>
-      <!-- If we need pagination -->
-      <div class="swiper-pagination" style="bottom: 0px !important;"></div>
+    </lazy-component>
+    <swiper-slides-placeholder v-if="!swiperReady || simplePages.length === 0" :slideAspectRatio="0.5" :swiper-options="swiperOptions" class="pb-8">
+      <template v-slot:default="slotProps">
+<!--        <MediaCardIGEmbed class="h-full w-full"></MediaCardIGEmbed>-->
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
 
-      <!-- If we need navigation buttons -->
-      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-      <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-      <!--        <div class="swiper-scrollbar"></div>-->
-    </div>
   </div>
 
 </template>
+
+<style scoped>
+
+.swiper-button-prev, .swiper-button-next {
+  display: flex !important;
+  background-color: white !important;
+  width: 32px;
+  height: 32px;
+  @apply rounded-full shadow;
+}
+
+@screen md {
+  .swiper-button-prev, .swiper-button-next {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.swiper-button-next::after, .swiper-button-prev::after {
+  font-size: 18px !important;
+  @apply font-bold;
+}
+
+</style>

@@ -16,7 +16,7 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
 
     <div class="px-4 pt-4 flex justify-end">
       <button @click="hideSidebar">
-        <i class="sio-cancel text-2xl"></i>
+        <i class="spr-cancel text-2xl"></i>
       </button>
     </div>
 

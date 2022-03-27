@@ -106,12 +106,16 @@ watch(
       <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
+<!--      <div class="px-4 md:px-0">-->
+<!--        <h2 class="section-title">熱門產品</h2>-->
+<!--        <MediaCardSwiperList :simple-pages="latest"></MediaCardSwiperList>-->
+<!--      </div>-->
+
+<!--      <h2 class="section-title px-4 md:px-0">最新貼文</h2>-->
       <div class="px-4 md:px-0">
-        <h2 class="section-title">最新貼文</h2>
-        <MediaCardSwiperList :simple-pages="latest"></MediaCardSwiperList>
+        <h2 class="section-title">熱門產品</h2>
+        <MediaCardIGEmbedSwiperList :simple-pages="latest"></MediaCardIGEmbedSwiperList>
       </div>
-      <!--        <MediaCardIGEmbedSwiperList :medias="latest"></MediaCardIGEmbedSwiperList>-->
-      <!--        <MediaCardSwiperList :medias="latest"></MediaCardSwiperList>-->
 
       <div class="px-4 md:px-0">
         <h2 class="section-title">活躍店長</h2>
@@ -120,6 +124,7 @@ watch(
 
       <h2 class="section-title px-4 md:px-0">實體店鋪</h2>
       <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>
+
 
     </div>
 

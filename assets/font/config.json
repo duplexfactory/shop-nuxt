@@ -1,6 +1,6 @@
 {
-  "name": "shop-it-out",
-  "css_prefix_text": "sio-",
+  "name": "shoperuse",
+  "css_prefix_text": "spr-",
   "css_use_suffix": false,
   "hinting": true,
   "units_per_em": 1000,
@@ -10,12 +10,6 @@
       "uid": "f3f90c8c89795da30f7444634476ea4f",
       "css": "angle-left",
       "code": 61700,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "e4dde1992f787163e2e2b534b8c8067d",
-      "css": "angle-down",
-      "code": 61703,
       "src": "fontawesome"
     },
     {
@@ -59,6 +53,122 @@
       "css": "menu",
       "code": 59396,
       "src": "entypo"
+    },
+    {
+      "uid": "e4dde1992f787163e2e2b534b8c8067d",
+      "css": "angle-down",
+      "code": 61703,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9f7e588c66cfd6891f6f507cf6f6596b",
+      "css": "phone",
+      "code": 59397,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "ccc2329632396dc096bb638d4b46fb98",
+      "css": "mail-alt",
+      "code": 61664,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0d08dbb1dd648a43bdea81b7e6c9e036",
+      "css": "location",
+      "code": 59398,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "598a5f2bcf3521d1615de8e1881ccd17",
+      "css": "clock",
+      "code": 59399,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0ddd3e8201ccc7d41f7b7c9d27eca6c1",
+      "css": "link",
+      "code": 59400,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c08a1cde48d96cba21d8c05fa7d7feb1",
+      "css": "doc-text-inv",
+      "code": 61788,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f279f25007794fa6837ff78fe94b216e",
+      "css": "money",
+      "code": 61654,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "38575a803c4da31ce20d77e1e1236bcb",
+      "css": "paper-plane",
+      "code": 61912,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "ead4c82d04d7758db0f076584893a8c1",
+      "css": "calendar-empty",
+      "code": 61747,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "37b41cdae5ec9dab40e0c5bfff8a0ec8",
+      "css": "id-card",
+      "code": 62146,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9d3e9faf68fd4e12def853f0d4e1173b",
+      "css": "whatsapp",
+      "code": 62002,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "4c1ef492f1d2c39a2250ae457cee2a6e",
+      "css": "instagram",
+      "code": 61805,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "4743b088aa95d6f3b6b990e770d3b647",
+      "css": "facebook-squared",
+      "code": 62216,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "34cb6ce62bf3f1efd59e2f5eb0d79f82",
+      "css": "wechat",
+      "code": 61911,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "caf88bff51b6a4f419aeddd86db0f490",
+      "css": "signal",
+      "code": 59401,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M380 14.6L391.3 60.1A451.9 451.9 0 0 0 265.6 112L241.6 71.9A498.1 498.1 0 0 1 380 14.6ZM620 14.6L608.8 60.1A451.9 451.9 0 0 1 734.4 112L758.6 71.9A498.1 498.1 0 0 0 620 14.6ZM71.9 241.6A498.1 498.1 0 0 0 14.6 380L60.1 391.3A451.9 451.9 0 0 1 112 265.6ZM46.9 500A452.3 452.3 0 0 1 52 432.1L5.6 425.1A501.8 501.8 0 0 0 5.6 574.9L52 567.9A452.3 452.3 0 0 1 46.9 500ZM758.4 928.1L734.4 888A451.9 451.9 0 0 1 608.9 939.9L620.2 985.4A498.1 498.1 0 0 0 758.4 928.1ZM953.1 500A452.3 452.3 0 0 1 948 567.9L994.4 574.9A501.8 501.8 0 0 0 994.4 425.1L948 432.1A452.3 452.3 0 0 1 953.1 500ZM985.4 620L939.9 608.8A451.9 451.9 0 0 1 888 734.4L928.1 758.6A498.1 498.1 0 0 0 985.4 620ZM567.9 948.1A456.3 456.3 0 0 1 432.1 948.1L425.1 994.5A501.8 501.8 0 0 0 574.9 994.5ZM864.8 768.8A454.8 454.8 0 0 1 768.8 864.8L796.6 902.5A500.8 500.8 0 0 0 902.5 796.9ZM768.8 135.2A454.8 454.8 0 0 1 864.8 231.3L902.5 203.1A500.8 500.8 0 0 0 796.9 97.5ZM135.2 231.3A454.8 454.8 0 0 1 231.3 135.2L203.1 97.5A500.8 500.8 0 0 0 97.5 203.1ZM928.1 241.6L888 265.6A451.9 451.9 0 0 1 939.9 391.1L985.4 379.8A498.1 498.1 0 0 0 928.1 241.6ZM432.1 52A456.3 456.3 0 0 1 567.9 52L574.9 5.6A501.8 501.8 0 0 0 425.1 5.6ZM159.3 914.9L62.5 937.5 85.1 840.7 39.5 830 16.9 926.8A46.9 46.9 0 0 0 73.2 983.1L169.9 960.9ZM49.2 788.2L94.8 798.8 110.5 731.7A451.2 451.2 0 0 1 60.1 608.8L14.6 620A496.3 496.3 0 0 0 60.7 738.8ZM268 889.8L200.9 905.4 211.5 951 260.9 939.5A496.3 496.3 0 0 0 379.7 985.6L390.9 940.2A451.2 451.2 0 0 1 268.3 889.5ZM500 93.8A406.3 406.3 0 0 0 156.3 716.2L117.2 882.8 283.8 843.8A406.3 406.3 0 1 0 500 93.8Z",
+        "width": 1000
+      },
+      "search": [
+        "signal"
+      ]
+    },
+    {
+      "uid": "98d9c83c1ee7c2c25af784b518c522c5",
+      "css": "block",
+      "code": 59402,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3db5347bd219f3bce6025780f5d9ef45",
+      "css": "tag",
+      "code": 59403,
+      "src": "fontawesome"
     }
   ]
 }

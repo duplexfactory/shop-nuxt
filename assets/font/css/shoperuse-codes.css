@@ -1,0 +1,27 @@
+
+.spr-star:before { content: '\e800'; } /* '' */
+.spr-star-filled:before { content: '\e801'; } /* '' */
+.spr-search:before { content: '\e802'; } /* '' */
+.spr-cancel:before { content: '\e803'; } /* '' */
+.spr-menu:before { content: '\e804'; } /* '' */
+.spr-phone:before { content: '\e805'; } /* '' */
+.spr-location:before { content: '\e806'; } /* '' */
+.spr-clock:before { content: '\e807'; } /* '' */
+.spr-link:before { content: '\e808'; } /* '' */
+.spr-signal:before { content: '\e809'; } /* '' */
+.spr-block:before { content: '\e80a'; } /* '' */
+.spr-tag:before { content: '\e80b'; } /* '' */
+.spr-money:before { content: '\f0d6'; } /* '' */
+.spr-mail-alt:before { content: '\f0e0'; } /* '' */
+.spr-angle-left:before { content: '\f104'; } /* '' */
+.spr-angle-right:before { content: '\f105'; } /* '' */
+.spr-angle-up:before { content: '\f106'; } /* '' */
+.spr-angle-down:before { content: '\f107'; } /* '' */
+.spr-calendar-empty:before { content: '\f133'; } /* '' */
+.spr-doc-text-inv:before { content: '\f15c'; } /* '' */
+.spr-instagram:before { content: '\f16d'; } /* '' */
+.spr-wechat:before { content: '\f1d7'; } /* '' */
+.spr-paper-plane:before { content: '\f1d8'; } /* '' */
+.spr-whatsapp:before { content: '\f232'; } /* '' */
+.spr-id-card:before { content: '\f2c2'; } /* '' */
+.spr-facebook-squared:before { content: '\f308'; } /* '' */

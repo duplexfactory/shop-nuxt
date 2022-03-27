@@ -1,6 +1,7 @@
 import IgStory from "./IgStory";
 import IgMedia from "./IgMedia";
 import IgTray from "./IgTray";
+import IgPageExtraData from "~/models/IgPageExtraData";
 
 export default interface IgPage {
     pk: number
@@ -44,4 +45,6 @@ export default interface IgPage {
     lastMediaData?: IgMedia;
     mediaUrls: string[];
     mediaCodes: string[];
+
+    extraData?: IgPageExtraData;
 }

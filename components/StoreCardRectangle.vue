@@ -2,6 +2,9 @@
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
     import {PageSearch} from "~/models/PageSearch";
+    import {computed} from "@vue/reactivity";
+    import dayjs from "dayjs";
+    import PageInfoRow from "~/models/PageInfoRow";
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
@@ -22,19 +25,11 @@
     //     locations,
     // } = shop;
     // const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-</script>
 
-<script lang="ts">
+    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
+    const lastActive = computed(() => dayjs(shop.lastActivity * 1000).format('DD/MM/YYYY'));
 
-import dayjs from "dayjs";
-
-export default {
-  computed: {
-    lastActive () {
-      return dayjs(this.shop.lastActivity * 1000).format('DD/MM/YYYY');
-    }
-  }
-}
+    const verifiedPage = false;
 </script>
 
 <template>
@@ -43,11 +38,12 @@ export default {
 
 
       <div class="col-span-3">
-            <div class="hidden sm:block bg-gray-300 rounded-full square-image-container"
+            <div v-if="verifiedPage"
+                 class="hidden sm:(block mb-2) bg-gray-300 rounded-full square-image-container"
                  v-lazy:background-image="shop.profilePicUrl"
                  style="height: 70px;"></div>
 
-            <div class="sm:mt-2 font-semibold text-lg truncate">
+            <div class="font-semibold text-lg truncate">
               <a class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
             </div>
 
@@ -74,7 +70,7 @@ export default {
 
         </div>
 
-        <div class="col-span-8 text-sm overflow-hidden">
+      <div v-if="verifiedPage" class="col-span-8 text-sm overflow-hidden">
             <div class="mt-2 text-gray-500 truncate">{{ shop.fullName }}</div>
             <div class="mt-2 text-gray-500 line-clamp-2">{{ shop.biography }}</div>
             <div v-if="shop.brickAndMortar" class="mt-2 text-sm text-gray-500">
@@ -87,6 +83,19 @@ export default {
                      v-lazy:background-image="$imageUrl(i)"></div>
             </div>
         </div>
+      <!-- flex flex-col flex-wrap -->
+      <div v-else class="col-span-8 text-gray-500 text-xs mt-2 sm:mt-0">
+        <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
+          <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+          <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+        </div>
+        <div class="mt-2 sm:mt-4 flex flex-row">
+          <div v-for="i in shop.mediaCodes" :key="i.toString()"
+               class="bg-gray-300 mr-2 square-image-container"
+               style="height: 100px;"
+               v-lazy:background-image="$imageUrl(i)"></div>
+        </div>
+      </div>
 
     </div>
 

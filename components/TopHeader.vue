@@ -5,7 +5,7 @@
       <div class="flex items-center flex-1 mr-8">
 
         <button class="md:hidden" @click="$emit('toggleDrawer')">
-          <i class="sio-menu text-2xl"></i>
+          <i class="spr-menu text-2xl"></i>
         </button>
 
         <nuxt-link to="/" class="mr-4"><img style="width: 100px;" src="~assets/images/logo.png"/></nuxt-link>

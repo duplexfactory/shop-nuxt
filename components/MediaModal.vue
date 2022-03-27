@@ -3,7 +3,7 @@
     <template v-slot:body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
-          <MediaCardIGEmbed :post-id="showingMediaModalData.code" :fixed-aspect-ratio="0" :username="showingMediaModalData.username"></MediaCardIGEmbed>
+          <MediaCardIGEmbed captioned :post-id="showingMediaModalData.code" :fixed-aspect-ratio="0" :username="showingMediaModalData.username"></MediaCardIGEmbed>
         </div>
         <div class="col-span-4">
           <div class="mt-4 md:mt-0">

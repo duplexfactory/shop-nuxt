@@ -8,4 +8,6 @@ export default interface IgMedia {
     commentCount: number;
 
     takenAt: number;
+
+    price?: number;
 }

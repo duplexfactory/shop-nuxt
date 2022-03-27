@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="flex">
         <button style="aspect-ratio: 1;" @click="closeModal">
-          <i class="sio-angle-left text-2xl"></i>
+          <i class="spr-angle-left text-2xl"></i>
         </button>
         <input @keyup.enter="search"
                v-model="searchText"
@@ -12,7 +12,7 @@
                type="search"
                autocomplete="off"/>
         <button @click="search" class="bg-pink-400 text-white px-2">
-          <i class="sio-search text-xl"></i>
+          <i class="spr-search text-xl"></i>
         </button>
       </div>
     </template>
