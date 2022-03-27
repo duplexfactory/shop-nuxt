@@ -138,8 +138,8 @@ const showingMediaModalData = useShowingMediaModalData();
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
 
         <!-- If we need navigation buttons -->
-        <div ref="swiperButtonPrev" class="swiper-button-prev" style="display: flex !important;"></div>
-        <div ref="swiperButtonNext" class="swiper-button-next" style="display: flex !important;"></div>
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
 
       </div>
     </lazy-component>
@@ -153,3 +153,27 @@ const showingMediaModalData = useShowingMediaModalData();
   </div>
 
 </template>
+
+<style scoped>
+
+.swiper-button-prev, .swiper-button-next {
+  display: flex !important;
+  background-color: white !important;
+  width: 32px;
+  height: 32px;
+  @apply rounded-full shadow;
+}
+
+@screen md {
+  .swiper-button-prev, .swiper-button-next {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.swiper-button-next::after, .swiper-button-prev::after {
+  font-size: 18px !important;
+  @apply font-bold;
+}
+
+</style>
