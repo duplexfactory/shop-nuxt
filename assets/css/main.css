@@ -32,6 +32,14 @@
     @apply inline-block text-pink-600 text-sm;
 }
 
+.text-input-primary {
+    @apply rounded-md border py-2 px-4 text-md;
+}
+
+.text-input-primary:focus {
+    @apply outline-none border-pink-400;
+}
+
 textarea {
     outline-color: #f472b6;
 }
