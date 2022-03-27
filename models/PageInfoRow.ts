@@ -37,7 +37,7 @@ export default class PageInfoRow {
             // Brick and mortar
             if (!!extraData.address) {
                 rows.push(
-                    new PageInfoRow("spr-location", extraData.address, `https://google.com/maps/search/${encodeURIComponent(extraData.address)}`),
+                    new PageInfoRow("spr-location", extraData.address, `https://google.com/maps/search/?api=1&query=${encodeURIComponent(extraData.address)}`),
                 )
             }
             else if (!!page && page.locations.length !== 0) {
