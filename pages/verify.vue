@@ -56,19 +56,57 @@
               輕鬆兩步認證
             </h2>
 
-            <div class="mt-4 flex items-center justify-center">
-              <div class="text-xl md:text-2xl font-bold">
-                1. 註冊Shoperuse帳戶
+            <div class="mt-8 grid grid-cols-11">
+              <div class="col-span-3 flex flex-col items-center">
+                <i class="spr-edit text-4xl"></i>
+                <div class="mt-2 text-xl md:text-2xl font-bold">
+                  1. 註冊Shoperuse帳戶
+                </div>
               </div>
-              <i class="spr-angle-right text-4xl"></i>
-              <div class="text-xl md:text-2xl font-bold">
-                2. 登入後連結IG帳戶
+              <div class="col-span-1 flex items-center justify-center">
+                <i class="spr-angle-right text-4xl"></i>
               </div>
-              <i class="spr-angle-right text-4xl"></i>
-              <div class="text-xl md:text-2xl font-bold">
-                完成認證
+              <div class="col-span-3 flex flex-col items-center">
+                <i class="spr-link text-4xl"></i>
+                <div class="mt-2 text-xl md:text-2xl font-bold">
+                  2. 登入後連結IG帳戶
+                </div>
+              </div>
+              <div class="col-span-1 flex items-center justify-center">
+                <i class="spr-angle-right text-4xl"></i>
+              </div>
+              <div class="col-span-3 flex flex-col items-center">
+                <i class="spr-ok text-4xl"></i>
+                <div class="mt-2 text-xl md:text-2xl font-bold">
+                  完成認證
+                </div>
               </div>
             </div>
+
+<!--            <div class="mt-8 flex items-center justify-center">-->
+<!--              <div class="flex flex-col items-center">-->
+<!--                <i class="spr-edit text-4xl"></i>-->
+<!--                <div class="mt-2 text-xl md:text-2xl font-bold">-->
+<!--                  1. 註冊Shoperuse帳戶-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <i class="mx-4 spr-angle-right text-4xl"></i>-->
+<!--              <div class="flex flex-col items-center">-->
+<!--                <i class="spr-link text-4xl"></i>-->
+<!--                <div class="mt-2 text-xl md:text-2xl font-bold">-->
+<!--                  2. 登入後連結IG帳戶-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <i class="mx-4 spr-angle-right text-4xl"></i>-->
+<!--              <div class="flex flex-col items-center">-->
+<!--                <i class="spr-ok text-4xl"></i>-->
+<!--                <div class="mt-2 text-xl md:text-2xl font-bold">-->
+<!--                  完成認證-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+
 
             <div class="md:grid grid-cols-2 gap-16 mt-16">
               <div class="col-span-1 bg-gray-100">
