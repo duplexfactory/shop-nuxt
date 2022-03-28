@@ -31,7 +31,7 @@
 
               </div>
 
-              <img src="~assets/images/ig_shop.jpg"/>
+              <img class="mt-8 md:mt-0" src="~assets/images/ig_shop.jpg"/>
 
             </div>
           </div>
@@ -39,8 +39,8 @@
 
         <section>
           <div class="container mx-auto">
-            <div class="grid grid-cols-3 gap-8">
-              <div v-for="point in points" class="col-span-1 rounded bg-white text-center p-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div v-for="point in points" class="col-span-1 rounded bg-white md:text-center p-4">
                 <div class="text-pink-400 text-2xl font-semibold">{{point.title}}</div>
                 <!--                <div class="mt-4">{{point.subtitle}}</div>-->
                 <div class="mt-4 text-sm">{{point.content}}</div>
@@ -56,28 +56,30 @@
               輕鬆兩步認證
             </h2>
 
-            <div class="mt-8 grid grid-cols-11">
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-11">
               <div class="col-span-3 flex flex-col items-center">
                 <i class="spr-edit text-4xl"></i>
-                <div class="mt-2 text-xl md:text-2xl font-bold">
+                <div class="mt-2 text-xl md:text-2xl font-bold text-center">
                   1. 註冊Shoperuse帳戶
                 </div>
               </div>
-              <div class="col-span-1 flex items-center justify-center">
-                <i class="spr-angle-right text-4xl"></i>
+              <div class="col-span-1 py-4 flex items-center justify-center text-4xl">
+                <i class="md:hidden spr-angle-down"></i>
+                <i class="hidden md:inline-block spr-angle-right"></i>
               </div>
               <div class="col-span-3 flex flex-col items-center">
                 <i class="spr-link text-4xl"></i>
-                <div class="mt-2 text-xl md:text-2xl font-bold">
+                <div class="mt-2 text-xl md:text-2xl font-bold text-center">
                   2. 登入後連結IG帳戶
                 </div>
               </div>
-              <div class="col-span-1 flex items-center justify-center">
-                <i class="spr-angle-right text-4xl"></i>
+              <div class="col-span-1 py-4 flex items-center justify-center text-4xl">
+                <i class="md:hidden spr-angle-down"></i>
+                <i class="hidden md:inline-block spr-angle-right"></i>
               </div>
               <div class="col-span-3 flex flex-col items-center">
                 <i class="spr-ok text-4xl"></i>
-                <div class="mt-2 text-xl md:text-2xl font-bold">
+                <div class="mt-2 text-xl md:text-2xl font-bold text-center">
                   完成認證
                 </div>
               </div>
@@ -109,19 +111,7 @@
 
 
             <div class="md:grid grid-cols-2 gap-16 mt-16">
-              <div class="col-span-1 bg-gray-100">
-                <div class="bg-white rounded-md border p-8">
-                  <h2 class="text-xl md:text-2xl font-bold">
-                    註冊
-                  </h2>
-                  <input v-model="username" class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">
-                  <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
-                  <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
-                  <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
-                </div>
-              </div>
-
-              <div class="mt-4 md:mt-0 col-span-1 font-light bg-white">
+              <div class="col-span-1 font-light bg-white md:order-2">
                 <div class="text-4xl md:text-5xl font-bold ">
                   立即認證
                 </div>
@@ -133,6 +123,17 @@
                   </ul>
                 </div>
 
+              </div>
+              <div class="col-span-1 bg-gray-100 mt-8 md:mt-0 md:order-1">
+                <div class="bg-white rounded-md border p-8">
+                  <h2 class="text-xl md:text-2xl font-bold">
+                    註冊
+                  </h2>
+                  <input v-model="username" class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">
+                  <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
+                  <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
+                  <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
+                </div>
               </div>
             </div>
           </div>
