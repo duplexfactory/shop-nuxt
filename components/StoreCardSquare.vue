@@ -25,19 +25,20 @@
     const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
     const description = 'description';
 
+    const verifiedPage = false;
 </script>
 
 <template>
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
             <div class="relative h-full">
-<!--                <div class="hidden sm:block bg-gray-300 rounded-full square-image-container" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>-->
+                <div v-if="verifiedPage" class="hidden sm:block bg-gray-300 rounded-full square-image-container" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>
 
                 <div class="mt-1 2xl:mt-2 overflow-hidden">
                   <div class="font-semibold text-lg truncate">
                     <a class="hover:underline" :href="`https://www.instagram.com/${username}/`" target="_blank">{{ username }}</a>
                   </div>
-                  <div class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
+                  <div v-if="verifiedPage" class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
                 </div>
 
                 <!-- Offline show locations -->

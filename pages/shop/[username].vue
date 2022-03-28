@@ -2,7 +2,9 @@
 
     import {throwError} from "#app";
 
-    const {tagsLookup} = useTags();
+    const {tagsLookup, categories} = useTags();
+
+    const verifiedPage = false;
 
     // const page = {
     //   lastActivity: 0,
@@ -69,8 +71,6 @@
 
     const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
 
-    const verifiedPage = false;
-
     // Medias
     let mediaPending = ref(false);
     const medias = ref([]);
@@ -111,7 +111,52 @@
         if (page.value.locations.length !== 0) {
           metaDescLocation = `，門市位於${page.value.locations.join("、")}`;
         }
-        metaDescFullname = page.value.fullName;
+
+        if (verifiedPage) {
+          metaDescFullname = page.value.fullName;
+        }
+        else {
+          // Construct a full name for unverified pages.
+          const universalCategory = categories.find((c) => c.id === "universal");
+          const universalTagIds = (universalCategory["tags"] as {id: string}[]).map((t) => t.id);
+
+          const basicTagLabels = [], universalTagLabels = [];
+          page.value.tags.forEach((t) => {
+            if (universalTagIds.includes(t))
+              universalTagLabels.push(tagsLookup[t]);
+            else
+              basicTagLabels.push(tagsLookup[t]);
+          });
+
+          if (universalTagLabels.length === 0) {
+            // No universal tags.
+            metaDescFullname = "專售" + basicTagLabels.join("、") + "。";
+          }
+          else {
+            metaDescFullname = "";
+
+            const prefixTagLabels = page.value.tags.filter((t) => ["south-korea", "japan", "second-hand"].includes(t)).map((t) => tagsLookup[t]);
+            if (prefixTagLabels.length === 0) {
+              metaDescFullname += basicTagLabels.join("、")
+            }
+            else {
+              if (basicTagLabels.length === 0)
+                metaDescFullname += prefixTagLabels.join("、") + "貨品";
+              else
+                metaDescFullname += prefixTagLabels.map((prefix) => basicTagLabels.map((base) => prefix + base)).flat().join("、")
+            }
+
+            if (page.value.tags.includes("purchase")) {
+              metaDescFullname += "代購";
+            }
+
+            if (page.value.tags.includes("customize")) {
+              metaDescFullname += metaDescFullname.length === 0 ? "訂製貨品" : "，可訂製";
+            }
+
+            metaDescFullname = (page.value.tags.includes("purchase") ? "專營" : "專售") + metaDescFullname + "。";
+          }
+        }
       }
       const metaDescription = `${route.params.username}的IG Shop門市、評論、商業登記、相片及貼文${metaDescLocation}。${metaDescFullname}`;
       return {
