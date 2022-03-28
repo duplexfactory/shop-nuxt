@@ -165,9 +165,9 @@
           {name: 'description', hid: 'description', content: metaDescription},
           {property: 'og:title', hid: 'og:title', content: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`},
           {property: 'og:url', hid: 'og:url', content: `${config.DOMAIN}/shop/${route.params.username}`},
-          {property: 'og:image', hid: 'og:image', content: `${page.value !== null ? page.value.profilePicUrl : ""}`},
-          {property: 'og:image:height', hid: 'og:image:height', content: '150'},
-          {property: 'og:image:width', hid: 'og:image:width', content: '150'},
+          // {property: 'og:image', hid: 'og:image', content: `${page.value !== null ? page.value.profilePicUrl : ""}`},
+          // {property: 'og:image:height', hid: 'og:image:height', content: '150'},
+          // {property: 'og:image:width', hid: 'og:image:width', content: '150'},
           {property: 'og:description', hid: 'og:description', content: metaDescription}
         ]
       }

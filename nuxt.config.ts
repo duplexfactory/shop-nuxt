@@ -44,14 +44,14 @@ export default defineNuxtConfig({
       {name: 'keywords', content: 'Shoperuse, ig shop, ig shop衫, instagram, 網店, ig shop商業登記, ig shop推薦, ig shop攻略'},
       {property: 'og:locale', hid: 'og:locale', content: 'zh_HK'},
       {property: 'og:title', hid: 'og:title', content: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shoperuse'},
-      // {property: 'og:url', hid: 'og:url', content: process.env.DOMAIN_WEB},
-      // {
-      //   property: 'og:image',
-      //   hid: 'og:image',
-      //   content: `${process.env.DOMAIN_WEB}/assets/img/common/home_preview.jpg`
-      // },
-      // {property: 'og:image:width', hid: 'og:image:width', content: '960'},
-      // {property: 'og:image:height', hid: 'og:image:height', content: '540'},
+      {property: 'og:url', hid: 'og:url', content: process.env.DOMAIN},
+      {
+        property: 'og:image',
+        hid: 'og:image',
+        content: `${process.env.DOMAIN}/images/logo.png`
+      },
+      {property: 'og:image:width', hid: 'og:image:width', content: '679'},
+      {property: 'og:image:height', hid: 'og:image:height', content: '339'},
       {
         property: 'og:description',
         hid: 'og:description',
