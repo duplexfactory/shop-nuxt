@@ -114,9 +114,10 @@
                   <h2 class="text-xl md:text-2xl font-bold">
                     註冊
                   </h2>
-                  <input class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">
-                  <input class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
-                  <button class="mt-4 btn btn-primary">立即註冊</button>
+                  <input v-model="username" class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">
+                  <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
+                  <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
+                  <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
                 </div>
               </div>
 
@@ -174,7 +175,7 @@
 
 <script lang="ts">
     export default {
-        data(): { features: string[], points: {title: string, subtitle: string, content: string}[] } {
+        data(): { features: string[], points: {title: string, subtitle: string, content: string, username: string, password: string, confirmPassword: string,}[] } {
             return {
                 features: [
                     '完全免費',
@@ -197,8 +198,25 @@
                     {title: "更改資料", subtitle: "修改分類、描述", content: "假如你認爲Shoperuse上你的商店分類或資料有任何錯誤，認證後你將可以隨意修改。"},
 
 
-                ]
+                ],
+                username: "",
+                password: "",
+                confirmPassword: "",
             }
+        },
+        methods: {
+          register() {
+            if (this.username == "" || this.password == "" || this.confirmPassword == "") {
+              this.$toast.error("請填寫所有欄位！", {position: "top"});
+              return;
+            }
+
+            if (this.password !== this.confirmPassword) {
+              this.$toast.error("請確保兩次輸入的密碼一致！", {position: "top"});
+              return;
+            }
+
+          }
         }
     }
 </script>
