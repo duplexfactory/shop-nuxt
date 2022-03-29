@@ -2,23 +2,23 @@
   <div>
     <div class="md:container mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between">
       <!-- left -->
-      <div class="flex items-center flex-1 mr-8">
+      <div class="flex items-center flex-1 md:mr-8">
 
         <button class="md:hidden" @click="$emit('toggleDrawer')">
           <i class="spr-menu text-2xl"></i>
         </button>
 
-        <nuxt-link to="/" class="mr-4"><img style="width: 100px;" src="/images/logo.png"/></nuxt-link>
+        <nuxt-link to="/" class="md:mr-4"><img style="width: 100px;" src="/images/logo.png"/></nuxt-link>
 
         <!-- Mobile Search Button -->
-        <button @click="showSearchModal = true" class="sm:hidden border py-2 pl-4 pr-8 text-sm text-gray-400">
-          商店 或 貼文
+        <button @click="showSearchModal = true" class="sm:hidden border rounded-md py-2 px-4 text-sm text-gray-400">
+          搜尋商店<i class="spr-search ml-4"></i>
         </button>
         <!-- Desktop Search Input -->
         <div class="hidden sm:block flex-1">
           <div class="flex w-full">
             <div class="dropdown flex-1" style="max-width: 350px;">
-              <input @keyup.enter="search" @focusin="searchInputFocusIn" @focusout="searchInputFocusOut" v-model="searchText" class="search-input" placeholder="商店 或 貼文" type="search" autocomplete="off" id="search" name="search" />
+              <input @keyup.enter="search" @focusin="searchInputFocusIn" @focusout="searchInputFocusOut" v-model="searchText" class="search-input" placeholder="搜尋 商店 或 貼文" type="search" autocomplete="off" id="search" name="search" />
               <div v-if="showSearchDropdown && searchText !== ''" class="search-menu">
                 <template v-if="tagsSearchResult.length !== 0">
                   <div class="px-4 py-2 text-sm bg-gray-50">分類</div>
@@ -52,6 +52,7 @@
         <nuxt-link to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>
         <AgeRestrictionToggle />
       </div>
+
     </div>
     <!--<div id="nav" class="container">nav</div>-->
   </div>
