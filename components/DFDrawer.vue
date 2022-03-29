@@ -33,12 +33,12 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
         <div class="py-2">
           <AgeRestrictionToggle />
         </div>
-        <div class="py-2">
-          <div @click="goTo('/verify')">認證我的商店</div>
-        </div>
-        <div class="py-2">
-          <div @click="goTo('/login/shop')">商戶登入</div>
-        </div>
+<!--        <div class="py-2">-->
+<!--          <div @click="goTo('/verify')">認證我的商店</div>-->
+<!--        </div>-->
+<!--        <div class="py-2">-->
+<!--          <div @click="goTo('/login/shop')">商戶登入</div>-->
+<!--        </div>-->
       </template>
 
 

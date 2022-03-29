@@ -48,13 +48,13 @@
 
       <!-- right -->
       <div class="hidden md:block">
-        <nuxt-link to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
-        <nuxt-link to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>
+<!--        <nuxt-link to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>-->
+<!--        <nuxt-link to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>-->
         <AgeRestrictionToggle />
       </div>
 
     </div>
-    <!--<div id="nav" class="container">nav</div>-->
+
   </div>
 
 </template>
