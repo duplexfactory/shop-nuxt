@@ -48,7 +48,8 @@
 
       <!-- right -->
       <div class="hidden md:block">
-<!--        <button class="btn-outline">認證我的商店</button>-->
+        <nuxt-link to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
+        <nuxt-link to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>
         <AgeRestrictionToggle />
       </div>
     </div>
