@@ -181,6 +181,12 @@
       "css": "edit",
       "code": 59405,
       "src": "fontawesome"
+    },
+    {
+      "uid": "d10920db2e79c997c5e783279291970c",
+      "css": "dot-3",
+      "code": 59406,
+      "src": "entypo"
     }
   ]
 }

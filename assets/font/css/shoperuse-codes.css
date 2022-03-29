@@ -13,6 +13,7 @@
 .spr-tag:before { content: '\e80b'; } /* '' */
 .spr-ok:before { content: '\e80c'; } /* '' */
 .spr-edit:before { content: '\e80d'; } /* '' */
+.spr-dot-3:before { content: '\e80e'; } /* '' */
 .spr-money:before { content: '\f0d6'; } /* '' */
 .spr-mail-alt:before { content: '\f0e0'; } /* '' */
 .spr-angle-left:before { content: '\f104'; } /* '' */

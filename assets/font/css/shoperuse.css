@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'shoperuse';
-  src: url('../font/shoperuse.eot?43835241');
-  src: url('../font/shoperuse.eot?43835241#iefix') format('embedded-opentype'),
-       url('../font/shoperuse.woff2?43835241') format('woff2'),
-       url('../font/shoperuse.woff?43835241') format('woff'),
-       url('../font/shoperuse.ttf?43835241') format('truetype'),
-       url('../font/shoperuse.svg?43835241#shoperuse') format('svg');
+  src: url('../font/shoperuse.eot?39665224');
+  src: url('../font/shoperuse.eot?39665224#iefix') format('embedded-opentype'),
+       url('../font/shoperuse.woff2?39665224') format('woff2'),
+       url('../font/shoperuse.woff?39665224') format('woff'),
+       url('../font/shoperuse.ttf?39665224') format('truetype'),
+       url('../font/shoperuse.svg?39665224#shoperuse') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'shoperuse';
-    src: url('../font/shoperuse.svg?43835241#shoperuse') format('svg');
+    src: url('../font/shoperuse.svg?39665224#shoperuse') format('svg');
   }
 }
 */
@@ -68,6 +68,7 @@
 .spr-tag:before { content: '\e80b'; } /* '' */
 .spr-ok:before { content: '\e80c'; } /* '' */
 .spr-edit:before { content: '\e80d'; } /* '' */
+.spr-dot-3:before { content: '\e80e'; } /* '' */
 .spr-money:before { content: '\f0d6'; } /* '' */
 .spr-mail-alt:before { content: '\f0e0'; } /* '' */
 .spr-angle-left:before { content: '\f104'; } /* '' */
