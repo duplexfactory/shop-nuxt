@@ -1,5 +1,10 @@
 <template>
   <div class="min-h-screen flex flex-col">
+    <div v-if="isIGBrowser && !isIGHintClosed" class="py-2 px-4 bg-gray-100">
+      <div class="text-xs">如在IG瀏覽器内未能正常加載，請按 "<i class="spr-dot-3 text-xs"></i>" > "瀏覽器設定" > "清除瀏覽資料" 後重新整理。</div>
+      <button @click="isIGHintClosed = true" class="mt-2 text-xs">知道了</button>
+    </div>
+
     <top-header @toggleDrawer="toggleDrawer"></top-header>
 
     <transition name="slide-side">
@@ -32,6 +37,7 @@
 
 <script setup lang="ts">
   import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+  import throttle from "lodash.throttle";
 
   // Meta
   const config = useRuntimeConfig();
@@ -77,21 +83,30 @@
   // Show Footer
   const showFooter = ref(false);
 
-</script>
+  // IG Browser
+  const isIGBrowser = ref(true);
+  const isIGHintClosed = ref(false);
 
-<script lang="ts">
-  import throttle from "lodash.throttle";
-
-  export default {
-    mounted() {
-      window.addEventListener("resize", throttle(() => {
-        if (window.innerWidth >= 640) {
-          // SM
-          if (this.showSearchModal) {
-            this.showSearchModal = false;
-          }
-        }
-      }, 500));
+  // Mounted
+  onMounted(() => {
+    if (navigator.userAgent.includes("Instagram")){
+      isIGBrowser.value = true;
     }
-  }
+
+    window.addEventListener("resize", throttle(() => {
+      if (window.innerWidth >= 640) {
+        // SM
+        if (showSearchModal.value) {
+          showSearchModal.value = false;
+        }
+      }
+    }, 500));
+  });
+
 </script>
+
+<style scoped>
+.spr-dot-3:before {
+  @apply transform rotate-90;
+}
+</style>
