@@ -13,7 +13,7 @@
             <hr class="my-2"/>
 
             <div class="text-right">
-                © 2022 InstaShop. All Rights Reserved.
+                © 2022 Shoperuse. All Rights Reserved.
             </div>
 
         </div>
