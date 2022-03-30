@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="md:container mx-auto px-4 sm:px-0 py-4 sm:py-5 flex items-center justify-between">
+    <div class="md:container mx-auto px-4 py-2 border-b-1 sm:(px-0 py-5 border-none) flex items-center justify-between">
       <!-- left -->
       <div class="flex items-center flex-1 md:mr-8">
 

@@ -98,7 +98,7 @@ export default {
       <!-- Slider main container -->
       <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
         <!-- Additional required wrapper -->
-        <div class="swiper-wrapper pb-8">
+        <div class="swiper-wrapper lg:pb-8">
           <!-- Slides -->
           <StoreCardSquare v-for="shop in shops"
                            class="swiper-slide"
@@ -118,7 +118,7 @@ export default {
       </div>
     </lazy-component>
 
-    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>

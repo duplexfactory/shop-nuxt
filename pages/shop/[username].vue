@@ -342,7 +342,7 @@ export default  {
 <style scoped>
 
 .tab-selected {
-  @apply border-bottom-4 border-pink-400;
+  @apply border-b-4 border-pink-400;
 }
 
 img:not([src]) {
