@@ -237,16 +237,16 @@ export default  {
 <template>
     <div class="mb-16">
         <div v-if="!!page" class="container mx-auto">
-            <section class="md:grid grid-cols-8 lg:(px-16)">
+            <section class="mt-8 md:mt-0 md:grid grid-cols-8 lg:(px-16)">
                 <div class="col-span-3 lg:(col-span-2)">
-                    <div v-if="verifiedPage" class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8"
+                    <div v-if="verifiedPage" class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8 mb-2"
                          style="height: 100px;">
                       <img class="h-full w-full"
                            :alt="page.username"
                            v-lazy="page.profilePicUrl"/>
                     </div>
 
-                    <div class="mt-2">
+                    <div>
                         <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
                         <div class="text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
@@ -289,7 +289,7 @@ export default  {
                 </div>
             </section>
 
-            <section class="md:mt-4">
+            <section class="mt-4">
                 <div class="mb-4 text-lg md:text-2xl flex">
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</h2>
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
