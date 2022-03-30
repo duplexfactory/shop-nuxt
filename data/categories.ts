@@ -5,6 +5,7 @@ export const categories = [{
         {"id": "candle", "label": "蠟燭"},
         {"id": "bracelet-macrame", "label": "手繩"},
         {"id": "preserved-flower", "label": "永生花"},
+        {"id": "floating-flower", "label": "浮游花"},
         {"id": "leather", "label": "皮革"}
     ]
 }, {
@@ -62,7 +63,8 @@ export const categories = [{
         {"id": "model", "label": "模型"},
         {"id": "periphery", "label": "周邊"},
         {"id": "wallet", "label": "銀包"},
-        {"id": "computer-bag", "label": "電腦袋"}
+        {"id": "computer-bag", "label": "電腦袋"},
+        {"id": "ornament", "label": "擺設"}
     ]
 }, {
     "id": "pet",
