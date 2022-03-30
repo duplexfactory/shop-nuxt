@@ -167,4 +167,9 @@ export default  {
   @apply px-8 py-2 text-center;
 }
 
+[class^="spr-"]:before, [class*=" spr-"]:before {
+  margin: 0px !important;
+}
+
+
 </style>
