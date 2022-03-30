@@ -84,7 +84,7 @@
   const showFooter = ref(false);
 
   // IG Browser
-  const isIGBrowser = ref(true);
+  const isIGBrowser = ref(false);
   const isIGHintClosed = ref(false);
 
   // Mounted
