@@ -50,8 +50,8 @@ export default defineNuxtConfig({
         hid: 'og:image',
         content: `${process.env.DOMAIN}/images/logo.png`
       },
-      {property: 'og:image:width', hid: 'og:image:width', content: '679'},
-      {property: 'og:image:height', hid: 'og:image:height', content: '339'},
+      {property: 'og:image:width', hid: 'og:image:width', content: '720'},
+      {property: 'og:image:height', hid: 'og:image:height', content: '360'},
       {
         property: 'og:description',
         hid: 'og:description',
