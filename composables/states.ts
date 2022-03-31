@@ -1,5 +1,21 @@
+import {SimpleIgPage} from "~/models/SimpleIgPage";
+import IgMedia from "~/models/IgMedia";
+
 export const useShowMediaModal = () => useState<boolean>('showMediaModal', () => false)
-export const useShowingMediaModalData = () => useState<{code: string, pagePk: number, username: string}>('showingMediaModalData', () => ({code: "", pagePk: 0, username: ""}))
+export const useShowingMediaModalData = () => useState<{
+
+    // Either code or media.
+    code?: string,
+    media?: IgMedia,
+
+    simplePage: SimpleIgPage
+}>('showingMediaModalData', () => ({
+    simplePage: {
+        fullName: "",
+        pk: 0,
+        username: ""
+    }
+}))
 
 export const useShowSearchModal = () => useState<boolean>('showSearchModal', () => false)
 

@@ -3,11 +3,24 @@
     <template v-slot:body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
-          <MediaCardIGEmbed captioned :post-id="showingMediaModalData.code" :fixed-aspect-ratio="0" :username="showingMediaModalData.username"></MediaCardIGEmbed>
+          <MediaCardIGEmbed captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="showingMediaModalData.simplePage.username"></MediaCardIGEmbed>
         </div>
         <div class="col-span-4">
           <div class="mt-4 md:mt-0">
-            <div class="flex items-center">
+
+            <div class="flex items-baseline">
+              <div class="text-xl md:text-2xl text-pink-700">HK$ {{ localMedia?.price ?? "-" }}</div>
+              <button class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
+            </div>
+
+            <button class="hover:underline" @click="onUsernameClick">
+              {{ showingMediaModalData.simplePage.username }}
+            </button>
+
+            <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${showingMediaModalData.simplePage.username}/`" target="_blank">{{ showingMediaModalData.simplePage.username }}</a></i></div>
+            <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
+
+            <div class="flex items-center mt-4">
               <div class="text-xl md:text-2xl">評論</div>
               <button @click="isShowingCreateReview = true" class="ml-2 btn btn-sm btn-outline">撰寫評論</button>
             </div>
@@ -41,8 +54,16 @@ import useCreateReview from "~/composables/useCreateReview";
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
 // Media Modal
-const showMediaModal =  useShowMediaModal();
+const showMediaModal = useShowMediaModal();
 const showingMediaModalData = useShowingMediaModalData();
+
+const localMediaCode = computed(() => {
+  return showingMediaModalData.value.media?.code || showingMediaModalData.value.code;
+});
+const fetchedMedia = ref(null);
+const localMedia = computed(() => {
+  return showingMediaModalData.value.media || fetchedMedia.value;
+});
 
 // Create Review
 const {
@@ -55,26 +76,14 @@ const {
   resetCreateReview
 } = useCreateReview();
 const isShowingCreateReview = ref<boolean>(false);
-reviewingCode.value = showingMediaModalData.value.code;
-reviewingPagePk.value = showingMediaModalData.value.pagePk;
+reviewingCode.value = localMediaCode.value;
+reviewingPagePk.value = showingMediaModalData.value.simplePage.pk;
 
 const reviews = ref<IgPageReview[]>([]);
-await fetchReviews();
-
-watch(
-    () => showingMediaModalData.value,
-    async (show, prevShow) => {
-      if (show) {
-        reviewingCode.value = showingMediaModalData.value.code;
-        reviewingPagePk.value = showingMediaModalData.value.pagePk;
-        await fetchReviews();
-      }
-    }
-)
 
 async function fetchReviews() {
   reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
-      mediaCode: showingMediaModalData.value.code,
+      mediaCode: localMediaCode.value,
     }}))['reviews'];
 }
 
@@ -91,5 +100,18 @@ function close() {
 
   showMediaModal.value = false;
 }
+
+const router = useRouter();
+function onUsernameClick() {
+  router.push(`/shop/${showingMediaModalData.value.simplePage.username}`);
+  close();
+}
+
+// Init data on modal open
+if (!localMedia.value) {
+  const {data, pending} = await useFetch(`/api/media`, {params: {id: localMediaCode.value}});
+  fetchedMedia.value = data.value;
+}
+await fetchReviews();
 
 </script>

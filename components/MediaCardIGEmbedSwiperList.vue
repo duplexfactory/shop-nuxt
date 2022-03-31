@@ -5,12 +5,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {PropType} from "vue";
-import IgMedia from "~/models/IgMedia";
-import IgPage from "~/models/IgPage";
 import {SwiperOptions} from "swiper/types/swiper-options";
 import loadIGEmbeds from "~/utils/loadIGEmbeds";
-
-type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
+import {SimpleIgPage} from "~/models/SimpleIgPage";
 
 export default {
   data() : {
@@ -78,7 +75,7 @@ export default {
     };
   },
   props: {
-    simplePages: Array as PropType<SimplePage[]>
+    simplePages: Array as PropType<SimpleIgPage[]>
   },
   methods: {
     loadSwiper() {
@@ -121,7 +118,7 @@ const showingMediaModalData = useShowingMediaModalData();
           <!-- Slides -->
 
           <MediaCardIGEmbed v-for="media in simplePages"
-                            @showMediaModal="showMediaModal = true; showingMediaModalData = {code: media.lastMediaData.code, pagePk: media.pk, username: media.username}"
+                            @showMediaModal="showMediaModal = true; showingMediaModalData = {media: media.lastMediaData, simplePage: media}"
                             class="swiper-slide"
                             top-bar
                             :fixedAspectRatio="0"

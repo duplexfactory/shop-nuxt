@@ -5,10 +5,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {PropType} from "vue";
-import IgPage from "~/models/IgPage";
 import {SwiperOptions} from "swiper/types/swiper-options";
-
-type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
+import {SimpleIgPage} from "~/models/SimpleIgPage";
 
 export default {
   data() : {
@@ -65,7 +63,7 @@ export default {
     };
   },
   props: {
-    simplePages: Array as PropType<SimplePage[]>
+    simplePages: Array as PropType<SimpleIgPage[]>
   },
   mounted() {
     // Navigation arrows
@@ -98,7 +96,7 @@ export default {
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
         <MediaCard v-for="page in simplePages"
-                   @click="showMediaModal = true; showingMediaModalData = {code: page.lastMediaData.code, pagePk: page.pk, username: page.username}"
+                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, simplePage: page}"
                    class="cursor-pointer swiper-slide"
                    :media="page.lastMediaData"
                    :shop="page"

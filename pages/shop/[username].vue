@@ -178,13 +178,22 @@
     const showModal = useShowMediaModal();
     const showingMediaModalData = useShowingMediaModalData();
 
-    function showMediaModal(mediaCode) {
+    function showMediaModal(media: IgMedia) {
+      if (page.value != null) {
+        showModal.value = true;
+        showingMediaModalData.value = {
+          media: media,
+          simplePage: page.value
+        };
+      }
+    }
+
+    function showMediaModalByCode(mediaCode: string) {
       if (page.value != null) {
         showModal.value = true;
         showingMediaModalData.value = {
           code: mediaCode,
-          pagePk: page.value.pk,
-          username: page.value.username
+          simplePage: page.value
         };
       }
     }
@@ -202,6 +211,7 @@
 
     // Create Review
     import useCreateReview from "~/composables/useCreateReview";
+    import IgMedia from "~/models/IgMedia";
 
     const {
       reviewingPagePk,
@@ -301,14 +311,14 @@ export default  {
                                   :style="verifiedPage ? 'aspect-ratio: 3/5' : ''"
                                   @show="showMedia(i)">
                     <MediaCard v-if="verifiedPage"
-                               @click="showMediaModal(media.code)"
+                               @click="showMediaModal(media)"
                                style="cursor: pointer"
                                :media="media"
                                :shop="page"></MediaCard>
                     <MediaCardIGEmbed
                         v-else
                         class="mb-4 md:mb-0"
-                        @showMediaModal="showMediaModal(media.code)"
+                        @showMediaModal="showMediaModal(media)"
                         :price="media.price"
                         top-bar
                         :post-id="media.code"
@@ -323,7 +333,7 @@ export default  {
                   </div>
                   <div class="col-span-1 lg:order-1">
                     <template v-for="review in reviews">
-                      <ReviewCard :review="review" :checkMediaButton="true" @showMedia="showMediaModal(review.mediaCode)"></ReviewCard>
+                      <ReviewCard :review="review" :checkMediaButton="true" @showMedia="showMediaModalByCode(review.mediaCode)"></ReviewCard>
                       <hr/>
                     </template>
                     <!-- No Reviews -->
