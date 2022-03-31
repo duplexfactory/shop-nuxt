@@ -1,7 +1,8 @@
 import {IncomingMessage, ServerResponse} from "http";
 import bcrypt from "bcryptjs";
 import {userCollection} from "~/server/firebase/collections";
-import {useMethod, useBody} from 'h3';
+import {useBody, useMethod} from 'h3';
+import {emailUsed, register} from "~/server/firebase/auth";
 
 export default async function (req: IncomingMessage, res: ServerResponse) {
     if (useMethod(req) != "POST") {
@@ -10,22 +11,22 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
         throw new Error()
     }
 
-    const {email, password}: {email: string, password: string} = await useBody(req);
+    const {email: _email, password}: { email: string, password: string } = await useBody(req);
+    const email = _email.toLowerCase();
 
-    const used = await userCollection().where("email", "==", email).get();
-
-    if (!used.empty) {
+    if (await emailUsed(email)) {
         res.statusCode = 400
         res.end()
         throw new Error()
     }
 
-    const created = await userCollection().add({
+    const uid = await register(email, password);
+
+    await userCollection().doc(uid).set({
+        uid: uid,
         email,
         password: await bcrypt.hash(password, 10)
     });
-
-    await created.update({id: created.id});
 
     return {success: true}
 }
