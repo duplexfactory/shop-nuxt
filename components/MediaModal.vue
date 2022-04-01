@@ -126,6 +126,8 @@ function onUsernameClick() {
   close();
 }
 
+const screenSize = useScreenSize();
+
 // Init data on modal open
 if (!localMedia.value) {
   const {data, pending} = await useFetch(`/api/media`, {params: {id: localMediaCode.value}});

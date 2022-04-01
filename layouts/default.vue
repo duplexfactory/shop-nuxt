@@ -36,10 +36,10 @@
 </template>
 
 <script setup lang="ts">
-  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-  import throttle from "lodash.throttle";
+import {ScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+import throttle from "lodash.throttle";
 
-  // Meta
+// Meta
   const config = useRuntimeConfig();
   const route = useRoute();
 
@@ -87,15 +87,39 @@
   const isIGBrowser = ref(false);
   const isIGHintClosed = ref(false);
 
+  // Screen Size
+  const screenSize = useScreenSize();
+  function calcScreenSize(innerWidth: number) {
+    if (1536 <= innerWidth) {
+      return ScreenSize.XXL;
+    }
+    else if (1280 <= innerWidth) {
+      return ScreenSize.XL;
+    }
+    else if (1024 <= innerWidth) {
+      return ScreenSize.LG;
+    }
+    else if (768 <= innerWidth) {
+      return ScreenSize.MD;
+    }
+    else if (640 <= innerWidth) {
+      return ScreenSize.SM;
+    }
+    else {
+      return  ScreenSize.DEFAULT;
+    }
+  }
+
   // Mounted
   onMounted(() => {
     if (navigator.userAgent.includes("Instagram")){
       isIGBrowser.value = true;
     }
 
-    window.addEventListener("resize", throttle(() => {
-      if (window.innerWidth >= 640) {
-        // SM
+    screenSize.value = calcScreenSize(window.innerWidth);
+    addEventListener("resize", throttle(() => {
+      screenSize.value = calcScreenSize(window.innerWidth);
+      if (screenSize.value !== ScreenSize.DEFAULT) {
         if (showSearchModal.value) {
           showSearchModal.value = false;
         }

@@ -25,3 +25,15 @@ export const useShowSearchModal = () => useState<boolean>('showSearchModal', () 
 
 export const useShowAgeRestrictedModal = () => useState<boolean>('showAgeRestrictedModal', () => false)
 export const useShowAgeRestrictedContent = () => useState<boolean>('showAgeRestrictedContent', () => false)
+
+
+export enum ScreenSize {
+    DEFAULT,
+    SM,
+    MD,
+    LG,
+    XL,
+    XXL
+}
+
+export const useScreenSize = () => useState<ScreenSize>('screenSize', () => ScreenSize.DEFAULT)
