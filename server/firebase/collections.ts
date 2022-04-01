@@ -1,10 +1,8 @@
-import {CollectionGroup, CollectionReference, getFirestore} from "firebase-admin/firestore";
+import {CollectionReference, getFirestore} from "firebase-admin/firestore";
 import IgPage from "~/models/IgPage";
-import IgMedia from "~/models/IgMedia";
-import IgTray from "~/models/IgTray";
-import IgStory from "~/models/IgStory";
 import {initFirebase} from "~/server/firebase/init";
 import IgPageReview from "~/models/IgPageReview";
+import User from "~/models/user/User";
 // import {firestore} from "firebase-admin/firestore";
 // import CollectionGroup = firestore.CollectionGroup;
 initFirebase();
@@ -15,6 +13,10 @@ export function pageCollection() {
 
 export function reviewCollection() {
     return getFirestore().collection("reviews") as CollectionReference<IgPageReview>;
+}
+
+export function userCollection() {
+    return getFirestore().collection("user") as CollectionReference<User>;
 }
 
 export type IdInput = number | string | { id: string | number }
