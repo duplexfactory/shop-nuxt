@@ -8,12 +8,16 @@ export const useShowingMediaModalData = () => useState<{
     code?: string,
     media?: IgMedia,
 
-    simplePage: SimpleIgPage
+    pagePk?: number,
+    simplePage?: SimpleIgPage
 }>('showingMediaModalData', () => ({
     simplePage: {
         fullName: "",
         pk: 0,
-        username: ""
+        username: "",
+        businessRegistration: false,
+        brickAndMortar: false,
+        locations: []
     }
 }))
 

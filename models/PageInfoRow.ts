@@ -12,7 +12,22 @@ export default class PageInfoRow {
         this.link = link;
     }
 
-    static rowsFromPage(page: IgPage | PageSearch): PageInfoRow[] {
+    static rowsFromExtraData(extraData: IgPageExtraData, fields: (keyof IgPageExtraData)[]): PageInfoRow[] {
+        const extraDataCopy = {};
+        for (const k of Object.keys(extraData) as (keyof IgPageExtraData)[]) {
+            if (fields.includes(k)) {
+                extraDataCopy[k] = extraData[k]
+            }
+        }
+
+        return PageInfoRow.rowsFromPage({
+            businessRegistration: false,
+            locations: [],
+            extraData: extraDataCopy,
+        });
+    }
+
+    static rowsFromPage(page: {businessRegistration: boolean, locations: string[], extraData?: IgPageExtraData}): PageInfoRow[] {
         const extraData = page.extraData;
         if (!!extraData) {
             const rows = [];

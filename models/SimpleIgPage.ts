@@ -1,3 +1,10 @@
 import IgPage from "~/models/IgPage";
 
-export type SimpleIgPage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
+export type SimpleIgPage = Pick<IgPage,
+    "fullName" |
+    "pk" |
+    "username" |
+    "extraData" |
+    "businessRegistration" |
+    "brickAndMortar" |
+    "locations">;

@@ -8,6 +8,7 @@ import {PropType} from "vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
 import loadIGEmbeds from "~/utils/loadIGEmbeds";
 import {SimpleIgPage} from "~/models/SimpleIgPage";
+import IgPage from "~/models/IgPage";
 
 export default {
   data() : {
@@ -75,7 +76,7 @@ export default {
     };
   },
   props: {
-    simplePages: Array as PropType<SimpleIgPage[]>
+    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">[]>
   },
   methods: {
     loadSwiper() {
@@ -112,13 +113,13 @@ const showingMediaModalData = useShowingMediaModalData();
 
     <lazy-component @show="loadSwiper">
       <!-- Slider main container -->
-      <div :class="{'hidden': !swiperReady || simplePages.length === 0}" class="swiper" ref="swiper">
+      <div :class="{'hidden': !swiperReady || lastMediaPage.length === 0}" class="swiper" ref="swiper">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper pb-8">
           <!-- Slides -->
 
-          <MediaCardIGEmbed v-for="media in simplePages"
-                            @showMediaModal="showMediaModal = true; showingMediaModalData = {media: media.lastMediaData, simplePage: media}"
+          <MediaCardIGEmbed v-for="media in lastMediaPage"
+                            @showMediaModal="showMediaModal = true; showingMediaModalData = {media: media.lastMediaData, pagePk: media.pk}"
                             class="swiper-slide"
                             top-bar
                             :fixedAspectRatio="0"
@@ -136,7 +137,7 @@ const showingMediaModalData = useShowingMediaModalData();
 
       </div>
     </lazy-component>
-    <swiper-slides-placeholder v-if="!swiperReady || simplePages.length === 0" :slideAspectRatio="0.5" :swiper-options="swiperOptions" class="pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slideAspectRatio="0.5" :swiper-options="swiperOptions" class="pb-8">
       <template v-slot:default="slotProps">
 <!--        <MediaCardIGEmbed class="h-full w-full"></MediaCardIGEmbed>-->
         <div class="h-full w-full bg-loading"></div>

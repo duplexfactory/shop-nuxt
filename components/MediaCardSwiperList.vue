@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import {PropType} from "vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
 import {SimpleIgPage} from "~/models/SimpleIgPage";
+import IgPage from "~/models/IgPage";
 
 export default {
   data() : {
@@ -63,7 +64,7 @@ export default {
     };
   },
   props: {
-    simplePages: Array as PropType<SimpleIgPage[]>
+    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">[]>
   },
   mounted() {
     // Navigation arrows
@@ -85,18 +86,18 @@ export default {
 
 <template>
   <div>
-    <swiper-slides-placeholder v-if="!swiperReady || simplePages.length === 0" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>
     </swiper-slides-placeholder>
     <!-- Slider main container -->
-    <div :class="{'hidden': !swiperReady || simplePages.length === 0}" class="swiper" ref="swiper">
+    <div :class="{'hidden': !swiperReady || lastMediaPage.length === 0}" class="swiper" ref="swiper">
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
-        <MediaCard v-for="page in simplePages"
-                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, simplePage: page}"
+        <MediaCard v-for="page in lastMediaPage"
+                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, pagePk: page.pk}"
                    class="cursor-pointer swiper-slide"
                    :media="page.lastMediaData"
                    :shop="page"

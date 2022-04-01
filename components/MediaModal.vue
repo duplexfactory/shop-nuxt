@@ -3,7 +3,7 @@
     <template v-slot:body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
-          <MediaCardIGEmbed captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="showingMediaModalData.simplePage.username"></MediaCardIGEmbed>
+          <MediaCardIGEmbed captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
         </div>
         <div class="col-span-4">
           <div class="mt-4 md:mt-0">
@@ -14,10 +14,17 @@
             </div>
 
             <button class="hover:underline" @click="onUsernameClick">
-              {{ showingMediaModalData.simplePage.username }}
+              {{ localPage.username }}
             </button>
 
-            <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${showingMediaModalData.simplePage.username}/`" target="_blank">{{ showingMediaModalData.simplePage.username }}</a></i></div>
+            <div v-if="pageInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">
+              <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
+                <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+              </div>
+            </div>
+
+            <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
             <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
 
             <div class="flex items-center mt-4">
@@ -52,10 +59,17 @@ import IgPageReview from "~/models/IgPageReview";
 import useCreateReview from "~/composables/useCreateReview";
 
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+import {computed} from "@vue/reactivity";
+import PageInfoRow from "~/models/PageInfoRow";
 
 // Media Modal
 const showMediaModal = useShowMediaModal();
 const showingMediaModalData = useShowingMediaModalData();
+
+const fetchedPage = ref(null);
+const localPage = computed(() => {
+  return showingMediaModalData.value.simplePage || fetchedPage.value;
+});
 
 const localMediaCode = computed(() => {
   return showingMediaModalData.value.media?.code || showingMediaModalData.value.code;
@@ -63,6 +77,11 @@ const localMediaCode = computed(() => {
 const fetchedMedia = ref(null);
 const localMedia = computed(() => {
   return showingMediaModalData.value.media || fetchedMedia.value;
+});
+
+const pageInfoRows = computed(() => {
+  if (!localPage.value) return []
+  return PageInfoRow.rowsFromExtraData(localPage.value.extraData, ["phone", "whatsapp", "wechat", "signal"]);
 });
 
 // Create Review
@@ -77,7 +96,7 @@ const {
 } = useCreateReview();
 const isShowingCreateReview = ref<boolean>(false);
 reviewingCode.value = localMediaCode.value;
-reviewingPagePk.value = showingMediaModalData.value.simplePage.pk;
+reviewingPagePk.value = showingMediaModalData.value.simplePage?.pk || showingMediaModalData.value.pagePk;
 
 const reviews = ref<IgPageReview[]>([]);
 
@@ -103,7 +122,7 @@ function close() {
 
 const router = useRouter();
 function onUsernameClick() {
-  router.push(`/shop/${showingMediaModalData.value.simplePage.username}`);
+  router.push(`/shop/${localPage.value.username}`);
   close();
 }
 
@@ -111,6 +130,10 @@ function onUsernameClick() {
 if (!localMedia.value) {
   const {data, pending} = await useFetch(`/api/media`, {params: {id: localMediaCode.value}});
   fetchedMedia.value = data.value;
+}
+if (!localPage.value) {
+  const {data, error} = await useFetch(`/api/shop`, {params: {id: showingMediaModalData.value.pagePk}});
+  fetchedPage.value = data.value.page;
 }
 await fetchReviews();
 

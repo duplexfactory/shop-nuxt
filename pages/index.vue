@@ -108,13 +108,13 @@ watch(
 
 <!--      <div class="px-4 md:px-0">-->
 <!--        <h2 class="section-title">熱門產品</h2>-->
-<!--        <MediaCardSwiperList :simple-pages="latest"></MediaCardSwiperList>-->
+<!--        <MediaCardSwiperList :lastMediaPage="latest"></MediaCardSwiperList>-->
 <!--      </div>-->
 
 <!--      <h2 class="section-title px-4 md:px-0">最新貼文</h2>-->
       <div class="px-4 md:px-0">
         <h2 class="section-title">熱門產品</h2>
-        <MediaCardIGEmbedSwiperList :simple-pages="latest"></MediaCardIGEmbedSwiperList>
+        <MediaCardIGEmbedSwiperList :lastMediaPage="latest"></MediaCardIGEmbedSwiperList>
       </div>
 
       <div class="px-4 md:px-0">
