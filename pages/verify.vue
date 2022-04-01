@@ -129,7 +129,7 @@
                   <h2 class="text-xl md:text-2xl font-bold">
                     註冊
                   </h2>
-                  <input v-model="username" class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">
+                  <input v-model="email" class="mt-4 block w-full text-input-primary" type="text" name="email" placeholder="用戶名">
                   <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
                   <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
                   <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
@@ -176,7 +176,7 @@
 
 <script lang="ts">
     export default {
-        data(): { features: string[], points: {title: string, subtitle: string, content: string, username: string, password: string, confirmPassword: string,}[] } {
+        data(): { features: string[], points: {title: string, subtitle: string, content: string, email: string, password: string, confirmPassword: string,}[] } {
             return {
                 features: [
                     '完全免費',
@@ -200,14 +200,14 @@
 
 
                 ],
-                username: "",
+                email: "",
                 password: "",
                 confirmPassword: "",
             }
         },
         methods: {
           register() {
-            if (this.username == "" || this.password == "" || this.confirmPassword == "") {
+            if (this.email == "" || this.password == "" || this.confirmPassword == "") {
               this.$toast.error("請填寫所有欄位！", {position: "top"});
               return;
             }
@@ -215,6 +215,15 @@
             if (this.password !== this.confirmPassword) {
               this.$toast.error("請確保兩次輸入的密碼一致！", {position: "top"});
               return;
+            }
+
+            try {
+              // (await $fetch('/api/auth/register', { method: 'POST', params: { email: this.email, password: this.password }}));
+
+              this.$router.push({path: '/my/shop'})
+            }
+            catch(e) {
+
             }
 
           }
