@@ -9,7 +9,8 @@
           <div class="mt-4 md:mt-0">
 
             <div class="flex items-baseline">
-              <div class="text-xl md:text-2xl text-pink-700">HK$ {{ localMedia?.price ?? "-" }}</div>
+              <!-- Do not use ?? because price 0 should show - as well -->
+              <div class="text-xl md:text-2xl text-pink-700">HK$ {{ localMedia?.price ? localMedia?.price : "-" }}</div>
               <button class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
             </div>
 
