@@ -1,12 +1,19 @@
+<script setup lang="ts">
+
+const {data} = await useFetch(`/api/shop?id=43808406274`);
+const {page: shop} = data.value
+
+</script>
+
 <template>
-    <div>
-      <div class="bg-white rounded-md border p-8">
-        <div class="text-xl md:text-2xl font-bold">
+    <div class="container mx-auto">
+      <div class="info-group">
+        <div class="md:text-xl font-bold">
           基本資料
         </div>
 
-<!--        <div>名稱<input v-model="username" class="text-input-primary" type="text" name="username" placeholder="名稱"/></div>-->
-<!--        <div>全名<input v-model="username" class="text-input-primary" type="text" name="username" placeholder="全名"/></div>-->
+        <div>名稱<input v-model="shop.username" class="ml-2 text-input-primary" type="text" name="username" placeholder="名稱"/></div>
+        <div>全名<input v-model="shop.fullName" class="ml-2 text-input-primary" type="text" name="fullName" placeholder="全名"/></div>
 <!--        <div>描述<input v-model="username" class="text-input-primary" type="text" name="username" placeholder="描述"/></div>-->
 
 <!--        <div>分類<input v-model="username" class="text-input-primary" type="text" name="username" placeholder="分類"/></div>-->
@@ -15,8 +22,8 @@
       </div>
 
 
-      <div class="bg-white rounded-md border p-8">
-        <div class="text-xl md:text-2xl font-bold">
+      <div class="info-group mt-4">
+        <div class="md:text-xl font-bold">
           詳細資料
         </div>
 
@@ -30,12 +37,10 @@
     </div>
 </template>
 
-<script>
-export default {
-name: "shop"
-}
-</script>
-
 <style scoped>
+
+.info-group {
+  @apply bg-white rounded-md border p-4;
+}
 
 </style>
