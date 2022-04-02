@@ -34,6 +34,8 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
 
     await initMongo();
 
+    res.setHeader('Cache-Control', 'max-age=120');
+
     return {
         pages: await pageSearchCollection.find(f).sort({activeScore: -1, lastActivity: -1}).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
         count: await pageSearchCollection.countDocuments(f)
