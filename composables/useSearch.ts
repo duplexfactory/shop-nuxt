@@ -49,7 +49,11 @@ export default function () {
             params["adult"] = "true";
         }
 
-        const {data, pending} = useLazyFetch(`/api/search`, {params});
+        const {data, pending} = useLazyFetch(`/api/search`, {
+            headers: {
+                'Cache-Control': 'max-age=120'
+            },
+            params});
         if (!!searchData.value && !!searchData.value.value) {
             searchDataBuffer.value = searchData.value.value;
         }
