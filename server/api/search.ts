@@ -35,7 +35,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     await initMongo();
 
     return {
-        pages: await pageSearchCollection.find(f).sort({activeScore: -1}).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
+        pages: await pageSearchCollection.find(f).sort({activeScore: -1, lastActivity: -1}).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
         count: await pageSearchCollection.countDocuments(f)
     }
 }
