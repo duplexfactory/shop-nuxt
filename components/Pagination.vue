@@ -40,12 +40,12 @@ export default {
     }
   },
   watch: {
-    records: function (current, prev) {
-      this.$emit("update:currentPage", 1);
-    },
-    perPage: function (current, prev) {
-      this.$emit("update:currentPage", 1);
-    }
+    // records: function (current, prev) {
+    //   this.$emit("update:currentPage", 1);
+    // },
+    // perPage: function (current, prev) {
+    //   this.$emit("update:currentPage", 1);
+    // }
   }
 }
 </script>

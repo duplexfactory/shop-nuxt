@@ -238,6 +238,8 @@ watch(
         }
       }
 
+      currentPage.value = 1;
+
       fetchResults();
     }
 )
