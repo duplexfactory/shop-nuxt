@@ -175,6 +175,7 @@
 </template>
 
 <script lang="ts">
+    import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
     export default {
         data(): { features: string[], points: {title: string, subtitle: string, content: string, email: string, password: string, confirmPassword: string,}[] } {
             return {
@@ -220,7 +221,51 @@
             try {
               // (await $fetch('/api/auth/register', { method: 'POST', params: { email: this.email, password: this.password }}));
 
-              this.$router.push({path: '/my/shop'})
+
+
+
+
+
+
+              // Import the functions you need from the SDKs you need
+              import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+              const firebaseConfig = {
+                apiKey: "AIzaSyA3thP4BYP5pBQbML6o3yODA7n7Jw7lW6M",
+                authDomain: "inshop-d6c87.firebaseapp.com",
+                projectId: "inshop-d6c87",
+                storageBucket: "inshop-d6c87.appspot.com",
+                messagingSenderId: "290690858012",
+                appId: "1:290690858012:web:e18fbe51159b99b558b3d9"
+              };
+
+// Initialize Firebase
+              const app = initializeApp(firebaseConfig);
+
+
+
+
+
+
+
+
+
+              const auth = getAuth();
+              signInWithEmailAndPassword(auth, this.email, this.password)
+                  .then((userCredential) => {
+                    // Signed in
+                    const user = userCredential.user;
+                    // ...
+                  })
+                  .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                  });
+
+              this.$router.push({path: '/my/shop'});
             }
             catch(e) {
 
