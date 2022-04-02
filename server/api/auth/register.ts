@@ -23,7 +23,7 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
     const uid = await register(email, password);
 
     await userCollection().doc(uid).set({
-        uid: uid,
+        uid,
         email,
         password: await bcrypt.hash(password, 10)
     });
