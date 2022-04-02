@@ -81,7 +81,7 @@
       if (medias.value.length != 0) {
         params["before"] = medias.value[medias.value.length - 1].takenAt;
       }
-      const {data: mediaData, pending} = await useLazyFetch(`/api/media`, {params});
+      const {data: mediaData, pending} = await useLazyFetch(`/api/media/list`, {params});
       if (mediaData.value != null) {
         medias.value = [...medias.value, ...mediaData.value.medias];
         mediaPending.value = false;

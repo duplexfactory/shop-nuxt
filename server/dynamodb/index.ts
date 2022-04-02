@@ -33,3 +33,30 @@ export async function getPageMedias(pagePk: number, limit?: number, before = day
 
     return res.Items?.map(m => unmarshall(m)) as IgMedia[];
 }
+
+export async function getMedia(pk: number, takenAt: number): Promise<IgMedia | null> {
+    const res = await client.send(new QueryCommand({
+        TableName: "medias",
+        KeyConditionExpression: "pagePk = :pagePk AND takenAt = :takenAt",
+        ExpressionAttributeValues: marshall({":pagePk": pk, ":takenAt": takenAt}),
+        ScanIndexForward: false,
+        Limit: 1
+    }));
+    return res.Items.map(i => unmarshall(i))[0] as IgMedia;
+}
+
+export async function getMediaByCode(code: string): Promise<IgMedia | null> {
+    const res = await client.send(new QueryCommand({
+        TableName: "medias",
+        IndexName: "code-takenAt-index",
+        KeyConditionExpression: "code = :code",
+        ExpressionAttributeValues: marshall({":code": code}),
+        ScanIndexForward: false,
+        Limit: 1
+    }));
+
+    if (res?.Count) {
+        const {pagePk, takenAt} = unmarshall(res.Items[0]);
+        return getMedia(pagePk, takenAt);
+    } else return undefined;
+}
