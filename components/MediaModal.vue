@@ -131,8 +131,8 @@ const screenSize = useScreenSize();
 
 // Init data on modal open
 if (!localMedia.value) {
-  const {data, pending} = await useFetch(`/api/media`, {params: {id: localMediaCode.value}});
-  fetchedMedia.value = data.value;
+  const {data, pending} = await useFetch(`/api/media/single`, {params: {code: localMediaCode.value}});
+  fetchedMedia.value = data.value.media;
 }
 if (!localPage.value) {
   const {data, error} = await useFetch(`/api/shop`, {params: {id: showingMediaModalData.value.pagePk}});
