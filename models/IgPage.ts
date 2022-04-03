@@ -1,6 +1,6 @@
-import IgStory from "./IgStory";
-import IgMedia from "./IgMedia";
-import IgTray from "./IgTray";
+import IgStory from "~/models/IgStory";
+import IgMedia from "~/models/IgMedia";
+import IgTray from "~/models/IgTray";
 import IgPageExtraData from "~/models/IgPageExtraData";
 
 export default interface IgPage {

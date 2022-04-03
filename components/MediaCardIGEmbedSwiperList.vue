@@ -7,16 +7,12 @@ import 'swiper/css/pagination';
 import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
 import IgPage from "~/models/IgPage";
-import SwiperSlidesPlaceholder from "~/components/SwiperSlidesPlaceholder.vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
-import MediaCard from "~/components/MediaCard.vue";
-import MediaCardIGEmbed from "~/components/MediaCardIGEmbed.vue";
 import loadIGEmbeds from "~/utils/loadIGEmbeds";
 
 type SimplePage = Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">;
 
 export default {
-  components: {MediaCardIGEmbed, MediaCard, SwiperSlidesPlaceholder},
   data() : {
     swiperLoaded: boolean,
     swiperReady: boolean,

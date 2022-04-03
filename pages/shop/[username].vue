@@ -32,10 +32,9 @@
     // };
 
     // Page Data Init
-    import IgPage from "../../models/IgPage";
-    import PageInfoRow from "../../models/PageInfoRow";
+    import IgPage from "~/models/IgPage";
+    import PageInfoRow from "~/models/PageInfoRow";
     import dayjs from "dayjs";
-    import {computed} from "@vue/reactivity";
 
     const config = useRuntimeConfig();
     const route = useRoute();

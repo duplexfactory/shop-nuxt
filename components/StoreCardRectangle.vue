@@ -2,7 +2,6 @@
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
     import {PageSearch} from "~/models/PageSearch";
-    import {computed} from "@vue/reactivity";
     import dayjs from "dayjs";
     import PageInfoRow from "~/models/PageInfoRow";
 

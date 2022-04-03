@@ -117,7 +117,6 @@
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import useSearch from "~/composables/useSearch";
 import {PaginationQuery} from "~/models/PaginationQuery";
-import {computed} from "@vue/reactivity";
 
 const {
   ageRestrictedCategories,

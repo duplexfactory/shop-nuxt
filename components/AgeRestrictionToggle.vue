@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-import {useShowAgeRestrictedContent, useShowAgeRestrictedModal} from "../composables/states";
+import {useShowAgeRestrictedContent, useShowAgeRestrictedModal} from "~/composables/states";
 
 const showAgeRestrictedModal = useShowAgeRestrictedModal();
 const showAgeRestrictedContent = useShowAgeRestrictedContent();
