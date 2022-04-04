@@ -78,7 +78,6 @@
             shops: Array as PropType<IgPage[]>
         },
         mounted() {
-            console.log("Store card square swiper list mounted");
 
             // Navigation arrows
             this.swiperOptions.navigation = {

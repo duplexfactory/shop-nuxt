@@ -28,7 +28,6 @@ export default {
 
         on: {
           init: () => {
-            console.log("offline init");
             this.swiperReady = true;
           },
         },

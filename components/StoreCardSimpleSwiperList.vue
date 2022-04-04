@@ -26,7 +26,6 @@ import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
 
               on: {
                 init: () => {
-                  console.log("simple init");
                   this.swiperReady = true;
                 },
               },
