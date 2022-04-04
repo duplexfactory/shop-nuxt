@@ -44,7 +44,7 @@
              style="height: 70px;"></div>
 
         <div class="font-semibold text-lg truncate">
-          <a v-on:click.stop class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
+          <a class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
         </div>
 
         <div class="hidden sm:block text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
@@ -87,7 +87,11 @@
       <div v-else class="link-container col-span-8 text-gray-500 text-xs mt-2 sm:mt-0">
         <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
           <i class="mr-2" :class="pageInfoRow.iconClass"></i>
-          <component v-on:click.stop :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+          <component :is="pageInfoRow.link ? 'a' : 'span'"
+                     class="break-words"
+                     :class="{'hover:underline': pageInfoRow.link}"
+                     target="_blank"
+                     :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
         </div>
         <div class="mt-2 sm:mt-4 flex flex-row">
           <div v-for="i in shop.mediaCodes" :key="i.toString()"

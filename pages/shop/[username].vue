@@ -283,7 +283,11 @@ export default  {
 
                   <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
                     <i class="mr-2" :class="pageInfoRow.iconClass"></i>
-                    <component :is="pageInfoRow.link ? 'a' : 'span'" :class="{'hover:underline': pageInfoRow.link}" target="_blank" :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+                    <component :is="pageInfoRow.link ? 'a' : 'span'"
+                               class="break-words"
+                               :class="{'hover:underline': pageInfoRow.link}"
+                               target="_blank"
+                               :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
                   </div>
                   <!--                    <button class="btn btn-outline">我知道</button>-->
 
