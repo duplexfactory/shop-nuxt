@@ -3,7 +3,7 @@
     <template v-slot:body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
-          <MediaCardIGEmbed captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
+          <MediaCardIGEmbed v-if="localMediaCode && localPage" captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
         </div>
         <div class="col-span-4">
           <div class="mt-4 md:mt-0">
@@ -14,7 +14,7 @@
               <button class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
             </div>
 
-            <button class="hover:underline" @click="onUsernameClick">
+            <button v-if="localPage" class="hover:underline" @click="onUsernameClick">
               {{ localPage.username }}
             </button>
 
@@ -29,7 +29,7 @@
               </div>
             </div>
 
-            <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
+            <div v-if="localPage" class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
             <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
 
             <div class="flex items-center mt-4">
@@ -138,10 +138,15 @@ if (!localMedia.value) {
   const {data, pending} = await useFetch(`/api/media/single`, {params: {code: localMediaCode.value}});
   fetchedMedia.value = data.value.media;
 }
-if (!localPage.value) {
-  const {data, error} = await useFetch(`/api/shop`, {params: {id: showingMediaModalData.value.pagePk}});
-  fetchedPage.value = data.value.page;
-}
-await fetchReviews();
+
+
+// Mounted
+onMounted(async () => {
+  if (!localPage.value) {
+    const {data, error} = await useFetch(`/api/shop`, {params: {id: showingMediaModalData.value.pagePk}});
+    fetchedPage.value = data.value.page;
+  }
+  await fetchReviews();
+});
 
 </script>
