@@ -129,7 +129,7 @@
                   <h2 class="text-xl md:text-2xl font-bold">
                     註冊
                   </h2>
-                  <input v-model="email" class="mt-4 block w-full text-input-primary" type="text" name="email" placeholder="用戶名">
+                  <input v-model="email" class="mt-4 block w-full text-input-primary" type="text" name="email" placeholder="電郵">
                   <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
                   <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
                   <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
@@ -207,7 +207,7 @@
             }
         },
         methods: {
-          register() {
+          async register() {
             if (this.email == "" || this.password == "" || this.confirmPassword == "") {
               this.$toast.error("請填寫所有欄位！", {position: "top"});
               return;
@@ -219,56 +219,27 @@
             }
 
             try {
-              // (await $fetch('/api/auth/register', { method: 'POST', params: { email: this.email, password: this.password }}));
+              (await $fetch('/api/auth/register', { method: 'POST', body: { email: this.email, password: this.password }}));
 
+              this.$toast.success("成功註冊！");
 
+              try {
+                const auth = getAuth();
+                const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
 
+                // Signed in
+                const user = userCredential.user;
+                this.$router.push({path: '/my/shop'});
+              }
+              catch (firebaseSignInError) {
+                const errorCode = firebaseSignInError.code;
+                const errorMessage = firebaseSignInError.message;
+                this.$toast.error("登入失敗", {position: "top"});
+              }
 
-
-
-
-              // Import the functions you need from the SDKs you need
-              import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-              const firebaseConfig = {
-                apiKey: "AIzaSyA3thP4BYP5pBQbML6o3yODA7n7Jw7lW6M",
-                authDomain: "inshop-d6c87.firebaseapp.com",
-                projectId: "inshop-d6c87",
-                storageBucket: "inshop-d6c87.appspot.com",
-                messagingSenderId: "290690858012",
-                appId: "1:290690858012:web:e18fbe51159b99b558b3d9"
-              };
-
-// Initialize Firebase
-              const app = initializeApp(firebaseConfig);
-
-
-
-
-
-
-
-
-
-              const auth = getAuth();
-              signInWithEmailAndPassword(auth, this.email, this.password)
-                  .then((userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    // ...
-                  })
-                  .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                  });
-
-              this.$router.push({path: '/my/shop'});
             }
             catch(e) {
-
+              this.$toast.error("電郵已被使用！");
             }
 
           }
