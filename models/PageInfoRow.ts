@@ -32,22 +32,29 @@ export default class PageInfoRow {
         if (!!extraData) {
             const rows = [];
             // Contact
+            function formattedPhone(phone:string): string {
+                const strippedPhone = (phone.length === 11 && phone.startsWith("852")) ? phone.slice(3, 11) : phone;
+                if (strippedPhone.length === 8) {
+                    return strippedPhone.slice(0, 4) + " " + strippedPhone.slice(4, 8);
+                }
+                return strippedPhone
+            }
             let phone = "";
             if (!!extraData.phone)
-                phone += `${extraData.phone} `;
+                phone += `${formattedPhone(extraData.phone)} `;
             if (extraData.noPhoneCall)
                 phone += "不接來電";
             if (phone.length !== 0)
                 rows.push(new PageInfoRow("spr-phone", phone));
 
             if (!!extraData.whatsapp)
-                rows.push(new PageInfoRow("spr-whatsapp", extraData.whatsapp, `https://api.whatsapp.com/send/?phone=${extraData.whatsapp.length == 8 ? '852' : ''}${extraData.whatsapp}`))
+                rows.push(new PageInfoRow("spr-whatsapp", formattedPhone(extraData.whatsapp), `https://api.whatsapp.com/send/?phone=${extraData.whatsapp.length == 8 ? '852' : ''}${extraData.whatsapp}`))
             if (!!extraData.signal)
-                rows.push(new PageInfoRow("spr-signal", extraData.signal, `https://signal.me/#p/+${extraData.signal}`),);
+                rows.push(new PageInfoRow("spr-signal", formattedPhone(extraData.signal), `https://signal.me/#p/+${extraData.signal}`),);
             if (!!extraData.wechat)
-                rows.push(new PageInfoRow("spr-wechat", extraData.wechat),);
+                rows.push(new PageInfoRow("spr-wechat", formattedPhone(extraData.wechat)),);
             if (!!extraData.email)
-                rows.push( new PageInfoRow("spr-mail-alt", extraData.email),);
+                rows.push( new PageInfoRow("spr-mail-alt", formattedPhone(extraData.email)),);
 
             // Brick and mortar
             if (!!extraData.address) {
