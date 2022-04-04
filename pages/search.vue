@@ -34,7 +34,7 @@
 
       <div class="col-span-4 md:col-span-3">
 
-        <div class="flex items-center mb-2 md:mb-4">
+        <div class="flex items-center mt-2 md:mt-0 mb-2 md:mb-4">
           <h2 v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
           <h1 class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 間商店)</h1>
 
