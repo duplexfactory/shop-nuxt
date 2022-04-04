@@ -34,7 +34,10 @@
 
       <div class="col-span-4 md:col-span-3 pt-2 md:pt-0">
 
-        <h2 v-if="$route.query['keyword']" class="mb-2 text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
+        <div v-if="$route.query['keyword']" class="mb-2 flex items-center">
+          <h2 class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
+          <button @click="clearKeyword"><i class="spr-cancel text-pink-600"></i></button>
+        </div>
 
         <!-- Mobile filter -->
         <div class="mb-2 md:hidden text-sm">
@@ -186,8 +189,12 @@ function pageChanged() {
 }
 
 const isMobileFiltersShown = ref<boolean>(false);
-function clearFilters() {
-
+function clearKeyword() {
+  const query = {
+    ...route.query
+  };
+  delete query.keyword;
+  router.replace({query});
 }
 
 // Meta
