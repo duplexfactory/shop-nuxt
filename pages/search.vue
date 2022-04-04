@@ -76,32 +76,37 @@
         <div class="mb-2 md:mb-4 flex items-center justify-between">
           <h1 class="text-sm text-gray-500">共 {{ searchResultTotalCount }} 間商店</h1>
 
-          <Pagination v-model:currentPage="currentPage"
+          <Pagination v-if="searchResults.length !== 0"
+                      v-model:currentPage="currentPage"
                       class="flex"
                       :records="searchResultTotalCount"
                       :per-page="10"
                       @pageChanged="pageChanged"/>
         </div>
 
-        <template v-if="!searchPending">
-          <div v-for="page in searchResults" :key="page._id.toString()">
-            <StoreCardRectangle :shop="page"
-                                class="mb-4"></StoreCardRectangle>
-            <hr class="sm:hidden mb-4"/>
-          </div>
-        </template>
-        <template v-else>
+        <template v-if="searchPending">
           <div v-for="_ in Array(10).fill(0)">
             <div class="mb-4 bg-loading" style="height: 240px;"></div>
             <hr class="sm:hidden mb-4"/>
           </div>
         </template>
+        <template v-else-if="searchResults.length !== 0">
+          <div v-for="page in searchResults" :key="page._id.toString()">
+            <StoreCardRectangle :shop="page"
+                                class="mb-4"></StoreCardRectangle>
+            <hr class="sm:hidden mb-4"/>
+          </div>
 
-        <!-- Bottom Pagination -->
-        <Pagination v-model:currentPage="currentPage"
-                    :records="searchResultTotalCount"
-                    :per-page="10"
-                    @pageChanged="pageChanged"/>
+          <!-- Bottom Pagination -->
+          <Pagination v-model:currentPage="currentPage"
+                      :records="searchResultTotalCount"
+                      :per-page="10"
+                      @pageChanged="pageChanged"/>
+        </template>
+        <template v-else>
+          <!-- No Results -->
+        </template>
+
 
       </div>
 
