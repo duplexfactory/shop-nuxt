@@ -279,7 +279,7 @@ export default  {
                     </div>
                 </div>
 
-                <div class="col-span-5 lg:col-span-6 pt-4 md:pl-8 text-gray-500 text-xs">
+                <div class="col-span-5 lg:col-span-6 pt-2 md:pt-4 md:pl-8 text-gray-500 text-sm">
 
                   <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
                     <i class="mr-2" :class="pageInfoRow.iconClass"></i>
@@ -291,8 +291,8 @@ export default  {
                   </div>
                   <!--                    <button class="btn btn-outline">我知道</button>-->
 
-                  <div class="text-gray-400 mt-4"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
-                  <div class="text-gray-400"><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
+                  <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${page.username}/`" target="_blank">{{ page.username }}</a></i></div>
+                  <div class="text-gray-400 text-xs"><i>本網只根據IG上張貼的資料作整理，並沒有核實。資料或有錯漏，僅供參考。</i></div>
                 </div>
 
                 <div v-if="verifiedPage" class="col-span-8 py-4 text-gray-500 text-sm">
