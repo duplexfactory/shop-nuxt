@@ -32,22 +32,12 @@
 
       </div>
 
-      <div class="col-span-4 md:col-span-3">
+      <div class="col-span-4 md:col-span-3 pt-2 md:pt-0">
 
-        <div class="flex items-center mt-2 md:mt-0 mb-2 md:mb-4">
-          <h2 v-if="$route.query['keyword']" class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
-          <h1 class="text-xs text-gray-500">(共 {{ searchResultTotalCount }} 間商店)</h1>
-
-          <div class="flex-1"></div>
-
-          <Pagination v-model:currentPage="currentPage"
-                      :records="searchResultTotalCount"
-                      :per-page="10"
-                      @pageChanged="pageChanged"/>
-        </div>
+        <h2 v-if="$route.query['keyword']" class="mb-2 text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
 
         <!-- Mobile filter -->
-        <div class="md:hidden mb-2 text-sm">
+        <div class="mb-2 md:hidden text-sm">
           <button @click="isMobileFiltersShown = !isMobileFiltersShown"
                   class="flex items-center"
                   :class="{'text-pink-400': isMobileFilterActive}">
@@ -83,6 +73,16 @@
           </div>
         </div>
 
+        <div class="mb-2 md:mb-4 flex items-center justify-between">
+          <h1 class="text-sm text-gray-500">共 {{ searchResultTotalCount }} 間商店</h1>
+
+          <Pagination v-model:currentPage="currentPage"
+                      class="flex"
+                      :records="searchResultTotalCount"
+                      :per-page="10"
+                      @pageChanged="pageChanged"/>
+        </div>
+
         <template v-if="!searchPending">
           <div v-for="page in searchResults" :key="page._id.toString()">
             <StoreCardRectangle :shop="page"
@@ -98,12 +98,10 @@
         </template>
 
         <!-- Bottom Pagination -->
-        <div class="flex justify-center">
-          <Pagination v-model:currentPage="currentPage"
-                      :records="searchResultTotalCount"
-                      :per-page="10"
-                      @pageChanged="pageChanged"/>
-        </div>
+        <Pagination v-model:currentPage="currentPage"
+                    :records="searchResultTotalCount"
+                    :per-page="10"
+                    @pageChanged="pageChanged"/>
 
       </div>
 
