@@ -14,6 +14,7 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
 
     // Get the ID token passed and the CSRF token.
     const {idToken, csrfToken}: {idToken: string, csrfToken: string} = await useBody(req);
+    console.log(useCookie(req, "csrfToken"))
     // Guard against CSRF attacks.
     if (csrfToken !== useCookie(req, "csrfToken")) {
         res.statusCode = 401

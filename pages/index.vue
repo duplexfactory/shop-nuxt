@@ -17,6 +17,7 @@ async function fetchHomeData() {
   if (showAgeRestrictedContent.value) {
     params["adult"] = true
   }
+  useLazyFetch(`/api/test/cookie`, {params, server: false});
   const {data} = useLazyFetch(`/api/home`, {params, server: false});
   watch(data, (newData) => {
     const {hot: _hot, active: _active, latest: _latest, physical: _physical} = newData;
