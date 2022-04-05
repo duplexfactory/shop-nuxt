@@ -19,7 +19,7 @@ import {getAuth, signInWithEmailAndPassword, setPersistence, Persistence} from "
 import firebase from "firebase/compat";
 
 // CSRF Token
-const csrfToken = useCookie('csrfToken');
+const csrfToken = useCookie('csrfToken', {path: "/",});
 if (process.server) {
   csrfToken.value = "123456"; // Assume this is a random hard to guess string.
 }
