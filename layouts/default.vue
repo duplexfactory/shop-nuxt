@@ -12,6 +12,21 @@
     </transition>
 
     <div class="flex-1 relative">
+
+<!--      <client-only>-->
+<!--        <Teleport to="body">-->
+          <div v-if="isLoggedIn === null"
+                class="fixed z-50 h-full w-full inset-0">
+            <div class="text-4xl">LOADING</div>
+          </div>
+<!--&lt;!&ndash;          <div v-if="isLoggedIn === null">null</div>&ndash;&gt;-->
+<!--&lt;!&ndash;          <div v-else>{{ isLoggedIn }}</div>&ndash;&gt;-->
+<!--        </Teleport>-->
+<!--      </client-only>-->
+
+
+
+
       <slot/>
 
       <transition name="modal">
@@ -38,6 +53,7 @@
 <script setup lang="ts">
 import {ScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 import throttle from "lodash.throttle";
+  import {getAuth, onAuthStateChanged, User} from "firebase/auth";
 
 // Meta
   const config = useRuntimeConfig();
@@ -87,6 +103,9 @@ import throttle from "lodash.throttle";
   const isIGBrowser = ref(false);
   const isIGHintClosed = ref(false);
 
+  // Login
+  const isLoggedIn = useIsLoggedIn();
+
   // Screen Size
   const screenSize = useScreenSize();
   function calcScreenSize(innerWidth: number) {
@@ -125,6 +144,18 @@ import throttle from "lodash.throttle";
         }
       }
     }, 500));
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (value?: User) => {
+      if (value === null) {
+        // Not logged in.
+        isLoggedIn.value = false;
+      }
+      else {
+        // Logged in.
+        isLoggedIn.value = true;
+      }
+    });
   });
 
 </script>
