@@ -15,7 +15,19 @@
 
 <script setup lang="ts">
 
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword, setPersistence, Persistence} from "firebase/auth";
+import firebase from "firebase/compat";
+
+// CSRF Token
+const csrfToken = useCookie('csrfToken');
+if (process.server) {
+  csrfToken.value = "123456"; // Assume this is a random hard to guess string.
+}
+// useMeta({
+//   meta: [
+//     {name: "csrf-token", content: csrfToken.value},
+//   ]
+// });
 
 const email = ref("");
 const password = ref("");
@@ -24,16 +36,33 @@ const router = useRouter();
 
 async function login() {
   try {
+    console.log("1");
     const auth = getAuth();
+    console.log("2");
+    // As httpOnly cookies are to be used, do not persist any state client side.
+    // console.log(Auth.Persistence.NONE);
+    // await setPersistence(auth, browserSessionPersistence);
+    // await setPersistence(auth, Auth.Persistence.NONE);
+    console.log("3");
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
 
+
+    // Get the user's ID token as it is needed to exchange for a session cookie.
+    const idToken = await userCredential.user.getIdToken();
+    // Session login endpoint is queried and the session cookie is set.
+    // CSRF protection should be taken into account.
+    console.log("4");
+    const {data} = await useFetch('/api/auth/session-login', {method: 'POST', body: {idToken, csrfToken: csrfToken.value}});
+    console.log("5");
+    await auth.signOut();
+
     // Signed in
-    const user = userCredential.user;
     await router.push({path: '/my/shop'});
   }
   catch (firebaseSignInError) {
     const errorCode = firebaseSignInError.code;
     const errorMessage = firebaseSignInError.message;
+    console.log(firebaseSignInError);
     // this.$toast.error("登入失敗", {position: "top"});
   }
 }
