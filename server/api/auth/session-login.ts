@@ -13,15 +13,19 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
     }
 
     // Get the ID token passed and the CSRF token.
-    const {idToken, csrfToken}: {idToken: string, csrfToken: string} = await useBody(req);
-    console.log(useCookie(req, "csrfToken"))
+    const {idToken, csrfToken} = await useBody(req);
+    const csrfTokenCookie = useCookie(req, "csrfToken");
+    console.log(csrfToken)
+    console.log(csrfTokenCookie)
+    console.log(typeof csrfToken);
+    console.log(typeof csrfTokenCookie);
+    console.log(csrfToken !== csrfTokenCookie)
     // Guard against CSRF attacks.
-    if (csrfToken !== useCookie(req, "csrfToken")) {
+    if (String(csrfToken) !== csrfTokenCookie) {
         res.statusCode = 401
         res.end()
         throw new Error()
     }
-    console.log("hereeee!")
 
     // Set session expiration to 5 days.
     const expiresIn = 60 * 60 * 24 * 5 * 1000;
