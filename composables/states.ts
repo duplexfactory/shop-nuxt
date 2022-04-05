@@ -27,6 +27,9 @@ export const useShowAgeRestrictedModal = () => useState<boolean>('showAgeRestric
 export const useShowAgeRestrictedContent = () => useState<boolean>('showAgeRestrictedContent', () => false)
 
 
+export const useIsLoggedIn = () => useState<boolean | null>('isLoggedIn', () => null)
+
+
 export enum ScreenSize {
     DEFAULT,
     SM,
