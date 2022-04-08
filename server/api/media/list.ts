@@ -1,9 +1,10 @@
 import type {IncomingMessage, ServerResponse} from 'http'
-import {useQuery} from 'h3'
+import {sendError, useQuery} from 'h3'
 import type IgMedia from "~/models/IgMedia";
 import {getPageMedias, initDynamo} from "~/server/dynamodb";
 import {initMongo, pageSearchCollection} from "~/server/mongodb";
 import dayjs from "dayjs";
+import {notFound} from "~/server/util";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ medias: IgMedia[] }> {
     let {
@@ -21,9 +22,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         const p = await pageSearchCollection.findOne({username}, {projection: {_id: 1}});
         if (!p) {
             // Page deleted
-            res.statusCode = 404
-            res.end()
-            throw new Error()
+            throw sendError(res, notFound)
         }
         queryId = p._id
     }

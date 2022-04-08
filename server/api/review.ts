@@ -1,6 +1,6 @@
 import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
-import {useMethod, useBody, assertMethod} from 'h3';
+import {assertMethod, useBody} from 'h3';
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string }> {
     assertMethod(req, "POST")

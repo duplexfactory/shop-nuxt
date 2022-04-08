@@ -1,8 +1,9 @@
 import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
 import IgPageReview from "~/models/IgPageReview";
-import {useQuery} from 'h3';
+import {sendError, useQuery} from 'h3';
 import {QuerySnapshot} from "firebase-admin/firestore";
+import {badRequest} from "~/server/util";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ reviews: (IgPageReview & {id: string}) [] }> {
     const {pagePk, mediaCode} = await useQuery(req) as { pagePk: string | undefined, mediaCode: string | undefined };
@@ -23,9 +24,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
             .get();
     }
     else {
-        res.statusCode = 400
-        res.end()
-        throw new Error()
+        throw sendError(res, badRequest)
     }
 
     const reviews = reviewSS.docs.map((d) => ({

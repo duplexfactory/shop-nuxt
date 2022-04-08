@@ -1,8 +1,9 @@
 import type {IncomingMessage, ServerResponse} from 'http'
 import {pageCollection} from "~/server/firebase/collections";
-import {useQuery} from 'h3'
+import {sendError, useQuery} from 'h3'
 import type IgPage from "~/models/IgPage";
 import {DocumentSnapshot, QuerySnapshot} from "@google-cloud/firestore";
+import {notFound} from "~/server/util";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ page: IgPage }> {
     const {id, username} = await useQuery(req) as { id: string | undefined, username: string | undefined }
@@ -19,9 +20,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
 
     if (!exists) {
-        res.statusCode = 404
-        res.end()
-        throw new Error()
+        throw sendError(res, notFound)
     }
 
     const data = pageDoc.data();
@@ -31,19 +30,15 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
             page = data[0]
         }
         else {
-            res.statusCode = 404
-            res.end()
-            throw new Error()
+            throw sendError(res, notFound)
         }
     }
     else {
         page = data;
     }
-    
+
     if (page.deleted) {
-        res.statusCode = 404
-        res.end()
-        throw new Error()
+        throw sendError(res, notFound)
     }
 
     // const now = Date.now()
