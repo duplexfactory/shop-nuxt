@@ -48,9 +48,13 @@
 
       <!-- right -->
       <div class="hidden md:block">
-<!--        <nuxt-link to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>-->
-<!--        <nuxt-link to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>-->
-        <nuxt-link to="/my/shop">aaaaa</nuxt-link>
+
+        <nuxt-link v-if="!isLoggedIn" to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
+        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>
+
+        <nuxt-link v-if="isLoggedIn" to="/my/shop" class="btn btn-sm btn-primary mr-4">我的商店</nuxt-link>
+        <button v-if="isLoggedIn" @click="logout" class="btn btn-sm btn-outline mr-4">登出</button>
+
         <AgeRestrictionToggle />
       </div>
 
@@ -73,6 +77,12 @@ const {
 } = useSearch();
 
 const showSearchModal = useShowSearchModal();
+
+const isLoggedIn = useIsLoggedIn();
+
+function logout() {
+
+}
 
 </script>
 

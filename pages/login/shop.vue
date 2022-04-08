@@ -15,48 +15,43 @@
 
 <script setup lang="ts">
 
-import {getAuth, signInWithEmailAndPassword, setPersistence, Persistence} from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  Persistence,
+  inMemoryPersistence,
+  signOut
+} from "firebase/auth";
 import firebase from "firebase/compat";
-
-// CSRF Token
-const csrfToken = useCookie('csrfToken', {path: "/",});
-if (process.server) {
-  csrfToken.value = "123456"; // Assume this is a random hard to guess string.
-}
-// useMeta({
-//   meta: [
-//     {name: "csrf-token", content: csrfToken.value},
-//   ]
-// });
 
 const email = ref("");
 const password = ref("");
 
 const router = useRouter();
 
+const isLoggedIn = useIsLoggedIn();
+
 async function login() {
   try {
-    console.log("1");
     const auth = getAuth();
-    console.log("2");
     // As httpOnly cookies are to be used, do not persist any state client side.
-    // console.log(Auth.Persistence.NONE);
-    // await setPersistence(auth, browserSessionPersistence);
-    // await setPersistence(auth, Auth.Persistence.NONE);
-    console.log("3");
+    await setPersistence(auth, inMemoryPersistence)
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
-
 
     // Get the user's ID token as it is needed to exchange for a session cookie.
     const idToken = await userCredential.user.getIdToken();
     // Session login endpoint is queried and the session cookie is set.
     // CSRF protection should be taken into account.
-    console.log("4");
-    const {data} = await useFetch('/api/auth/session-login', {method: 'POST', body: {idToken, csrfToken: csrfToken.value}});
-    console.log("5");
-    await auth.signOut();
+    const {data, error} = await useFetch('/api/auth/session-login', {headers: { "x-requested-with":  "XMLHttpRequest" }, method: 'POST', body: {idToken}});
+    if (error.value != null) {
+      useNuxtApp().vueApp.$toast.error("登入失敗", {position: "top"});
+      return;
+    }
+    await signOut(auth);
 
     // Signed in
+    isLoggedIn.value = true;
     await router.push({path: '/my/shop'});
   }
   catch (firebaseSignInError) {

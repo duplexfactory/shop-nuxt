@@ -13,20 +13,6 @@
 
     <div class="flex-1 relative">
 
-<!--      <client-only>-->
-<!--        <Teleport to="body">-->
-          <div v-if="isLoggedIn === null"
-                class="fixed z-50 h-full w-full inset-0">
-            <div class="text-4xl">LOADING</div>
-          </div>
-<!--&lt;!&ndash;          <div v-if="isLoggedIn === null">null</div>&ndash;&gt;-->
-<!--&lt;!&ndash;          <div v-else>{{ isLoggedIn }}</div>&ndash;&gt;-->
-<!--        </Teleport>-->
-<!--      </client-only>-->
-
-
-
-
       <slot/>
 
       <transition name="modal">
@@ -105,6 +91,15 @@ import throttle from "lodash.throttle";
 
   // Login
   const isLoggedIn = useIsLoggedIn();
+  if (process.server) {
+    const token = useCookie("session", {path: "/",});
+    if (!token.value) {
+      isLoggedIn.value = false
+    }
+    else {
+      isLoggedIn.value = true
+    }
+  }
 
   // Screen Size
   const screenSize = useScreenSize();
@@ -145,17 +140,6 @@ import throttle from "lodash.throttle";
       }
     }, 500));
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, (value?: User) => {
-      if (value === null) {
-        // Not logged in.
-        isLoggedIn.value = false;
-      }
-      else {
-        // Logged in.
-        isLoggedIn.value = true;
-      }
-    });
   });
 
 </script>

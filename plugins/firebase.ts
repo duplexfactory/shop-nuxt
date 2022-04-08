@@ -1,7 +1,6 @@
 import {defineNuxtPlugin, useRuntimeConfig} from "#app";
 import {getApps, initializeApp} from "firebase/app";
 import {useIsLoggedIn} from "~/composables/states";
-import {getAuth, onAuthStateChanged, User, setPersistence, inMemoryPersistence} from "firebase/auth";
 
 export default defineNuxtPlugin(async (nuxtApp) => {
     // Import the functions you need from the SDKs you need
@@ -26,7 +25,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
 
-        await setPersistence(getAuth(), inMemoryPersistence)
+
         // const auth = getAuth(app);
         // isLoggedIn.value = await new Promise((resolve: any, reject: any) =>
         //     onAuthStateChanged(auth, (user?: User) =>
