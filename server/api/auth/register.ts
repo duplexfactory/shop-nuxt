@@ -1,5 +1,4 @@
 import {IncomingMessage, ServerResponse} from "http";
-import bcrypt from "bcryptjs";
 import {userCollection} from "~/server/firebase/collections";
 import {assertMethod, defineEventHandler, sendError, useBody} from 'h3';
 import {emailUsed, register} from "~/server/firebase/auth";
@@ -21,8 +20,7 @@ export default defineEventHandler(async (event) => {
 
     await userCollection().doc(uid).set({
         uid,
-        email,
-        password: await bcrypt.hash(password, 10)
+        email
     });
 
     return {success: true}
