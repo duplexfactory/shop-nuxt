@@ -8,6 +8,7 @@
             <input v-model="email" class="mt-4 block text-input-primary" type="text" name="email"
                    placeholder="電郵">
             <button @click="confirm" class="mt-4 btn btn-primary" :disabled="disabled">確認</button>
+            {{disabled.value}}
         </div>
         <div v-else>
             <h1 class="mt-8 text-xl text-gray-700">
@@ -24,7 +25,7 @@
     const email = ref("")
     const done = ref(false)
 
-    const emailRegEx = /\w+([\.-]?\w)*@\w+([\.-]?\w)*(\.\w{2,3})+/gm
+    const emailRegEx = /^\w([\.-]?\w)*@\w([\.-]?\w)*(\.\w{2,3})$/
     const disabled = computed(() => !emailRegEx.test(email.value))
 
     async function confirm() {
