@@ -1,15 +1,11 @@
 import {IncomingMessage, ServerResponse} from "http";
 import bcrypt from "bcryptjs";
 import {userCollection} from "~/server/firebase/collections";
-import {useBody, useMethod} from 'h3';
+import {assertMethod, useBody, useMethod} from 'h3';
 import {emailUsed, register} from "~/server/firebase/auth";
 
 export default async function (req: IncomingMessage, res: ServerResponse) {
-    if (useMethod(req) != "POST") {
-        res.statusCode = 405
-        res.end()
-        throw new Error()
-    }
+    assertMethod(req, "POST")
 
     const {email: _email, password}: { email: string, password: string } = await useBody(req);
     const email = _email.toLowerCase();

@@ -1,14 +1,9 @@
 import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
-import {useMethod, useBody} from 'h3';
+import {useMethod, useBody, assertMethod} from 'h3';
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string }> {
-
-    if (useMethod(req) != "POST") {
-        res.statusCode = 405
-        res.end()
-        throw new Error()
-    }
+    assertMethod(req, "POST")
 
     const {pagePk, mediaCode, content, rating} = await useBody<{ pagePk: number, mediaCode: string | undefined, content: string, rating: number}>(req);
     const review = {
