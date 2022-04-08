@@ -2,8 +2,8 @@ import {defineNuxtConfig, NuxtConfig} from "nuxt3";
 import {ModuleContainer} from "@nuxt/schema";
 
 // Sitemap
-const path = require('path')
-const fs = require('fs-extra')
+import path from 'path'
+import fs from 'fs-extra'
 import { createSitemap } from "@nuxtjs/sitemap/lib/builder";
 import { createRoutesCache } from "@nuxtjs/sitemap/lib/cache";
 import { excludeRoutes } from "@nuxtjs/sitemap/lib/routes";
@@ -14,6 +14,7 @@ import {categories} from "./data/categories";
 // Hidden paths
 import { resolve } from 'path'
 import { createCommonJS } from 'mlly'
+import {duration} from "~/utils/dayjs";
 const { __dirname } = createCommonJS(import.meta.url)
 
 export default defineNuxtConfig({
@@ -112,7 +113,7 @@ export default defineNuxtConfig({
     return {
       path: '/sitemap.xml',
       hostname: process.env.DOMAIN,
-      cacheTime: 1000 * 60 * 60 * 6,
+      cacheTime: duration(6, "hours").asMilliseconds(),
       exclude: [
         '/hidden/**',
       ],
