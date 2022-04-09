@@ -187,6 +187,12 @@
       "css": "dot-3",
       "code": 59406,
       "src": "entypo"
+    },
+    {
+      "uid": "9bd60140934a1eb9236fd7a8ab1ff6ba",
+      "css": "spin4",
+      "code": 59444,
+      "src": "fontelico"
     }
   ]
 }
