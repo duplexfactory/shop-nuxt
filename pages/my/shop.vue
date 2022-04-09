@@ -52,7 +52,20 @@ const extraDataStringFields = ref({
 }[keyof IgPageExtraData], string>);
 
 for (const key of Object.keys(extraDataStringFields.value)) {
-  extraDataStringFields.value[key] = shop.extraData[key];
+  extraDataStringFields.value[key] = shop.extraData[key] ?? "";
+}
+
+const extraDataBooleanFields = ref({
+  br: false,
+  noRefund: false,
+  noIgDM: false,
+  noPhoneCall: false,
+} as Record<{
+  [K in keyof IgPageExtraData]: IgPageExtraData[K] extends boolean ? K : never;
+}[keyof IgPageExtraData], string>);
+
+for (const key of Object.keys(extraDataBooleanFields.value)) {
+  extraDataBooleanFields.value[key] = !!shop.extraData[key];
 }
 
 </script>
@@ -107,7 +120,7 @@ for (const key of Object.keys(extraDataStringFields.value)) {
         <div class="md:text-xl font-bold">
           詳細資料
         </div>
-        <div class="table">
+        <div class="inline-table">
           <div v-for="extraDataStringFieldKey of Object.keys(extraDataStringFields)" class="table-row">
             <div class="table-cell pr-2 pt-2">
               <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
@@ -118,7 +131,22 @@ for (const key of Object.keys(extraDataStringFields.value)) {
           </div>
         </div>
 
-        <button @click="" class="mt-4 btn btn-primary">儲存</button>
+        <div class="inline-table">
+          <div v-for="extraDataBooleanFieldKey of Object.keys(extraDataBooleanFields)" class="table-row">
+            <div class="table-cell pr-2 pt-2">
+              <i :class="extraDataLookup[extraDataBooleanFieldKey].iconClass"></i>
+              {{ extraDataLookup[extraDataBooleanFieldKey].title }}
+            </div>
+            <div class="table-cell pt-2">
+              <input type="checkbox" v-model="shop.extraData[extraDataBooleanFieldKey]">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button @click="" class="mt-4 btn btn-primary">儲存</button>
+        </div>
+
       </div>
 
       <div class="info-group my-4">

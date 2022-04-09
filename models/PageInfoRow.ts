@@ -49,6 +49,22 @@ export const extraDataLookup = {
         title: "Shop Since",
         iconClass: "spr-calendar-empty",
     },
+    "br": {
+        title: "持商業登記",
+        iconClass: "spr-doc-text-inv",
+    },
+    "noRefund": {
+        title: "不設退款",
+        iconClass: "spr-block",
+    },
+    "noIgDM": {
+        title: "不回IG DM",
+        iconClass: "spr-block",
+    },
+    "noPhoneCall": {
+        title: "不接來電",
+        iconClass: "spr-block",
+    },
 } as Record<keyof IgPageExtraData, { title: string, iconClass: string }>
 
 export default class PageInfoRow {
