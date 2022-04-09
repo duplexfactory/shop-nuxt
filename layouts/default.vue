@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col" :class="showLoginLoading ? 'h-screen overflow-hidden' : ''">
     <div v-if="isIGBrowser && !isIGHintClosed" class="py-2 px-4 bg-gray-100">
       <div class="text-xs">如在IG瀏覽器内未能正常加載，請按 "<i class="spr-dot-3 text-xs"></i>" > "瀏覽器設定" > "清除瀏覽資料" 後重新整理。</div>
       <button @click="isIGHintClosed = true" class="mt-2 text-xs">知道了</button>
@@ -11,10 +11,10 @@
       <LazyDFDrawer v-if="drawerOpen" @toggleDrawer="toggleDrawer" :open="drawerOpen"></LazyDFDrawer>
     </transition>
 
-    <div class="flex-1 relative">
+    <div class="flex-1 relative" :class="showLoginLoading ? 'overflow-hidden' : ''">
 
       <!-- Login fullscreen loading -->
-      <div v-if="isLoggedIn === null && showLoginLoading"
+      <div v-if="showLoginLoading"
            class="absolute z-50 flex flex-col justify-center items-center inset-0 bg-white"
            style="min-width: 100%; min-height: 100%;">
         <div>
@@ -100,11 +100,14 @@
 
   // Login
   const isLoggedIn = useIsLoggedIn();
-  const showLoginLoading = computed(() => {
+  const isLoginLoadingRoute = computed(() => {
     return [
         "/my"
     ].find((p) => route.path.startsWith(p));
   });
+  const showLoginLoading = computed(() => {
+    return isLoggedIn.value === null && isLoginLoadingRoute.value;
+  })
 
   // Screen Size
   const screenSize = useScreenSize();
