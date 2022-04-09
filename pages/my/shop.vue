@@ -47,7 +47,10 @@ const extraDataStringFields = ref({
   facebook:  "",
   discount:  "",
   shopSince:  "",
-} as Record<keyof IgPageExtraData, string>);
+} as Record<{
+  [K in keyof IgPageExtraData]: IgPageExtraData[K] extends string ? K : never;
+}[keyof IgPageExtraData], string>);
+
 for (const key of Object.keys(extraDataStringFields.value)) {
   extraDataStringFields.value[key] = shop.extraData[key];
 }
