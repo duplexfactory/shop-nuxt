@@ -13,19 +13,13 @@
 
     <div class="flex-1 relative">
 
-<!--      <client-only>-->
-<!--        <Teleport to="body">-->
-          <div v-if="isLoggedIn === null && showLoginLoading"
-                class="fixed z-50 h-full w-full inset-0">
-            <div class="text-4xl">LOADING</div>
-          </div>
-<!--&lt;!&ndash;          <div v-if="isLoggedIn === null">null</div>&ndash;&gt;-->
-<!--&lt;!&ndash;          <div v-else>{{ isLoggedIn }}</div>&ndash;&gt;-->
-<!--        </Teleport>-->
-<!--      </client-only>-->
-
-
-
+      <div v-if="isLoggedIn === null && showLoginLoading"
+           class="absolute z-50 flex flex-col justify-center items-center inset-0 bg-white"
+           style="min-width: 100%; min-height: 100%;">
+        <div>
+          <i class="spr-spin4 animate-spin text-6xl text-pink-400"></i>
+        </div>
+      </div>
 
       <slot/>
 
