@@ -13,6 +13,7 @@
 
     <div class="flex-1 relative">
 
+      <!-- Login fullscreen loading -->
       <div v-if="isLoggedIn === null && showLoginLoading"
            class="absolute z-50 flex flex-col justify-center items-center inset-0 bg-white"
            style="min-width: 100%; min-height: 100%;">
