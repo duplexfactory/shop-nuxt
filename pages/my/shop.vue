@@ -1,34 +1,12 @@
 <script setup lang="ts">
 
-import {getAuth, onAuthStateChanged, signOut, User} from "firebase/auth";
-import {useIsLoggedIn} from "~/composables/states";
-
-// onMounted(() => {
-//   const auth = getAuth();
-//   onAuthStateChanged(auth, (value?: User) => {
-//     if (value === null) {
-//       // Not logged in.
-//     }
-//     else {
-//       // Logged in.
-//     }
-//   });
-// })
+import {getAuth, signOut} from "firebase/auth";
+import {useIsLoggedIn, useShowLoginLoading} from "~/composables/states";
 
 const router = useRouter();
 const isLoggedIn = useIsLoggedIn();
-if (isLoggedIn.value === true) {
-  console.log("Already signed in.")
-}
-else if (isLoggedIn.value === false) {
-  // Redirect.
-  console.log("Already signed out.")
-  router.replace("/login/shop");
-}
-else {
-  console.log("Sign loading, ssr.")
-}
-
+const showLoginLoading = useShowLoginLoading();
+showLoginLoading.value = true;
 watch(
     () => isLoggedIn.value,
     async (isLoggedIn, prevIsLoggedIn) => {
@@ -47,17 +25,10 @@ watch(
 const {data} = await useFetch(`/api/shop?id=43808406274`);
 const {page: shop} = data.value
 
-function logout() {
-  const auth = getAuth();
-  signOut(auth);
-}
-
 </script>
 
 <template>
     <div class="container mx-auto">
-      <button @click="logout">logout</button>
-      {{ isLoggedIn }}
 
       <div class="info-group">
         <div class="md:text-xl font-bold">

@@ -51,11 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import {ScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-import throttle from "lodash.throttle";
+  import {ScreenSize, useScreenSize, useShowingMediaModalData, useShowLoginLoading, useShowMediaModal} from "~/composables/states";
+  import throttle from "lodash.throttle";
   import {getAuth, onAuthStateChanged, User} from "firebase/auth";
 
-// Meta
+  // Meta
   const config = useRuntimeConfig();
   const route = useRoute();
 
@@ -105,6 +105,7 @@ import throttle from "lodash.throttle";
 
   // Login
   const isLoggedIn = useIsLoggedIn();
+  const showLoginLoading = useShowLoginLoading();
 
   // Screen Size
   const screenSize = useScreenSize();
@@ -147,6 +148,7 @@ import throttle from "lodash.throttle";
 
     const auth = getAuth();
     onAuthStateChanged(auth, (value?: User) => {
+      console.log("onAuthStateChanged");
       if (value === null) {
         // Not logged in.
         isLoggedIn.value = false;

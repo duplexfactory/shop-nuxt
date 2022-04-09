@@ -22,10 +22,14 @@ const password = ref("");
 
 const router = useRouter();
 
+// Login
+const isLoggedIn = useIsLoggedIn();
+
 async function login() {
   try {
     const auth = getAuth();
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+    isLoggedIn.value = true;
 
     // Signed in
     const user = userCredential.user;
