@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
 import {useIsLoggedIn} from "~/composables/states";
+import IgPageExtraData from "~/models/IgPageExtraData";
+import {extraDataLookup} from "~/models/PageInfoRow";
 
 const router = useRouter();
 const isLoggedIn = useIsLoggedIn();
@@ -19,7 +21,8 @@ watch(
 )
 
 
-const {data} = await useFetch(`/api/shop?id=43808406274`);
+const {data} = await useFetch(`/api/shop?id=384883192`);
+// 43808406274
 const {page: shop} = data.value
 
 const {categories, tagsLookup} = useTags()
@@ -29,6 +32,24 @@ function addSelectedTag() {
     return;
   }
   shop.tags.push(selectedTag.value);
+}
+
+const extraDataStringFields = ref({
+  phone: "",
+  whatsapp: "",
+  wechat: "",
+  signal: "",
+  email: "",
+  address: "",
+  openHours: "",
+  link: "", // IgPage.externalUrl
+  relatedPage: "",
+  facebook:  "",
+  discount:  "",
+  shopSince:  "",
+} as Record<keyof IgPageExtraData, string>);
+for (const key of Object.keys(extraDataStringFields.value)) {
+  extraDataStringFields.value[key] = shop.extraData[key];
 }
 
 </script>
@@ -83,10 +104,54 @@ function addSelectedTag() {
         <div class="md:text-xl font-bold">
           詳細資料
         </div>
+        <div class="table">
+          <div v-for="extraDataStringFieldKey of Object.keys(extraDataStringFields)" class="table-row">
+            <div class="table-cell pr-2 pt-2">
+              <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
+            </div>
+            <div class="table-cell pt-2">
+              <input v-model="shop.extraData[extraDataStringFieldKey]" class="text-input-primary" type="text" :placeholder="extraDataLookup[extraDataStringFieldKey].title"/>
+            </div>
+          </div>
+        </div>
 
-<!--        <input v-model="username" class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">-->
-<!--        <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">-->
-<!--        <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">-->
+        <button @click="" class="mt-4 btn btn-primary">儲存</button>
+      </div>
+
+      <div class="info-group my-4">
+        <div class="md:text-xl font-bold">
+          登入資料
+        </div>
+
+        <div class="table">
+          <div class="table-row">
+            <div class="table-cell pr-2 pt-2">
+              用戶名
+            </div>
+            <div class="table-cell pt-2">
+              <input class="text-input-primary w-full" type="text" placeholder="用戶名"/>
+            </div>
+          </div>
+          <div class="table-row">
+            <div class="table-cell pr-2 pt-2">
+              密碼
+            </div>
+            <div class="table-cell pt-2">
+              <input class="text-input-primary w-full" type="password" placeholder="密碼"/>
+            </div>
+          </div>
+          <div class="table-row">
+            <div class="table-cell pr-2 pt-2">
+              重新輸入密碼
+            </div>
+            <div class="table-cell pt-2">
+              <input class="text-input-primary w-full" type="password" placeholder="重新輸入密碼"/>
+            </div>
+          </div>
+        </div>
+
+
+
         <button @click="" class="mt-4 btn btn-primary">儲存</button>
       </div>
 
@@ -98,6 +163,11 @@ function addSelectedTag() {
 
 .info-group {
   @apply bg-white rounded-md border p-4;
+}
+
+.table-cell.fit-width {
+  width: 1px;
+  white-space: nowrap;
 }
 
 </style>
