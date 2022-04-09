@@ -15,7 +15,7 @@
 
 <!--      <client-only>-->
 <!--        <Teleport to="body">-->
-          <div v-if="isLoggedIn === null"
+          <div v-if="isLoggedIn === null && showLoginLoading"
                 class="fixed z-50 h-full w-full inset-0">
             <div class="text-4xl">LOADING</div>
           </div>
@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-  import {ScreenSize, useScreenSize, useShowingMediaModalData, useShowLoginLoading, useShowMediaModal} from "~/composables/states";
+  import {ScreenSize, useScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
   import throttle from "lodash.throttle";
   import {getAuth, onAuthStateChanged, User} from "firebase/auth";
 
@@ -105,7 +105,11 @@
 
   // Login
   const isLoggedIn = useIsLoggedIn();
-  const showLoginLoading = useShowLoginLoading();
+  const showLoginLoading = computed(() => {
+    return [
+        "/my"
+    ].find((p) => route.path.startsWith(p));
+  });
 
   // Screen Size
   const screenSize = useScreenSize();

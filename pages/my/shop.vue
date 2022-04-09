@@ -1,12 +1,10 @@
 <script setup lang="ts">
 
 import {getAuth, signOut} from "firebase/auth";
-import {useIsLoggedIn, useShowLoginLoading} from "~/composables/states";
+import {useIsLoggedIn} from "~/composables/states";
 
 const router = useRouter();
 const isLoggedIn = useIsLoggedIn();
-const showLoginLoading = useShowLoginLoading();
-showLoginLoading.value = true;
 watch(
     () => isLoggedIn.value,
     async (isLoggedIn, prevIsLoggedIn) => {
