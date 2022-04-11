@@ -155,15 +155,18 @@ const extraDataMultiStringFieldsTemp = ref({});
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="table">
+
               <div v-for="extraDataBooleanFieldKey of Object.keys(extraDataBooleanFields)" class="table-row">
                 <div class="table-cell fit-width pr-2 pb-4">
                   <i :class="extraDataLookup[extraDataBooleanFieldKey].iconClass"></i>
-                  {{ extraDataLookup[extraDataBooleanFieldKey].title }}
                 </div>
                 <div class="table-cell pb-4">
-                  <input type="checkbox" v-model="shop.extraData[extraDataBooleanFieldKey]">
+                  <div class="w-full flex justify-between items-center">
+                    <div class="py-2 text-md">
+                      {{ extraDataLookup[extraDataBooleanFieldKey].title }}
+                    </div>
+                    <input type="checkbox" v-model="shop.extraData[extraDataBooleanFieldKey]">
+                  </div>
                 </div>
               </div>
             </div>
