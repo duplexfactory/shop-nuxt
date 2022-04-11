@@ -65,6 +65,14 @@ export const extraDataLookup = {
         title: "不接來電",
         iconClass: "spr-block",
     },
+    "paymentMethods": {
+        title: "付款方法",
+        iconClass: "spr-money",
+    },
+    "mailing": {
+        title: "郵寄",
+        iconClass: "spr-paper-plane",
+    },
 } as Record<keyof IgPageExtraData, { title: string, iconClass: string }>
 
 export default class PageInfoRow {
