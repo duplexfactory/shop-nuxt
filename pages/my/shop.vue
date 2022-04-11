@@ -21,7 +21,8 @@ watch(
 )
 
 
-const {data} = await useFetch(`/api/shop?id=384883192`);
+const {data} = await useFetch(`/api/shop?id=1527690977`);
+// 384883192
 // 43808406274
 const {page: shop} = data.value
 
@@ -68,6 +69,8 @@ for (const key of Object.keys(extraDataBooleanFields.value)) {
   extraDataBooleanFields.value[key] = !!shop.extraData[key];
 }
 
+const extraDataMultiStringFieldsTemp = ref({});
+
 </script>
 
 <template>
@@ -106,7 +109,7 @@ for (const key of Object.keys(extraDataBooleanFields.value)) {
           <div class="mt-1">
             <div v-for="tag in shop.tags"
                  :key="tag"
-                 class="tag border rounded-md p-2 mt-1 mr-2">
+                 class="chip">
               {{ `#${tagsLookup[tag]}` }}
               <button @click="shop.tags = shop.tags.filter((t) => t !== tag)"><i class="spr-cancel"></i></button>
             </div>
@@ -120,32 +123,55 @@ for (const key of Object.keys(extraDataBooleanFields.value)) {
         <div class="md:text-xl font-bold">
           詳細資料
         </div>
-        <div class="inline-table">
-          <div v-for="extraDataStringFieldKey of Object.keys(extraDataStringFields)" class="table-row">
-            <div class="table-cell pr-2 pt-2">
-              <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
-            </div>
-            <div class="table-cell pt-2">
-              <input v-model="shop.extraData[extraDataStringFieldKey]" class="text-input-primary" type="text" :placeholder="extraDataLookup[extraDataStringFieldKey].title"/>
+
+        <div class="grid grid-cols-2 gap-8">
+          <div class="table col-span-1">
+            <div v-for="extraDataStringFieldKey of Object.keys(extraDataStringFields)" class="table-row">
+              <div class="table-cell fit-width pr-2 pt-2">
+                <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
+              </div>
+              <div class="table-cell pt-2">
+                <input v-model="shop.extraData[extraDataStringFieldKey]" class="text-input-primary w-full" type="text" :placeholder="extraDataLookup[extraDataStringFieldKey].title"/>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="inline-table">
-          <div v-for="extraDataBooleanFieldKey of Object.keys(extraDataBooleanFields)" class="table-row">
-            <div class="table-cell pr-2 pt-2">
-              <i :class="extraDataLookup[extraDataBooleanFieldKey].iconClass"></i>
-              {{ extraDataLookup[extraDataBooleanFieldKey].title }}
+          <div class="col-span-1">
+            <div class="table">
+              <div v-for="extraDataMultiStringFieldKey of ['paymentMethods', 'mailing']" class="table-row">
+                <div class="table-cell fit-width pr-2 pb-4">
+                  <i :class="extraDataLookup[extraDataMultiStringFieldKey].iconClass"></i>
+                </div>
+                <div class="table-cell pb-4">
+                  <div class="flex items-center">
+                    <input v-model="extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]" class="text-input-primary" type="text" :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
+                    <button class="btn btn-outline ml-2" @click="shop.extraData[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">+</button>
+                  </div>
+                  <div v-for="value in shop.extraData[extraDataMultiStringFieldKey]"
+                       :key="value"
+                       class="chip">
+                    {{ value }}
+                    <button @click="shop.extraData[extraDataMultiStringFieldKey] = shop.extraData[extraDataMultiStringFieldKey].filter((v) => v !== value)"><i class="spr-cancel"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="table-cell pt-2">
-              <input type="checkbox" v-model="shop.extraData[extraDataBooleanFieldKey]">
+            <div class="table">
+              <div v-for="extraDataBooleanFieldKey of Object.keys(extraDataBooleanFields)" class="table-row">
+                <div class="table-cell fit-width pr-2 pb-4">
+                  <i :class="extraDataLookup[extraDataBooleanFieldKey].iconClass"></i>
+                  {{ extraDataLookup[extraDataBooleanFieldKey].title }}
+                </div>
+                <div class="table-cell pb-4">
+                  <input type="checkbox" v-model="shop.extraData[extraDataBooleanFieldKey]">
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
 
-        <div>
-          <button @click="" class="mt-4 btn btn-primary">儲存</button>
-        </div>
+        <button @click="" class="mt-4 btn btn-primary">儲存</button>
 
       </div>
 
@@ -199,6 +225,10 @@ for (const key of Object.keys(extraDataBooleanFields.value)) {
 .table-cell.fit-width {
   width: 1px;
   white-space: nowrap;
+}
+
+.chip {
+  @apply inline-block text-pink-600 text-md border rounded-md p-2 mt-1 mr-2;
 }
 
 </style>
