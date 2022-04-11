@@ -123,6 +123,7 @@
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import useSearch from "~/composables/useSearch";
 import {PaginationQuery} from "~/models/PaginationQuery";
+import { ref, computed } from 'vue';
 
 const {
   ageRestrictedCategories,
@@ -155,6 +156,7 @@ const router = useRouter();
 const selectedTag = ref<string>(route.query['tag'] ? route.query['tag'] : '');
 const businessRegistration = ref<boolean>(route.query['br'] === 'true');
 const brickAndMortar = ref<boolean>(route.query['brick'] === 'true');
+const currentPage = ref<number>(route.query['page'] ? Number(route.query['page']) : 1);
 
 const selectedCategories = ref<string[]>([]);
 if (selectedTag.value !== '') {
@@ -179,20 +181,21 @@ function fetchResults(p: PaginationQuery = new PaginationQuery()) {
   ), p);
 }
 
-fetchResults();
+fetchResults(new PaginationQuery(
+    (currentPage.value - 1) * 10
+));
 
-const currentPage = ref<number>(1);
 function pageChanged() {
-  fetchResults(new PaginationQuery(
-      (currentPage.value - 1) * 10
-  ));
+  const query = {
+    ...route.query
+  };
+  query.page = currentPage.value.toString();
+  router.replace({query});
 }
 
 const isMobileFiltersShown = ref<boolean>(false);
 function clearKeyword() {
-  const query = {
-    ...route.query
-  };
+  const query = Object.assign({}, route.query, {page: "1"});
   delete query.keyword;
   router.replace({query});
 }
@@ -247,18 +250,23 @@ watch(
         }
       }
 
-      currentPage.value = 1;
+      if (q["page"] != undefined) {
+        currentPage.value = Number(q["page"]);
+      }
+      else {
+        currentPage.value = 1;
+      }
 
-      fetchResults();
+      fetchResults(new PaginationQuery(
+          (currentPage.value - 1) * 10
+      ));
     }
 )
 
 watch(
     selectedTag,
     async (sT, prevST) => {
-      const query = {
-        ...route.query
-      };
+      const query = Object.assign({}, route.query, {page: "1"});
       if (selectedTag.value != '') {
         query.tag = selectedTag.value;
       }
@@ -273,9 +281,7 @@ watch(
 watch(
   businessRegistration,
   async (br, prevBr) => {
-    const query = {
-      ...route.query
-    };
+    const query = Object.assign({}, route.query, {page: "1"});
     if (businessRegistration.value) {
       query.br = 'true';
     }
@@ -290,9 +296,7 @@ watch(
 watch(
   brickAndMortar,
   async (bm, prevBm) => {
-    const query = {
-      ...route.query
-    };
+    const query = Object.assign({}, route.query, {page: "1"});
     if (brickAndMortar.value) {
       query.brick = 'true';
     }
