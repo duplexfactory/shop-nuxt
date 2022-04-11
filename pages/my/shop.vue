@@ -71,6 +71,10 @@ for (const key of Object.keys(extraDataBooleanFields.value)) {
 
 const extraDataMultiStringFieldsTemp = ref({});
 
+// Licence
+const licenceChecked = ref(!!shop.extraData.licence);
+const licenceNumber = ref(!!shop.extraData.licence && typeof shop.extraData.licence === "string" ? shop.extraData.licence : "");
+
 </script>
 
 <template>
@@ -138,6 +142,7 @@ const extraDataMultiStringFieldsTemp = ref({});
 
           <div class="col-span-1">
             <div class="table">
+
               <div v-for="extraDataMultiStringFieldKey of ['paymentMethods', 'mailing']" class="table-row">
                 <div class="table-cell fit-width pr-2 pb-4">
                   <i :class="extraDataLookup[extraDataMultiStringFieldKey].iconClass"></i>
@@ -153,6 +158,21 @@ const extraDataMultiStringFieldsTemp = ref({});
                     {{ value }}
                     <button @click="shop.extraData[extraDataMultiStringFieldKey] = shop.extraData[extraDataMultiStringFieldKey].filter((v) => v !== value)"><i class="spr-cancel"></i></button>
                   </div>
+                </div>
+              </div>
+
+              <div class="table-row">
+                <div class="table-cell fit-width pr-2 pb-4">
+                  <i :class="extraDataLookup['licence'].iconClass"></i>
+                </div>
+                <div class="table-cell pb-4">
+                  <div class="w-full flex justify-between items-center">
+                    <div class="py-2 text-md">
+                      {{ extraDataLookup['licence'].title }}
+                    </div>
+                    <input type="checkbox" v-model="licenceChecked">
+                  </div>
+                  <input v-if="licenceChecked" v-model="licenceNumber" class="text-input-primary w-full" type="text" :placeholder="extraDataLookup['licence'].title"/>
                 </div>
               </div>
 
