@@ -73,6 +73,10 @@ export const extraDataLookup = {
         title: "郵寄",
         iconClass: "spr-paper-plane",
     },
+    "licence": {
+        title: "持有牌照",
+        iconClass: "spr-id-card",
+    },
 } as Record<keyof IgPageExtraData, { title: string, iconClass: string }>
 
 export default class PageInfoRow {
