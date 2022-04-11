@@ -117,6 +117,7 @@ export default  {
       else {
         delete query["keyword"];
       }
+      delete query["page"];
 
       this.$router.push({
         path: "/search",
