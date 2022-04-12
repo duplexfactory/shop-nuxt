@@ -94,6 +94,15 @@ watch(licenceNumber, (n, prevN) => {
 <template>
     <div class="container mx-auto">
 
+      <div class="info-group flex justify-center">
+        <div class="text-center w-3/5">
+          <button class="btn-primary"><i class="spr-instagram"></i>連結Instagram帳戶</button>
+          <div class="mt-4">
+            以你的Instagram帳戶登入後，即可<b>隨意修改你的IG Shop在Shoperuse上的資訊</b>，更可於<b>Shoperuse搜尋結果顯示你的IG Shop貼文照片</b>！
+          </div>
+        </div>
+      </div>
+
       <div class="info-group">
         <div class="md:text-xl font-bold">
           基本資料
