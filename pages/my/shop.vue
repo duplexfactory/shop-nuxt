@@ -1,25 +1,7 @@
 <script setup lang="ts">
 
-import {useIsLoggedIn} from "~/composables/states";
 import IgPageExtraData from "~/models/IgPageExtraData";
 import {extraDataLookup} from "~/models/PageInfoRow";
-
-const router = useRouter();
-const isLoggedIn = useIsLoggedIn();
-watch(
-    () => isLoggedIn.value,
-    async (isLoggedIn, prevIsLoggedIn) => {
-      if (isLoggedIn === true) {
-        console.log("Signed in.")
-      }
-      if (isLoggedIn === false) {
-        // Redirect.
-        console.log("Signed out.")
-        await router.replace("/login/shop");
-      }
-    }
-)
-
 
 const {data} = await useFetch(`/api/shop?id=1527690977`);
 // 384883192
@@ -89,11 +71,13 @@ watch(licenceNumber, (n, prevN) => {
   }
 })
 
+const verifiedPage = true;
+
 </script>
 
 <template>
-    <div class="container mx-auto">
-
+  <div>
+    <template v-if="!verifiedPage">
       <div class="info-group flex justify-center">
         <div class="text-center w-3/5">
           <button class="btn-primary"><i class="spr-instagram"></i>連結Instagram帳戶</button>
@@ -102,7 +86,9 @@ watch(licenceNumber, (n, prevN) => {
           </div>
         </div>
       </div>
+    </template>
 
+    <template v-else>
       <div class="info-group">
         <div class="md:text-xl font-bold">
           基本資料
@@ -144,9 +130,7 @@ watch(licenceNumber, (n, prevN) => {
         </div>
         <button @click="" class="mt-4 btn btn-primary">儲存</button>
       </div>
-
-
-      <div class="info-group mt-4">
+      <div class="info-group">
         <div class="md:text-xl font-bold">
           詳細資料
         </div>
@@ -220,52 +204,14 @@ watch(licenceNumber, (n, prevN) => {
         <button @click="" class="mt-4 btn btn-primary">儲存</button>
 
       </div>
-
-      <div class="info-group my-4">
-        <div class="md:text-xl font-bold">
-          登入資料
-        </div>
-
-        <div class="table">
-          <div class="table-row">
-            <div class="table-cell pr-2 pt-2">
-              用戶名
-            </div>
-            <div class="table-cell pt-2">
-              <input class="text-input-primary w-full" type="text" placeholder="用戶名"/>
-            </div>
-          </div>
-          <div class="table-row">
-            <div class="table-cell pr-2 pt-2">
-              密碼
-            </div>
-            <div class="table-cell pt-2">
-              <input class="text-input-primary w-full" type="password" placeholder="密碼"/>
-            </div>
-          </div>
-          <div class="table-row">
-            <div class="table-cell pr-2 pt-2">
-              重新輸入密碼
-            </div>
-            <div class="table-cell pt-2">
-              <input class="text-input-primary w-full" type="password" placeholder="重新輸入密碼"/>
-            </div>
-          </div>
-        </div>
-
-
-
-        <button @click="" class="mt-4 btn btn-primary">儲存</button>
-      </div>
-
-
-    </div>
+    </template>
+  </div>
 </template>
 
 <style scoped>
 
 .info-group {
-  @apply bg-white rounded-md border p-4;
+  @apply bg-white rounded-md border p-4 mb-4;
 }
 
 .table-cell.fit-width {
