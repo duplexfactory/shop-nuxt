@@ -15,24 +15,25 @@ const pageUsername = ref("shoperuse");
       <div class="table">
         <div class="table-row">
           <div class="table-cell pr-2 pt-2">
-            用戶名
+              電郵
           </div>
           <div class="table-cell pt-2">
-            <input class="text-input-primary w-full" type="text" placeholder="用戶名"/>
+            <input class="text-input-primary w-full" type="text" placeholder="電郵"/>
           </div>
         </div>
-        <div class="table-row">
-          <div class="table-cell pr-2 pt-2">
-            Instagram帳戶
+          <div class="table-row">
+              <div class="table-cell pr-2 pt-2">
+                  <div>Instagram帳戶</div>
+                  <div class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
+              </div>
+              <div class="table-cell pt-2">
+                  <button v-if="!verifiedPage" class="text-pink-600 py-4"><i class="spr-instagram"></i>立即連結</button>
+                  <template v-else>
+                      <a class="hover:underline text-pink-600 mr-2" :href="`https://www.instagram.com/${pageUsername}/`" target="_blank">{{ "@" + pageUsername }}</a>
+                      <button class="text-gray-500 py-2">解除連結</button>
+                  </template>
+              </div>
           </div>
-          <div class="table-cell pt-2 text-right">
-            <button v-if="!verifiedPage" class="text-pink-600 py-2"><i class="spr-instagram"></i>立即連結</button>
-            <template v-else>
-              <a class="hover:underline text-pink-600 mr-2" :href="`https://www.instagram.com/${pageUsername}/`" target="_blank">{{ "@" + pageUsername }}</a>
-              <button class="text-gray-500 py-2">解除連結</button>
-            </template>
-          </div>
-        </div>
       </div>
       <button @click="" class="mt-4 btn btn-primary">儲存</button>
     </div>
