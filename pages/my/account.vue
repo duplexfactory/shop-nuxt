@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const verifiedPage = false;
+const verifiedPage = ref(false);
 const pageUsername = ref("shoperuse");
 
 </script>
@@ -24,13 +24,13 @@ const pageUsername = ref("shoperuse");
           <div class="table-row">
               <div class="table-cell pr-2 pt-2">
                   <div>Instagram帳戶</div>
-                  <div class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
+                  <div v-if="!verifiedPage" class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
               </div>
               <div class="table-cell pt-2">
-                  <button v-if="!verifiedPage" class="text-pink-600 py-4"><i class="spr-instagram"></i>立即連結</button>
+                  <button v-if="!verifiedPage" class="text-pink-600 py-4" @click="verifiedPage = true"><i class="spr-instagram"></i>立即連結</button>
                   <template v-else>
                       <a class="hover:underline text-pink-600 mr-2" :href="`https://www.instagram.com/${pageUsername}/`" target="_blank">{{ "@" + pageUsername }}</a>
-                      <button class="text-gray-500 py-2">解除連結</button>
+                      <button class="text-gray-500 py-2" @click="verifiedPage = false">解除連結</button>
                   </template>
               </div>
           </div>
