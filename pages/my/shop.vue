@@ -74,6 +74,20 @@ const extraDataMultiStringFieldsTemp = ref({});
 // Licence
 const licenceChecked = ref(!!shop.extraData.licence);
 const licenceNumber = ref(!!shop.extraData.licence && typeof shop.extraData.licence === "string" ? shop.extraData.licence : "");
+watch(licenceChecked, (checked, prevChecked) => {
+  shop.extraData.licence = checked;
+  if (!checked) {
+    licenceNumber.value = "";
+  }
+})
+watch(licenceNumber, (n, prevN) => {
+  if (n === "") {
+    shop.extraData.licence = licenceChecked.value;
+  }
+  else {
+    shop.extraData.licence = licenceNumber.value;
+  }
+})
 
 </script>
 
@@ -167,12 +181,12 @@ const licenceNumber = ref(!!shop.extraData.licence && typeof shop.extraData.lice
                 </div>
                 <div class="table-cell pb-4">
                   <div class="w-full flex justify-between items-center">
-                    <div class="py-2 text-md">
+                    <label for="checkbox-licence" class="py-2 text-md">
                       {{ extraDataLookup['licence'].title }}
-                    </div>
-                    <input type="checkbox" v-model="licenceChecked">
+                    </label>
+                    <input type="checkbox" id="checkbox-licence" v-model="licenceChecked">
                   </div>
-                  <input v-if="licenceChecked" v-model="licenceNumber" class="text-input-primary w-full" type="text" :placeholder="extraDataLookup['licence'].title"/>
+                  <input v-if="licenceChecked" v-model="licenceNumber" class="text-input-primary w-full" type="text" placeholder="牌照號碼"/>
                 </div>
               </div>
 
@@ -182,10 +196,10 @@ const licenceNumber = ref(!!shop.extraData.licence && typeof shop.extraData.lice
                 </div>
                 <div class="table-cell pb-4">
                   <div class="w-full flex justify-between items-center">
-                    <div class="py-2 text-md">
+                    <label :for="'checkbox-' + extraDataBooleanFieldKey" class="py-2 text-md">
                       {{ extraDataLookup[extraDataBooleanFieldKey].title }}
-                    </div>
-                    <input type="checkbox" v-model="shop.extraData[extraDataBooleanFieldKey]">
+                    </label>
+                    <input type="checkbox" :id="'checkbox-' + extraDataBooleanFieldKey" v-model="shop.extraData[extraDataBooleanFieldKey]">
                   </div>
                 </div>
               </div>
