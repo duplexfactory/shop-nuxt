@@ -2,6 +2,7 @@
     import {PropType} from "vue";
     import IgPage from '~/models/IgPage';
     import dayjs from "dayjs";
+    import PageInfoRow from "~/models/PageInfoRow";
 
     const {tagsLookup} = useTags()
     const {shop} = defineProps({
@@ -26,6 +27,7 @@
     const description = 'description';
 
     const verifiedPage = false;
+    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
 </script>
 
 <template>
@@ -71,11 +73,25 @@
         </div>
 
         <div class="col-span-1" v-if="mediaCodes">
-            <div class="bg-gray-300 square-image-container" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
-            <div class="flex" style="margin-top: 2px;">
-                <div class="bg-gray-300 square-image-container flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
-                <div class="bg-gray-300 square-image-container flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
-            </div>
+            <template v-if="verifiedPage">
+                <div class="bg-gray-300 square-image-container" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
+                <div class="flex" style="margin-top: 2px;">
+                  <div class="bg-gray-300 square-image-container flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
+                  <div class="bg-gray-300 square-image-container flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
+                </div>
+            </template>
+            <template v-else>
+              <div class="p-4" style="aspect-ratio: 2/3;">
+                <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
+                  <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                  <component :is="pageInfoRow.link ? 'a' : 'span'"
+                             class="break-words"
+                             :class="{'hover:underline': pageInfoRow.link}"
+                             target="_blank"
+                             :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+                </div>
+              </div>
+            </template>
         </div>
     </div>
 </template>
