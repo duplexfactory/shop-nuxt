@@ -36,7 +36,7 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
         q
             .orderBy("followerCount", "desc")
             .limit(21)
-            .pick(...cardFields)
+            .pick(...cardFields, "extraData")
             .get()
             .then(ss => ss.data()),
         q
@@ -55,7 +55,7 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
             .where("brickAndMortar", "==", true)
             .orderBy("activeScore", "desc")
             .limit(21)
-            .pick(...cardFields)
+            .pick(...cardFields, "extraData")
             .get()
             .then(ss => ss.data())
     ])
