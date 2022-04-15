@@ -83,7 +83,7 @@ function loadSwiper() {
       nextEl: swiperButtonNext.value,
       prevEl: swiperButtonPrev.value,
     };
-    
+
     new Swiper(swiper.value, swiperOptions);
   }
 }
