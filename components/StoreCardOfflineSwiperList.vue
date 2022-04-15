@@ -1,94 +1,93 @@
 <script lang="ts">
+import {PropType} from "vue";
+import IgPage from '~/models/IgPage';
+
+export default {
+  props: {
+    shops: Array as PropType<IgPage[]>
+  },
+}
+</script>
+
+<script setup lang="ts">
+
 import Swiper, { Navigation, FreeMode, Pagination } from 'swiper';
 // import Swiper and modules styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import "swiper/css/free-mode";
-import {PropType} from "vue";
-import IgPage from '~/models/IgPage';
 import {SwiperOptions} from "swiper/types/swiper-options";
 
-export default {
-  data() : {
-    swiperLoaded: boolean,
-    swiperReady: boolean,
-    swiperOptions: SwiperOptions
-  } {
-    return {
-      swiperLoaded: false,
-      swiperReady: false,
-      swiperOptions: {
+const swiper = ref(null);
+const swiperButtonPrev = ref(null);
+const swiperButtonNext = ref(null);
+const swiperLoaded = ref(false);
+const swiperReady = ref(false);
+const swiperOptions: SwiperOptions = {
 
-        modules: [Navigation, FreeMode, Pagination],
+  modules: [Navigation, FreeMode, Pagination],
 
-        // Optional parameters
-        // direction: 'vertical',
-        // loop: true,
+  // Optional parameters
+  // direction: 'vertical',
+  // loop: true,
 
-        on: {
-          init: () => {
-            this.swiperReady = true;
-          },
-        },
+  on: {
+    init: () => {
+      swiperReady.value = true;
+    },
+  },
 
-        spaceBetween: 16,
-        slidesPerView: 1.2,
-        slidesPerGroup: 1,
-        freeMode: true,
+  spaceBetween: 16,
+  slidesPerView: 1.2,
+  slidesPerGroup: 1,
+  freeMode: true,
 
-        breakpoints: {
-          1024: { // lg
-            spaceBetween: 16,
-            slidesPerView: 2.2,
-            slidesPerGroup: 2,
-            freeMode: false,
-          },
-          1280: { // xl
-            spaceBetween: 16,
-            slidesPerView: 2.5,
-            slidesPerGroup: 2,
-            freeMode: false,
-          },
-          1536: { // 2xl
-            spaceBetween: 16,
-            slidesPerView: 3,
-            slidesPerGroup: 3,
-            freeMode: false,
-          }
-        },
-
-        pagination: {
-          el: '.swiper-pagination',
-        },
-
-        // // And if we need scrollbar
-        // scrollbar: {
-        //   el: '.swiper-scrollbar',
-        // },
-      }
+  breakpoints: {
+    1024: { // lg
+      spaceBetween: 16,
+      slidesPerView: 2.2,
+      slidesPerGroup: 2,
+      freeMode: false,
+    },
+    1280: { // xl
+      spaceBetween: 16,
+      slidesPerView: 2.5,
+      slidesPerGroup: 2,
+      freeMode: false,
+    },
+    1536: { // 2xl
+      spaceBetween: 16,
+      slidesPerView: 3,
+      slidesPerGroup: 3,
+      freeMode: false,
     }
   },
-  props: {
-    shops: Array as PropType<IgPage[]>
+
+  pagination: {
+    el: '.swiper-pagination',
   },
-  methods: {
-    loadSwiper() {
-      if (!this.swiperLoaded && this.$refs.swiper) {
 
-        this.swiperLoaded = true;
+};
 
-        // Navigation arrows
-        this.swiperOptions.navigation = {
-          nextEl: this.$refs.swiperButtonNext,
-          prevEl: this.$refs.swiperButtonPrev,
-        };
+watch(swiper, (newSwiper) => {
+  loadSwiper();
+});
 
-        const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
-      }
-    }
+function loadSwiper() {
+  if (!swiperLoaded.value && swiper.value) {
+    swiperLoaded.value = true;
+
+    // Navigation arrows
+    swiperOptions.navigation = {
+      nextEl: swiperButtonNext.value,
+      prevEl: swiperButtonPrev.value,
+    };
+    
+    new Swiper(swiper.value, swiperOptions);
   }
 }
+
 </script>
 
 <template>
