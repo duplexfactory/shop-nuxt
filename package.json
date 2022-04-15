@@ -32,7 +32,8 @@
     "mongodb": "^4.3.1",
     "node-fetch": "^3.1.0",
     "path": "^0.12.7",
-    "swiper": "^7.4.1"
+    "swiper": "^7.4.1",
+    "vue3-popper": "^1.4.2"
   },
   "overrides": {
     "whatwg-url": "^11.0.0"

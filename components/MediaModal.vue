@@ -11,7 +11,13 @@
             <div class="flex items-baseline">
               <!-- Do not use ?? because price 0 should show - as well -->
               <div class="text-xl md:text-2xl text-pink-700">HK$ {{ localMedia?.price ? localMedia?.price : "-" }}</div>
-              <button class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
+
+              <Popper hover offsetDistance="0" placement="top">
+                <button class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
+                <template #content>
+                  <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">此價格由電腦偵查或用戶提出。如有錯漏，歡迎提出修改。</div>
+                </template>
+              </Popper>
             </div>
 
             <button v-if="localPage" class="hover:underline" @click="onUsernameClick">
@@ -66,6 +72,8 @@ import useCreateReview from "~/composables/useCreateReview";
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 import {computed} from "@vue/reactivity";
 import PageInfoRow from "~/models/PageInfoRow";
+
+import Popper from "vue3-popper";
 
 // Media Modal
 const showMediaModal = useShowMediaModal();
@@ -138,7 +146,6 @@ if (!localMedia.value) {
   const {data, pending} = await useFetch(`/api/media/single`, {params: {code: localMediaCode.value}});
   fetchedMedia.value = data.value.media;
 }
-
 
 // Mounted
 onMounted(async () => {
