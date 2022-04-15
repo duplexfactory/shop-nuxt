@@ -1,4 +1,5 @@
 import IgPageExtraData from "~/models/IgPageExtraData";
+import IgMedia from "~/models/IgMedia";
 
 export class PageSearch {
     _id: number;
@@ -26,7 +27,9 @@ export class PageSearch {
     fetching: boolean;
     profilePicLastFetch: number;
 
-    lastActivity: number
+    lastActivity: number;
+    lastMedia: number;
+    lastMediaData?: IgMedia;
 
-    extraData: IgPageExtraData
+    extraData: IgPageExtraData;
 }
