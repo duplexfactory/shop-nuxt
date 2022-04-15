@@ -82,8 +82,8 @@
             </template>
             <template v-else>
               <div class="py-4 pr-4 text-sm" style="aspect-ratio: 2/3;">
-                <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="flex items-center mb-1">
-                  <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="flex items-start mb-1">
+                  <span><i class="mr-2" :class="pageInfoRow.iconClass"></i></span>
                   <component :is="pageInfoRow.link ? 'a' : 'span'"
                              class="break-all"
                              :class="{'hover:underline': pageInfoRow.link}"
