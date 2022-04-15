@@ -13,7 +13,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         content,
         created: Date.now(),
         deleted: false,
-        ip: req.connection.remoteAddress || req.socket.remoteAddress || ""
+        ip: req.headers["cf-connecting-ip"] || req.connection.remoteAddress || req.socket.remoteAddress || ""
     };
 
     const reference = await reviewCollection().add(review);
