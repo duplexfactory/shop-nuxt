@@ -13,7 +13,7 @@
               <div class="text-xl md:text-2xl text-pink-700">HK$ {{ localMedia?.price ? localMedia?.price : "-" }}</div>
 
               <Popper hover offsetDistance="0" placement="top">
-                <button class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
+                <button @click="showPriceSuggestionModal = true" class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
                 <template #content>
                   <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">此價格由電腦偵查或用戶提出。如有錯漏，歡迎提出修改。</div>
                 </template>
@@ -60,6 +60,18 @@
           </div>
         </div>
       </div>
+
+      <Teleport to="body">
+        <div v-if="showPriceSuggestionModal" class="suggest-price-modal">
+            <div class="bg-white p-4 rounded-md">
+              <input v-model="suggestedPrice" class="block text-input-primary" type="number" name="price" placeholder="輸入價格">
+              <div class="flex justify-end mt-2">
+                <button @click="submitPrice" class="btn-primary btn-sm mr-2">提交</button>
+                <button @click="showPriceSuggestionModal = false" class="btn-outline btn-sm">取消</button>
+              </div>
+            </div>
+        </div>
+      </Teleport>
     </template>
   </LazyModal>
 </template>
@@ -141,6 +153,19 @@ function onUsernameClick() {
 
 const screenSize = useScreenSize();
 
+// Suggest price
+const showPriceSuggestionModal = ref(false);
+const suggestedPrice = ref(null);
+const nuxt = useNuxtApp();
+function submitPrice() {
+  if (suggestedPrice.value === null) {
+    nuxt.vueApp.$toast.error("請輸入價格！", {position: "top"});
+    return;
+  }
+  nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"});
+  showPriceSuggestionModal.value = false;
+}
+
 // Init data on modal open
 if (!localMedia.value) {
   const {data, pending} = await useFetch(`/api/media/single`, {params: {code: localMediaCode.value}});
@@ -157,3 +182,13 @@ onMounted(async () => {
 });
 
 </script>
+
+<style scoped>
+
+.suggest-price-modal {
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.5);
+  @apply w-full h-full fixed top-0 left-0 flex items-center justify-center;
+}
+
+</style>
