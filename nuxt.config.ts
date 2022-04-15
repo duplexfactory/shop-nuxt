@@ -14,7 +14,7 @@ import {categories} from "./data/categories";
 // Hidden paths
 import { resolve } from 'path'
 import { createCommonJS } from 'mlly'
-import {duration} from "~/utils/dayjs";
+import {duration} from "./utils/dayjs";
 const { __dirname } = createCommonJS(import.meta.url)
 
 export default defineNuxtConfig({
