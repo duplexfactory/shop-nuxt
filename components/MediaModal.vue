@@ -157,11 +157,21 @@ const screenSize = useScreenSize();
 const showPriceSuggestionModal = ref(false);
 const suggestedPrice = ref(null);
 const nuxt = useNuxtApp();
-function submitPrice() {
+async function submitPrice() {
   if (suggestedPrice.value === null) {
     nuxt.vueApp.$toast.error("請輸入價格！", {position: "top"});
     return;
   }
+
+  const body: any = {
+    code: localMediaCode.value,
+    price: suggestedPrice.value
+  };
+  await useFetch('/api/suggest/media-price', { method: 'POST', body})
+
+  // Reset
+  suggestedPrice.value = null;
+
   nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"});
   showPriceSuggestionModal.value = false;
 }
