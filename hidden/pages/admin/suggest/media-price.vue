@@ -66,7 +66,7 @@ function approveRecord(id: string) {
 }
 
 async function deleteRecord(id: string) {
-  const { data, error } = await useFetch('/api/suggest/media-price', { method: 'DELETE', body: {id}});
+  const { data, error } = await useFetch('/api/suggest/media-price', { method: 'DELETE', params: {id}});
   if (error.value !== null) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
     return;

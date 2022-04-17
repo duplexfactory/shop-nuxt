@@ -1,5 +1,5 @@
 import {IncomingMessage, ServerResponse} from "http";
-import {assertMethod, isMethod, useBody} from "h3";
+import {assertMethod, isMethod, useBody, useQuery} from "h3";
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
 
 export default async (req: IncomingMessage, res: ServerResponse) => {
@@ -25,7 +25,7 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     if (isMethod(req, "DELETE")) {
         const {
             id
-        } = await useBody<{ id: string}>(req);
+        } = useQuery(req) as { id: string };
         await mediaPriceSuggestionCollection().doc(id).delete();
         return {
             success: true
