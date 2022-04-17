@@ -10,4 +10,5 @@ export default interface IgMedia {
     takenAt: number;
 
     price?: number;
+    patchPrice?: number;
 }
