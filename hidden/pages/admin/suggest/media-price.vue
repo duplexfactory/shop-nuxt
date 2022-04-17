@@ -61,8 +61,14 @@ function tsToDateString(ts) {
   return dayjs(ts).format('DD/MM/YYYY')
 }
 
-function approveRecord(id: string) {
-
+async function approveRecord(id: string) {
+  const { data, error } = await useFetch('/api/suggest/media-price/approve', { method: 'POST', params: {id}});
+  if (error.value !== null) {
+    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    return;
+  }
+  suggestions.value = suggestions.value.filter((s) => s.id !== id);
+  nuxt.vueApp.$toast.success("成功！", {position: "top"});
 }
 
 async function deleteRecord(id: string) {
