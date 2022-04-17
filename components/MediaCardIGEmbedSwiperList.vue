@@ -14,7 +14,7 @@
                             class="swiper-slide"
                             top-bar
                             :fixedAspectRatio="0"
-                            :price="media.lastMediaData.price"
+                            :price="mediaPrice(media.lastMediaData)"
                             :delegate-script="true"
                             :postId="media.lastMediaData.code"
                             :key="media.pk + '-post-card'"></MediaCardIGEmbed>
@@ -143,8 +143,12 @@ export default {
 
 <script setup lang="ts">
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+import useMediaPrice from "~/composables/useMediaPrice";
 const showMediaModal = useShowMediaModal();
 const showingMediaModalData = useShowingMediaModalData();
+
+// Media Price
+const { mediaPrice } = useMediaPrice();
 </script>
 
 <style scoped>

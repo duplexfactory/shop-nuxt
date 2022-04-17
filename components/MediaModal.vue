@@ -10,7 +10,7 @@
 
             <div class="flex items-baseline">
               <!-- Do not use ?? because price 0 should show - as well -->
-              <div class="text-xl md:text-2xl text-pink-700">HK$ {{ localMedia?.price ? localMedia?.price : "-" }}</div>
+              <div class="text-xl md:text-2xl text-pink-700">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
 
               <Popper hover offsetDistance="0" placement="top">
                 <button @click="showPriceSuggestionModal = true" class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
@@ -86,6 +86,9 @@ import {computed} from "@vue/reactivity";
 import PageInfoRow from "~/models/PageInfoRow";
 
 import Popper from "vue3-popper";
+import type {Ref} from "vue";
+import IgMedia from "~/models/IgMedia";
+import useMediaPrice from "~/composables/useMediaPrice";
 
 // Media Modal
 const showMediaModal = useShowMediaModal();
@@ -99,7 +102,7 @@ const localPage = computed(() => {
 const localMediaCode = computed(() => {
   return showingMediaModalData.value.media?.code || showingMediaModalData.value.code;
 });
-const fetchedMedia = ref(null);
+const fetchedMedia: Ref<IgMedia | null> = ref(null);
 const localMedia = computed(() => {
   return showingMediaModalData.value.media || fetchedMedia.value;
 });
@@ -108,6 +111,9 @@ const pageInfoRows = computed(() => {
   if (!localPage.value) return []
   return PageInfoRow.rowsFromExtraData(localPage.value.extraData, ["phone", "whatsapp", "wechat", "signal"]);
 });
+
+// Media Price
+const { mediaPrice, formatMediaPrice } = useMediaPrice();
 
 // Create Review
 const {
