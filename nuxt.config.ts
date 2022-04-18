@@ -90,6 +90,8 @@ export default defineNuxtConfig({
     FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+
+    IG_APP_ID: process.env.DOMAIN,
   },
   privateRuntimeConfig: {
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
@@ -98,6 +100,7 @@ export default defineNuxtConfig({
     DYNAMODB_ACCESS_KEY_ID: process.env.DYNAMODB_ACCESS_KEY_ID,
     DYNAMODB_SECRET_ACCESS_KEY: process.env.DYNAMODB_SECRET_ACCESS_KEY,
     DYNAMODB_REGION: process.env.DYNAMODB_REGION,
+    IG_APP_SECRET: process.env.IG_APP_SECRET,
   },
   ssr: true,
   plugins: [],
