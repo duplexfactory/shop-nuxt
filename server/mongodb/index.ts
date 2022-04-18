@@ -1,8 +1,10 @@
 import config from "#config";
 import {Collection, MongoClient, MongoClientOptions} from "mongodb";
 import {PageSearch} from "~~/models/PageSearch";
+import IgAuth from "~/models/IgAuth";
 
 export let pageSearchCollection: Collection<PageSearch>;
+export let igAuthCollection: Collection<IgAuth>;
 let init = false;
 let client: MongoClient;
 
@@ -14,6 +16,7 @@ export async function initMongo() {
         } as MongoClientOptions);
         const db = client.db("ig");
         pageSearchCollection = db.collection("page");
+        igAuthCollection = db.collection("igAuth");
         init = true;
     }
     return client;

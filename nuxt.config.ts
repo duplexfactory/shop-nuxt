@@ -81,7 +81,8 @@ export default defineNuxtConfig({
   publicRuntimeConfig: {
     IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F",
     IMG_PROXY: process.env.IMG_PROXY,
-    DOMAIN: process.env.DOMAIN
+    DOMAIN: process.env.DOMAIN,
+    IG_APP_ID: process.env.DOMAIN,
   },
   privateRuntimeConfig: {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
@@ -91,6 +92,7 @@ export default defineNuxtConfig({
     DYNAMODB_ACCESS_KEY_ID: process.env.DYNAMODB_ACCESS_KEY_ID,
     DYNAMODB_SECRET_ACCESS_KEY: process.env.DYNAMODB_SECRET_ACCESS_KEY,
     DYNAMODB_REGION: process.env.DYNAMODB_REGION,
+    IG_APP_SECRET: process.env.IG_APP_SECRET,
   },
   ssr: true,
   plugins: [],
