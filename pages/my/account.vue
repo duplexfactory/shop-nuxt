@@ -6,7 +6,6 @@
 
     function authorize() {
         const config = useRuntimeConfig();
-        const router = useRouter();
 
         const url = new URL(`https://api.instagram.com/oauth/authorize`)
 
