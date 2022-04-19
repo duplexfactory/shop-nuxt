@@ -19,9 +19,12 @@
     }
 
     onMounted(async () => {
-        // const data = await $fetch("/api/auth/ig-code", {params: {code}})
-        verifiedPage.value = true
-        authLoading.value = false
+        if (code) {
+            const {username} = await $fetch("/api/auth/ig-code", {params: {code}})
+            pageUsername.value = username
+            verifiedPage.value = true
+            authLoading.value = false
+        }
     });
 </script>
 
