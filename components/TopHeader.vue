@@ -8,7 +8,7 @@
           <i class="spr-menu text-2xl"></i>
         </button>
 
-        <nuxt-link to="/" class="md:mr-4"><img style="width: 100px;" src="/images/logo.png"/></nuxt-link>
+        <nuxt-link to="/" class="md:mr-4"><img style="width: 100px; height: 50px;" src="/images/logo.png"/></nuxt-link>
 
         <!-- Mobile Search Button -->
         <button @click="showSearchModal = true" class="sm:hidden border rounded-md py-2 px-4 text-sm text-gray-400">
