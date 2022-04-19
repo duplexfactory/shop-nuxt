@@ -282,12 +282,12 @@
                                   class="col-span-1"
                                   :style="verifiedPage ? 'aspect-ratio: 3/5' : ''"
                                   @show="showMedia(i)">
-                    <MediaCard v-if="verifiedPage"
+                    <LazyMediaCard v-if="verifiedPage"
                                @click="showMediaModal(media)"
                                style="cursor: pointer"
                                :media="media"
-                               :shop="page"></MediaCard>
-                    <MediaCardIGEmbed
+                               :shop="page"></LazyMediaCard>
+                    <LazyMediaCardIGEmbed
                         v-else
                         class="mb-4 md:mb-0"
                         @showMediaModal="showMediaModal(media)"
@@ -295,7 +295,7 @@
                         top-bar
                         :post-id="media.code"
                         :fixed-aspect-ratio="0"
-                        :username="page.username"></MediaCardIGEmbed>
+                        :username="page.username"></LazyMediaCardIGEmbed>
                   </lazy-component>
                 </div>
                 <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
