@@ -48,27 +48,9 @@
 
     const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
     const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
-    const whatsapp = computed(() => {
-      let bestPhone = "";
-      if (page.value != null) {
-        const possiblePhones = page.value.biography.matchAll(/(?<=\D|$)(\d{8}|\d{11})(?=\D|$)/g);
-        const whatsappIndex = page.value.biography.toLowerCase().indexOf("whatsapp");
-        let bestPhoneIndex = page.value.biography.length
-        for (const p of possiblePhones) {
-          if (whatsappIndex == -1) {
-            return p[0];
-          }
-          if (whatsappIndex < p.index && p.index < bestPhoneIndex) {
-            bestPhone = p[0];
-            bestPhoneIndex = p.index
-          }
-        }
-      }
-      return bestPhone;
-    })
-
-
     const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
+
+    const selectedIndex = ref(0);
 
     // Medias
     let mediaPending = ref(false);
@@ -227,20 +209,6 @@
       await fetchReviews();
     }
 
-</script>
-
-<script lang="ts">
-
-
-export default  {
-    data(): {
-      selectedIndex: number,
-    } {
-      return {
-        selectedIndex: 0,
-      }
-    },
-}
 </script>
 
 <template>
