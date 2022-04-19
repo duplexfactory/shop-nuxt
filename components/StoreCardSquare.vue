@@ -34,7 +34,7 @@
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
             <div class="relative h-full">
-                <div v-if="verifiedPage" class="hidden sm:block mb-1 2xl:mb-2 bg-gray-300 rounded-full square-image-container" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>
+                <div v-if="verifiedPage" class="hidden sm:block mb-1 2xl:mb-2 rounded-full image-container aspect-square" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>
 
                 <div class="overflow-hidden">
                   <div class="font-semibold text-lg truncate">
@@ -74,10 +74,10 @@
 
         <div class="col-span-1" v-if="mediaCodes">
             <template v-if="verifiedPage">
-                <div class="bg-gray-300 square-image-container" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
+                <div class="image-container aspect-square" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
                 <div class="flex" style="margin-top: 2px;">
-                  <div class="bg-gray-300 square-image-container flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
-                  <div class="bg-gray-300 square-image-container flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
+                  <div class="image-container aspect-square flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
+                  <div class="image-container aspect-square flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
                 </div>
             </template>
             <template v-else>
@@ -95,10 +95,3 @@
         </div>
     </div>
 </template>
-
-<style>
-.square-image-container {
-    aspect-ratio: 1;
-    @apply bg-center bg-cover;
-}
-</style>

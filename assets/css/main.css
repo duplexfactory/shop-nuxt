@@ -75,3 +75,7 @@ textarea {
         background-position-x: -200%;
     }
 }
+
+.image-container {
+    @apply bg-center bg-cover bg-gray-300;
+}

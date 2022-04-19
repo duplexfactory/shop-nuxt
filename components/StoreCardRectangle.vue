@@ -39,7 +39,7 @@
 
       <div class="link-container col-span-3">
         <div v-if="verifiedPage"
-             class="hidden sm:(block mb-2) bg-gray-300 rounded-full square-image-container"
+             class="hidden sm:(block mb-2) rounded-full image-container aspect-square"
              v-lazy:background-image="shop.profilePicUrl"
              style="height: 70px;"></div>
 
@@ -78,7 +78,7 @@
         </div>
         <div class="mt-2 sm:mt-4 flex flex-row">
           <div v-for="i in shop.mediaCodes" :key="i.toString()"
-               class="bg-gray-300 mr-2 square-image-container"
+               class="mr-2 image-container aspect-square"
                style="height: 100px;"
                v-lazy:background-image="$imageUrl(i)"></div>
         </div>
@@ -95,7 +95,7 @@
         </div>
         <div class="mt-2 sm:mt-4 flex flex-row">
           <div v-for="i in shop.mediaCodes" :key="i.toString()"
-               class="bg-gray-300 mr-2 square-image-container"
+               class="mr-2 image-container aspect-square"
                style="height: 100px;"
                v-lazy:background-image="$imageUrl(i)"></div>
         </div>
@@ -108,7 +108,7 @@
     <!--<div class="overflow-hidden border rounded-md grid grid-cols-2">-->
         <!--<div class="p-4 col-span-1">-->
             <!--<div class="relative h-full">-->
-                <!--<div class="bg-gray-300 rounded-full square-image-container" :style="`background-image: url(${profilePicUrl});`" style="height: 60px;"></div>-->
+                <!--<div class="rounded-full image-container aspect-square" :style="`background-image: url(${profilePicUrl});`" style="height: 60px;"></div>-->
 
                 <!--<div class="mt-1 2xl:mt-2 overflow-hidden">-->
                     <!--<div class="font-semibold text-lg truncate">{{ username }}</div>-->
@@ -140,12 +140,12 @@
         <!--</div>-->
 
         <!--<div class="col-span-1">-->
-            <!--<div class="bg-gray-300 square-image-container" :style="`background-image: url(${mediaUrls[0]});`"></div>-->
+            <!--<div class="image-container aspect-square" :style="`background-image: url(${mediaUrls[0]});`"></div>-->
             <!--<div class="bg-white" style="height: 2px;"/>-->
             <!--<div class="block lg:flex flex-row">-->
-                <!--<div class="bg-red-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>-->
+                <!--<div class="bg-red-300 image-container aspect-square" style="flex: 1;" :style="`background-image: url(${mediaUrls[1]});`"></div>-->
                 <!--<div style="width: 2px;"></div>-->
-                <!--<div class="bg-green-300 square-image-container" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>-->
+                <!--<div class="bg-green-300 image-container aspect-square" style="flex: 1;" :style="`background-image: url(${mediaUrls[2]});`"></div>-->
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
@@ -161,11 +161,4 @@
   pointer-events: all;
 }
 
-</style>
-
-<style>
-    .square-image-container {
-        aspect-ratio: 1;
-        @apply bg-center bg-cover;
-    }
 </style>

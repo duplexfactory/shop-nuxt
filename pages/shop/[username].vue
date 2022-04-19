@@ -216,7 +216,7 @@
         <div v-if="!!page" class="container mx-auto">
             <section class="mt-8 md:mt-0 md:grid grid-cols-8 lg:(px-16)">
                 <div class="col-span-3 lg:(col-span-2)">
-                    <div v-if="verifiedPage" class="rounded-full overflow-hidden bg-gray-300 square-image-container mr-8 mb-2"
+                    <div v-if="verifiedPage" class="rounded-full overflow-hidden image-container aspect-square mr-8 mb-2"
                          style="height: 100px;">
                       <img class="h-full w-full"
                            :alt="page.username"
