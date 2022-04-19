@@ -1,6 +1,8 @@
 <script setup lang="ts">
+    const {code} = useRoute().query
     const verifiedPage = ref(false);
     const pageUsername = ref("shoperuse");
+    const authLoading = ref(!!code);
 
     function authorize() {
         const config = useRuntimeConfig();
@@ -16,15 +18,23 @@
         window.location.assign(url.href)
     }
 
-    const {code} = useRoute().query
     onMounted(async () => {
-        const data = await $fetch("/api/auth/ig-code", {params: {code}})
+        // const data = await $fetch("/api/auth/ig-code", {params: {code}})
         verifiedPage.value = true
+        authLoading.value = false
     });
 </script>
 
 <template>
     <div class="container">
+        <div v-if="authLoading"
+             class="absolute z-50 flex flex-col justify-center items-center inset-0 bg-white"
+             style="min-width: 100%; min-height: 100%;">
+            <div>
+                <i class="spr-spin4 animate-spin text-6xl text-pink-400"></i>
+            </div>
+        </div>
+
         <div class="info-group">
             <div class="md:text-xl font-bold">
                 帳戶
