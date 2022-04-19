@@ -1,10 +1,9 @@
 <template>
-<!--  max-width:540px; min-width:326px; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);-->
-
-<!--  aspect-ratio: 0.5;-->
-<!--  class="w-full"-->
-  <div class="overflow-hidden border" style="position: relative;" :style="fixedAspectRatio !== 0 ? `aspect-ratio: ${fixedAspectRatio.toString()};` : ''" ref="blockquote-container" >
-<!--    height: 100% !important;-->
+  <div class="overflow-hidden border" style="position: relative;" :style="fixedAspectRatio !== 0 ? `aspect-ratio: ${fixedAspectRatio.toString()};` : ''">
+    <!--  max-width:540px; min-width:326px; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);-->
+    <!--  aspect-ratio: 0.5;-->
+    <!--  class="w-full"-->
+    <!--    height: 100% !important;-->
     <div v-if="topBar" class="text-xs md:text-sm text-gray-400 flex justify-between p-2">
       <div v-if="!!price" class="text-pink-700">HK$ {{ price }}</div>
       <div v-else></div>
@@ -32,12 +31,15 @@
 </template>
 
 <script setup lang="ts">
+
 import {PropType} from "vue";
+import loadIGEmbeds from "~/utils/loadIGEmbeds";
 
 const {
   postId,
   fixedAspectRatio,
   username,
+  delegateScript,
   captioned
 } = defineProps({
   postId: String as PropType<String>,
@@ -49,52 +51,13 @@ const {
   topBar: { type: Boolean, default: false },
 })
 
-</script>
-
-<script lang="ts">
-import loadIGEmbeds from "~/utils/loadIGEmbeds";
-
-export default {
-  // data(): {
-  //   igEmbedLoaded: boolean
-  // } {
-  //   return {
-  //     igEmbedLoaded: false
-  //   }
-  // },
-  mounted() {
-
-    if (this.delegateScript) {
-      return;
-    }
-
-    loadIGEmbeds();
-
-    // identify an element to observe
-    // const elementToObserve = this.$refs['blockquote-container'];
-
-    // create a new instance of 'MutationObserver' named 'observer',
-    // passing it a callback function
-    // const observer = new MutationObserver((mutationsList, observer) => {
-    //   console.log(mutationsList[0].addedNodes[0])
-    //   if (mutationsList[0].addedNodes[0] != undefined) {
-    //     this.igEmbedLoaded = true;
-        // const iframe: HTMLIFrameElement = mutationsList[0].addedNodes[0] as HTMLIFrameElement;
-        // // console.log(iframe);
-        // iframe.onload = () => {
-        //   console.log('iframe loaded');
-        //   this.igEmbedLoaded = true;
-        // }
-    //   }
-    // });
-    //
-    // // call 'observe' on that MutationObserver instance,
-    // // passing it the element to observe, and the options object
-    // observer.observe(elementToObserve, {characterData: false, childList: true, attributes: false});
-    //
-    // this.$emit('observerLoaded');
+onMounted(() => {
+  if (delegateScript.value) {
+    return;
   }
-}
+  loadIGEmbeds();
+})
+
 </script>
 
 <style>
