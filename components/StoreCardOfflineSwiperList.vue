@@ -1,14 +1,3 @@
-<script lang="ts">
-import {PropType} from "vue";
-import IgPage from '~/models/IgPage';
-
-export default {
-  props: {
-    shops: Array as PropType<IgPage[]>
-  },
-}
-</script>
-
 <script setup lang="ts">
 
 import Swiper, { Navigation, FreeMode, Pagination } from 'swiper';
@@ -18,6 +7,12 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import "swiper/css/free-mode";
 import {SwiperOptions} from "swiper/types/swiper-options";
+import {PropType} from "vue";
+import IgPage from "~/models/IgPage";
+
+const {shops} = defineProps({
+  shops: Array as PropType<IgPage[]>
+})
 
 const swiper = ref(null);
 const swiperButtonPrev = ref(null);
