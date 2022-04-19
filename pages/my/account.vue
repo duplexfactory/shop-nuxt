@@ -15,6 +15,12 @@
 
         window.location.assign(url.href)
     }
+
+    const {code} = useRoute().query
+    onMounted(async () => {
+        const data = await $fetch("/api/auth/ig-code", {params: {code}})
+        verifiedPage.value = true
+    });
 </script>
 
 <template>
@@ -39,9 +45,13 @@
                         <div v-if="!verifiedPage" class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
                     </div>
                     <div class="table-cell pt-2">
-                        <button v-if="!verifiedPage" class="text-pink-600 py-4" @click="authorize()"><i class="spr-instagram"></i>立即連結</button>
+                        <button v-if="!verifiedPage" class="text-pink-600 py-4" @click="authorize()"><i
+                            class="spr-instagram"></i>立即連結
+                        </button>
                         <template v-else>
-                            <a class="hover:underline text-pink-600 mr-2" :href="`https://www.instagram.com/${pageUsername}/`" target="_blank">{{ "@" + pageUsername }}</a>
+                            <a class="hover:underline text-pink-600 mr-2"
+                               :href="`https://www.instagram.com/${pageUsername}/`"
+                               target="_blank">{{ "@" + pageUsername }}</a>
                             <button class="text-gray-500 py-2" @click="verifiedPage = false">解除連結</button>
                         </template>
                     </div>

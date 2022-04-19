@@ -5,10 +5,10 @@ import dayjs from "dayjs"
 
 import config from "#config"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
-import {UpdateFilter} from "mongodb";
-import IgAuth from "~/models/IgAuth";
+import {noCache} from "~/server/util"
 
 export default async function (req: IncomingMessage, res: ServerResponse) {
+    noCache(res)
     await initMongo()
 
     const {code} = useQuery(req)
@@ -48,17 +48,16 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
         expires_in
     } = await longTokenRes.json() as { access_token: string, expires_in: number }
 
-    const update: UpdateFilter<IgAuth> = {
+    const page = await pageSearchCollection.findOne({username}) as unknown as { pk: number };
+
+    await igAuthCollection.updateOne({localUserId: userId}, {
         $set: {
             username,
             expiry: dayjs().add(expires_in, "seconds").toDate(),
-            accessToken: longToken
+            accessToken: longToken,
+            pk: page?.pk || undefined
         }
-    }
-    const page = await pageSearchCollection.findOne({username})
-    if (page) update.$set.pk = page.pk
-
-    await igAuthCollection.updateOne({localUserId: userId}, update, {upsert: true})
+    }, {upsert: true})
 
     return {accessToken: longToken, userId, id, username}
 }
