@@ -2,6 +2,10 @@
     @apply text-md px-6 py-2 rounded-md;
 }
 
+/*
+* Button types
+*/
+
 .btn-primary {
     @apply btn text-white bg-pink-400;
 }
@@ -17,6 +21,10 @@
 .btn-primary-hover.btn-outline:hover {
     @apply text-white bg-pink-400;
 }
+
+/*
+* Button sizes
+*/
 
 .btn-sm {
     @apply text-sm px-3 py-1;
@@ -78,4 +86,8 @@ textarea {
 
 .image-container {
     @apply bg-center bg-cover bg-gray-300;
+}
+
+.iconbox::before {
+    @apply !m-0;
 }
