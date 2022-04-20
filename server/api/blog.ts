@@ -23,12 +23,13 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
 
     await blogCollection().doc(blogId).set({
+        id: blogId,
         created: Date.now(),
         title,
         slug,
         metaDesc,
         htmlContent,
-    }, {merge: true})
+    })
 
     return {
         id: blogId
