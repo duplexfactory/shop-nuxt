@@ -1,23 +1,47 @@
 <script setup lang="ts">
   import Blog from "~/models/Blog"
   import dayjs from "dayjs";
-  import type {Ref} from "vue";
+  import {abortNavigation} from "#app";
 
   const config = useRuntimeConfig();
   const route = useRoute();
+
+  // Extract blog ID
   const lastSeparatorIndex = (route.params.slug as string).lastIndexOf("-");
-  const slug = (route.params.slug as string).slice(0, lastSeparatorIndex);
   const blogId = (route.params.slug as string).slice(lastSeparatorIndex + 1);
 
-  const blog: Ref<Blog & {id: string}> = ref<Blog & {id: string}>({
-    id: "",
-    created: 1650422141,
-    title: "This is a title",
-    slug: "",
-    metaDesc: "",
-    htmlContent: "",
+  if (Number(blogId) === Number.NaN) {
+    // Bad ID
+    abortNavigation();
+  }
+
+  const {data, error} = await useLazyFetch("/api/blog", {params: {id: blogId}});
+
+  if (!!error && !!error.value) {
+    // API error
+    abortNavigation();
+  }
+
+  const blog = computed<Blog>(() => {
+    if (data.value) {
+      return data.value.blog;
+    }
+    return {
+      id: "",
+      created: 0,
+      title: "",
+      slug: "",
+      metaDesc: "",
+      htmlContent: "",
+    };
   })
   const created = dayjs(blog.value.created * 1000).format('DD/MM/YYYY');
+
+  const structuredPath = `/blog/${blog.value.slug}-${blog.value.id}`;
+  if (route.path !== structuredPath) {
+    // 302 redirect
+    navigateTo(structuredPath);
+  }
 
   // Meta
   useMeta(computed(() => {
@@ -34,13 +58,12 @@
       ]
     }
   }))
-
 </script>
 
 <template>
   <div class="container mx-auto py-4">
     <div class="grid grid-cols-12">
-      <div class="col-start-3 col-span-8">
+      <div v-if="blog" class="col-start-3 col-span-8">
         <div class="text-3xl">{{ blog.title }}</div>
         <div class="flex justify-between text-sm mt-2">
           <div class="text-gray-500">
@@ -55,6 +78,7 @@
           </div>
         </div>
 
+        <div v-html="blog.htmlContent"></div>
 
       </div>
     </div>
