@@ -5,6 +5,7 @@ import IgPageReview from "~/models/IgPageReview";
 import User from "~/models/user/User";
 import MediaPriceSuggestion from "~/models/MediaPriceSuggestion";
 import ShopSuggestion from "~/models/ShopSuggestion";
+import Blog from "~/models/Blog";
 // import {firestore} from "firebase-admin/firestore";
 // import CollectionGroup = firestore.CollectionGroup;
 initFirebase();
@@ -33,6 +34,10 @@ export function mediaPriceSuggestionCollection() {
 
 export function shopSuggestionCollection() {
     return getFirestore().collection("shopSuggests") as CollectionReference<ShopSuggestion>;
+}
+
+export function blogCollection() {
+    return getFirestore().collection("blogs") as CollectionReference<Blog>;
 }
 
 export type IdInput = number | string | { id: string | number }

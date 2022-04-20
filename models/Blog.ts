@@ -3,6 +3,6 @@ export default interface Blog {
     created: number;
     title: string;
     slug: string;
-    metaTitle: string;
+    metaDesc: string;
     htmlContent: string;
 }
