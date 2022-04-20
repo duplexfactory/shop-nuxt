@@ -2,16 +2,16 @@
   <div class="container mx-auto pb-8">
 
     <div class="mb-4 text-right">
-      <button class="btn btn-primary" @click="save">Save</button>
+      <button class="btn btn-primary" @click="save" :disabled="isSubmitting">Save</button>
     </div>
 
     <div class="mb-4 flex">
-      <input class="flex-1 text-input-primary" type="text" name="title" placeholder="Title">
+      <input v-model="blog.title" class="flex-1 text-input-primary" type="text" name="title" placeholder="Title">
     </div>
 
     <div class="mb-4 flex">
-      <input class="flex-1 mr-4 text-input-primary" type="text" name="slug" placeholder="Slug">
-      <input class="flex-1 text-input-primary" type="text" name="metaTitle" placeholder="Meta Title">
+      <input v-model="blog.slug" class="flex-1 mr-4 text-input-primary" type="text" name="slug" placeholder="Slug">
+      <input v-model="blog.metaDesc" class="flex-1 text-input-primary" type="text" name="metaDesc" placeholder="Meta Description">
     </div>
 
     <div class="mb-4">
@@ -22,7 +22,9 @@
   </div>
 </template>
 
-<script type="ts" setup>
+<script setup lang="ts">
+
+const nuxt = useNuxtApp();
 
 useMeta({
   script: [
@@ -30,15 +32,44 @@ useMeta({
   ]
 })
 
-const htmlContent = ref("");
+const blog = ref({
+  title: "",
+  slug: "",
+  metaDesc: "",
+  htmlContent: "",
+})
+const isSubmitting = ref(false);
 
 function loadTiny() {
   tinymce.init({selector:'#myTextarea'});
 }
 
-function save() {
-  htmlContent.value = tinymce.get("myTextarea").getContent();
-  console.log(htmlContent.value);
+async function save() {
+
+  blog.value.htmlContent = tinymce.get("myTextarea").getContent();
+
+  // Submit
+  isSubmitting.value = true;
+  const {data, error} = await useFetch("/api/blog", {method: "POST", body: {
+      ...blog.value
+    }});
+  isSubmitting.value = false;
+
+  // Error
+  if (error.value) {
+    nuxt.vueApp.$toast.error("儲存失敗！", {position: "top"});
+    return;
+  }
+
+  // Reset
+  blog.value = {
+    title: "",
+    slug: "",
+    metaDesc: "",
+    htmlContent: "",
+  }
+
+  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"});
 }
 
 // useMounted(() => {
