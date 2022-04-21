@@ -35,7 +35,7 @@
       htmlContent: "",
     };
   })
-  const created = dayjs(blog.value.created * 1000).format('DD/MM/YYYY');
+  const created = dayjs(blog.value.created).format('DD/MM/YYYY');
 
   const structuredPath = `/blog/${blog.value.slug}-${blog.value.id}`;
   if (route.path !== structuredPath) {
