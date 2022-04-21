@@ -45,7 +45,11 @@
 
   import edjsHTML from "editorjs-html";
   const parser = edjsHTML();
-  const htmlContent = parser.parse(blog.value.htmlContent).join("</br>");
+  const htmlContent = blog.value.htmlContent.blocks.map((b) => {
+    const alignment = b.data.alignment ?? b.tunes?.alignmentTune?.alignment ?? "left"
+    const style = `style="text-align: ${alignment}"`;
+    return `<div ${style}>${parser.parseBlock(b)}</div>`
+  }).join("");
 
   // Meta
   useMeta(computed(() => {
