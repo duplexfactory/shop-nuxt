@@ -29,6 +29,7 @@
     "@vueuse/nuxt": "^7.5.3",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
+    "editorjs-html": "^3.4.2",
     "editorjs-inline-font-size-tool": "^1.0.1",
     "exponential-backoff": "^3.1.0",
     "firebase": "^9.6.10",

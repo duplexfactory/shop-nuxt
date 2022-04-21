@@ -43,6 +43,10 @@
     navigateTo(structuredPath);
   }
 
+  import edjsHTML from "editorjs-html";
+  const parser = edjsHTML();
+  const htmlContent = parser.parse(blog.value.htmlContent).join("</br>");
+
   // Meta
   useMeta(computed(() => {
     return {
@@ -78,7 +82,7 @@
           </div>
         </div>
 
-        <div v-html="blog.htmlContent"></div>
+        <div v-html="htmlContent"></div>
 
       </div>
     </div>
