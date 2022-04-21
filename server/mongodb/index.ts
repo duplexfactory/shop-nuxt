@@ -13,7 +13,7 @@ export async function initMongo() {
             useNewUrlParser: true,
             useUnifiedTopology: true
         } as MongoClientOptions);
-        const db = client.db("ig");
+        const db = client.db(config.DEV ? "ig-dev" : "ig");
         pageSearchCollection = db.collection("page");
         igAuthCollection = db.collection("igAuth");
         init = true;

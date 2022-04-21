@@ -82,6 +82,7 @@ export default defineNuxtConfig({
     IMG_PROXY: process.env.IMG_PROXY,
     DOMAIN: process.env.DOMAIN,
     IG_APP_ID: process.env.DOMAIN,
+    DEV: process.env.DEV
   },
   privateRuntimeConfig: {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
