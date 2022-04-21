@@ -44,7 +44,20 @@
   }
 
   import edjsHTML from "editorjs-html";
+
   const parser = edjsHTML();
+  // function createElementFromHTML(htmlString) {
+  //   const div = document.createElement('div');
+  //   div.innerHTML = htmlString.trim();
+  //
+  //   // Change this to div.childNodes to support multiple top-level nodes.
+  //   return div.firstChild as HTMLElement;
+  // }
+  // const htmlContent = parser.parse(blog.value.htmlContent).map((s) => {
+  //   const e = createElementFromHTML(s);
+  //   const alignment = b.data.alignment ?? b.tunes?.alignmentTune?.alignment ?? "left";
+  //   e.setAttribute("style", `text-align: ${alignment}`);
+  // })
   const htmlContent = blog.value.htmlContent.blocks.map((b) => {
     const alignment = b.data.alignment ?? b.tunes?.alignmentTune?.alignment ?? "left"
     const style = `style="text-align: ${alignment}"`;
