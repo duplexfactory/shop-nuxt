@@ -14,39 +14,66 @@
       <input v-model="blog.metaDesc" class="flex-1 text-input-primary" type="text" name="metaDesc" placeholder="Meta Description">
     </div>
 
-    <div class="mb-4">
-      <button class="btn btn-primary mr-4" @click="loadTiny">Load TinyMCE</button>
+    <div class="border rounded-md">
+      <div id="editor"></div>
     </div>
 
-    <textarea id="myTextarea"></textarea>
   </div>
 </template>
 
 <script setup lang="ts">
 
+import type EditorJS from "@editorjs/editorjs";
+import type {Ref} from "vue";
+import Blog from "~/models/Blog";
+
 const nuxt = useNuxtApp();
 
-useMeta({
-  script: [
-    {type: 'text/javascript', src: "/js/tinymce/js/tinymce/tinymce.min.js"}
-  ]
-})
 
-const blog = ref({
+const blog: Ref<Omit<Blog, "id" | "created">> = ref({
   title: "",
   slug: "",
   metaDesc: "",
-  htmlContent: "",
+  htmlContent: null,
 })
 const isSubmitting = ref(false);
 
-function loadTiny() {
-  tinymce.init({selector:'#myTextarea'});
-}
+const editor: Ref<EditorJS | null> = ref(null);
+
+onMounted(async () => {
+  const EditorJS = await import("@editorjs/editorjs")
+  const Header = await import("@editorjs/header")
+  const List = await import("@editorjs/list")
+  const Table = await import("@editorjs/table")
+  const FontSize = await import('editorjs-inline-font-size-tool');
+
+  editor.value = new EditorJS.default({
+    holder: "editor",
+    tools: {
+      header: {
+        class: Header.default,
+        shortcut: 'CMD+SHIFT+H',
+        inlineToolbar: true,
+      },
+      list: {
+        class: List.default,
+        shortcut: 'CMD+SHIFT+L'
+      },
+      table: {
+        class: Table.default,
+        inlineToolbar: true,
+      },
+      fontSize: {
+        class: FontSize.default,
+        inlineToolbar: true,
+      },
+    }
+  });
+})
 
 async function save() {
 
-  blog.value.htmlContent = tinymce.get("myTextarea").getContent();
+  blog.value.htmlContent = await editor.value.save();
 
   // Submit
   isSubmitting.value = true;
@@ -66,16 +93,11 @@ async function save() {
     title: "",
     slug: "",
     metaDesc: "",
-    htmlContent: "",
+    htmlContent: null,
   }
 
   nuxt.vueApp.$toast.success("儲存成功！", {position: "top"});
 }
 
-// useMounted(() => {
-//   this.$nextTick(async () => {
-//     await tinymce.init({selector:'#myTextarea'});
-//   })
-// })
 
 </script>
