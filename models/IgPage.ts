@@ -27,6 +27,8 @@ export default interface IgPage {
     lastActivity: number
     tier: number
 
+    temp?: boolean
+
     // sub-docs
     stories: IgStory[]
     medias: IgMedia[] // max 252

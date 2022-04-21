@@ -4,6 +4,13 @@ import dayjs from "dayjs"
 
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {noCache} from "~/server/util"
+import IgPage from "~/models/IgPage";
+
+interface RawMedia {
+    "caption": string,
+    "permalink": string,
+    "timestamp": string
+}
 
 export default defineEventHandler(async (event) => {
     noCache(event)
@@ -57,6 +64,24 @@ export default defineEventHandler(async (event) => {
             pk: page?.pk || undefined
         }
     }, {upsert: true})
+
+    // fetch medias
+    const mediaUrl = new URL("https://graph.instagram.com/me/media")
+    tokenUrl.searchParams.set("fields", "caption,permalink,timestamp")
+    tokenUrl.searchParams.set("access_token", longToken)
+    const mediaRes = await fetch(mediaUrl.href)
+    const {data: medias}: { data: RawMedia } = await mediaRes.json()
+
+    if (!page) {
+        const p: Partial<IgPage> = {
+            temp: true,
+            pk: 0,
+            username,
+            fullName: "",
+            biography: "",
+            mediaCount: 0
+        }
+    }
 
     return {accessToken: longToken, userId, id, username}
 })

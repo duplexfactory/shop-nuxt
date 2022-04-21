@@ -1,4 +1,4 @@
-import {DynamoDBClient, QueryCommand} from "@aws-sdk/client-dynamodb";
+import {BatchWriteItemCommand, DynamoDBClient, QueryCommand} from "@aws-sdk/client-dynamodb";
 import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
 import IgMedia from "~/models/IgMedia";
 import dayjs from "dayjs";
@@ -59,4 +59,10 @@ export async function getMediaByCode(code: string): Promise<IgMedia | null> {
         const {pagePk, takenAt} = unmarshall(res.Items[0]);
         return getMedia(pagePk, takenAt);
     } else return undefined;
+}
+
+export async function saveMedias(medias: IgMedia[]) {
+    await client.send(new BatchWriteItemCommand({
+        RequestItems: {medias: medias.map(media => ({PutRequest: {Item: marshall(media)}}))}
+    }));
 }
