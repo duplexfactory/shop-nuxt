@@ -46,6 +46,8 @@ onMounted(async () => {
   const List = await import("@editorjs/list")
   const Table = await import("@editorjs/table")
   const FontSize = await import('editorjs-inline-font-size-tool');
+  const Paragraph = await import('editorjs-paragraph-with-alignment');
+  const AlignmentTuneTool = await import('editorjs-text-alignment-blocktune');
 
   editor.value = new EditorJS.default({
     holder: "editor",
@@ -54,6 +56,7 @@ onMounted(async () => {
         class: Header.default,
         shortcut: 'CMD+SHIFT+H',
         inlineToolbar: true,
+        tunes: ["alignmentTune"]
       },
       list: {
         class: List.default,
@@ -67,6 +70,20 @@ onMounted(async () => {
         class: FontSize.default,
         inlineToolbar: true,
       },
+      paragraph: {
+        class: Paragraph.default,
+        inlineToolbar: true,
+      },
+      alignmentTune: {
+        class: AlignmentTuneTool.default,
+        config:{
+          default: "right",
+          blocks: {
+            header: 'center',
+            list: 'right'
+          }
+        },
+      }
     }
   });
 })
