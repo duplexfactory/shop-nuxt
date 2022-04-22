@@ -1,20 +1,19 @@
-import {IncomingMessage, ServerResponse} from "http"
 import fetch from "node-fetch"
-import {useQuery} from "h3"
+import {defineEventHandler, useQuery} from "h3"
 import dayjs from "dayjs"
 
-import config from "#config"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {noCache} from "~/server/util"
 
-export default async function (req: IncomingMessage, res: ServerResponse) {
-    noCache(res)
+export default defineEventHandler(async (event) => {
+    noCache(event)
     await initMongo()
 
-    const {code} = useQuery(req)
+    const {code} = useQuery(event)
 
     // exchange code for short lived access token
     const form = new URLSearchParams()
+    const config = useRuntimeConfig();
     form.append("client_id", config.IG_APP_ID)
     form.append("client_secret", config.IG_APP_SECRET)
     form.append("grant_type", "authorization_code")
@@ -60,4 +59,4 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
     }, {upsert: true})
 
     return {accessToken: longToken, userId, id, username}
-}
+})

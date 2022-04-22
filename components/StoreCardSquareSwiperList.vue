@@ -1,3 +1,34 @@
+<template>
+  <div>
+    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
+      <template v-slot:default="slotProps">
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
+    <!-- Slider main container -->
+    <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
+      <!-- Additional required wrapper -->
+      <div class="swiper-wrapper lg:pb-8">
+        <!-- Slides -->
+        <StoreCardSquare v-for="shop in shops"
+                         class="swiper-slide"
+                         :shop="shop"
+                         :key="shop.username + '-store-card-sq'"></StoreCardSquare>
+      </div>
+
+      <div ref="swiperPagination" class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
+
+      <!-- If we need navigation buttons -->
+      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+      <div ref="swiperButtonNext" class="swiper-button-next"></div>
+
+      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+      <!--        <div class="swiper-scrollbar"></div>-->
+    </div>
+
+  </div>
+</template>
+
 <!--<script setup lang="ts">-->
 
 <!--function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {-->
@@ -93,35 +124,4 @@
         }
     }
 </script>
-
-<template>
-    <div>
-      <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
-        <template v-slot:default="slotProps">
-          <div class="h-full w-full bg-loading"></div>
-        </template>
-      </swiper-slides-placeholder>
-      <!-- Slider main container -->
-      <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper lg:pb-8">
-          <!-- Slides -->
-          <StoreCardSquare v-for="shop in shops"
-                           class="swiper-slide"
-                           :shop="shop"
-                           :key="shop.username + '-store-card-sq'"></StoreCardSquare>
-        </div>
-
-        <div ref="swiperPagination" class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
-
-        <!-- If we need navigation buttons -->
-        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-        <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-        <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-        <!--        <div class="swiper-scrollbar"></div>-->
-      </div>
-
-    </div>
-</template>
 

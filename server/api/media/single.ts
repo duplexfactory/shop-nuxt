@@ -1,22 +1,21 @@
-import type {IncomingMessage, ServerResponse} from 'http'
-import {sendError, useQuery} from 'h3'
+import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3'
 import type IgMedia from "~/models/IgMedia";
 import {getMediaByCode, initDynamo} from "~/server/dynamodb";
 import {badRequest, notFound} from "~/server/util";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ media: IgMedia }> {
-    const {code} = await useQuery(req) as { code: string }
+export default defineEventHandler(async (event) => {
+    const {code} = await useQuery(event) as { code: string }
 
-    let queryId: number
-    if (code) {
-        initDynamo();
-        const media = await getMediaByCode(code);
-        if(!media) {
-            sendError(res, notFound)
-        }
-        return {media}
-    } else {
+    if (!code) {
         // Page deleted
-        throw sendError(res, badRequest)
+        throw sendError(event, badRequest)
     }
-}
+
+    initDynamo();
+    const media = await getMediaByCode(code);
+    if (!media) {
+        throw sendError(event, notFound)
+    }
+    return {media} as unknown as JSONValue
+    // { media: IgMedia }
+})

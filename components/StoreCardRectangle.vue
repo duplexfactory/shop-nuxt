@@ -1,36 +1,3 @@
-<script setup lang="ts">
-    import {PropType} from "vue";
-    import IgPage from '~/models/IgPage';
-    import {PageSearch} from "~/models/PageSearch";
-    import dayjs from "dayjs";
-    import PageInfoRow from "~/models/PageInfoRow";
-
-    const {tagsLookup} = useTags()
-    const {shop} = defineProps({
-        shop: Object as PropType<IgPage | PageSearch>
-    })
-    //
-    // const {
-    //     username,
-    //     fullName,
-    //     biography,
-    //     lastActivity,
-    //     followerCount,
-    //     mediaCount,
-    //     mediaUrls,
-    //     profilePicUrl,
-    //     tags,
-    //     brickAndMortar,
-    //     locations,
-    // } = shop;
-    // const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-
-    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
-    const lastActive = computed(() => dayjs(shop.lastActivity * 1000).format('DD/MM/YYYY'));
-
-    const verifiedPage = false;
-</script>
-
 <template>
 
     <div class="sm:(border rounded-md p-4 grid) grid-cols-12 gap-8 relative">
@@ -150,6 +117,39 @@
         <!--</div>-->
     <!--</div>-->
 </template>
+
+<script setup lang="ts">
+import {PropType} from "vue";
+import IgPage from '~/models/IgPage';
+import {PageSearch} from "~/models/PageSearch";
+import dayjs from "dayjs";
+import PageInfoRow from "~/models/PageInfoRow";
+
+const {tagsLookup} = useTags()
+const {shop} = defineProps({
+  shop: Object as PropType<IgPage | PageSearch>
+})
+//
+// const {
+//     username,
+//     fullName,
+//     biography,
+//     lastActivity,
+//     followerCount,
+//     mediaCount,
+//     mediaUrls,
+//     profilePicUrl,
+//     tags,
+//     brickAndMortar,
+//     locations,
+// } = shop;
+// const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
+
+const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
+const lastActive = computed(() => dayjs(shop.lastActivity * 1000).format('DD/MM/YYYY'));
+
+const verifiedPage = false;
+</script>
 
 <style scoped>
 

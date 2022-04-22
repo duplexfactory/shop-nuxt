@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import {useShowAgeRestrictedModal} from "~/composables/states";
-
-const {ageRestrictedCategories} = useTags();
-
-const showAgeRestrictedModal = useShowAgeRestrictedModal();
-
-</script>
-
 <template>
   <div class="sidenav">
 
@@ -57,6 +48,15 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
 
   </div>
 </template>
+
+<script setup lang="ts">
+import {useShowAgeRestrictedModal} from "~/composables/states";
+
+const {ageRestrictedCategories} = useTags();
+
+const showAgeRestrictedModal = useShowAgeRestrictedModal();
+
+</script>
 
 <script lang="ts">
 

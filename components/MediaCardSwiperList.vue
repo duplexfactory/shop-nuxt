@@ -1,3 +1,36 @@
+<template>
+  <div>
+    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
+      <template v-slot:default="slotProps">
+        <div class="h-full w-full bg-loading"></div>
+      </template>
+    </swiper-slides-placeholder>
+    <!-- Slider main container -->
+    <div :class="{'hidden': !swiperReady || lastMediaPage.length === 0}" class="swiper" ref="swiper">
+      <!-- Additional required wrapper -->
+      <div class="swiper-wrapper pb-8">
+        <!-- Slides -->
+        <MediaCard v-for="page in lastMediaPage"
+                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, pagePk: page.pk}"
+                   class="cursor-pointer swiper-slide"
+                   :media="page.lastMediaData"
+                   :shop="page"
+                   :key="page.pk.toString() + '-post-card'"></MediaCard>
+      </div>
+      <!-- If we need pagination -->
+      <div class="swiper-pagination" style="bottom: 0px !important;"></div>
+
+      <!-- If we need navigation buttons -->
+      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+      <div ref="swiperButtonNext" class="swiper-button-next"></div>
+
+      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+      <!--        <div class="swiper-scrollbar"></div>-->
+    </div>
+  </div>
+
+</template>
+
 <script lang="ts">
 import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
 // import Swiper and modules styles
@@ -79,40 +112,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-  const showMediaModal = useShowMediaModal();
-  const showingMediaModalData = useShowingMediaModalData();
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+const showMediaModal = useShowMediaModal();
+const showingMediaModalData = useShowingMediaModalData();
 </script>
-
-<template>
-  <div>
-    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
-      <template v-slot:default="slotProps">
-        <div class="h-full w-full bg-loading"></div>
-      </template>
-    </swiper-slides-placeholder>
-    <!-- Slider main container -->
-    <div :class="{'hidden': !swiperReady || lastMediaPage.length === 0}" class="swiper" ref="swiper">
-      <!-- Additional required wrapper -->
-      <div class="swiper-wrapper pb-8">
-        <!-- Slides -->
-        <MediaCard v-for="page in lastMediaPage"
-                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, pagePk: page.pk}"
-                   class="cursor-pointer swiper-slide"
-                   :media="page.lastMediaData"
-                   :shop="page"
-                   :key="page.pk.toString() + '-post-card'"></MediaCard>
-      </div>
-      <!-- If we need pagination -->
-      <div class="swiper-pagination" style="bottom: 0px !important;"></div>
-
-      <!-- If we need navigation buttons -->
-      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-      <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-      <!--        <div class="swiper-scrollbar"></div>-->
-    </div>
-  </div>
-
-</template>
