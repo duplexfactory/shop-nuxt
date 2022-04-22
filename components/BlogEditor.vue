@@ -40,8 +40,13 @@ const blog: Ref<Omit<Blog, "id" | "created">> = ref({
   metaDesc: "",
   htmlContent: null,
 });
+console.log(editBlog);
 if (editBlog) {
-  blog.value = editBlog
+  // const editableBlog: Omit<Blog, "id" | "created"> = {};
+  // Object.keys(blog.value).forEach((k) => editableBlog[k] = editBlog[k])
+  // blog.value = editableBlog;
+
+  blog.value = editBlog;
 }
 // watch(editBlog, (newEditBlog) => {
 //   console.log("changeddd!!!!");
@@ -111,7 +116,10 @@ async function save() {
 
   // Submit
   isSubmitting.value = true;
-  const {data, error} = await useFetch("/api/blog", {method: "POST", body: {
+  const {data, error} = await useFetch("/api/blog", {
+    method: !!editBlog ? "PATCH" : "POST",
+    params: !!editBlog ? {id: editBlog.id} : "POST",
+    body: {
       ...blog.value
     }});
   isSubmitting.value = false;
