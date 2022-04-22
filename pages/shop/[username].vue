@@ -1,216 +1,3 @@
-<script setup lang="ts">
-
-    import {throwError} from "#app";
-
-    const {tagsLookup, categories} = useTags();
-
-    const verifiedPage = false;
-
-    // const page = {
-    //   lastActivity: 0,
-    //   // "_id":{"$numberDouble":"1.0007428151000E+10"},
-    //   // "activeScore":{"$numberInt":"0"},
-    //   // "adult":false,
-    //   "biography":"Close❌\n👭🏻兩姐妹susu開創的養生茶小店\n🇭🇰香港自家制小店\n💵Payme | FPS | Bank Transfer\n📦平郵 ｜ 順豐 ｜面交(東鐵沿線)\n🎁歡迎訂購散水禮物，婚禮回禮等等...\n🛍歡迎DM或點下面whatsapp link 下單",
-    //   "brickAndMortar":false,
-    //   // "businessRegistration":false,
-    //   "followerCount":1608,
-    //   // "followingCount":{"$numberInt":"830"},
-    //   // "fullName":"𝓢𝓾𝓼𝓾.𝓬𝓱𝓪養生茶 || 花茶 ||水果茶 || 冷泡茶",
-    //   "locations":[],
-    //   "mediaCount":81,
-    //   "medias": [
-    //     {
-    //       id: 'id',
-    //       code: 'CLZgxXFjPiO',
-    //     }
-    //   ],
-    //   // "mediaUrls":["https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-15/150787098_152367376704308_3452290134182951987_n.jpg?stp=dst-jpg_e35_s1080x1080&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=108&_nc_ohc=P29nDOXzGc4AX88R7V4&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjUxMTE4MjM5Njc2NzY2NDI3MA%3D%3D.2-ccb7-4&oh=00_AT-zPt3KEIA0lLxErMnYz67w4VQGxrI_fhM_EOW6JCHVcA&oe=61F878DE&_nc_sid=6136e7","https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-15/150941680_871159673462427_8079581001106523128_n.jpg?stp=dst-jpg_e35_s1080x1080&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=103&_nc_ohc=Yl3z0DVuN8YAX8hXYLy&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjUxMTE4MTkxODk0NDI1MTk1Mg%3D%3D.2-ccb7-4&oh=00_AT82eF4thvNIoEwLnjS-NSoJCYE36vTvA3cP0YAKSaLaIg&oe=61FA552C&_nc_sid=6136e7","https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-15/151811494_1671834206329917_3439524254574899315_n.jpg?stp=dst-jpg_e35_s1080x1080&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=109&_nc_ohc=uxYg6LYw9bkAX8KDDYy&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjUxMTE4MTQ3MDM4ODQ3MDA0NQ%3D%3D.2-ccb7-4&oh=00_AT-u_y7m2UP_iC4RtgvWN0Gw8iRlVMnYbCDzPYoWmXPhPw&oe=61F9CCB4&_nc_sid=6136e7"],
-    //   "profilePicUrl":"https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-19/94730584_1985404248269838_3376414541758857216_n.jpg?stp=dst-jpg_s150x150&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=106&_nc_ohc=tvG5RElIgE0AX_VjuJP&edm=AEF8tYYBAAAA&ccb=7-4&oh=00_AT-jhQrubt594nSdQJdo7Dwuj72Ha-2b03grnHtMUuyx-Q&oe=61F9E2D1&_nc_sid=a9513d",
-    //   "tags":["tea"],
-    //   "username":"susu.cha"
-    // };
-
-    // Page Data Init
-    import IgPage from "~/models/IgPage";
-    import PageInfoRow from "~/models/PageInfoRow";
-    import dayjs from "dayjs";
-
-    const config = useRuntimeConfig();
-    const route = useRoute();
-
-    const {data, error} = await useLazyFetch(`/api/shop`, {params: {username: route.params.username}})
-    if (!!error && !!error.value) {
-      const error = new Error();
-      (error as any).statusCode = 404;
-      throwError(error)
-    }
-
-    const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
-    const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
-    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
-
-    const selectedIndex = ref(0);
-
-    // Medias
-    let mediaPending = ref(false);
-    const medias = ref([]);
-    async function fetchMedias() {
-      const params = {
-        username: route.params.username,
-        limit: 12
-      }
-      if (medias.value.length != 0) {
-        params["before"] = medias.value[medias.value.length - 1].takenAt;
-      }
-      const {data: mediaData, pending} = await useLazyFetch(`/api/media/list`, {params});
-      if (mediaData.value != null) {
-        medias.value = [...medias.value, ...mediaData.value.medias];
-        mediaPending.value = false;
-      }
-      else {
-        // Client navigation.
-        watch(mediaData, (newData) => {
-          medias.value = [...medias.value, ...newData.medias];
-          mediaPending.value = false;
-        })
-      }
-    }
-    await fetchMedias();
-
-    async function showMedia(i: number) {
-      if (i == medias.value.length - 1 && !mediaPending.value) {
-        mediaPending.value = true;
-        await fetchMedias();
-      }
-    }
-
-    // Meta
-    useMeta(computed(() => {
-      let metaDescLocation = "", metaDescFullname = "";
-      if (page.value !== null) {
-        if (page.value.locations.length !== 0) {
-          metaDescLocation = `，門市位於${page.value.locations.join("、")}`;
-        }
-
-        if (verifiedPage) {
-          metaDescFullname = page.value.fullName;
-        }
-        else {
-          // Construct a full name for unverified pages.
-          const universalCategory = categories.find((c) => c.id === "universal");
-          const universalTagIds = (universalCategory["tags"] as {id: string}[]).map((t) => t.id);
-
-          const basicTagLabels = [], universalTagLabels = [];
-          page.value.tags.forEach((t) => {
-            if (universalTagIds.includes(t))
-              universalTagLabels.push(tagsLookup[t]);
-            else
-              basicTagLabels.push(tagsLookup[t]);
-          });
-
-          if (universalTagLabels.length === 0) {
-            // No universal tags.
-            metaDescFullname = "專售" + basicTagLabels.join("、") + "。";
-          }
-          else {
-            metaDescFullname = "";
-
-            const prefixTagLabels = page.value.tags.filter((t) => ["south-korea", "japan", "second-hand"].includes(t)).map((t) => tagsLookup[t]);
-            if (prefixTagLabels.length === 0) {
-              metaDescFullname += basicTagLabels.join("、")
-            }
-            else {
-              if (basicTagLabels.length === 0)
-                metaDescFullname += prefixTagLabels.join("、") + "貨品";
-              else
-                metaDescFullname += prefixTagLabels.map((prefix) => basicTagLabels.map((base) => prefix + base)).flat().join("、")
-            }
-
-            if (page.value.tags.includes("purchase")) {
-              metaDescFullname += "代購";
-            }
-
-            if (page.value.tags.includes("customize")) {
-              metaDescFullname += metaDescFullname.length === 0 ? "訂製貨品" : "，可訂製";
-            }
-
-            metaDescFullname = (page.value.tags.includes("purchase") ? "專營" : "專售") + metaDescFullname + "。";
-          }
-        }
-      }
-      const metaDescription = `${route.params.username}的IG Shop門市、評論、商業登記、相片及貼文${metaDescLocation}。${metaDescFullname}`;
-      return {
-        title: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`,
-        meta: [
-          {name: 'description', hid: 'description', content: metaDescription},
-          {property: 'og:title', hid: 'og:title', content: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`},
-          {property: 'og:url', hid: 'og:url', content: `${config.DOMAIN}/shop/${route.params.username}`},
-          // {property: 'og:image', hid: 'og:image', content: `${page.value !== null ? page.value.profilePicUrl : ""}`},
-          // {property: 'og:image:height', hid: 'og:image:height', content: '150'},
-          // {property: 'og:image:width', hid: 'og:image:width', content: '150'},
-          {property: 'og:description', hid: 'og:description', content: metaDescription}
-        ]
-      }
-    }))
-
-    // Media Modal
-    import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-
-    const showModal = useShowMediaModal();
-    const showingMediaModalData = useShowingMediaModalData();
-
-    function showMediaModal(media: IgMedia) {
-      if (page.value != null) {
-        showModal.value = true;
-        showingMediaModalData.value = {
-          media: media,
-          simplePage: page.value
-        };
-      }
-    }
-
-    function showMediaModalByCode(mediaCode: string) {
-      if (page.value != null) {
-        showModal.value = true;
-        showingMediaModalData.value = {
-          code: mediaCode,
-          simplePage: page.value
-        };
-      }
-    }
-
-    // Reviews
-    import IgPageReview from "~/models/IgPageReview";
-
-    const reviews = ref<IgPageReview[]>([]);
-
-    async function fetchReviews() {
-      reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
-          pagePk: page.value.pk,
-        }}))['reviews'];
-    }
-
-    // Create Review
-    import useCreateReview from "~/composables/useCreateReview";
-    import IgMedia from "~/models/IgMedia";
-
-    const {
-      reviewingPagePk,
-      isCreatingReview,
-      rating,
-      content,
-      createReview,
-    } = useCreateReview();
-
-    async function sendReview() {
-      reviewingPagePk.value = page.value.pk;
-      await createReview();
-      await fetchReviews();
-    }
-
-</script>
-
 <template>
     <div class="mb-16">
         <div v-if="!!page" class="container mx-auto">
@@ -319,6 +106,219 @@
 
     </div>
 </template>
+
+<script setup lang="ts">
+
+import {throwError} from "nuxt/app";
+
+const {tagsLookup, categories} = useTags();
+
+const verifiedPage = false;
+
+// const page = {
+//   lastActivity: 0,
+//   // "_id":{"$numberDouble":"1.0007428151000E+10"},
+//   // "activeScore":{"$numberInt":"0"},
+//   // "adult":false,
+//   "biography":"Close❌\n👭🏻兩姐妹susu開創的養生茶小店\n🇭🇰香港自家制小店\n💵Payme | FPS | Bank Transfer\n📦平郵 ｜ 順豐 ｜面交(東鐵沿線)\n🎁歡迎訂購散水禮物，婚禮回禮等等...\n🛍歡迎DM或點下面whatsapp link 下單",
+//   "brickAndMortar":false,
+//   // "businessRegistration":false,
+//   "followerCount":1608,
+//   // "followingCount":{"$numberInt":"830"},
+//   // "fullName":"𝓢𝓾𝓼𝓾.𝓬𝓱𝓪養生茶 || 花茶 ||水果茶 || 冷泡茶",
+//   "locations":[],
+//   "mediaCount":81,
+//   "medias": [
+//     {
+//       id: 'id',
+//       code: 'CLZgxXFjPiO',
+//     }
+//   ],
+//   // "mediaUrls":["https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-15/150787098_152367376704308_3452290134182951987_n.jpg?stp=dst-jpg_e35_s1080x1080&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=108&_nc_ohc=P29nDOXzGc4AX88R7V4&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjUxMTE4MjM5Njc2NzY2NDI3MA%3D%3D.2-ccb7-4&oh=00_AT-zPt3KEIA0lLxErMnYz67w4VQGxrI_fhM_EOW6JCHVcA&oe=61F878DE&_nc_sid=6136e7","https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-15/150941680_871159673462427_8079581001106523128_n.jpg?stp=dst-jpg_e35_s1080x1080&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=103&_nc_ohc=Yl3z0DVuN8YAX8hXYLy&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjUxMTE4MTkxODk0NDI1MTk1Mg%3D%3D.2-ccb7-4&oh=00_AT82eF4thvNIoEwLnjS-NSoJCYE36vTvA3cP0YAKSaLaIg&oe=61FA552C&_nc_sid=6136e7","https://scontent-hkg4-2.cdninstagram.com/v/t51.2885-15/151811494_1671834206329917_3439524254574899315_n.jpg?stp=dst-jpg_e35_s1080x1080&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-2.cdninstagram.com&_nc_cat=109&_nc_ohc=uxYg6LYw9bkAX8KDDYy&edm=ABmJApABAAAA&ccb=7-4&ig_cache_key=MjUxMTE4MTQ3MDM4ODQ3MDA0NQ%3D%3D.2-ccb7-4&oh=00_AT-u_y7m2UP_iC4RtgvWN0Gw8iRlVMnYbCDzPYoWmXPhPw&oe=61F9CCB4&_nc_sid=6136e7"],
+//   "profilePicUrl":"https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-19/94730584_1985404248269838_3376414541758857216_n.jpg?stp=dst-jpg_s150x150&cb=9ad74b5e-7e291d1f&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=106&_nc_ohc=tvG5RElIgE0AX_VjuJP&edm=AEF8tYYBAAAA&ccb=7-4&oh=00_AT-jhQrubt594nSdQJdo7Dwuj72Ha-2b03grnHtMUuyx-Q&oe=61F9E2D1&_nc_sid=a9513d",
+//   "tags":["tea"],
+//   "username":"susu.cha"
+// };
+
+// Page Data Init
+import IgPage from "~/models/IgPage";
+import PageInfoRow from "~/models/PageInfoRow";
+import dayjs from "dayjs";
+
+const config = useRuntimeConfig();
+const route = useRoute();
+
+const {data, error} = await useLazyFetch(`/api/shop`, {params: {username: route.params.username}})
+if (!!error && !!error.value) {
+  const error = new Error();
+  (error as any).statusCode = 404;
+  throwError(error)
+}
+
+const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
+const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
+const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
+
+const selectedIndex = ref(0);
+
+// Medias
+let mediaPending = ref(false);
+const medias = ref([]);
+async function fetchMedias() {
+  const params = {
+    username: route.params.username,
+    limit: 12
+  }
+  if (medias.value.length != 0) {
+    params["before"] = medias.value[medias.value.length - 1].takenAt;
+  }
+  const {data: mediaData, pending} = await useLazyFetch(`/api/media/list`, {params});
+  if (mediaData.value != null) {
+    medias.value = [...medias.value, ...mediaData.value.medias];
+    mediaPending.value = false;
+  }
+  else {
+    // Client navigation.
+    watch(mediaData, (newData) => {
+      medias.value = [...medias.value, ...newData.medias];
+      mediaPending.value = false;
+    })
+  }
+}
+await fetchMedias();
+
+async function showMedia(i: number) {
+  if (i == medias.value.length - 1 && !mediaPending.value) {
+    mediaPending.value = true;
+    await fetchMedias();
+  }
+}
+
+// Meta
+useMeta(computed(() => {
+  let metaDescLocation = "", metaDescFullname = "";
+  if (page.value !== null) {
+    if (page.value.locations.length !== 0) {
+      metaDescLocation = `，門市位於${page.value.locations.join("、")}`;
+    }
+
+    if (verifiedPage) {
+      metaDescFullname = page.value.fullName;
+    }
+    else {
+      // Construct a full name for unverified pages.
+      const universalCategory = categories.find((c) => c.id === "universal");
+      const universalTagIds = (universalCategory["tags"] as {id: string}[]).map((t) => t.id);
+
+      const basicTagLabels = [], universalTagLabels = [];
+      page.value.tags.forEach((t) => {
+        if (universalTagIds.includes(t))
+          universalTagLabels.push(tagsLookup[t]);
+        else
+          basicTagLabels.push(tagsLookup[t]);
+      });
+
+      if (universalTagLabels.length === 0) {
+        // No universal tags.
+        metaDescFullname = "專售" + basicTagLabels.join("、") + "。";
+      }
+      else {
+        metaDescFullname = "";
+
+        const prefixTagLabels = page.value.tags.filter((t) => ["south-korea", "japan", "second-hand"].includes(t)).map((t) => tagsLookup[t]);
+        if (prefixTagLabels.length === 0) {
+          metaDescFullname += basicTagLabels.join("、")
+        }
+        else {
+          if (basicTagLabels.length === 0)
+            metaDescFullname += prefixTagLabels.join("、") + "貨品";
+          else
+            metaDescFullname += prefixTagLabels.map((prefix) => basicTagLabels.map((base) => prefix + base)).flat().join("、")
+        }
+
+        if (page.value.tags.includes("purchase")) {
+          metaDescFullname += "代購";
+        }
+
+        if (page.value.tags.includes("customize")) {
+          metaDescFullname += metaDescFullname.length === 0 ? "訂製貨品" : "，可訂製";
+        }
+
+        metaDescFullname = (page.value.tags.includes("purchase") ? "專營" : "專售") + metaDescFullname + "。";
+      }
+    }
+  }
+  const metaDescription = `${route.params.username}的IG Shop門市、評論、商業登記、相片及貼文${metaDescLocation}。${metaDescFullname}`;
+  return {
+    title: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`,
+    meta: [
+      {name: 'description', hid: 'description', content: metaDescription},
+      {property: 'og:title', hid: 'og:title', content: `${route.params.username} | IG Shop 推薦及評論平台 | Shoperuse`},
+      {property: 'og:url', hid: 'og:url', content: `${config.DOMAIN}/shop/${route.params.username}`},
+      // {property: 'og:image', hid: 'og:image', content: `${page.value !== null ? page.value.profilePicUrl : ""}`},
+      // {property: 'og:image:height', hid: 'og:image:height', content: '150'},
+      // {property: 'og:image:width', hid: 'og:image:width', content: '150'},
+      {property: 'og:description', hid: 'og:description', content: metaDescription}
+    ]
+  }
+}))
+
+// Media Modal
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+
+const showModal = useShowMediaModal();
+const showingMediaModalData = useShowingMediaModalData();
+
+function showMediaModal(media: IgMedia) {
+  if (page.value != null) {
+    showModal.value = true;
+    showingMediaModalData.value = {
+      media: media,
+      simplePage: page.value
+    };
+  }
+}
+
+function showMediaModalByCode(mediaCode: string) {
+  if (page.value != null) {
+    showModal.value = true;
+    showingMediaModalData.value = {
+      code: mediaCode,
+      simplePage: page.value
+    };
+  }
+}
+
+// Reviews
+import IgPageReview from "~/models/IgPageReview";
+
+const reviews = ref<IgPageReview[]>([]);
+
+async function fetchReviews() {
+  reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
+      pagePk: page.value.pk,
+    }}))['reviews'];
+}
+
+// Create Review
+import useCreateReview from "~/composables/useCreateReview";
+import IgMedia from "~/models/IgMedia";
+
+const {
+  reviewingPagePk,
+  isCreatingReview,
+  rating,
+  content,
+  createReview,
+} = useCreateReview();
+
+async function sendReview() {
+  reviewingPagePk.value = page.value.pk;
+  await createReview();
+  await fetchReviews();
+}
+
+</script>
 
 <style scoped>
 

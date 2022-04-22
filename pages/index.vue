@@ -1,79 +1,3 @@
-<script setup lang="ts">
-
-import {useShowAgeRestrictedContent} from "~/composables/states";
-
-const {ageRestrictedCategories} = useTags();
-const showAgeRestrictedContent = useShowAgeRestrictedContent();
-
-const hot = ref([]);
-const active = ref([]);
-const latest = ref([]);
-const physical = ref([]);
-
-fetchHomeData();
-
-async function fetchHomeData() {
-  const params = {};
-  if (showAgeRestrictedContent.value) {
-    params["adult"] = true
-  }
-  const {data} = useLazyFetch(`/api/home`, {params, server: false});
-  watch(data, (newData) => {
-    const {hot: _hot, active: _active, latest: _latest, physical: _physical} = newData;
-    hot.value = _hot;
-    active.value = _active;
-    latest.value = _latest;
-    physical.value = _physical;
-  })
-}
-
-watch(
-    showAgeRestrictedContent,
-    async (show, prevShow) => fetchHomeData()
-)
-
-// const header = ref('Nuxt 3 starter template')
-// const {counter} = goSick();
-
-// let res = await fetch(`https://www.instagram.com/${storeName}/?__a=1`);
-// res = await res.text();
-// const data = JSON.parse(res);
-
-// function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {
-//   const lastIndex = Math.ceil(slidesPerView) - 1;
-//   const marginStyle = index != lastIndex ? `margin-right: ${spaceBetween}px; ` : '';
-//   // if (index == lastIndex) {
-//   //   return 'height: 100%;';
-//   // }
-//   return 'aspect-ratio: 4/3; ' + marginStyle + `width: calc(${100 / slidesPerView}% - ${(16 * (slidesPerView - 1) / slidesPerView)}px);`;
-// }
-
-</script>
-
-<script lang="ts">
-  export default {
-    data(): {
-      dropdownOffset: number,
-      igEmbedLoaded: boolean
-    } {
-      return {
-        dropdownOffset: 0,
-        igEmbedLoaded: false
-      }
-    },
-    mounted() {
-      // const script = document.createElement("script");
-      // script.type = "text/javascript";
-      // script.src = "//www.instagram.com/embed.js";
-      // document.body.appendChild(script);
-
-      this.$refs.categoriesScroll.onscroll = (_) => {
-        this.dropdownOffset = this.$refs.categoriesScroll.scrollLeft
-      }
-    }
-  }
-</script>
-
 <template>
   <div class="mb-16">
 
@@ -131,6 +55,91 @@ watch(
 
   </div>
 </template>
+
+<script setup lang="ts">
+
+import {useShowAgeRestrictedContent} from "~/composables/states";
+
+const {ageRestrictedCategories} = useTags();
+const showAgeRestrictedContent = useShowAgeRestrictedContent();
+
+const hot = ref([]);
+const active = ref([]);
+const latest = ref([]);
+const physical = ref([]);
+
+
+await fetchHomeData();
+
+async function fetchHomeData() {
+  const params = {};
+  if (showAgeRestrictedContent.value) {
+    params["adult"] = true
+  }
+  const {data} = await useLazyFetch(`/api/home`, {params});
+  if (data.value) {
+    const {hot: _hot, active: _active, latest: _latest, physical: _physical} = data.value;
+    hot.value = _hot;
+    active.value = _active;
+    latest.value = _latest;
+    physical.value = _physical;
+  }
+
+  watch(data, (newData) => {
+    const {hot: _hot, active: _active, latest: _latest, physical: _physical} = newData;
+    hot.value = _hot;
+    active.value = _active;
+    latest.value = _latest;
+    physical.value = _physical;
+  })
+}
+
+watch(
+    showAgeRestrictedContent,
+    async (show, prevShow) => fetchHomeData()
+)
+
+// const header = ref('Nuxt 3 starter template')
+// const {counter} = goSick();
+
+// let res = await fetch(`https://www.instagram.com/${storeName}/?__a=1`);
+// res = await res.text();
+// const data = JSON.parse(res);
+
+// function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {
+//   const lastIndex = Math.ceil(slidesPerView) - 1;
+//   const marginStyle = index != lastIndex ? `margin-right: ${spaceBetween}px; ` : '';
+//   // if (index == lastIndex) {
+//   //   return 'height: 100%;';
+//   // }
+//   return 'aspect-ratio: 4/3; ' + marginStyle + `width: calc(${100 / slidesPerView}% - ${(16 * (slidesPerView - 1) / slidesPerView)}px);`;
+// }
+
+</script>
+
+<script lang="ts">
+export default {
+  data(): {
+    dropdownOffset: number,
+    igEmbedLoaded: boolean
+  } {
+    return {
+      dropdownOffset: 0,
+      igEmbedLoaded: false
+    }
+  },
+  mounted() {
+    // const script = document.createElement("script");
+    // script.type = "text/javascript";
+    // script.src = "//www.instagram.com/embed.js";
+    // document.body.appendChild(script);
+
+    this.$refs.categoriesScroll.onscroll = (_) => {
+      this.dropdownOffset = this.$refs.categoriesScroll.scrollLeft
+    }
+  }
+}
+</script>
 
 <style>
 

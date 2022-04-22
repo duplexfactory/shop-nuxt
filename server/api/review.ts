@@ -1,11 +1,11 @@
-import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
-import {assertMethod, useBody} from 'h3';
+import {assertMethod, defineEventHandler, useBody, appendHeader} from 'h3';
 import {noCache} from "~/server/util";
+import {IncomingMessage} from "http";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string }> {
-    noCache(res)
-    assertMethod(req, "POST")
+export default defineEventHandler(async (event) => {
+    noCache(event)
+    assertMethod(event, "POST")
 
     const {pagePk, mediaCode, content, rating} = await useBody<{ pagePk: number, mediaCode: string | undefined, content: string, rating: number}>(req);
     const review = {
@@ -15,11 +15,11 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         content,
         created: Date.now(),
         deleted: false,
-        ip: req.headers["cf-connecting-ip"] as string || req.connection.remoteAddress || req.socket.remoteAddress || ""
+        ip: (event.req as any as IncomingMessage).headers["cf-connecting-ip"] as string ||(event.req as any as IncomingMessage).connection.remoteAddress || (event.req as any as IncomingMessage).socket.remoteAddress || ""
     };
 
     const reference = await reviewCollection().add(review);
     return {
         id: reference.id
     }
-}
+})

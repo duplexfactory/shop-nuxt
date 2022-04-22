@@ -1,12 +1,11 @@
-import type {IncomingMessage, ServerResponse} from 'http'
 import {pageCollection} from "~/server/firebase/collections";
-import {sendError, useQuery} from 'h3'
+import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3'
 import type IgPage from "~/models/IgPage";
 import {DocumentSnapshot, QuerySnapshot} from "@google-cloud/firestore";
 import {notFound} from "~/server/util";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ page: IgPage }> {
-    const {id, username} = await useQuery(req) as { id: string | undefined, username: string | undefined }
+export default defineEventHandler(async (event) => {
+    const {id, username} = await useQuery(event) as { id: string | undefined, username: string | undefined }
 
     let pageDoc: DocumentSnapshot<IgPage> | QuerySnapshot<IgPage>;
     let exists: boolean;
@@ -20,7 +19,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
 
     if (!exists) {
-        throw sendError(res, notFound)
+        throw sendError(event, notFound)
     }
 
     const data = pageDoc.data();
@@ -30,7 +29,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
             page = data[0]
         }
         else {
-            throw sendError(res, notFound)
+            throw sendError(event, notFound)
         }
     }
     else {
@@ -38,7 +37,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     }
 
     if (page.deleted) {
-        throw sendError(res, notFound)
+        throw sendError(event, notFound)
     }
 
     // const now = Date.now()
@@ -58,5 +57,6 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
 
     return {
         page
-    }
-}
+    } as unknown as JSONValue
+    // { page: IgPage }
+})

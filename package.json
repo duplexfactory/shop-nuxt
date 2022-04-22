@@ -8,8 +8,8 @@
     "patch": "yarn add -D patch-vue-directive-ssr"
   },
   "devDependencies": {
+    "nuxt": "npm:nuxt3@^3.0.0-27468803.23e7afb",
     "nuxt-windicss": "^2.0.0",
-    "nuxt3": "^3.0.0-27468803.23e7afb",
     "patch-vue-directive-ssr": "^0.0.1"
   },
   "dependencies": {

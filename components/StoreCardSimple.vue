@@ -1,22 +1,3 @@
-<script setup lang="ts">
-    import {PropType} from "vue";
-    import IgPage from '~/models/IgPage';
-    import dayjs from "dayjs";
-
-    const {tagsLookup} = useTags()
-    const {shop} = defineProps({
-      shop: Object as PropType<IgPage>
-    })
-
-    const {
-      pk,
-      username,
-      fullName,
-      profilePicUrl,
-      tags
-    } = shop;
-</script>
-
 <template>
     <div class="p-4 text-center">
 
@@ -39,3 +20,21 @@
     </div>
 </template>
 
+<script setup lang="ts">
+import {PropType} from "vue";
+import IgPage from '~/models/IgPage';
+import dayjs from "dayjs";
+
+const {tagsLookup} = useTags()
+const {shop} = defineProps({
+  shop: Object as PropType<IgPage>
+})
+
+const {
+  pk,
+  username,
+  fullName,
+  profilePicUrl,
+  tags
+} = shop;
+</script>

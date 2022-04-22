@@ -1,6 +1,5 @@
-import config from "#config";
 import {Collection, MongoClient, MongoClientOptions} from "mongodb";
-import {PageSearch} from "~~/models/PageSearch";
+import {PageSearch} from "~/models/PageSearch";
 import IgAuth from "~/models/IgAuth";
 
 export let pageSearchCollection: Collection<PageSearch>;
@@ -10,7 +9,7 @@ let client: MongoClient;
 
 export async function initMongo() {
     if (!init) {
-        client = await MongoClient.connect(config.MONGO_SRV, {
+        client = await MongoClient.connect(useRuntimeConfig().MONGO_SRV, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         } as MongoClientOptions);

@@ -1,3 +1,19 @@
+<template>
+
+  <div class="w-full">
+    <div v-for="config in configs()" class="w-full" :class="`${config.classBreakpoint}flex ${config.nextClassBreakpoint}:hidden`">
+      <template v-for="(_, i) of Array(Math.ceil(config.slidesPerView)).fill(0)">
+        <div :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
+          <slot></slot>
+        </div>
+      </template>
+    </div>
+  </div>
+
+
+
+</template>
+
 <script lang="ts">
 import {PropType} from "vue";
 import {SwiperOptions} from "swiper/types/swiper-options";
@@ -26,7 +42,7 @@ export default {
     },
 
     configs(): { classBreakpoint: string; nextClassBreakpoint: string, spaceBetween: number; slidesPerView: number; }[] {
-    // configs() {
+      // configs() {
       let spaceBetween: number | undefined = this.swiperOptions.spaceBetween;
       let slidesPerView: number | undefined = this.swiperOptions.slidesPerView;
 
@@ -68,22 +84,6 @@ export default {
   }
 }
 </script>
-
-<template>
-
-  <div class="w-full">
-    <div v-for="config in configs()" class="w-full" :class="`${config.classBreakpoint}flex ${config.nextClassBreakpoint}:hidden`">
-      <template v-for="(_, i) of Array(Math.ceil(config.slidesPerView)).fill(0)">
-        <div :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
-          <slot></slot>
-        </div>
-      </template>
-    </div>
-  </div>
-
-
-
-</template>
 
 <style scoped>
 

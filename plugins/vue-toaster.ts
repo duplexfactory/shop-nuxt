@@ -1,4 +1,4 @@
-import {defineNuxtPlugin} from "#app";
+import {defineNuxtPlugin} from "nuxt/app";
 import Toaster from "@meforma/vue-toaster";
 
 export default defineNuxtPlugin((nuxtApp) => {

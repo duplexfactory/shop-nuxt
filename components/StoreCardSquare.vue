@@ -1,35 +1,3 @@
-<script setup lang="ts">
-    import {PropType} from "vue";
-    import IgPage from '~/models/IgPage';
-    import dayjs from "dayjs";
-    import PageInfoRow from "~/models/PageInfoRow";
-
-    const {tagsLookup} = useTags()
-    const {shop} = defineProps({
-        shop: Object as PropType<IgPage>,
-        showLocations: {type: Boolean, default: false}
-    })
-
-    const {
-        pk,
-        username,
-        fullName,
-        lastActivity,
-        followerCount,
-        mediaCount,
-        mediaUrls,
-        mediaCodes,
-        profilePicUrl,
-        tags,
-        locations
-    } = shop;
-    const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
-    const description = 'description';
-
-    const verifiedPage = false;
-    const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
-</script>
-
 <template>
     <div class="overflow-hidden border rounded-md grid grid-cols-2">
         <div class="p-4 col-span-1">
@@ -95,3 +63,34 @@
         </div>
     </div>
 </template>
+<script setup lang="ts">
+import {PropType} from "vue";
+import IgPage from '~/models/IgPage';
+import dayjs from "dayjs";
+import PageInfoRow from "~/models/PageInfoRow";
+
+const {tagsLookup} = useTags()
+const {shop} = defineProps({
+  shop: Object as PropType<IgPage>,
+  showLocations: {type: Boolean, default: false}
+})
+
+const {
+  pk,
+  username,
+  fullName,
+  lastActivity,
+  followerCount,
+  mediaCount,
+  mediaUrls,
+  mediaCodes,
+  profilePicUrl,
+  tags,
+  locations
+} = shop;
+const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
+const description = 'description';
+
+const verifiedPage = false;
+const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
+</script>

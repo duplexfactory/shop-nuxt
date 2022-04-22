@@ -1,14 +1,3 @@
-<script setup>
-    // Dummy data.
-    const storeName = 'caseonlyy';
-    const lastActiveDate = new Date();
-    const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
-    const description = 'description';
-
-    const {data} = await useFetch(`/api/shop?id=43808406274`);
-    const {page: shop} = data.value
-</script>
-
 <template>
     <div class="container mx-auto pb-20">
 
@@ -79,3 +68,14 @@
 
     </div>
 </template>
+
+<script setup>
+// Dummy data.
+const storeName = 'caseonlyy';
+const lastActiveDate = new Date();
+const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
+const description = 'description';
+
+const {data} = await useFetch(`/api/shop?id=43808406274`);
+const {page: shop} = data.value
+</script>

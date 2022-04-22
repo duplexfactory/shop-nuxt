@@ -1,19 +1,19 @@
 import {IncomingMessage, ServerResponse} from "http";
 import bcrypt from "bcryptjs";
 import {userCollection} from "~/server/firebase/collections";
-import {assertMethod, sendError, useBody} from 'h3';
+import {assertMethod, defineEventHandler, sendError, useBody} from 'h3';
 import {emailUsed, register} from "~/server/firebase/auth";
 import {noCache, notFound} from "~/server/util";
 
-export default async function (req: IncomingMessage, res: ServerResponse) {
-    noCache(res)
-    assertMethod(req, "POST")
+export default defineEventHandler(async (event) => {
+    noCache(event)
+    assertMethod(event, "POST")
 
-    const {email: _email, password}: { email: string, password: string } = await useBody(req);
+    const {email: _email, password}: { email: string, password: string } = await useBody(event);
     const email = _email.toLowerCase();
 
     if (await emailUsed(email)) {
-        throw sendError(res, notFound)
+        throw sendError(event, notFound)
     }
 
     const uid = await register(email, password);
@@ -25,4 +25,4 @@ export default async function (req: IncomingMessage, res: ServerResponse) {
     });
 
     return {success: true}
-}
+})

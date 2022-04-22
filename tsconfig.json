@@ -3,6 +3,10 @@
   "compilerOptions": {
     "types": [
       "nuxt-windicss"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["*"]
+    }
   }
 }

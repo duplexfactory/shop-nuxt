@@ -1,5 +1,4 @@
-import {IncomingMessage, ServerResponse} from "http";
-import {useQuery} from "h3";
+import {defineEventHandler, JSONValue, useQuery} from "h3";
 import {initMongo, pageSearchCollection} from "~/server/mongodb";
 import {Filter} from "mongodb";
 import {PageSearch} from "~/models/PageSearch";
@@ -22,12 +21,12 @@ const cardProj = cardFields.reduce((obj, k) => Object.assign(obj, {[k]: 1}), {})
 const extraProj = {...cardProj, extraData: 1}
 const idToPk = (page: PageSearch) => ({...page, pk: page._id})
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
+export default defineEventHandler(async (event) => {
     await initMongo();
 
     const {
         adult
-    } = await useQuery(req) as { adult: string };
+    } = await useQuery(event) as { adult: string };
 
     const f: Filter<PageSearch> = {};
     if (adult !== "true") {
@@ -54,5 +53,6 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
         latest,
         active,
         physical,
-    };
-}
+    } as any as JSONValue;
+})
+

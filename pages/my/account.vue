@@ -1,32 +1,3 @@
-<script setup lang="ts">
-    const {code} = useRoute().query
-    const verifiedPage = ref(false);
-    const pageUsername = ref("shoperuse");
-    const authLoading = ref(!!code);
-
-    function authorize() {
-        const config = useRuntimeConfig();
-
-        const url = new URL(`https://api.instagram.com/oauth/authorize`)
-
-        url.searchParams.set("client_id", config.IG_APP_ID)
-        url.searchParams.set("redirect_uri", config.DOMAIN + `/my/account`)
-        url.searchParams.set("scope", "user_profile,user_media")
-        url.searchParams.set("response_type", "code")
-
-        window.location.assign(url.href)
-    }
-
-    onMounted(async () => {
-        if (code) {
-            const {username} = await $fetch("/api/auth/ig-code", {params: {code}})
-            pageUsername.value = username
-            verifiedPage.value = true
-            authLoading.value = false
-        }
-    });
-</script>
-
 <template>
     <div class="container">
         <div v-if="authLoading"
@@ -106,6 +77,35 @@
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+const {code} = useRoute().query
+const verifiedPage = ref(false);
+const pageUsername = ref("shoperuse");
+const authLoading = ref(!!code);
+
+function authorize() {
+  const config = useRuntimeConfig();
+
+  const url = new URL(`https://api.instagram.com/oauth/authorize`)
+
+  url.searchParams.set("client_id", config.IG_APP_ID)
+  url.searchParams.set("redirect_uri", config.DOMAIN + `/my/account`)
+  url.searchParams.set("scope", "user_profile,user_media")
+  url.searchParams.set("response_type", "code")
+
+  window.location.assign(url.href)
+}
+
+onMounted(async () => {
+  if (code) {
+    const {username} = await $fetch("/api/auth/ig-code", {params: {code}})
+    pageUsername.value = username
+    verifiedPage.value = true
+    authLoading.value = false
+  }
+});
+</script>
 
 <style scoped>
 

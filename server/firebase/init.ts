@@ -1,4 +1,3 @@
-import config from "#config";
 import {cert, getApps, initializeApp} from "firebase-admin/app";
 import {Query, QuerySnapshot} from "@google-cloud/firestore";
 import {getFirestore} from "firebase-admin/firestore";
@@ -26,6 +25,7 @@ export function fields<T extends object, Ks extends keyof T>(...fields: Ks[]): K
 
 export function initFirebase() {
     if (!getApps().length) {
+        const config = useRuntimeConfig();
         initializeApp({
             credential: cert({
                 projectId: config.FIREBASE_PROJECT_ID,

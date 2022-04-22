@@ -120,6 +120,8 @@
 
 <script setup lang="ts">
 
+console.log("search setup")
+
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import useSearch from "~/composables/useSearch";
 import {PaginationQuery} from "~/models/PaginationQuery";

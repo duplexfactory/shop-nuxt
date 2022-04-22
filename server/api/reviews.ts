@@ -1,12 +1,11 @@
-import {IncomingMessage, ServerResponse} from "http";
 import {reviewCollection} from "~/server/firebase/collections";
 import IgPageReview from "~/models/IgPageReview";
-import {sendError, useQuery} from 'h3';
+import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3';
 import {QuerySnapshot} from "firebase-admin/firestore";
 import {badRequest} from "~/server/util";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ reviews: (IgPageReview & {id: string}) [] }> {
-    const {pagePk, mediaCode} = await useQuery(req) as { pagePk: string | undefined, mediaCode: string | undefined };
+export default defineEventHandler(async (event) => {
+    const {pagePk, mediaCode} = await useQuery(event) as { pagePk: string | undefined, mediaCode: string | undefined };
 
     let reviewSS: QuerySnapshot<IgPageReview>;
     if (mediaCode != undefined) {
@@ -24,7 +23,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
             .get();
     }
     else {
-        throw sendError(res, badRequest)
+        throw sendError(event, badRequest)
     }
 
     const reviews = reviewSS.docs.map((d) => ({
@@ -37,5 +36,6 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
 
     return {
         reviews
-    }
-}
+    } as unknown as JSONValue
+    // (IgPageReview & {id: string}) []
+})
