@@ -6,7 +6,7 @@ import Blog from "~/models/Blog";
 
 export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string } | { blog: Blog }> {
     noCache(res)
-    assertMethod(req, ["POST", "GET"])
+    assertMethod(req, ["POST", "GET", "PATCH"])
 
     if (isMethod(req, "POST")) {
         const {
@@ -35,6 +35,9 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         return {
             id: blogId
         }
+    }
+    else if (isMethod(req, "PATCH")) {
+
     }
     else if (isMethod(req, "GET")) {
         const {
