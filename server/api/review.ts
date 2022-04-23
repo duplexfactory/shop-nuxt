@@ -1,5 +1,5 @@
 import {reviewCollection} from "~/server/firebase/collections";
-import {assertMethod, defineEventHandler, useBody, appendHeader} from 'h3';
+import {assertMethod, defineEventHandler, useBody} from 'h3';
 import {noCache} from "~/server/util";
 import {IncomingMessage} from "http";
 
@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     noCache(event)
     assertMethod(event, "POST")
 
-    const {pagePk, mediaCode, content, rating} = await useBody<{ pagePk: number, mediaCode: string | undefined, content: string, rating: number}>(req);
+    const {pagePk, mediaCode, content, rating} = await useBody<{ pagePk: number, mediaCode: string | undefined, content: string, rating: number}>(event);
     const review = {
         pagePk,
         mediaCode,
