@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     const headers = Object.assign({}, (event.req as IncomingMessage).headers) as Record<string, string>;
     delete headers.host;
     const f = await fetch(url.toString(), {headers: headers});
-    (event.res as ServerResponse).writeHead(f.status, f.statusText, f.headers.raw())
+    event.res.writeHead(f.status, f.statusText, f.headers.raw())
     await pipe(f.body, (event.res as any as ServerResponse))
     // res.end()
 })
