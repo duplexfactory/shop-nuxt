@@ -1,4 +1,4 @@
-import {appendHeader, defineEventHandler, JSONValue, useQuery} from 'h3';
+import {defineEventHandler, JSONValue, useQuery} from 'h3';
 import {initMongo, pageSearchCollection} from "~/server/mongodb";
 import {PageSearch} from "~/models/PageSearch";
 import {Filter} from "mongodb";
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
     await initMongo();
 
-    appendHeader(event, 'Cache-Control', 'max-age=120');
+    event.res.setHeader("Cache-Control", "max-age=120");
 
     return {
         pages: await pageSearchCollection.find(f).sort({activeScore: -1, lastActivity: -1}).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
