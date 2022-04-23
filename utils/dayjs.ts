@@ -3,4 +3,4 @@ import dDuration from "dayjs/plugin/duration"
 
 dayjs.extend(dDuration)
 
-export { duration } from "dayjs";
+export const duration = dayjs.duration;
