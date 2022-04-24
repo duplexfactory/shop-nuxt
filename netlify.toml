@@ -1,2 +1,4 @@
 [context.dev.environment]
   DEV = "true"
+[context.demo.environment]
+  DEV = "true"
