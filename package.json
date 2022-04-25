@@ -33,5 +33,11 @@
     "node-fetch": "^3.1.0",
     "path": "^0.12.7",
     "swiper": "^7.4.1"
+  },
+  "overrides": {
+    "whatwg-url": "^11.0.0"
+  },
+  "resolutions": {
+    "whatwg-url": "^11.0.0"
   }
 }
