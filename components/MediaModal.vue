@@ -143,7 +143,7 @@ if (!localMedia.value) {
 // Mounted
 onMounted(async () => {
   if (!localPage.value) {
-    const {data, error} = await useFetch(`/api/shop`, {params: {id: showingMediaModalData.value.pagePk}});
+    const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pagePk}`);
     fetchedPage.value = data.value.page;
   }
   await fetchReviews();

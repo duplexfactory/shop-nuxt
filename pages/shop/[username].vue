@@ -148,7 +148,7 @@ import dayjs from "dayjs";
 const config = useRuntimeConfig();
 const route = useRoute();
 
-const {data, error} = await useLazyFetch(`/api/shop`, {params: {username: route.params.username}})
+const {data, error} = await useLazyFetch(`/api/shop/username/${route.params.username}`)
 if (!!error && !!error.value) {
   throwError(notFound);
 }

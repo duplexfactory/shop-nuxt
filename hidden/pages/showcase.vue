@@ -76,6 +76,6 @@ const lastActiveDate = new Date();
 const lastActive = `${lastActiveDate.getDate()}/${lastActiveDate.getMonth() + 1}/${lastActiveDate.getFullYear()}`;
 const description = 'description';
 
-const {data} = await useFetch(`/api/shop?id=43808406274`);
+const {data} = await useFetch(`/api/shop/id/43808406274`);
 const {page: shop} = data.value
 </script>
