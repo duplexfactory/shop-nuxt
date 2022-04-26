@@ -1,18 +1,17 @@
-import {IncomingMessage, ServerResponse} from "http";
-import {badRequest, noCache, notFound} from "~/server/util";
-import {sendError, useBody, useQuery} from "h3";
+import {badRequest, noCache} from "~/server/util";
+import {defineEventHandler, sendError, useBody, useQuery} from "h3";
 import {blogCollection} from "~/server/firebase/collections";
 import Blog from "~/models/Blog";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string }> {
-    noCache(res)
+export default defineEventHandler(async (event) => {
+    noCache(event)
 
     const {
         id
-    } = useQuery(req) as { id: string };
+    } = useQuery(event) as { id: string };
 
     if (!id) {
-        throw sendError(res, badRequest);
+        throw sendError(event, badRequest);
     }
 
     const {
@@ -20,7 +19,7 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
         slug,
         metaDesc,
         htmlContent,
-    } = await useBody<Partial<Omit<Blog, "id" | "created">>>(req);
+    } = await useBody<Partial<Omit<Blog, "id" | "created">>>(event);
 
     await blogCollection().doc(id).update({
         title,
@@ -32,4 +31,4 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     return {
         id
     }
-}
+})
