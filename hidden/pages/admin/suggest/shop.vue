@@ -48,15 +48,16 @@ import type {Ref} from "vue";
 import ShopSuggestion from "~/models/ShopSuggestion";
 
 const nuxt = useNuxtApp();
-const { data } = await useFetch('/api/suggest/shop/list');
-const suggestions: Ref<ShopSuggestion[]> = ref<ShopSuggestion[]>(data.value.suggestions)
+const { data } = await useFetch('/api/admin/suggest/shop/list', {server: false});
+const suggestions: Ref<ShopSuggestion[]> = ref<ShopSuggestion[]>([]);
+watch(data, (newData) => suggestions.value = newData.suggestions);
 
 function tsToDateString(ts) {
   return dayjs(ts).format('DD/MM/YYYY')
 }
 
 async function approveRecord(id: string) {
-  const { data, error } = await useFetch('/api/suggest/shop/approve', { method: 'POST', params: {id}});
+  const { data, error } = await useFetch('/api/admin/suggest/shop/approve', { method: 'POST', params: {id}});
   if (error.value !== null) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
     return;
@@ -66,7 +67,7 @@ async function approveRecord(id: string) {
 }
 
 async function deleteRecord(id: string) {
-  const { data, error } = await useFetch('/api/suggest/shop', { method: 'DELETE', params: {id}});
+  const { data, error } = await useFetch('/api/admin/suggest/shop', { method: 'DELETE', params: {id}});
   if (error.value !== null) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
     return;

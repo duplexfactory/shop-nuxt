@@ -1,7 +1,7 @@
 import {defineEventHandler, sendError, useQuery} from "h3";
-import {notFound} from "~/server/util";
 import {shopSuggestionCollection} from "~/server/firebase/collections";
 import {initMongo, pendingPageCollection} from "~/server/mongodb";
+import {notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
     const {
