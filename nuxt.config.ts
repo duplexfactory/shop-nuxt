@@ -252,8 +252,8 @@ export default defineNuxtConfig({
         for (const fileName of files) {
           const routeName = fileName.replace('.vue', '');
           pages.push({
-            name: routeName,
-            path: `/${dir}/${routeName}`,
+            name: (dir.length !== 0 ? dir.split('/').join('-') + '-' : '') + routeName,
+            path: dir.length !== 0 ? `/${dir}/${routeName}` : `/${routeName}`,
             file: resolve(root, dir, fileName)
           })
         }
