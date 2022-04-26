@@ -78,7 +78,7 @@
                         v-else
                         class="mb-4 md:mb-0"
                         @showMediaModal="showMediaModal(media)"
-                        :price="media.price"
+                        :price="mediaPrice(media)"
                         top-bar
                         :post-id="media.code"
                         :fixed-aspect-ratio="0"
@@ -301,6 +301,7 @@ async function fetchReviews() {
 // Create Review
 import useCreateReview from "~/composables/useCreateReview";
 import IgMedia from "~/models/IgMedia";
+import useMediaPrice from "~/composables/useMediaPrice";
 
 const {
   reviewingPagePk,
@@ -315,6 +316,9 @@ async function sendReview() {
   await createReview();
   await fetchReviews();
 }
+
+// Media Price
+const { mediaPrice } = useMediaPrice();
 
 </script>
 

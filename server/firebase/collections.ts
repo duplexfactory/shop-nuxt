@@ -3,6 +3,8 @@ import IgPage from "~/models/IgPage";
 import {initFirebase} from "~/server/firebase/init";
 import IgPageReview from "~/models/IgPageReview";
 import User from "~/models/user/User";
+import MediaPriceSuggestion from "~/models/MediaPriceSuggestion";
+import ShopSuggestion from "~/models/ShopSuggestion";
 // import {firestore} from "firebase-admin/firestore";
 // import CollectionGroup = firestore.CollectionGroup;
 initFirebase();
@@ -17,6 +19,14 @@ export function reviewCollection() {
 
 export function userCollection() {
     return getFirestore().collection("user") as CollectionReference<User>;
+}
+
+export function mediaPriceSuggestionCollection() {
+    return getFirestore().collection("priceSuggests") as CollectionReference<MediaPriceSuggestion>;
+}
+
+export function shopSuggestionCollection() {
+    return getFirestore().collection("shopSuggests") as CollectionReference<ShopSuggestion>;
 }
 
 export type IdInput = number | string | { id: string | number }

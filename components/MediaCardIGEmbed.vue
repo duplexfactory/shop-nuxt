@@ -5,7 +5,7 @@
     <!--  class="w-full"-->
     <!--    height: 100% !important;-->
     <div v-if="topBar" class="text-xs md:text-sm text-gray-400 flex justify-between p-2">
-      <div v-if="!!price" class="text-pink-700">HK$ {{ price }}</div>
+      <div v-if="!!price" class="text-pink-700">{{ formatMediaPrice(price) }}</div>
       <div v-else></div>
 
       <button @click="$emit('showMediaModal')">查看詳情及評論<i class="spr-angle-right"></i></button>
@@ -34,6 +34,7 @@
 
 import {PropType} from "vue";
 import loadIGEmbeds from "~/utils/loadIGEmbeds";
+import useMediaPrice from "~/composables/useMediaPrice";
 
 const {
   postId,
@@ -57,6 +58,9 @@ onMounted(() => {
   }
   loadIGEmbeds();
 })
+
+// Media Price
+const { formatMediaPrice } = useMediaPrice();
 
 </script>
 
