@@ -1,7 +1,8 @@
-import {badRequest, noCache, notFound} from "~/server/util";
+import {noCache} from "~/server/util";
 import {defineEventHandler, JSONValue, sendError, useQuery} from "h3";
 import {blogCollection} from "~/server/firebase/collections";
 import Blog from "~/models/Blog";
+import {badRequest, notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
     noCache(event)
