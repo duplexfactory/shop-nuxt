@@ -1,7 +1,7 @@
 import {defineEventHandler, sendError, useQuery} from "h3";
 import {initDynamo, patchMediaByCode} from "~/server/dynamodb";
-import {notFound} from "~/server/util";
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
+import {notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
     const {

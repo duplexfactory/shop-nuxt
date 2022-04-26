@@ -54,15 +54,16 @@ import MediaPriceSuggestion from "~/models/MediaPriceSuggestion";
 import type {Ref} from "vue";
 
 const nuxt = useNuxtApp();
-const { data } = await useFetch('/api/suggest/media-price/list');
-const suggestions: Ref<MediaPriceSuggestion[]> = ref<MediaPriceSuggestion[]>(data.value.suggestions)
+const { data } = await useFetch('/api/admin/suggest/media-price/list', {server: false});
+const suggestions: Ref<MediaPriceSuggestion[]> = ref<MediaPriceSuggestion[]>([]);
+watch(data, (newData) => suggestions.value = newData.suggestions);
 
 function tsToDateString(ts) {
   return dayjs(ts).format('DD/MM/YYYY')
 }
 
 async function approveRecord(id: string) {
-  const { data, error } = await useFetch('/api/suggest/media-price/approve', { method: 'POST', params: {id}});
+  const { data, error } = await useFetch('/api/admin/suggest/media-price/approve', {method: 'POST', params: {id}});
   if (error.value !== null) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
     return;
@@ -72,7 +73,7 @@ async function approveRecord(id: string) {
 }
 
 async function deleteRecord(id: string) {
-  const { data, error } = await useFetch('/api/suggest/media-price', { method: 'DELETE', params: {id}});
+  const { data, error } = await useFetch('/api/admin/suggest/media-price', {method: 'DELETE', params: {id}});
   if (error.value !== null) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
     return;
