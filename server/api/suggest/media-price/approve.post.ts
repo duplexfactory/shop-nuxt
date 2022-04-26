@@ -1,19 +1,16 @@
-import {IncomingMessage, ServerResponse} from "http";
-import {assertMethod, sendError, useQuery} from "h3";
+import {defineEventHandler, sendError, useQuery} from "h3";
 import {initDynamo, patchMediaByCode} from "~/server/dynamodb";
 import {notFound} from "~/server/util";
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
-    assertMethod(req, "POST")
-
+export default defineEventHandler(async (event) => {
     const {
         id
-    } = useQuery(req) as { id: string };
+    } = useQuery(event) as { id: string };
 
     const ss = await mediaPriceSuggestionCollection().doc(id).get();
     if (!ss.exists) {
-        sendError(res, notFound);
+        sendError(event, notFound);
     }
 
     const suggestion = ss.data();
@@ -23,7 +20,7 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
         patchPrice: suggestion.price
     });
     if (!success) {
-        sendError(res, notFound);
+        sendError(event, notFound);
     }
 
     await mediaPriceSuggestionCollection().doc(id).delete();
@@ -31,4 +28,4 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     return {
         success: true
     }
-}
+});
