@@ -6,7 +6,7 @@ export default defineEventHandler((event) => {
         const cookies = useCookies(event);
         const cookie = cookies["duplex_factory"];
         if (!cookie || cookie !== "shoperuse_is_great") {
-            throw sendError(event, notFound);
+            sendError(event, notFound);
         }
     }
 })
