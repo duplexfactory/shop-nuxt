@@ -109,7 +109,7 @@
 
 <script setup lang="ts">
 
-import {throwError} from "nuxt3/app";
+import { createError } from "h3";
 
 const {tagsLookup, categories} = useTags();
 
@@ -150,9 +150,9 @@ const route = useRoute();
 
 const {data, error} = await useLazyFetch(`/api/shop`, {params: {username: route.params.username}})
 if (!!error && !!error.value) {
-  const error = new Error();
-  (error as any).statusCode = 404;
-  throwError(error)
+  throwError(
+      createError({statusCode: 404, statusMessage: "Not Found"})
+  );
 }
 
 const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
