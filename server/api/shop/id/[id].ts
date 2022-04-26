@@ -1,6 +1,7 @@
 import {pageCollection} from "~/server/firebase/collections"
 import {defineEventHandler, JSONValue} from "h3"
-import {assert, notFound} from "~/server/util"
+import {assert} from "~/server/util"
+import {notFound} from "~/utils/h3Error"
 
 export default defineEventHandler(async (event) => {
     const {id} = event.context.params

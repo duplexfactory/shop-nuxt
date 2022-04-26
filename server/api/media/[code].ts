@@ -1,6 +1,7 @@
 import {defineEventHandler, JSONValue} from "h3"
 import {getMediaByCode, initDynamo} from "~/server/dynamodb"
-import {assert, notFound} from "~/server/util"
+import {assert} from "~/server/util"
+import {notFound} from "~/utils/h3Error"
 
 export default defineEventHandler(async (event) => {
     const {code} = event.context.params
