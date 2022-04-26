@@ -109,7 +109,7 @@
 
 <script setup lang="ts">
 
-import { createError } from "h3";
+import {notFound} from "~/utils/h3Error";
 
 const {tagsLookup, categories} = useTags();
 
@@ -150,9 +150,7 @@ const route = useRoute();
 
 const {data, error} = await useLazyFetch(`/api/shop`, {params: {username: route.params.username}})
 if (!!error && !!error.value) {
-  throwError(
-      createError({statusCode: 404, statusMessage: "Not Found"})
-  );
+  throwError(notFound);
 }
 
 const page = computed<IgPage | null>(() => data.value ? data.value.page : null);

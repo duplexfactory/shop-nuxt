@@ -3,7 +3,7 @@ import type IgMedia from "~/models/IgMedia";
 import {getPageMedias, initDynamo} from "~/server/dynamodb";
 import {initMongo, pageSearchCollection} from "~/server/mongodb";
 import dayjs from "dayjs";
-import {notFound} from "~/server/util";
+import {notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
     let {

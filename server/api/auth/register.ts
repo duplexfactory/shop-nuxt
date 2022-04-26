@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 import {userCollection} from "~/server/firebase/collections";
 import {assertMethod, defineEventHandler, sendError, useBody} from 'h3';
 import {emailUsed, register} from "~/server/firebase/auth";
-import {noCache, notFound} from "~/server/util";
+import {noCache} from "~/server/util";
+import {notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
     noCache(event)

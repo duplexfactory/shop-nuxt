@@ -2,7 +2,7 @@ import {pageCollection} from "~/server/firebase/collections";
 import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3'
 import type IgPage from "~/models/IgPage";
 import {DocumentSnapshot, QuerySnapshot} from "@google-cloud/firestore";
-import {notFound} from "~/server/util";
+import {notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
     const {id, username} = await useQuery(event) as { id: string | undefined, username: string | undefined }
