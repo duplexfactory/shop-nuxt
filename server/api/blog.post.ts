@@ -1,18 +1,17 @@
-import {IncomingMessage, ServerResponse} from "http";
 import {noCache} from "~/server/util";
-import {useBody} from "h3";
+import {defineEventHandler, useBody} from "h3";
 import {blogCollection} from "~/server/firebase/collections";
 import Blog from "~/models/Blog";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ id: string }> {
-    noCache(res)
+export default defineEventHandler(async (event) => {
+    noCache(event)
 
     const {
         title,
         slug,
         metaDesc,
         htmlContent,
-    } = await useBody<Omit<Blog, "id" | "created">>(req);
+    } = await useBody<Omit<Blog, "id" | "created">>(event);
 
     // ID
     const lastBlog = (await blogCollection().orderBy("id", "desc").pick("id").limit(1).get()).data();
@@ -33,4 +32,4 @@ export default async function (req: IncomingMessage, res: ServerResponse): Promi
     return {
         id: blogId
     }
-}
+})

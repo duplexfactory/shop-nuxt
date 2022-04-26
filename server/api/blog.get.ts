@@ -1,25 +1,26 @@
-import {IncomingMessage, ServerResponse} from "http";
 import {badRequest, noCache, notFound} from "~/server/util";
-import {sendError, useQuery} from "h3";
+import {defineEventHandler, JSONValue, sendError, useQuery} from "h3";
 import {blogCollection} from "~/server/firebase/collections";
 import Blog from "~/models/Blog";
 
-export default async function (req: IncomingMessage, res: ServerResponse): Promise<{ blog: Blog }> {
-    noCache(res)
+export default defineEventHandler(async (event) => {
+    noCache(event)
 
     const {
         id
-    } = useQuery(req) as { id: string };
+    } = useQuery(event) as { id: string };
 
     if (!id) {
-        throw sendError(res, badRequest);
+        throw sendError(event, badRequest);
     }
 
     const blogDoc = await blogCollection().doc(id).get();
 
     if(!blogDoc.exists) {
-        sendError(res, notFound);
+        sendError(event, notFound);
     }
 
-    return {blog: blogDoc.data()};
-}
+    return {blog: blogDoc.data()} as unknown as JSONValue;
+
+    // { blog: Blog }
+})
