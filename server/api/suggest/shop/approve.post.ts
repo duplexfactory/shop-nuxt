@@ -1,19 +1,16 @@
-import {IncomingMessage, ServerResponse} from "http";
-import {assertMethod, sendError, useQuery} from "h3";
+import {defineEventHandler, sendError, useQuery} from "h3";
 import {notFound} from "~/server/util";
 import {shopSuggestionCollection} from "~/server/firebase/collections";
 import {initMongo, pendingPageCollection} from "~/server/mongodb";
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
-    assertMethod(req, "POST")
-
+export default defineEventHandler(async (event) => {
     const {
         id
-    } = useQuery(req) as { id: string };
+    } = useQuery(event) as { id: string };
 
     const ss = await shopSuggestionCollection().doc(id).get();
     if (!ss.exists) {
-        sendError(res, notFound);
+        sendError(event, notFound);
     }
 
     const suggestion = ss.data();
@@ -27,5 +24,5 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
 
     return {
         success: true
-    }
-}
+    };
+});

@@ -1,7 +1,7 @@
-import {IncomingMessage, ServerResponse} from "http";
 import {shopSuggestionCollection} from "~/server/firebase/collections";
+import {defineEventHandler, JSONValue} from "h3";
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
+export default defineEventHandler(async (event) => {
     const ss = await shopSuggestionCollection()
         .orderBy("created", "desc")
         .get();
@@ -14,5 +14,5 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
             ...d.data(),
             id: d.id
         }))
-    }
-}
+    } as unknown as JSONValue;
+});
