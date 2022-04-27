@@ -2,7 +2,8 @@ import IgPageExtraData from "~/models/IgPageExtraData";
 import IgMedia from "~/models/IgMedia";
 
 export class PageSearch {
-    _id: number;
+    _id: string;
+    pk?: number;
     username: string;
     fullName: string;
     biography: string;

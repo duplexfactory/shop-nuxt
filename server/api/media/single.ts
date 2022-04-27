@@ -1,6 +1,6 @@
 import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3'
 import type IgMedia from "~/models/IgMedia";
-import {getMediaByCode, initDynamo} from "~/server/dynamodb";
+import {oldGetMediaByCode, initDynamo} from "~/server/dynamodb";
 import {badRequest, notFound} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     }
 
     initDynamo();
-    const media = await getMediaByCode(code);
+    const media = await oldGetMediaByCode(code);
     if (!media) {
         throw sendError(event, notFound)
     }

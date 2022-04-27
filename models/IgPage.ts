@@ -1,11 +1,12 @@
-import IgStory from "~/models/IgStory";
-import IgMedia from "~/models/IgMedia";
-import IgTray from "~/models/IgTray";
-import IgPageExtraData from "~/models/IgPageExtraData";
+import IgStory from "~/models/IgStory"
+import IgMedia from "~/models/IgMedia"
+import IgTray from "~/models/IgTray"
+import IgPageExtraData from "~/models/IgPageExtraData"
 
 export default interface IgPage {
-    pk: number
-    username: string
+    _id: string;
+    pk: number;
+    username: string;
     fullName: string
     biography: string
 

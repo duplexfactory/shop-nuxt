@@ -1,9 +1,8 @@
-import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3'
-import type IgMedia from "~/models/IgMedia";
-import {getPageMedias, initDynamo} from "~/server/dynamodb";
-import {initMongo, pageSearchCollection} from "~/server/mongodb";
-import dayjs from "dayjs";
-import {notFound} from "~/utils/h3Error";
+import {defineEventHandler, JSONValue, sendError, useQuery} from "h3"
+import {getPageMediasByPk, initDynamo} from "~/server/dynamodb"
+import {initMongo, pageSearchCollection} from "~/server/mongodb"
+import dayjs from "dayjs"
+import {notFound} from "~/utils/h3Error"
 
 export default defineEventHandler(async (event) => {
     let {
@@ -23,12 +22,12 @@ export default defineEventHandler(async (event) => {
             // Page deleted
             throw sendError(event, notFound)
         }
-        queryId = p._id
+        queryId = p.pk || Number(p._id) // TODO: change to string _id
     }
 
     initDynamo();
     return {
-        medias: await getPageMedias(queryId, limit ? Number(limit) : undefined, before ? Number(before) : dayjs().unix())
+        medias: await getPageMediasByPk(queryId, limit ? Number(limit) : undefined, before ? Number(before) : dayjs().unix())
     } as unknown as JSONValue
     // { medias: IgMedia[] }
 })
