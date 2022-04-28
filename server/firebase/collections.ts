@@ -1,4 +1,3 @@
-import config from "#config";
 import {CollectionReference, getFirestore} from "firebase-admin/firestore";
 import IgPage from "~/models/IgPage";
 import {initFirebase} from "~/server/firebase/init";
@@ -9,6 +8,8 @@ import ShopSuggestion from "~/models/ShopSuggestion";
 // import {firestore} from "firebase-admin/firestore";
 // import CollectionGroup = firestore.CollectionGroup;
 initFirebase();
+
+const config = useRuntimeConfig();
 
 function checkDev(name: string) {
     return config.DEV ? "dev-" + name : name
