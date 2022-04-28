@@ -1,7 +1,6 @@
 import {defineNuxtPlugin, useRuntimeConfig} from "#app"
 import {getApps, initializeApp} from "firebase/app"
 import {useIsLoggedIn} from "~/composables/states"
-import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 import {getAnalytics} from "firebase/analytics"
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -27,7 +26,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig)
-        const analytics = getAnalytics(app)
+        const analytics = config.DEV ? getAnalytics(app) : undefined
 
         // const auth = getAuth(app);
         // isLoggedIn.value = await new Promise((resolve: any, reject: any) =>
