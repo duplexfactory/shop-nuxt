@@ -1,7 +1,8 @@
-import {defineNuxtPlugin, useRuntimeConfig} from "#app";
-import {getApps, initializeApp} from "firebase/app";
-import {useIsLoggedIn} from "~/composables/states";
-import {getAuth, onAuthStateChanged, User} from "firebase/auth";
+import {defineNuxtPlugin, useRuntimeConfig} from "#app"
+import {getApps, initializeApp} from "firebase/app"
+import {useIsLoggedIn} from "~/composables/states"
+import {getAuth, onAuthStateChanged, User} from "firebase/auth"
+import {getAnalytics} from "firebase/analytics"
 
 export default defineNuxtPlugin(async (nuxtApp) => {
     // Import the functions you need from the SDKs you need
@@ -9,8 +10,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
-    const config = useRuntimeConfig();
-    const isLoggedIn = useIsLoggedIn();
+    const config = useRuntimeConfig()
+    const isLoggedIn = useIsLoggedIn()
 
     if (!getApps().length) {
         // Your web app's Firebase configuration
@@ -21,10 +22,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             storageBucket: config.FIREBASE_STORAGE_BUCKET,
             messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
             appId: config.FIREBASE_APP_ID
-        };
+        }
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig)
+        const analytics = getAnalytics(app)
 
         // const auth = getAuth(app);
         // isLoggedIn.value = await new Promise((resolve: any, reject: any) =>
@@ -35,4 +37,4 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     }
 
 
-});
+})
