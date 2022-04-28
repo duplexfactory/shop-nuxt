@@ -118,7 +118,7 @@ const { mediaPrice, formatMediaPrice } = useMediaPrice();
 // Create Review
 const {
   reviewingCode,
-  reviewingPagePk,
+  reviewingPageId,
   isCreatingReview,
   rating,
   content,
@@ -127,7 +127,7 @@ const {
 } = useCreateReview();
 const isShowingCreateReview = ref<boolean>(false);
 reviewingCode.value = localMediaCode.value;
-reviewingPagePk.value = showingMediaModalData.value.simplePage?.pk || showingMediaModalData.value.pagePk;
+reviewingPageId.value = showingMediaModalData.value.simplePage?._id || showingMediaModalData.value._id;
 
 const reviews = ref<IgPageReview[]>([]);
 
@@ -191,7 +191,7 @@ if (!localMedia.value) {
 // Mounted
 onMounted(async () => {
   if (!localPage.value) {
-    const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pagePk}`);
+    const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`);
     fetchedPage.value = data.value.page;
   }
   await fetchReviews();

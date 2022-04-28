@@ -10,14 +10,14 @@
           <!-- Slides -->
 
           <MediaCardIGEmbed v-for="media in lastMediaPage"
-                            @showMediaModal="showMediaModal = true; showingMediaModalData = {media: media.lastMediaData, pagePk: media.pk}"
+                            @showMediaModal="showMediaModal = true; showingMediaModalData = {media: media.lastMediaData, pageId: media._id}"
                             class="swiper-slide"
                             top-bar
                             :fixedAspectRatio="0"
                             :price="mediaPrice(media.lastMediaData)"
                             :delegate-script="true"
                             :postId="media.lastMediaData.code"
-                            :key="media.pk + '-post-card'"></MediaCardIGEmbed>
+                            :key="media._id + '-post-card'"></MediaCardIGEmbed>
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination" style="bottom: 0px !important;"></div>
@@ -117,7 +117,7 @@ export default {
     };
   },
   props: {
-    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">[]>
+    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>
   },
   methods: {
     loadSwiper() {

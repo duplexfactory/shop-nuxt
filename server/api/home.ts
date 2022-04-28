@@ -21,10 +21,6 @@ const cardFields = [
 const cardProj = cardFields.reduce((obj, k) => Object.assign(obj, {[k]: 1}), {})
 const extraProj = {...cardProj, extraData: 1}
 
-function idToPk(page: PageSearch) {
-    return page.pk ? page : {...page, pk: Number(page._id)}
-}
-
 export default defineEventHandler(async (event) => {
     await initMongo()
 
@@ -38,18 +34,18 @@ export default defineEventHandler(async (event) => {
     }
 
     const [hot, latest, active, physical] = await Promise.all([
-        pageSearchCollection.find(f).sort({followerCount: -1}).limit(21).project(extraProj).map(idToPk).toArray(),
+        pageSearchCollection.find(f).sort({followerCount: -1}).limit(21).project(extraProj).toArray(),
         pageSearchCollection.find({...f, lastMedia: {$gt: 0}}).sort({lastMedia: -1}).limit(12).project({
             _id: 1,
             username: 1,
             fullName: 1,
             lastMediaData: 1
-        }).map(idToPk).toArray(),
-        pageSearchCollection.find(f).sort({activeScore: -1}).limit(30).project(cardProj).map(idToPk).toArray(),
+        }).toArray(),
+        pageSearchCollection.find(f).sort({activeScore: -1}).limit(30).project(cardProj).toArray(),
         pageSearchCollection.find({
             ...f,
             brickAndMortar: true
-        }).sort({activeScore: -1}).limit(21).project(extraProj).map(idToPk).toArray(),
+        }).sort({activeScore: -1}).limit(21).project(extraProj).toArray(),
     ])
 
     return {

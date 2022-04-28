@@ -294,7 +294,7 @@ const reviews = ref<IgPageReview[]>([]);
 
 async function fetchReviews() {
   reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
-      pagePk: page.value.pk,
+      pageId: page.value._id,
     }}))['reviews'];
 }
 
@@ -304,7 +304,7 @@ import IgMedia from "~/models/IgMedia";
 import useMediaPrice from "~/composables/useMediaPrice";
 
 const {
-  reviewingPagePk,
+  reviewingPageId,
   isCreatingReview,
   rating,
   content,
@@ -312,7 +312,7 @@ const {
 } = useCreateReview();
 
 async function sendReview() {
-  reviewingPagePk.value = page.value.pk;
+  reviewingPageId.value = page.value._id;
   await createReview();
   await fetchReviews();
 }

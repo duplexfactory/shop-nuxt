@@ -22,22 +22,6 @@ export async function initDynamo() {
     return client;
 }
 
-// TODO: change to media pageId
-/**
- * @deprecated use getPageMedias
- */
-export async function getPageMediasByPk(pagePk: number, limit?: number, before = dayjs().unix()) {
-    const res = await client.send(new QueryCommand({
-        TableName: "medias",
-        KeyConditionExpression: "pagePk = :pagePk AND takenAt < :before",
-        ExpressionAttributeValues: marshall({":pagePk": pagePk, ":before": before}),
-        ScanIndexForward: false,
-        Limit: limit
-    }));
-
-    return res.Items?.map(m => unmarshall(m)) as IgMedia[];
-}
-
 export async function getPageMedias(pageId: string, limit?: number, before = dayjs().unix()) {
     const res = await client.send(new QueryCommand({
         TableName: "media",
@@ -50,11 +34,11 @@ export async function getPageMedias(pageId: string, limit?: number, before = day
     return res.Items?.map(m => unmarshall(m)) as IgMedia[];
 }
 
-export async function getMedia(pk: number, takenAt: number): Promise<IgMedia | null> {
+export async function getMedia(pageId: number, takenAt: number): Promise<IgMedia | null> {
     const res = await client.send(new QueryCommand({
-        TableName: "medias",
-        KeyConditionExpression: "pagePk = :pagePk AND takenAt = :takenAt",
-        ExpressionAttributeValues: marshall({":pagePk": pk, ":takenAt": takenAt}),
+        TableName: "media",
+        KeyConditionExpression: "pageId = :pageId AND takenAt = :takenAt",
+        ExpressionAttributeValues: marshall({":pageId": pageId, ":takenAt": takenAt}),
         ScanIndexForward: false,
         Limit: 1
     }));
@@ -63,29 +47,6 @@ export async function getMedia(pk: number, takenAt: number): Promise<IgMedia | n
 
 async function queryMediaByCode(code: string) {
     return client.send(new QueryCommand({
-        TableName: "medias",
-        IndexName: "code-takenAt-index",
-        KeyConditionExpression: "code = :code",
-        ExpressionAttributeValues: marshall({":code": code}),
-        ScanIndexForward: false,
-        Limit: 1
-    }));
-}
-
-// TODO: change table
-/**
- * @deprecated use getMediaByCode
- */
-export async function oldGetMediaByCode(code: string): Promise<IgMedia | null> {
-    const res = await queryMediaByCode(code);
-    if (res?.Count) {
-        const {pagePk, takenAt} = unmarshall(res.Items[0]);
-        return getMedia(pagePk, takenAt);
-    } else return undefined;
-}
-
-export async function getMediaByCode(code: string): Promise<IgMedia | null> {
-    const res = await client.send(new QueryCommand({
         TableName: "media",
         IndexName: "code-index",
         KeyConditionExpression: "code = :code",
@@ -93,10 +54,14 @@ export async function getMediaByCode(code: string): Promise<IgMedia | null> {
         ScanIndexForward: false,
         Limit: 1
     }));
+}
+
+export async function getMediaByCode(code: string): Promise<IgMedia | null> {
+    const res = await queryMediaByCode(code);
 
     if (res?.Count) {
-        const {pagePk, takenAt} = unmarshall(res.Items[0]);
-        return getMedia(pagePk, takenAt);
+        const {pageId, takenAt} = unmarshall(res.Items[0]);
+        return getMedia(pageId, takenAt);
     } else return undefined;
 }
 

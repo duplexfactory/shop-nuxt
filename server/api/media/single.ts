@@ -1,21 +1,15 @@
-import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3'
-import type IgMedia from "~/models/IgMedia";
-import {oldGetMediaByCode, initDynamo} from "~/server/dynamodb";
-import {badRequest, notFound} from "~/utils/h3Error";
+import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {getMediaByCode, initDynamo} from "~/server/dynamodb"
+import {notFound} from "~/utils/h3Error"
+import {assert} from "~/server/util"
 
 export default defineEventHandler(async (event) => {
     const {code} = await useQuery(event) as { code: string }
+    assert(event, code)
 
-    if (!code) {
-        // Page deleted
-        throw sendError(event, badRequest)
-    }
+    initDynamo()
+    const media = await getMediaByCode(code)
+    assert(event, media, notFound)
 
-    initDynamo();
-    const media = await oldGetMediaByCode(code);
-    if (!media) {
-        throw sendError(event, notFound)
-    }
     return {media} as unknown as JSONValue
-    // { media: IgMedia }
 })

@@ -7,9 +7,9 @@ export default defineEventHandler(async (event) => {
     noCache(event)
     assertMethod(event, "POST")
 
-    const {pagePk, mediaCode, content, rating} = await useBody<{ pagePk: number, mediaCode: string | undefined, content: string, rating: number}>(event);
+    const {pageId, mediaCode, content, rating} = await useBody<{ pageId: string, mediaCode: string | undefined, content: string, rating: number}>(event);
     const review = {
-        pagePk,
+        pageId,
         mediaCode,
         rating,
         content,

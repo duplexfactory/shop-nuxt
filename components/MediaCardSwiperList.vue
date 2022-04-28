@@ -11,11 +11,11 @@
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
         <MediaCard v-for="page in lastMediaPage"
-                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, pagePk: page.pk}"
+                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, pageId: page._id}"
                    class="cursor-pointer swiper-slide"
                    :media="page.lastMediaData"
                    :shop="page"
-                   :key="page.pk.toString() + '-post-card'"></MediaCard>
+                   :key="page._id + '-post-card'"></MediaCard>
       </div>
       <!-- If we need pagination -->
       <div class="swiper-pagination" style="bottom: 0px !important;"></div>
@@ -97,7 +97,7 @@ export default {
     };
   },
   props: {
-    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "pk" | "username">[]>
+    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>
   },
   mounted() {
     // Navigation arrows

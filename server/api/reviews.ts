@@ -5,7 +5,7 @@ import {QuerySnapshot} from "firebase-admin/firestore";
 import {badRequest} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
-    const {pagePk, mediaCode} = await useQuery(event) as { pagePk: string | undefined, mediaCode: string | undefined };
+    const {pageId, mediaCode} = await useQuery(event) as { pageId: string | undefined, mediaCode: string | undefined };
 
     let reviewSS: QuerySnapshot<IgPageReview>;
     if (mediaCode != undefined) {
@@ -15,9 +15,9 @@ export default defineEventHandler(async (event) => {
             .orderBy("created", "desc")
             .get();
     }
-    else if (pagePk != undefined) {
+    else if (pageId != undefined) {
         reviewSS = await reviewCollection()
-            .where("pagePk", "==", Number(pagePk))
+            .where("pageId", "==", Number(pageId))
             .where("deleted", "==", false)
             .orderBy("created", "desc")
             .get();

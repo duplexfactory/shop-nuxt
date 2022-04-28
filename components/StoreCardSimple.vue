@@ -31,7 +31,7 @@ const {shop} = defineProps({
 })
 
 const {
-  pk,
+  _id,
   username,
   fullName,
   profilePicUrl,

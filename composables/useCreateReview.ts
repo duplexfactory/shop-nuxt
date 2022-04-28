@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 export default function useCreateReview() {
 
     const reviewingCode = ref<string>("");
-    const reviewingPagePk = ref<number>(0);
+    const reviewingPageId = ref<string>("");
     const isCreatingReview = ref<boolean>(false);
     const rating = ref<number>(0);
     const content = ref<string>("");
@@ -12,7 +12,7 @@ export default function useCreateReview() {
         isCreatingReview.value = true;
 
         const body: any = {
-            pagePk: reviewingPagePk.value,
+            pagePk: reviewingPageId.value,
             rating: rating.value,
             content: content.value,
         };
@@ -36,7 +36,7 @@ export default function useCreateReview() {
 
     return {
         reviewingCode,
-        reviewingPagePk,
+        reviewingPageId,
         isCreatingReview,
         rating,
         content,
