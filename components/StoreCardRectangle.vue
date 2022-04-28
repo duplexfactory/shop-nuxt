@@ -17,7 +17,7 @@
         <div class="hidden sm:block text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>
 
         <div class="mt-2 2xl:mt-4 hidden sm:flex text-sm text-gray-500">
-          <div class="text-center flex-1">
+          <div v-if="shop.followerCount" class="text-center flex-1">
             <div>粉絲</div>
             <div>{{ shop.followerCount.toLocaleString() }}</div>
           </div>

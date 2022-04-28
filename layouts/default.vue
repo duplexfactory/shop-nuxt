@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col" :class="showLoginLoading ? 'h-screen overflow-hidden' : ''">
     <div v-if="isIGBrowser && !isIGHintClosed" class="py-2 px-4 bg-gray-100">
       <div class="text-xs">如在IG瀏覽器内未能正常加載，請按 "<i class="spr-dot-3 text-xs"></i>" > "瀏覽器設定" > "清除瀏覽資料" 後重新整理。</div>
       <button @click="isIGHintClosed = true" class="mt-2 text-xs">知道了</button>
@@ -11,7 +11,17 @@
       <LazyDFDrawer v-if="drawerOpen" @toggleDrawer="toggleDrawer" :open="drawerOpen"></LazyDFDrawer>
     </transition>
 
-    <div class="flex-1 relative">
+    <div class="flex-1 relative" :class="showLoginLoading ? 'overflow-hidden' : ''">
+
+      <!-- Login fullscreen loading -->
+      <div v-if="showLoginLoading"
+           class="absolute z-50 flex flex-col justify-center items-center inset-0 bg-white"
+           style="min-width: 100%; min-height: 100%;">
+        <div>
+          <i class="spr-spin4 animate-spin text-6xl text-pink-400"></i>
+        </div>
+      </div>
+
       <slot/>
 
       <transition name="modal">
@@ -36,10 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import {ScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-import throttle from "lodash.throttle";
+  import {ScreenSize, useScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+  import throttle from "lodash.throttle";
+  import {getAuth, onAuthStateChanged, User} from "firebase/auth";
 
-// Meta
+  // Meta
   const config = useRuntimeConfig();
   const route = useRoute();
 
@@ -87,6 +98,17 @@ import throttle from "lodash.throttle";
   const isIGBrowser = ref(false);
   const isIGHintClosed = ref(false);
 
+  // Login
+  const isLoggedIn = useIsLoggedIn();
+  const isLoginLoadingRoute = computed(() => {
+    return [
+        "/my"
+    ].find((p) => route.path.startsWith(p));
+  });
+  const showLoginLoading = computed(() => {
+    return isLoggedIn.value === null && isLoginLoadingRoute.value;
+  })
+
   // Screen Size
   const screenSize = useScreenSize();
   function calcScreenSize(innerWidth: number) {
@@ -125,6 +147,19 @@ import throttle from "lodash.throttle";
         }
       }
     }, 500));
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (value?: User) => {
+      console.log("onAuthStateChanged");
+      if (value === null) {
+        // Not logged in.
+        isLoggedIn.value = false;
+      }
+      else {
+        // Logged in.
+        isLoggedIn.value = true;
+      }
+    });
   });
 
 </script>

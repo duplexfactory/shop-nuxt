@@ -129,7 +129,7 @@
                   <h2 class="text-xl md:text-2xl font-bold">
                     註冊
                   </h2>
-                  <input v-model="username" class="mt-4 block w-full text-input-primary" type="text" name="username" placeholder="用戶名">
+                  <input v-model="email" class="mt-4 block w-full text-input-primary" type="text" name="email" placeholder="電郵">
                   <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
                   <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
                   <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
@@ -175,8 +175,9 @@
 </template>
 
 <script lang="ts">
+    import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
     export default {
-        data(): { features: string[], points: {title: string, subtitle: string, content: string, username: string, password: string, confirmPassword: string,}[] } {
+        data(): { features: string[], points: {title: string, subtitle: string, content: string, email: string, password: string, confirmPassword: string,}[] } {
             return {
                 features: [
                     '完全免費',
@@ -195,19 +196,19 @@
                     // {title: "更改資料", subtitle: "修改分類、描述", content: "假如你認爲你的商店分類或你IG上的描述不適合此平台，認證後你將可以隨意修改。"},
 
                     {title: "拓展客源", subtitle: "更好的展示方式", content: "我們採用了比IG更類似電商平台的設計，而且為各商店分類。讓你的商店能夠更清晰、準確地展示給你的目標客戶。"},
-                    {title: "展示IG資訊", subtitle: "商業登記核實", content: "認證你的商店後，我們將會在Shoperuse上展示你在IG的簡介等資訊，讓用戶可以更清楚了解你商店售賣的產品。。"},
+                    {title: "展示IG資訊", subtitle: "商業登記核實", content: "認證你的商店後，我們將會在Shoperuse上展示你在IG的簡介等資訊，讓用戶可以更清楚了解你商店售賣的產品。"},
                     {title: "更改資料", subtitle: "修改分類、描述", content: "假如你認爲Shoperuse上你的商店分類或資料有任何錯誤，認證後你將可以隨意修改。"},
 
 
                 ],
-                username: "",
+                email: "",
                 password: "",
                 confirmPassword: "",
             }
         },
         methods: {
-          register() {
-            if (this.username == "" || this.password == "" || this.confirmPassword == "") {
+          async register() {
+            if (this.email == "" || this.password == "" || this.confirmPassword == "") {
               this.$toast.error("請填寫所有欄位！", {position: "top"});
               return;
             }
@@ -215,6 +216,30 @@
             if (this.password !== this.confirmPassword) {
               this.$toast.error("請確保兩次輸入的密碼一致！", {position: "top"});
               return;
+            }
+
+            try {
+              (await $fetch('/api/auth/register', { method: 'POST', body: { email: this.email, password: this.password }}));
+
+              this.$toast.success("成功註冊！");
+
+              try {
+                const auth = getAuth();
+                const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
+
+                // Signed in
+                const user = userCredential.user;
+                this.$router.push({path: '/my/shop'});
+              }
+              catch (firebaseSignInError) {
+                const errorCode = firebaseSignInError.code;
+                const errorMessage = firebaseSignInError.message;
+                this.$toast.error("登入失敗", {position: "top"});
+              }
+
+            }
+            catch(e) {
+              this.$toast.error("電郵已被使用！");
             }
 
           }
