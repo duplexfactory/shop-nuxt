@@ -116,7 +116,7 @@ async function save() {
 
   // Submit
   isSubmitting.value = true;
-  const {data, error} = await useFetch("/api/blog", {
+  const {data, error} = await useFetch("/api/admin/blog", {
     method: !!editBlog ? "PATCH" : "POST",
     params: !!editBlog ? {id: editBlog.id} : undefined,
     body: {
