@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
     tokenUrl.searchParams.set("fields", "caption,permalink,timestamp")
     tokenUrl.searchParams.set("access_token", longToken)
     const mediaRes = await fetch(mediaUrl.href)
-    const {data: medias}: { data: RawMedia } = await mediaRes.json()
+    const {data: medias} = await mediaRes.json() as { data: RawMedia }
 
     if (!page) {
         const p: Partial<IgPage> = {
