@@ -62,16 +62,21 @@
       </div>
 
       <Teleport to="body">
-        <div v-if="showPriceSuggestionModal" class="suggest-price-modal">
-            <div class="bg-white p-4 rounded-md">
-              <input v-model="suggestedPrice" class="block text-input-primary" type="number" name="price" placeholder="輸入價格">
-              <div class="flex justify-end mt-2">
-                <button @click="submitPrice" class="btn-primary btn-sm mr-2">提交</button>
-                <button @click="showPriceSuggestionModal = false" class="btn-outline btn-sm">取消</button>
+        <transition name="modal">
+          <LazyModal v-if="showPriceSuggestionModal" @close="showPriceSuggestionModal = false">
+            <template #container>
+              <div class="bg-white p-4 rounded-md">
+                <input v-model="suggestedPrice" class="block text-input-primary" type="number" name="price" placeholder="輸入價格">
+                <div class="flex justify-end mt-2">
+                  <button @click="submitPrice" class="btn-primary btn-sm mr-2">提交</button>
+                  <button @click="showPriceSuggestionModal = false" class="btn-outline btn-sm">取消</button>
+                </div>
               </div>
-            </div>
-        </div>
+            </template>
+          </LazyModal>
+        </transition>
       </Teleport>
+
     </template>
   </LazyModal>
 </template>
@@ -198,13 +203,3 @@ onMounted(async () => {
 });
 
 </script>
-
-<style scoped>
-
-.suggest-price-modal {
-  z-index: 9998;
-  background-color: rgba(0, 0, 0, 0.5);
-  @apply w-full h-full fixed top-0 left-0 flex items-center justify-center;
-}
-
-</style>

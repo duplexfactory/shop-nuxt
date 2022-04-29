@@ -1,6 +1,12 @@
 <template>
   <div class="modal-mask" @click="$emit('close')">
-    <div class="px-0 sm:container mx-auto flex items-center h-full">
+
+    <div v-if="$slots.container" class="w-full h-full flex items-center justify-center">
+      <slot name="container"></slot>
+    </div>
+
+    <div v-else class="px-0 sm:container mx-auto flex items-center h-full">
+
       <div class="modal-container" @click.stop="">
 
         <div class="modal-header">
@@ -26,6 +32,7 @@
             <!--          </button>-->
           </slot>
         </div>
+
       </div>
     </div>
 
