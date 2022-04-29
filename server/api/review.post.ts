@@ -4,8 +4,7 @@ import {noCache} from "~/server/util";
 import {IncomingMessage} from "http";
 
 export default defineEventHandler(async (event) => {
-    noCache(event)
-    assertMethod(event, "POST")
+    noCache(event);
 
     const {pageId, mediaCode, content, rating} = await useBody<{ pageId: string, mediaCode: string | undefined, content: string, rating: number}>(event);
     const review = {
