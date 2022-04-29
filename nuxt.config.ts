@@ -251,7 +251,7 @@ export default defineNuxtConfig({
       const root = resolve(__dirname, 'hidden/pages');
 
       function traverse(dir: string) {
-        const children = fs.readdirSync(resolve(root, dir));
+        const children: string[] = fs.readdirSync(resolve(root, dir));
         const files = children.filter(file => fs.lstatSync(resolve(root, dir, file)).isFile());
         const dirs = children.filter(file => !fs.lstatSync(resolve(root, dir, file)).isFile());
 
@@ -260,10 +260,16 @@ export default defineNuxtConfig({
         }
 
         for (const fileName of files) {
-          const routeName = fileName.replace('.vue', '');
+          let routeName = fileName.replace('.vue', '');
+          let dynamicLink = false;
+          if (routeName.startsWith('[') && routeName.endsWith(']')) {
+            routeName = routeName.slice(1, routeName.length - 1);
+            dynamicLink = true;
+          }
+          const p = `${dynamicLink ? ':' : ''}${routeName}`;
           pages.push({
             name: (dir.length !== 0 ? dir.split('/').join('-') + '-' : '') + routeName,
-            path: dir.length !== 0 ? `/${dir}/${routeName}` : `/${routeName}`,
+            path: `${dir.length !== 0 ?  '/' + dir : ''}/${p}`,
             file: resolve(root, dir, fileName)
           })
         }
