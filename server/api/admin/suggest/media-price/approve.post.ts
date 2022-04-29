@@ -2,8 +2,12 @@ import {defineEventHandler, sendError, useQuery} from "h3";
 import {initDynamo, patchMediaByCode} from "~/server/dynamodb";
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
 import {notFound} from "~/utils/h3Error";
+import {noCache} from "~/server/util";
 
 export default defineEventHandler(async (event) => {
+
+    noCache(event);
+
     const {
         id
     } = useQuery(event) as { id: string };
