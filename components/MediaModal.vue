@@ -20,9 +20,9 @@
               </Popper>
             </div>
 
-            <button v-if="localPage" class="hover:underline" @click="onUsernameClick">
+            <nuxt-link v-if="localPage" class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
               {{ localPage.username }}
-            </button>
+            </nuxt-link>
 
             <div v-if="pageInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">
               <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
