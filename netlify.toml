@@ -1,4 +1,5 @@
 [context.dev.environment]
   DEV = "true"
+  DEV_DB = "true"
 [context.demo.environment]
   DEV = "true"

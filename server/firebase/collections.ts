@@ -12,7 +12,7 @@ initFirebase();
 const config = useRuntimeConfig();
 
 function checkDev(name: string) {
-    return config.DEV ? "dev-" + name : name
+    return config.DEV_DB ? "dev-" + name : name
 }
 
 export function pageCollection() {

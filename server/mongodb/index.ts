@@ -18,7 +18,7 @@ export async function initMongo() {
             useNewUrlParser: true,
             useUnifiedTopology: true
         } as MongoClientOptions)
-        const db = client.db(config.DEV ? "ig-dev" : "ig")
+        const db = client.db(config.DEV_DB ? "ig-dev" : "ig")
         pageSearchCollection = db.collection("page")
         igAuthCollection = db.collection("igAuth")
         pendingPageCollection = db.collection("pendingPage")

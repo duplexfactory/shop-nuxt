@@ -83,6 +83,7 @@ export default defineNuxtConfig({
     DOMAIN: process.env.DOMAIN,
     IG_APP_ID: process.env.DOMAIN,
     DEV: process.env.DEV,
+    DEV_DB: process.env.DEV_DB,
 
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
 
