@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import Blog from "~/models/Blog"
   import dayjs from "dayjs";
-  import {abortNavigation} from "#app";
+  import {notFound} from "~/utils/h3Error";
 
   const config = useRuntimeConfig();
   const route = useRoute();
@@ -12,14 +12,14 @@
 
   if (Number(blogId) === Number.NaN) {
     // Bad ID
-    abortNavigation();
+    throwError(notFound);
   }
 
   const {data, error} = await useLazyFetch("/api/blog", {params: {id: blogId}});
 
   if (!!error && !!error.value) {
     // API error
-    abortNavigation();
+    throwError(notFound);
   }
 
   const blog = computed<Blog>(() => {
