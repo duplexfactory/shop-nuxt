@@ -29,6 +29,7 @@
     "fs-extra": "^10.0.1",
     "lodash.throttle": "^4.1.1",
     "mongodb": "^4.3.1",
+    "nanoid": "^3.3.4",
     "node-fetch": "^3.1.0",
     "path": "^0.12.7",
     "swiper": "^7.4.1",

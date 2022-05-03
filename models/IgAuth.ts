@@ -1,5 +1,5 @@
 export default interface IgAuth {
-    pk?: number;
+    pageId: string;
     username: string;
     localUserId: number;
 

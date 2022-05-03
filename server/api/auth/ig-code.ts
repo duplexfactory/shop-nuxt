@@ -1,10 +1,11 @@
 import fetch from "node-fetch"
 import {defineEventHandler, useQuery} from "h3"
 import dayjs from "dayjs"
+import {nanoid} from "nanoid"
 
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {noCache} from "~/server/util"
-import IgPage from "~/models/IgPage";
+import IgPage from "~/models/IgPage"
 
 interface RawMedia {
     "caption": string,
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
     // exchange code for short lived access token
     const form = new URLSearchParams()
-    const config = useRuntimeConfig();
+    const config = useRuntimeConfig()
     form.append("client_id", config.IG_APP_ID)
     form.append("client_secret", config.IG_APP_SECRET)
     form.append("grant_type", "authorization_code")
@@ -54,14 +55,16 @@ export default defineEventHandler(async (event) => {
         expires_in
     } = await longTokenRes.json() as { access_token: string, expires_in: number }
 
-    const page = await pageSearchCollection.findOne({username}) as unknown as { pk: number };
+    const page = await pageSearchCollection.findOne({username}) as { _id: string }
+    const pageId = page ? page._id : nanoid()
 
-    await igAuthCollection.updateOne({localUserId: userId}, {
+    await igAuthCollection.updateOne({username}, {
         $set: {
+            pageId,
             username,
+            localUserId: userId,
             expiry: dayjs().add(expires_in, "seconds").toDate(),
-            accessToken: longToken,
-            pk: page?.pk || undefined
+            accessToken: longToken
         }
     }, {upsert: true})
 
