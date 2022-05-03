@@ -13,6 +13,7 @@
         <StoreCardSquare v-for="shop in shops"
                          class="swiper-slide"
                          :shop="shop"
+                         :showLocations="true"
                          :key="shop.username + '-store-card-sq'"></StoreCardSquare>
       </div>
 

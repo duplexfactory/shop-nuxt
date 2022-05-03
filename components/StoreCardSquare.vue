@@ -11,10 +11,36 @@
                   <div v-if="verifiedPage" class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
                 </div>
 
-                <!-- Offline show locations -->
-                <div v-if="showLocations" class="mt-2 2xl:mt-4 text-sm text-gray-500">
-                  {{ '門市：' + shop.locations.join('、') }}
+                <div v-if="contactInfoRows.length !== 0">
+                  <a v-for="(pageInfoRow, i) in contactInfoRows"
+                     :key="pageInfoRow.value + i.toString()"
+                     :href="pageInfoRow.link"
+                     target="_blank">
+                    <i class="mr-1"
+                       :style="`color: #${contactColor(pageInfoRow.key)}`"
+                       :class="pageInfoRow.iconClass"></i>
+                  </a>
                 </div>
+
+                <div class="mt-2 2xl:mt-4 line-clamp-2"
+                     style="font-size: 0;">
+                  <div v-for="tag in tags"
+                       :key="tag"
+                       class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
+                </div>
+
+                <div v-if="showLocations && addressInfoRow" class="mt-2 2xl:mt-4 text-sm text-gray-500 flex items-start">
+                  <span><i class="mr-2" :class="addressInfoRow.iconClass"></i></span>
+                  <component :is="addressInfoRow.link ? 'a' : 'span'"
+                             class="break-all"
+                             :class="{'hover:underline': addressInfoRow.link}"
+                             target="_blank"
+                             :href="addressInfoRow.link">
+                    <span v-if="addressInfoRow.link" class="md:hidden">查看地址</span>
+                    <span :class="addressInfoRow.link ? 'hidden md:inline-block' : ''">{{ addressInfoRow.value }}</span>
+                  </component>
+                </div>
+
                 <!-- Online show followers -->
                 <div v-else class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
                     <div v-if="followerCount" class="text-center flex-1">
@@ -26,13 +52,6 @@
                         <div>貼文</div>
                         <div>{{ mediaCount.toLocaleString() }}</div>
                     </div>
-                </div>
-
-                <div class="mt-2 2xl:mt-4 line-clamp-2"
-                     style="font-size: 0;">
-                    <div v-for="tag in tags"
-                         :key="tag"
-                         class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
                 </div>
 
                 <nuxt-link :to="`/shop/${username}`"
@@ -49,7 +68,7 @@
                 </div>
             </template>
             <template v-else>
-              <div class="py-4 pr-4 text-sm" style="aspect-ratio: 2/3;">
+              <div class="py-4 pr-4 text-sm text-gray-500" style="aspect-ratio: 2/3;">
                 <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="flex items-start mb-1">
                   <span><i class="mr-2" :class="pageInfoRow.iconClass"></i></span>
                   <component :is="pageInfoRow.link ? 'a' : 'span'"
@@ -86,11 +105,35 @@ const {
   mediaCodes,
   profilePicUrl,
   tags,
-  locations
+  locations,
+  extraData
 } = shop;
 const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
 const description = 'description';
 
 const verifiedPage = false;
-const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop));
+const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop).filter((r) => !["address", "whatsapp", "wechat", "signal", "email", "shopSince", "relatedPage"].includes(r.key)));
+
+const contactInfoRows = computed(() => PageInfoRow.rowsFromExtraData(extraData, ["whatsapp", "wechat", "signal"]));
+function contactColor(key: "whatsapp" | "wechat" | "signal") {
+  switch (key) {
+    case "whatsapp":
+      return "25D366";
+    case "wechat":
+      return "09B83E";
+    case "signal":
+      return "2152A7";
+  }
+}
+const addressInfoRow = computed(() => {
+  const rows = PageInfoRow.rowsFromPage({
+    businessRegistration: false,
+    locations,
+    extraData: {
+      address: extraData.address
+    }
+  });
+  return rows.length === 0 ? undefined : rows[0];
+});
+
 </script>
