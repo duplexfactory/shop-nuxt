@@ -6,6 +6,8 @@ import {nanoid} from "nanoid"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {noCache} from "~/server/util"
 import IgPage from "~/models/IgPage"
+import IgMedia from "~/models/IgMedia"
+import {saveMedias} from "~/server/dynamodb"
 
 interface RawMedia {
     "caption": string,
@@ -68,23 +70,35 @@ export default defineEventHandler(async (event) => {
         }
     }, {upsert: true})
 
-    // fetch medias
-    const mediaUrl = new URL("https://graph.instagram.com/me/media")
-    tokenUrl.searchParams.set("fields", "caption,permalink,timestamp")
-    tokenUrl.searchParams.set("access_token", longToken)
-    const mediaRes = await fetch(mediaUrl.href)
-    const {data: medias} = await mediaRes.json() as { data: RawMedia }
-
+    // create page
     if (!page) {
         const p: Partial<IgPage> = {
+            _id: pageId,
             temp: true,
             pk: 0,
             username,
             fullName: "",
             biography: "",
-            mediaCount: 0
+            mediaCount: 0,
+            nextFetch: 1
         }
+        await pageSearchCollection.insertOne(p)
     }
+
+    // fetch medias
+    const mediaUrl = new URL("https://graph.instagram.com/me/media")
+    tokenUrl.searchParams.set("fields", "caption,permalink,timestamp")
+    tokenUrl.searchParams.set("access_token", longToken)
+    const mediaRes = await fetch(mediaUrl.href)
+    const {data: medias} = await mediaRes.json() as { data: RawMedia[] }
+
+    const dMedias: IgMedia[] = medias.map(m => ({
+        code: m.permalink.split("/").filter(t => !!t).pop(),
+        pageId,
+        caption: m.caption,
+        takenAt: dayjs(m.timestamp).unix(),
+    }))
+    await saveMedias(dMedias)
 
     return {accessToken: longToken, userId, id, username}
 })
