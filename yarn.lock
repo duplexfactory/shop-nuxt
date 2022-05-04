@@ -1446,11 +1446,6 @@
     protobufjs "^6.10.0"
     yargs "^16.2.0"
 
-"@jambonn/vue-lazyload@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@jambonn/vue-lazyload/-/vue-lazyload-1.0.9.tgz#3b2271e41860a8d9728d1898d9c997b749052d95"
-  integrity sha512-V9AnxDTAS1+q5LpTWtvyEN2bo1skvSzPRbFfP7Z1qhfEQRQouSwReEkbEb5B5M4MDEM1UIE0kxlsvOcCkon8DQ==
-
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.0.6.tgz#4ac237f4dabc8dd93330386907b97591801f7352"
