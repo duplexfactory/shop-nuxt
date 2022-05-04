@@ -1,6 +1,7 @@
 <template>
   <div>
-    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slide-aspect-ratio="3/5"
+                               :swiper-options="swiperOptions" class="pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>
@@ -31,88 +32,70 @@
 
 </template>
 
-<script lang="ts">
-import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
-// import Swiper and modules styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import {PropType} from "vue";
-import {SwiperOptions} from "swiper/types/swiper-options";
-import {SimpleIgPage} from "~/models/SimpleIgPage";
-import IgPage from "~/models/IgPage";
-
-export default {
-  data() : {
-    swiperReady: boolean,
-    swiperOptions: SwiperOptions
-  } {
-    return {
-      swiperReady: false,
-      swiperOptions: {
-        modules: [Navigation, Pagination],
-
-        // Optional parameters
-        // direction: 'vertical',
-        // loop: true,
-
-        on: {
-          init: () => {
-            this.swiperReady = true;
-          },
-        },
-
-        spaceBetween: 16,
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-
-        breakpoints: {
-          1024: {
-            spaceBetween: 16,
-            slidesPerView: 3,
-            slidesPerGroup: 3,
-          },
-          1280: {
-            spaceBetween: 24,
-            slidesPerView: 3.5,
-            slidesPerGroup: 3,
-          },
-          1536: {
-            spaceBetween: 24,
-            slidesPerView: 4,
-            slidesPerGroup: 4,
-          }
-        },
-
-        // If we need pagination
-        pagination: {
-          el: '.swiper-pagination',
-        },
-
-        // // And if we need scrollbar
-        // scrollbar: {
-        //   el: '.swiper-scrollbar',
-        // },
-      }
-    };
-  },
-  props: {
-    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>
-  },
-  mounted() {
-    // Navigation arrows
-    this.swiperOptions.navigation = {
-      nextEl: this.$refs.swiperButtonNext,
-      prevEl: this.$refs.swiperButtonPrev,
-    };
-
-    const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
-  }
-}
-</script>
-
 <script setup lang="ts">
-import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-const showMediaModal = useShowMediaModal();
-const showingMediaModalData = useShowingMediaModalData();
+  import {Navigation, Pagination} from "swiper"
+  // import Swiper and modules styles
+  import "swiper/css/navigation"
+  import "swiper/css/pagination"
+  import {PropType} from "vue"
+  import IgPage from "~/models/IgPage"
+  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
+
+  const {lastMediaPage} = defineProps({lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>})
+
+  const showMediaModal = useShowMediaModal()
+  const showingMediaModalData = useShowingMediaModalData()
+
+  const {
+    swiper,
+    swiperReady,
+    swiperOptions,
+    loadSwiper
+  } = useSwiper({
+    modules: [Navigation, Pagination],
+
+    // Optional parameters
+    // direction: 'vertical',
+    // loop: true,
+
+    on: {
+      init: () => {
+        swiperReady.value = true
+      },
+    },
+
+    spaceBetween: 16,
+    slidesPerView: 2,
+    slidesPerGroup: 2,
+
+    breakpoints: {
+      1024: {
+        spaceBetween: 16,
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      1280: {
+        spaceBetween: 24,
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+      },
+      1536: {
+        spaceBetween: 24,
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+      }
+    },
+
+    // If we need pagination
+    pagination: {
+      el: ".swiper-pagination",
+    },
+
+    // // And if we need scrollbar
+    // scrollbar: {
+    //   el: '.swiper-scrollbar',
+    // },
+  })
+
+  onMounted(loadSwiper)
 </script>

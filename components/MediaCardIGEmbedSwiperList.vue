@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>-->
+    <!--    <swiper-slides-placeholder v-if="!swiperReady" :slide-aspect-ratio="3/5" :swiper-options="swiperOptions" class="pb-8"></swiper-slides-placeholder>-->
 
     <lazy-component @show="loadSwiper">
       <!-- Slider main container -->
@@ -28,9 +28,10 @@
 
       </div>
     </lazy-component>
-    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slideAspectRatio="0.5" :swiper-options="swiperOptions" class="pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slideAspectRatio="0.5"
+                               :swiper-options="swiperOptions" class="pb-8">
       <template v-slot:default="slotProps">
-<!--        <MediaCardIGEmbed class="h-full w-full"></MediaCardIGEmbed>-->
+        <!--        <MediaCardIGEmbed class="h-full w-full"></MediaCardIGEmbed>-->
         <div class="h-full w-full bg-loading"></div>
       </template>
     </swiper-slides-placeholder>
@@ -39,138 +40,108 @@
 
 </template>
 
-<script lang="ts">
-import Swiper, {FreeMode, Navigation, Pagination} from 'swiper';
-// import Swiper and modules styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import {PropType} from "vue";
-import {SwiperOptions} from "swiper/types/swiper-options";
-import loadIGEmbeds from "~/utils/loadIGEmbeds";
-import {SimpleIgPage} from "~/models/SimpleIgPage";
-import IgPage from "~/models/IgPage";
-
-export default {
-  data() : {
-    swiperLoaded: boolean,
-    swiperReady: boolean,
-    swiperOptions: SwiperOptions
-  } {
-    return {
-      swiperLoaded: false,
-      swiperReady: false,
-      swiperOptions: {
-        modules: [Navigation, Pagination],
-
-        // Optional parameters
-        // direction: 'vertical',
-        // loop: true,
-
-        on: {
-          init: () => {
-            this.swiperReady = true;
-            this.$nextTick(() => {
-              loadIGEmbeds();
-            })
-          },
-        },
-
-        observer: true,
-
-        spaceBetween: 0,
-        slidesPerView: 2,
-        slidesPerGroup: 2,
-
-        breakpoints: {
-          1024: {
-            // spaceBetween: 32,
-            // slidesPerView: 2,
-            // slidesPerGroup: 2,
-
-            spaceBetween: 16,
-            slidesPerView: 3,
-            slidesPerGroup: 3,
-          },
-          1280: {
-            spaceBetween: 24,
-            slidesPerView: 3.5,
-            slidesPerGroup: 3,
-          },
-          1536: {
-            spaceBetween: 24,
-            slidesPerView: 4,
-            slidesPerGroup: 4,
-          }
-        },
-
-        // If we need pagination
-        pagination: {
-          el: '.swiper-pagination',
-        },
-
-        // // And if we need scrollbar
-        // scrollbar: {
-        //   el: '.swiper-scrollbar',
-        // },
-      }
-    };
-  },
-  props: {
-    lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>
-  },
-  methods: {
-    loadSwiper() {
-      this.$nextTick(() => {
-        if (!this.swiperLoaded && this.$refs.swiper) {
-
-          this.swiperLoaded = true;
-
-          // Navigation arrows
-          this.swiperOptions.navigation = {
-            nextEl: this.$refs.swiperButtonNext,
-            prevEl: this.$refs.swiperButtonPrev,
-          };
-
-          const swiper = new Swiper(this.$refs.swiper, this.swiperOptions);
-        }
-      })
-
-    }
-  }
-}
-</script>
-
 <script setup lang="ts">
-import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-import useMediaPrice from "~/composables/useMediaPrice";
-const showMediaModal = useShowMediaModal();
-const showingMediaModalData = useShowingMediaModalData();
+  import {Navigation, Pagination} from "swiper"
+  // import Swiper and modules styles
+  import "swiper/css/navigation"
+  import "swiper/css/pagination"
+  import {PropType} from "vue"
+  import loadIGEmbeds from "~/utils/loadIGEmbeds"
+  import IgPage from "~/models/IgPage"
+  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
+  import useMediaPrice from "~/composables/useMediaPrice"
 
-// Media Price
-const { mediaPrice } = useMediaPrice();
+  const {lastMediaPage} = defineProps({lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>})
+
+  const showMediaModal = useShowMediaModal()
+  const showingMediaModalData = useShowingMediaModalData()
+
+  // Media Price
+  const {mediaPrice} = useMediaPrice()
+
+  const {
+    swiper,
+    swiperReady,
+    loadSwiper,
+    swiperOptions
+  } = useSwiper({
+    modules: [Navigation, Pagination],
+
+    // Optional parameters
+    // direction: 'vertical',
+    // loop: true,
+
+    on: {
+      init: () => {
+        swiperReady.value = true
+        nextTick(() => {
+          loadIGEmbeds()
+        })
+      },
+    },
+
+    observer: true,
+
+    spaceBetween: 0,
+    slidesPerView: 2,
+    slidesPerGroup: 2,
+
+    breakpoints: {
+      1024: {
+        // spaceBetween: 32,
+        // slidesPerView: 2,
+        // slidesPerGroup: 2,
+
+        spaceBetween: 16,
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      1280: {
+        spaceBetween: 24,
+        slidesPerView: 3.5,
+        slidesPerGroup: 3,
+      },
+      1536: {
+        spaceBetween: 24,
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+      }
+    },
+
+    // If we need pagination
+    pagination: {
+      el: ".swiper-pagination",
+    },
+
+    // // And if we need scrollbar
+    // scrollbar: {
+    //   el: '.swiper-scrollbar',
+    // },
+  })
+
+  watch(swiper, loadSwiper)
 </script>
 
 <style scoped>
 
-.swiper-button-prev, .swiper-button-next {
-  display: flex !important;
-  background-color: white !important;
-  width: 32px;
-  height: 32px;
-  @apply rounded-full shadow;
-}
-
-@screen md {
   .swiper-button-prev, .swiper-button-next {
-    width: 44px;
-    height: 44px;
+    display: flex !important;
+    background-color: white !important;
+    width: 32px;
+    height: 32px;
+    @apply rounded-full shadow;
   }
-}
 
-.swiper-button-next::after, .swiper-button-prev::after {
-  font-size: 18px !important;
-  @apply font-bold;
-}
+  @screen md {
+    .swiper-button-prev, .swiper-button-next {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .swiper-button-next::after, .swiper-button-prev::after {
+    font-size: 18px !important;
+    @apply font-bold;
+  }
 
 </style>

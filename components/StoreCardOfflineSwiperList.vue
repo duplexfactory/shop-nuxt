@@ -24,7 +24,8 @@
       </div>
     </lazy-component>
 
-    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3" :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
+    <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3"
+                               :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>
@@ -35,87 +36,69 @@
 
 <script setup lang="ts">
 
-import Swiper, { Navigation, FreeMode, Pagination } from 'swiper';
-// import Swiper and modules styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import "swiper/css/free-mode";
-import {SwiperOptions} from "swiper/types/swiper-options";
-import {PropType} from "vue";
-import IgPage from "~/models/IgPage";
+  import {FreeMode, Navigation, Pagination} from "swiper"
+  // import Swiper and modules styles
+  import "swiper/css/navigation"
+  import "swiper/css/pagination"
+  import "swiper/css/free-mode"
+  import {PropType} from "vue"
+  import IgPage from "~/models/IgPage"
 
-const {shops} = defineProps({
-  shops: Array as PropType<IgPage[]>
-})
+  const {shops} = defineProps({shops: Array as PropType<IgPage[]>})
 
-const swiper = ref(null);
-const swiperButtonPrev = ref(null);
-const swiperButtonNext = ref(null);
-const swiperLoaded = ref(false);
-const swiperReady = ref(false);
-const swiperOptions: SwiperOptions = {
+  const {
+    swiper,
+    swiperButtonPrev,
+    swiperButtonNext,
+    swiperLoaded,
+    swiperReady,
+    swiperOptions,
+    loadSwiper
+  } = useSwiper({
 
-  modules: [Navigation, FreeMode, Pagination],
+    modules: [Navigation, FreeMode, Pagination],
 
-  // Optional parameters
-  // direction: 'vertical',
-  // loop: true,
+    // Optional parameters
+    // direction: 'vertical',
+    // loop: true,
 
-  on: {
-    init: () => {
-      swiperReady.value = true;
+    on: {
+      init: () => {
+        swiperReady.value = true
+      },
     },
-  },
 
-  spaceBetween: 16,
-  slidesPerView: 1.2,
-  slidesPerGroup: 1,
-  freeMode: true,
+    spaceBetween: 16,
+    slidesPerView: 1.2,
+    slidesPerGroup: 1,
+    freeMode: true,
 
-  breakpoints: {
-    1024: { // lg
-      spaceBetween: 16,
-      slidesPerView: 2.2,
-      slidesPerGroup: 2,
-      freeMode: false,
+    breakpoints: {
+      1024: { // lg
+        spaceBetween: 16,
+        slidesPerView: 2.2,
+        slidesPerGroup: 2,
+        freeMode: false,
+      },
+      1280: { // xl
+        spaceBetween: 16,
+        slidesPerView: 2.5,
+        slidesPerGroup: 2,
+        freeMode: false,
+      },
+      1536: { // 2xl
+        spaceBetween: 16,
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+        freeMode: false,
+      }
     },
-    1280: { // xl
-      spaceBetween: 16,
-      slidesPerView: 2.5,
-      slidesPerGroup: 2,
-      freeMode: false,
+
+    pagination: {
+      el: ".swiper-pagination",
     },
-    1536: { // 2xl
-      spaceBetween: 16,
-      slidesPerView: 3,
-      slidesPerGroup: 3,
-      freeMode: false,
-    }
-  },
+  })
 
-  pagination: {
-    el: '.swiper-pagination',
-  },
-
-};
-
-watch(swiper, (newSwiper) => {
-  loadSwiper();
-});
-
-function loadSwiper() {
-  if (!swiperLoaded.value && swiper.value) {
-    swiperLoaded.value = true;
-
-    // Navigation arrows
-    swiperOptions.navigation = {
-      nextEl: swiperButtonNext.value,
-      prevEl: swiperButtonPrev.value,
-    };
-
-    new Swiper(swiper.value, swiperOptions);
-  }
-}
+  watch(swiper, loadSwiper)
 
 </script>
