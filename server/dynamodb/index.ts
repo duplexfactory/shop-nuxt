@@ -72,7 +72,7 @@ export async function patchMediaByCode(code: string, patchItem): Promise<boolean
     const res = await queryMediaByCode(code)
     if (res?.Count) {
         const {pagePk, takenAt} = unmarshall(res.Items[0])
-        await update("medias", {
+        await update("media", {
             pagePk, takenAt
         }, patchItem)
         return true
@@ -113,4 +113,10 @@ const update = async (tableName, key, item) => {
     }))
 
     return unmarshall(Attributes)
+}
+
+export async function saveMedias(medias: IgMedia[]) {
+    await client.send(new BatchWriteItemCommand({
+        RequestItems: {media: medias.map(media => ({PutRequest: {Item: marshall(media)}}))}
+    }));
 }
