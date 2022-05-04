@@ -5,6 +5,7 @@
 
   const config = useRuntimeConfig();
   const route = useRoute();
+  const nuxt = useNuxtApp();
 
   // Extract blog ID
   const lastSeparatorIndex = (route.params.slug as string).lastIndexOf("-");
@@ -44,6 +45,7 @@
   }
 
   import edjsHTML from "editorjs-html";
+  import {useNuxt} from "@nuxt/kit";
 
   const parser = edjsHTML();
   // function createElementFromHTML(htmlString) {
@@ -79,6 +81,28 @@
       ]
     }
   }))
+
+
+  const shareWhatsAppLink = computed(() => {
+    const text = `${blog.value.title} | IG Shop 推薦及評論平台 | Shoperuse\n`
+        + `${config.DOMAIN}/blog/${blog.value.slug}-${blog.value.id}`;
+    const url = new URL("https://api.whatsapp.com/send");
+    url.search = new URLSearchParams({text});
+    return url.toString();
+  });
+
+  const shareFacebookLink = computed(() => {
+    const url = new URL("https://www.facebook.com/sharer.php");
+    url.search = new URLSearchParams({u: `${config.DOMAIN}/blog/${blog.value.slug}-${blog.value.id}`});
+    return url.toString();
+  });
+
+  function copyToClipboardClicked() {
+    const text = `${blog.value.title} | IG Shop 推薦及評論平台 | Shoperuse\n`
+        + `${config.DOMAIN}/blog/${blog.value.slug}-${blog.value.id}`;
+    navigator.clipboard.writeText(text);
+    nuxt.vueApp.$toast.success("已成功複製連結。", {position: "top"});
+  }
 </script>
 
 <template>
@@ -93,9 +117,9 @@
 
           <!-- Share Buttons -->
           <div class="text-sm">
-            <button class="social-btn iconbox spr-whatsapp"></button>
-            <button class="social-btn iconbox spr-facebook-squared"></button>
-            <button class="social-btn iconbox spr-link"></button>
+            <a :href="shareWhatsAppLink" target="_blank"><span class="social-btn iconbox spr-whatsapp"></span></a>
+            <a :href="shareFacebookLink" target="_blank"><span class="social-btn iconbox spr-facebook-squared"></span></a>
+            <button @click="copyToClipboardClicked" class="social-btn iconbox spr-link"></button>
           </div>
         </div>
 
