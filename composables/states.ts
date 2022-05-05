@@ -1,5 +1,6 @@
 import {SimpleIgPage} from "~/models/SimpleIgPage";
 import IgMedia from "~/models/IgMedia";
+import {User} from "firebase/auth"
 
 export const useShowMediaModal = () => useState<boolean>('showMediaModal', () => false)
 export const useShowingMediaModalData = () => useState<{
@@ -29,6 +30,7 @@ export const useShowAgeRestrictedContent = () => useState<boolean>('showAgeRestr
 
 
 export const useIsLoggedIn = () => useState<boolean | null>('isLoggedIn', () => null)
+export const useCurrentUser = () => useState<User | null>('currentUser', () => null)
 
 export enum ScreenSize {
     DEFAULT,

@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 import {nanoid} from "nanoid"
 
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
-import {noCache} from "~/server/util"
+import {getAuth, noCache} from "~/server/util"
 import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
 import {saveMedias} from "~/server/dynamodb"
@@ -17,6 +17,7 @@ interface RawMedia {
 
 export default defineEventHandler(async (event) => {
     noCache(event)
+    const auth = getAuth(event)
     await initMongo()
 
     const {code} = useQuery(event)
@@ -62,6 +63,7 @@ export default defineEventHandler(async (event) => {
 
     await igAuthCollection.updateOne({username}, {
         $set: {
+            userId: auth.uid,
             pageId,
             username,
             localUserId: userId,

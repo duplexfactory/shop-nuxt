@@ -46,126 +46,128 @@
 </template>
 
 <script setup lang="ts">
-  import {ScreenSize, useScreenSize, useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-  import throttle from "lodash.throttle";
-  import {getAuth, onAuthStateChanged, User} from "firebase/auth";
+  import {
+    ScreenSize,
+    useCurrentUser,
+    useScreenSize,
+    useShowingMediaModalData,
+    useShowMediaModal
+  } from "~/composables/states"
+  import throttle from "lodash.throttle"
+  import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 
   // Meta
-  const config = useRuntimeConfig();
-  const route = useRoute();
+  const config = useRuntimeConfig()
+  const route = useRoute()
 
   useMeta(computed(() => {
-    if (route.path !== '/') {
-      let canonical = route.fullPath;
-      if (route.path.endsWith('/')) {
-        canonical = canonical.replace(route.path, route.path.slice(0, -1));
+    if (route.path !== "/") {
+      let canonical = route.fullPath
+      if (route.path.endsWith("/")) {
+        canonical = canonical.replace(route.path, route.path.slice(0, -1))
       }
       return {
         link: [
-          {rel: 'canonical', href: config.DOMAIN + canonical},
+          {rel: "canonical", href: config.DOMAIN + canonical},
         ]
       }
-    }
-    else {
+    } else {
       return {}
     }
-  }));
+  }))
 
   // Media Modal
-  const showMediaModal =  useShowMediaModal();
-  const showingMediaModalData = useShowingMediaModalData();
-  watch(showMediaModal, (show, prevShow) => toggleOverflow(show));
+  const showMediaModal = useShowMediaModal()
+  const showingMediaModalData = useShowingMediaModalData()
+  watch(showMediaModal, (show, prevShow) => toggleOverflow(show))
 
   // Search Modal
-  const showSearchModal = useShowSearchModal();
-  watch(showSearchModal, (show, prevShow) => toggleOverflow(show));
+  const showSearchModal = useShowSearchModal()
+  watch(showSearchModal, (show, prevShow) => toggleOverflow(show))
 
   // Drawer
-  const drawerOpen = ref<boolean>(false);
+  const drawerOpen = ref<boolean>(false)
+
   function toggleDrawer() {
-    drawerOpen.value = !drawerOpen.value;
-    toggleOverflow(drawerOpen.value);
+    drawerOpen.value = !drawerOpen.value
+    toggleOverflow(drawerOpen.value)
   }
 
   function toggleOverflow(hidden: boolean) {
-    hidden ? document.body.classList.add('overflow-hidden') : document.body.classList.remove('overflow-hidden');
+    hidden ? document.body.classList.add("overflow-hidden") : document.body.classList.remove("overflow-hidden")
   }
 
   // Show Footer
-  const showFooter = ref(false);
+  const showFooter = ref(false)
 
   // IG Browser
-  const isIGBrowser = ref(false);
-  const isIGHintClosed = ref(false);
+  const isIGBrowser = ref(false)
+  const isIGHintClosed = ref(false)
 
   // Login
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedIn = useIsLoggedIn()
+  const currentUser = useCurrentUser()
   const isLoginLoadingRoute = computed(() => {
     return [
-        "/my"
-    ].find((p) => route.path.startsWith(p));
-  });
+      "/my"
+    ].find((p) => route.path.startsWith(p))
+  })
   const showLoginLoading = computed(() => {
-    return isLoggedIn.value === null && isLoginLoadingRoute.value;
+    return isLoggedIn.value === null && isLoginLoadingRoute.value
   })
 
   // Screen Size
-  const screenSize = useScreenSize();
+  const screenSize = useScreenSize()
+
   function calcScreenSize(innerWidth: number) {
     if (1536 <= innerWidth) {
-      return ScreenSize.XXL;
-    }
-    else if (1280 <= innerWidth) {
-      return ScreenSize.XL;
-    }
-    else if (1024 <= innerWidth) {
-      return ScreenSize.LG;
-    }
-    else if (768 <= innerWidth) {
-      return ScreenSize.MD;
-    }
-    else if (640 <= innerWidth) {
-      return ScreenSize.SM;
-    }
-    else {
-      return  ScreenSize.DEFAULT;
+      return ScreenSize.XXL
+    } else if (1280 <= innerWidth) {
+      return ScreenSize.XL
+    } else if (1024 <= innerWidth) {
+      return ScreenSize.LG
+    } else if (768 <= innerWidth) {
+      return ScreenSize.MD
+    } else if (640 <= innerWidth) {
+      return ScreenSize.SM
+    } else {
+      return ScreenSize.DEFAULT
     }
   }
 
   // Mounted
   onMounted(() => {
-    if (navigator.userAgent.includes("Instagram")){
-      isIGBrowser.value = true;
+    if (navigator.userAgent.includes("Instagram")) {
+      isIGBrowser.value = true
     }
 
-    screenSize.value = calcScreenSize(window.innerWidth);
+    screenSize.value = calcScreenSize(window.innerWidth)
     addEventListener("resize", throttle(() => {
-      screenSize.value = calcScreenSize(window.innerWidth);
+      screenSize.value = calcScreenSize(window.innerWidth)
       if (screenSize.value !== ScreenSize.DEFAULT) {
         if (showSearchModal.value) {
-          showSearchModal.value = false;
+          showSearchModal.value = false
         }
       }
-    }, 500));
+    }, 500))
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, (value?: User) => {
-      console.log("onAuthStateChanged");
-      if (value === null) {
-        // Not logged in.
-        isLoggedIn.value = false;
-      }
-      else {
-        // Logged in.
-        isLoggedIn.value = true;
-      }
-    });
-  });
+    const auth = getAuth()
+    onAuthStateChanged(auth, async (user?: User) => {
+      // console.log("onAuthStateChanged");
+      currentUser.value = user
+      isLoggedIn.value = !!user
+      // const {getAuthHeader} = useAuth()
+      // const res = await $fetch("/api/auth/test-auth", {
+      //   headers: await getAuthHeader()
+      // })
+      // console.log(res)
+    })
+  })
 
 </script>
 
 <style scoped>
-.spr-dot-3:before {
-  @apply transform rotate-90;
-}
+  .spr-dot-3:before {
+    @apply transform rotate-90;
+  }
 </style>
