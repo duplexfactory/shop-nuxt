@@ -61,6 +61,8 @@
 
   const {
     swiper,
+    swiperButtonPrev,
+    swiperButtonNext,
     swiperReady,
     loadSwiper,
     swiperOptions
