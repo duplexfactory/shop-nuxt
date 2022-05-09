@@ -1,5 +1,7 @@
 [context.dev.environment]
   DEV = "true"
   DEV_DB = "true"
+  DOMAIN = "https://dev.shoperuse.com"
 [context.demo.environment]
   DEV = "true"
+  DOMAIN = "https://demo.shoperuse.com"
