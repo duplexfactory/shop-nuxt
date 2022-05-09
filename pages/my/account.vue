@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="">
         <div v-if="authLoading"
              class="absolute z-50 flex flex-col justify-center items-center inset-0 bg-white"
              style="min-width: 100%; min-height: 100%;">
