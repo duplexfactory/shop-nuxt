@@ -81,7 +81,7 @@ export default defineNuxtConfig({
     IMAGE_KEY: "s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F",
     IMG_PROXY: process.env.IMG_PROXY,
     DOMAIN: process.env.DOMAIN,
-    IG_APP_ID: process.env.DOMAIN,
+    IG_APP_ID: process.env.IG_APP_ID,
     DEV: process.env.DEV,
     DEV_DB: process.env.DEV_DB,
 
