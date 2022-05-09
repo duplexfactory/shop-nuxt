@@ -99,7 +99,11 @@ function authorize() {
 
 onMounted(async () => {
   if (code) {
-    const {username} = await $fetch("/api/auth/ig-code", {params: {code}})
+    const {getAuthHeader} = useAuth()
+    const {username} = await $fetch("/api/auth/ig-code", {
+      params: {code},
+      headers: await getAuthHeader()
+    })
     pageUsername.value = username
     verifiedPage.value = true
     authLoading.value = false
