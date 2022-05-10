@@ -135,7 +135,7 @@ const verifiedPage = true;
           詳細資料
         </div>
 
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid md:grid-cols-2 gap-8">
           <div class="table col-span-1">
             <div v-for="extraDataStringFieldKey of Object.keys(extraDataStringFields)" class="table-row">
               <div class="table-cell fit-width pr-2 pt-2">
