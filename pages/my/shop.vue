@@ -156,7 +156,7 @@ const verifiedPage = true;
                 </div>
                 <div class="table-cell pb-4">
                   <div class="flex items-center">
-                    <input v-model="extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]" class="text-input-primary" type="text" :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
+                    <input size="1" style="flex: 1;" v-model="extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]" class="text-input-primary" type="text" :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
                     <button class="btn btn-outline ml-2" @click="shop.extraData[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">+</button>
                   </div>
                   <div v-for="value in shop.extraData[extraDataMultiStringFieldKey]"
