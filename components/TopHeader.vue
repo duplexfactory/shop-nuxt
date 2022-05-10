@@ -54,13 +54,32 @@
 
       <!-- right -->
       <div class="hidden md:block">
+
         <nuxt-link v-if="!isLoggedIn" to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
         <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>
 
-        <nuxt-link v-if="isLoggedIn" to="/my/shop" class="btn btn-sm btn-primary mr-4">我的商店</nuxt-link>
-        <button v-if="isLoggedIn" @click="logout" class="btn btn-sm btn-outline mr-4">登出</button>
+        <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
+          <button class="text-sm text-gray-500">
+            settings
+          </button>
+          <template #content>
+            <div class="text-sm p-2 bg-white rounded-md shadow-md">
+              <div class="p-2">
+                <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
+              </div>
+              <div class="p-2">
+                <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
+              </div>
+              <div class="p-2">
+                <AgeRestrictionToggle/>
+              </div>
+              <div class="p-2">
+                <button @click="logout" class="">登出</button>
+              </div>
+            </div>
+          </template>
+        </Popper>
 
-        <AgeRestrictionToggle/>
       </div>
 
     </div>
@@ -71,6 +90,7 @@
 
 <script setup lang="ts">
 
+  import Popper from "vue3-popper";
   import useSearch from "~/composables/useSearch"
   import {useShowSearchModal} from "~/composables/states"
   import {getAuth} from "firebase/auth"
