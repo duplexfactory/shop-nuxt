@@ -19,7 +19,7 @@
                         電郵
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="text" placeholder="電郵"/>
+                        <input v-model="email" class="text-input-primary w-full" type="text" placeholder="電郵"/>
                     </div>
                 </div>
                 <div class="table-row">
@@ -79,6 +79,10 @@
 </template>
 
 <script setup lang="ts">
+
+import {useCurrentUser} from "~/composables/states";
+import {User} from "firebase/auth";
+
 const {code} = useRoute().query
 const verifiedPage = ref(false);
 const pageUsername = ref("shoperuse");
@@ -109,6 +113,17 @@ onMounted(async () => {
     authLoading.value = false
   }
 });
+
+const currentUser = useCurrentUser();
+const email = ref("");
+email.value = currentUser.value?.email ?? "";
+watch(
+    () => currentUser.value,
+    async (u: User, prevU) => {
+      email.value = u?.email ?? "";
+    }
+)
+
 </script>
 
 <style scoped>
