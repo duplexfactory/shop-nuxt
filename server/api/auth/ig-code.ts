@@ -8,6 +8,8 @@ import {getAuth, noCache} from "~/server/util"
 import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
 import {initDynamo, saveMedias} from "~/server/dynamodb"
+import {pageCollection} from "~/server/firebase/collections"
+import {PageSearch} from "~/models/PageSearch"
 
 interface RawMedia {
     "caption": string,
@@ -82,9 +84,11 @@ export default defineEventHandler(async (event) => {
             fullName: "",
             biography: "",
             mediaCount: 0,
-            nextFetch: 1
+            nextFetch: 1,
+            adult: false
         }
-        await pageSearchCollection.insertOne(p)
+        await pageSearchCollection.insertOne(p as PageSearch)
+        await pageCollection().doc(pageId).update(p)
     }
 
     // fetch medias
@@ -94,14 +98,26 @@ export default defineEventHandler(async (event) => {
     const mediaRes = await fetch(mediaUrl.href)
     const {data: medias} = await mediaRes.json() as { data: RawMedia[] }
 
-    const dMedias: IgMedia[] = medias.map(m => ({
-        code: m.permalink.split("/").filter(t => !!t).pop(),
-        pageId,
-        caption: m.caption,
-        takenAt: dayjs(m.timestamp).unix(),
-    }))
-    initDynamo();
-    await saveMedias(dMedias)
+    if (medias.length) {
+        const dMedias: IgMedia[] = medias.map(m => ({
+            code: m.permalink.split("/").filter(t => !!t).pop(),
+            pageId,
+            caption: m.caption,
+            takenAt: dayjs(m.timestamp).unix(),
+        }))
+        initDynamo()
+        await saveMedias(dMedias)
+
+        const lastMedia = dMedias[0]
+
+        const update = {
+            lastMedia: lastMedia.takenAt,
+            lastActivity: lastMedia.takenAt,
+            lastMediaData: lastMedia
+        }
+        await pageSearchCollection.updateOne({_id: pageId}, {$set: update})
+        await pageCollection().doc(pageId).update(update)
+    }
 
     return {accessToken: longToken, userId, id, username}
 })
