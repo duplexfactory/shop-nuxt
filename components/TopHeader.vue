@@ -93,7 +93,6 @@
   import Popper from "vue3-popper";
   import useSearch from "~/composables/useSearch"
   import {useShowSearchModal} from "~/composables/states"
-  import {getAuth} from "firebase/auth"
 
   const {ageRestrictedCategories} = useTags()
   const {
@@ -105,14 +104,11 @@
   const showSearchModal = useShowSearchModal()
 
   // Login
-  const isLoggedIn = useIsLoggedIn()
-  const isIgConnected = useIsIgConnected()
-
-  async function logout() {
-    const auth = getAuth()
-    await auth.signOut()
-    isLoggedIn.value = false
-  }
+  const isLoggedIn = useIsLoggedIn();
+  const isIgConnected = useIsIgConnected();
+  const {
+    logout
+  } = useLogout();
 
 </script>
 

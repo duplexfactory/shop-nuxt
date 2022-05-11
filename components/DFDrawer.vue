@@ -21,9 +21,19 @@
         </div>
       </template>
       <template v-else>
-        <div class="py-2">
-          <AgeRestrictionToggle />
+        <div v-if="isLoggedIn" class="py-2">
+          <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
         </div>
+        <div v-if="isLoggedIn && isIgConnected" class="py-2">
+          <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
+        </div>
+        <div class="py-2">
+          <AgeRestrictionToggle/>
+        </div>
+        <div v-if="isLoggedIn" class="py-2">
+          <button @click="logout" class="">登出</button>
+        </div>
+
 <!--        <div class="py-2">-->
 <!--          <div @click="goTo('/verify')">認證我的商店</div>-->
 <!--        </div>-->
@@ -50,11 +60,19 @@
 </template>
 
 <script setup lang="ts">
+
 import {useShowAgeRestrictedModal} from "~/composables/states";
 
 const {ageRestrictedCategories} = useTags();
 
 const showAgeRestrictedModal = useShowAgeRestrictedModal();
+
+// Login
+const isLoggedIn = useIsLoggedIn();
+const isIgConnected = useIsIgConnected();
+const {
+  logout
+} = useLogout();
 
 </script>
 
