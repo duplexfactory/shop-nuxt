@@ -19,7 +19,8 @@
                         電郵
                     </div>
                     <div class="table-cell pt-2">
-                        <input v-model="email" class="text-input-primary w-full" type="text" placeholder="電郵"/>
+<!--                        <input v-model="email" class="text-input-primary w-full" type="text" placeholder="電郵"/>-->
+                        <div>{{email}}</div>
                     </div>
                 </div>
                 <div class="table-row">
@@ -40,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <button @click="" class="mt-4 btn btn-primary">儲存</button>
+<!--            <button @click="" class="mt-4 btn btn-primary">儲存</button>-->
         </div>
         <div class="info-group">
             <div class="md:text-xl font-bold">
