@@ -1,83 +1,94 @@
 <script setup lang="ts">
 
-import IgPageExtraData from "~/models/IgPageExtraData";
-import {extraDataLookup} from "~/models/PageInfoRow";
+  import IgPageExtraData from "~/models/IgPageExtraData"
+  import {extraDataLookup} from "~/models/PageInfoRow"
+  import {useIgUsername} from "~/composables/states"
 
-const {data} = await useFetch(`/api/shop?id=1527690977`);
-// 384883192
-// 43808406274
-const {page: shop} = data.value
+  const shop = ref<IgPage>(null)
+  const {categories, tagsLookup} = useTags()
+  const selectedTag = ref("")
 
-const {categories, tagsLookup} = useTags()
-const selectedTag = ref("");
-function addSelectedTag() {
-  if (shop.tags.includes(selectedTag.value)) {
-    return;
+  function addSelectedTag() {
+    if (shop.value.tags.includes(selectedTag.value)) {
+      return
+    }
+    shop.value.tags.push(selectedTag.value)
   }
-  shop.tags.push(selectedTag.value);
-}
 
-const extraDataStringFields = ref({
-  phone: "",
-  whatsapp: "",
-  wechat: "",
-  signal: "",
-  email: "",
-  address: "",
-  openHours: "",
-  link: "", // IgPage.externalUrl
-  relatedPage: "",
-  facebook:  "",
-  discount:  "",
-  shopSince:  "",
-} as Record<{
-  [K in keyof IgPageExtraData]: IgPageExtraData[K] extends string ? K : never;
-}[keyof IgPageExtraData], string>);
+  const extraDataStringFields = ref({
+    phone: "",
+    whatsapp: "",
+    wechat: "",
+    signal: "",
+    email: "",
+    address: "",
+    openHours: "",
+    link: "", // IgPage.externalUrl
+    relatedPage: "",
+    facebook: "",
+    discount: "",
+    shopSince: "",
+  } as Record<{
+    [K in keyof IgPageExtraData]: IgPageExtraData[K] extends string ? K : never;
+  }[keyof IgPageExtraData], string>)
 
-for (const key of Object.keys(extraDataStringFields.value)) {
-  extraDataStringFields.value[key] = shop.extraData[key] ?? "";
-}
+  const extraDataBooleanFields = ref({
+    br: false,
+    noRefund: false,
+    noIgDM: false,
+    noPhoneCall: false,
+  } as Record<{
+    [K in keyof IgPageExtraData]: IgPageExtraData[K] extends boolean ? K : never;
+  }[keyof IgPageExtraData], string>)
 
-const extraDataBooleanFields = ref({
-  br: false,
-  noRefund: false,
-  noIgDM: false,
-  noPhoneCall: false,
-} as Record<{
-  [K in keyof IgPageExtraData]: IgPageExtraData[K] extends boolean ? K : never;
-}[keyof IgPageExtraData], string>);
+  const extraDataMultiStringFieldsTemp = ref({})
 
-for (const key of Object.keys(extraDataBooleanFields.value)) {
-  extraDataBooleanFields.value[key] = !!shop.extraData[key];
-}
+  // Licence
+  const licenceChecked = ref(false)
+  const licenceNumber = ref("")
+  watch(licenceChecked, (checked, prevChecked) => {
+    shop.value.extraData.licence = checked
+    if (!checked) {
+      licenceNumber.value = ""
+    }
+  })
+  watch(licenceNumber, (n, prevN) => {
+    if (n === "") {
+      shop.value.extraData.licence = licenceChecked.value
+    } else {
+      shop.value.extraData.licence = licenceNumber.value
+    }
+  })
 
-const extraDataMultiStringFieldsTemp = ref({});
+  const isIgConnected = useIsIgConnected()
+  const igUsername = useIgUsername()
 
-// Licence
-const licenceChecked = ref(!!shop.extraData.licence);
-const licenceNumber = ref(!!shop.extraData.licence && typeof shop.extraData.licence === "string" ? shop.extraData.licence : "");
-watch(licenceChecked, (checked, prevChecked) => {
-  shop.extraData.licence = checked;
-  if (!checked) {
-    licenceNumber.value = "";
+  async function init(username: string) {
+    const {data} = await useFetch(`/api/shop/username/${username}`)
+    shop.value = data.value.page
+    for (const key of Object.keys(extraDataStringFields.value)) {
+      extraDataStringFields.value[key] = shop.value.extraData[key] ?? ""
+    }
+
+    for (const key of Object.keys(extraDataBooleanFields.value)) {
+      extraDataBooleanFields.value[key] = !!shop.value.extraData[key]
+    }
+
+    licenceChecked.value = !!shop.value.extraData.licence
+    licenceNumber.value = (!!shop.value.extraData.licence && typeof shop.value.extraData.licence === "string" ? shop.value.extraData.licence : "")
   }
-})
-watch(licenceNumber, (n, prevN) => {
-  if (n === "") {
-    shop.extraData.licence = licenceChecked.value;
-  }
-  else {
-    shop.extraData.licence = licenceNumber.value;
-  }
-})
 
-const isIgConnected = useIsIgConnected();
+  if(igUsername.value) {
+    await init(igUsername.value)
+  } else {
+    watch(igUsername, init)
+  }
 
 </script>
 
 <template>
   <div>
-    <template v-if="!isIgConnected">
+    <template v-if="!isIgConnected || !shop">
       <div class="info-group flex justify-center">
         <div class="text-center w-3/5">
           <button class="btn-primary"><i class="spr-instagram"></i>連結Instagram帳戶</button>
@@ -96,11 +107,13 @@ const isIgConnected = useIsIgConnected();
 
         <div class="mt-2 flex items-center">
           <span>名稱</span>
-          <input v-model="shop.username" class="ml-2 text-input-primary flex-1" type="text" name="username" placeholder="名稱"/>
+          <input v-model="shop.username" class="ml-2 text-input-primary flex-1" type="text" name="username"
+                 placeholder="名稱"/>
         </div>
         <div class="mt-2 flex items-center">
           <span>全名</span>
-          <input v-model="shop.fullName" class="ml-2 text-input-primary flex-1" type="text" name="fullName" placeholder="全名"/>
+          <input v-model="shop.fullName" class="ml-2 text-input-primary flex-1" type="text" name="fullName"
+                 placeholder="全名"/>
         </div>
         <div class="mt-2">
           描述
@@ -142,7 +155,8 @@ const isIgConnected = useIsIgConnected();
                 <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
               </div>
               <div class="table-cell pt-2">
-                <input v-model="shop.extraData[extraDataStringFieldKey]" class="text-input-primary w-full" type="text" :placeholder="extraDataLookup[extraDataStringFieldKey].title"/>
+                <input v-model="shop.extraData[extraDataStringFieldKey]" class="text-input-primary w-full"
+                       type="text" :placeholder="extraDataLookup[extraDataStringFieldKey].title"/>
               </div>
             </div>
           </div>
@@ -156,14 +170,22 @@ const isIgConnected = useIsIgConnected();
                 </div>
                 <div class="table-cell pb-4">
                   <div class="flex items-center">
-                    <input size="1" style="flex: 1;" v-model="extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]" class="text-input-primary" type="text" :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
-                    <button class="btn btn-outline ml-2" @click="shop.extraData[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">+</button>
+                    <input size="1" style="flex: 1;"
+                           v-model="extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]"
+                           class="text-input-primary" type="text"
+                           :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
+                    <button class="btn btn-outline ml-2"
+                            @click="shop.extraData[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">
+                      +
+                    </button>
                   </div>
                   <div v-for="value in shop.extraData[extraDataMultiStringFieldKey]"
                        :key="value"
                        class="chip">
                     {{ value }}
-                    <button @click="shop.extraData[extraDataMultiStringFieldKey] = shop.extraData[extraDataMultiStringFieldKey].filter((v) => v !== value)"><i class="spr-cancel"></i></button>
+                    <button
+                      @click="shop.extraData[extraDataMultiStringFieldKey] = shop.extraData[extraDataMultiStringFieldKey].filter((v) => v !== value)">
+                      <i class="spr-cancel"></i></button>
                   </div>
                 </div>
               </div>
@@ -179,7 +201,8 @@ const isIgConnected = useIsIgConnected();
                     </label>
                     <input type="checkbox" id="checkbox-licence" v-model="licenceChecked">
                   </div>
-                  <input v-if="licenceChecked" v-model="licenceNumber" class="text-input-primary w-full" type="text" placeholder="牌照號碼"/>
+                  <input v-if="licenceChecked" v-model="licenceNumber" class="text-input-primary w-full" type="text"
+                         placeholder="牌照號碼"/>
                 </div>
               </div>
 
@@ -192,7 +215,8 @@ const isIgConnected = useIsIgConnected();
                     <label :for="'checkbox-' + extraDataBooleanFieldKey" class="py-2 text-md">
                       {{ extraDataLookup[extraDataBooleanFieldKey].title }}
                     </label>
-                    <input type="checkbox" :id="'checkbox-' + extraDataBooleanFieldKey" v-model="shop.extraData[extraDataBooleanFieldKey]">
+                    <input type="checkbox" :id="'checkbox-' + extraDataBooleanFieldKey"
+                           v-model="shop.extraData[extraDataBooleanFieldKey]">
                   </div>
                 </div>
               </div>
@@ -210,17 +234,17 @@ const isIgConnected = useIsIgConnected();
 
 <style scoped>
 
-.info-group {
-  @apply bg-white rounded-md border p-4 mb-4;
-}
+  .info-group {
+    @apply bg-white rounded-md border p-4 mb-4;
+  }
 
-.table-cell.fit-width {
-  width: 1px;
-  white-space: nowrap;
-}
+  .table-cell.fit-width {
+    width: 1px;
+    white-space: nowrap;
+  }
 
-.chip {
-  @apply inline-block text-pink-600 text-md border rounded-md p-2 mt-1 mr-2;
-}
+  .chip {
+    @apply inline-block text-pink-600 text-md border rounded-md p-2 mt-1 mr-2;
+  }
 
 </style>
