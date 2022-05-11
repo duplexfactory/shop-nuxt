@@ -59,7 +59,7 @@
             <div class="mt-8 grid grid-cols-1 md:grid-cols-11">
               <div class="col-span-3 flex flex-col items-center">
                 <i class="spr-edit text-4xl"></i>
-                <div class="mt-2 text-xl md:text-2xl font-bold text-center">
+                <div class="verify-step-text">
                   1. 註冊Shoperuse帳戶
                 </div>
               </div>
@@ -69,7 +69,7 @@
               </div>
               <div class="col-span-3 flex flex-col items-center">
                 <i class="spr-link text-4xl"></i>
-                <div class="mt-2 text-xl md:text-2xl font-bold text-center">
+                <div class="verify-step-text">
                   2. 登入後連結IG帳戶
                 </div>
               </div>
@@ -79,7 +79,7 @@
               </div>
               <div class="col-span-3 flex flex-col items-center">
                 <i class="spr-ok text-4xl"></i>
-                <div class="mt-2 text-xl md:text-2xl font-bold text-center">
+                <div class="verify-step-text">
                   完成認證
                 </div>
               </div>
@@ -115,10 +115,10 @@
                 <div class="text-4xl md:text-5xl font-bold ">
                   立即認證
                 </div>
-                <div class="mt-8 text-xl md:text-2xl">
+                <div class="mt-8 text-gray-600 text-xl md:text-2xl">
                   <ul>
                     <li v-for="feature in features" :key="feature" class="mt-2 flex">
-                      <span class=" font-bold mr-4 block">✓</span>{{ feature }}
+                      <span class="font-bold mr-4 block">✓</span>{{ feature }}
                     </li>
                   </ul>
                 </div>
@@ -255,6 +255,10 @@
 
     section:nth-child(even) {
         @apply bg-gray-100;
+    }
+
+    .verify-step-text {
+        @apply mt-4 text-gray-700 text-xl md:text-2xl font-bold text-center;
     }
 
 </style>
