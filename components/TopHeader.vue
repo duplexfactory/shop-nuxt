@@ -19,7 +19,7 @@
           <div class="flex w-full">
             <div class="dropdown flex-1" style="max-width: 350px;">
               <input @keyup.enter="search" @focusin="searchInputFocusIn" @focusout="searchInputFocusOut"
-                     v-model="searchText" class="search-input" placeholder="搜尋 商店 或 貼文" type="search" autocomplete="off"
+                     v-model="searchText" class="search-input" placeholder="搜尋 商店 或 貼文" type="search" autocomplete="false"
                      id="search" name="search"/>
               <div v-if="showSearchDropdown && searchText !== ''" class="search-menu">
                 <template v-if="tagsSearchResult.length !== 0">

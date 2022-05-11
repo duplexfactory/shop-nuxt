@@ -46,14 +46,13 @@
             <div class="md:text-xl font-bold">
                 變更密碼
             </div>
-
             <div class="table">
                 <div class="table-row">
                     <div class="table-cell pr-2 pt-2">
                         當前密碼
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="password" placeholder="當前密碼"/>
+                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" placeholder="當前密碼"/>
                     </div>
                 </div>
                 <div class="table-row">
@@ -61,7 +60,7 @@
                         新密碼
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="password" placeholder="新密碼"/>
+                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" placeholder="新密碼"/>
                     </div>
                 </div>
                 <div class="table-row">
@@ -69,7 +68,7 @@
                         重新輸入新密碼
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="password" placeholder="重新輸入新密碼"/>
+                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" placeholder="重新輸入新密碼"/>
                     </div>
                 </div>
             </div>
