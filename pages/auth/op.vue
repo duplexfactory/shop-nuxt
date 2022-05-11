@@ -8,7 +8,7 @@
                    placeholder="新密碼">
             <input v-model="rePassword" class="mt-4 block text-input-primary" type="password" name="re-password"
                    placeholder="確認密碼">
-            <div lass="mt-2 text-red-300" v-if="error">{{ error }}</div>
+            <div class="mt-2 text-red-300" v-if="error">{{ error }}</div>
             <button @click="confirm" class="mt-4 btn btn-primary">設定新密碼</button>
         </div>
         <div v-else-if="valid === false">
