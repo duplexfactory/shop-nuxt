@@ -158,11 +158,17 @@ import {
       currentUser.value = user
       isLoggedIn.value = !!user
 
-      const {getAuthHeader} = useAuth()
-      const res = await $fetch("/api/auth/check-ig-connect", {
-        headers: await getAuthHeader()
-      })
-      isIgConnected.value = res.connected;
+      if (isLoggedIn.value) {
+        const {getAuthHeader} = useAuth()
+        const res = await $fetch("/api/auth/check-ig-connect", {
+          headers: await getAuthHeader()
+        })
+        isIgConnected.value = res.connected;
+      }
+      else {
+        isIgConnected.value = false;
+      }
+
     })
   })
 
