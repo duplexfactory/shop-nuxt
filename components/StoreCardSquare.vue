@@ -59,8 +59,8 @@
             </div>
         </div>
 
-        <div class="col-span-1" v-if="mediaCodes">
-            <template v-if="verifiedPage">
+        <div class="col-span-1">
+            <template v-if="verifiedPage && mediaCodes">
                 <div class="image-container aspect-square" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
                 <div class="flex" style="margin-top: 2px;">
                   <div class="image-container aspect-square flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
