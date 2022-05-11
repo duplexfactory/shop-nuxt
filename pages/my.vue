@@ -1,10 +1,9 @@
 <script setup lang="ts">
 
-import {useIsLoggedIn} from "~/composables/states";
-
 const route = useRoute();
 const router = useRouter();
 const isLoggedIn = useIsLoggedIn();
+const isIgConnected = useIsIgConnected();
 watch(
     () => isLoggedIn.value,
     async (isLoggedIn, prevIsLoggedIn) => {
@@ -25,8 +24,8 @@ watch(
     <div class="container mx-auto">
 
       <div class="mb-4 text-lg flex">
-        <nuxt-link to="/my/shop" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/shop')}">我的商店</nuxt-link>
         <nuxt-link to="/my/account" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/account')}">我的帳戶</nuxt-link>
+        <nuxt-link v-if="isIgConnected" to="/my/shop" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/shop')}">我的商店</nuxt-link>
       </div>
 
       <nuxt-child></nuxt-child>

@@ -46,13 +46,13 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    ScreenSize,
-    useCurrentUser,
-    useScreenSize,
-    useShowingMediaModalData,
-    useShowMediaModal
-  } from "~/composables/states"
+import {
+  ScreenSize,
+  useCurrentUser, useIsIgConnected,
+  useScreenSize,
+  useShowingMediaModalData,
+  useShowMediaModal
+} from "~/composables/states"
   import throttle from "lodash.throttle"
   import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 
@@ -106,6 +106,7 @@
 
   // Login
   const isLoggedIn = useIsLoggedIn()
+  const isIgConnected = useIsIgConnected();
   const currentUser = useCurrentUser()
   const isLoginLoadingRoute = computed(() => {
     return [
@@ -156,11 +157,12 @@
       // console.log("onAuthStateChanged");
       currentUser.value = user
       isLoggedIn.value = !!user
-      // const {getAuthHeader} = useAuth()
-      // const res = await $fetch("/api/auth/test-auth", {
-      //   headers: await getAuthHeader()
-      // })
-      // console.log(res)
+
+      const {getAuthHeader} = useAuth()
+      const res = await $fetch("/api/auth/check-ig-connect", {
+        headers: await getAuthHeader()
+      })
+      isIgConnected.value = res.connected;
     })
   })
 
