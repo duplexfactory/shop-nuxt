@@ -53,7 +53,7 @@
       </div>
 
       <!-- right -->
-      <div class="">
+      <div :class="{'sqr-menu': isLoggedIn}">
 
         <nuxt-link v-if="!isLoggedIn" to="/verify" class="hidden md:inline-block btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
         <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="md:(btn btn-sm btn-outline mr-4) text-pink-600 text-sm">商戶登入</nuxt-link>
@@ -61,7 +61,7 @@
         <div class="hidden md:inline-block">
           <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
             <button class="text-sm text-gray-500">
-              settings
+              <img src="~assets/icons/user.png"/>
             </button>
             <template #content>
               <div class="text-sm p-2 bg-white rounded-md shadow-md">
@@ -210,5 +210,9 @@
     margin: 0px !important;
   }
 
-
+  .sqr-menu {
+    height: 35px;
+    width: 35px;
+    @apply p-1;
+  }
 </style>
