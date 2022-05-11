@@ -22,16 +22,16 @@
       </template>
       <template v-else>
         <div v-if="isLoggedIn" class="py-2">
-          <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
+          <nuxt-link to="/my/account" @click="hideSidebar">我的帳戶</nuxt-link>
         </div>
         <div v-if="isLoggedIn && isIgConnected" class="py-2">
-          <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
+          <nuxt-link to="/my/shop" @click="hideSidebar">我的商店</nuxt-link>
         </div>
         <div class="py-2">
           <AgeRestrictionToggle/>
         </div>
         <div v-if="isLoggedIn" class="py-2">
-          <button @click="logout" class="">登出</button>
+          <button @click="hideSidebar(); logout();" class="">登出</button>
         </div>
 
 <!--        <div class="py-2">-->
