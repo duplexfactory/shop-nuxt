@@ -28,6 +28,20 @@
     }
 }
 
+@screen md {
+    .md\:btn {
+        @apply btn;
+    }
+
+    .md\:btn-outline {
+        @apply btn-outline;
+    }
+
+    .md\:btn-sm {
+        @apply btn-sm;
+    }
+}
+
 .tag {
     @apply inline-block text-pink-600 text-sm;
 }

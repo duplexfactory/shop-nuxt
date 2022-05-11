@@ -39,7 +39,7 @@
     const router = useRouter();
 
     // Login
-const isLoggedIn = useIsLoggedIn();
+    const isLoggedIn = useIsLoggedIn();
 
     async function login() {
         try {

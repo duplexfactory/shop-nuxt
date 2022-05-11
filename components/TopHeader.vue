@@ -11,7 +11,7 @@
         <nuxt-link to="/" class="md:mr-4"><img style="width: 100px; height: 50px;" src="/images/logo.png"/></nuxt-link>
 
         <!-- Mobile Search Button -->
-        <button @click="showSearchModal = true" class="sm:hidden border rounded-md py-2 px-4 text-sm text-gray-400">
+        <button @click="showSearchModal = true" class="sm:hidden border rounded-md py-2 px-4 text-sm text-gray-400 flex-1 mr-2">
           搜尋商店<i class="spr-search ml-4"></i>
         </button>
         <!-- Desktop Search Input -->
@@ -53,32 +53,35 @@
       </div>
 
       <!-- right -->
-      <div class="hidden md:block">
+      <div class="">
 
-        <nuxt-link v-if="!isLoggedIn" to="/verify" class="btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
-        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="btn btn-sm btn-outline mr-4">商戶登入</nuxt-link>
+        <nuxt-link v-if="!isLoggedIn" to="/verify" class="hidden md:inline-block btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
+        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="md:(btn btn-sm btn-outline mr-4) text-pink-600 text-sm">商戶登入</nuxt-link>
 
-        <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
-          <button class="text-sm text-gray-500">
-            settings
-          </button>
-          <template #content>
-            <div class="text-sm p-2 bg-white rounded-md shadow-md">
-              <div class="p-2">
-                <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
+        <div class="hidden md:inline-block">
+          <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
+            <button class="text-sm text-gray-500">
+              settings
+            </button>
+            <template #content>
+              <div class="text-sm p-2 bg-white rounded-md shadow-md">
+                <div class="p-2">
+                  <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
+                </div>
+                <div v-if="isIgConnected" class="p-2">
+                  <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
+                </div>
+                <div class="p-2">
+                  <AgeRestrictionToggle/>
+                </div>
+                <div class="p-2">
+                  <button @click="logout" class="">登出</button>
+                </div>
               </div>
-              <div v-if="isIgConnected" class="p-2">
-                <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
-              </div>
-              <div class="p-2">
-                <AgeRestrictionToggle/>
-              </div>
-              <div class="p-2">
-                <button @click="logout" class="">登出</button>
-              </div>
-            </div>
-          </template>
-        </Popper>
+            </template>
+          </Popper>
+        </div>
+
 
       </div>
 
