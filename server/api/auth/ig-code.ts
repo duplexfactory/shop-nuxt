@@ -89,8 +89,8 @@ export default defineEventHandler(async (event) => {
 
     // fetch medias
     const mediaUrl = new URL("https://graph.instagram.com/me/media")
-    tokenUrl.searchParams.set("fields", "caption,permalink,timestamp")
-    tokenUrl.searchParams.set("access_token", longToken)
+    mediaUrl.searchParams.set("fields", "caption,permalink,timestamp")
+    mediaUrl.searchParams.set("access_token", longToken)
     const mediaRes = await fetch(mediaUrl.href)
     const {data: medias} = await mediaRes.json() as { data: RawMedia[] }
 
