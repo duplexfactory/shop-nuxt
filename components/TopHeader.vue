@@ -68,7 +68,7 @@
                 <div class="p-2">
                   <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
                 </div>
-                <div v-if="isIgConnected" class="p-2">
+                <div class="p-2">
                   <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
                 </div>
                 <div class="p-2">
@@ -108,7 +108,6 @@
 
   // Login
   const isLoggedIn = useIsLoggedIn();
-  const isIgConnected = useIsIgConnected();
   const {
     logout
   } = useLogout();

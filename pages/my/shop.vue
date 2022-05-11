@@ -71,13 +71,13 @@ watch(licenceNumber, (n, prevN) => {
   }
 })
 
-const verifiedPage = true;
+const isIgConnected = useIsIgConnected();
 
 </script>
 
 <template>
   <div>
-    <template v-if="!verifiedPage">
+    <template v-if="!isIgConnected">
       <div class="info-group flex justify-center">
         <div class="text-center w-3/5">
           <button class="btn-primary"><i class="spr-instagram"></i>連結Instagram帳戶</button>

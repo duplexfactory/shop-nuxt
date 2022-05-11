@@ -24,7 +24,7 @@
         <div v-if="isLoggedIn" class="py-2">
           <nuxt-link to="/my/account" @click="hideSidebar">我的帳戶</nuxt-link>
         </div>
-        <div v-if="isLoggedIn && isIgConnected" class="py-2">
+        <div v-if="isLoggedIn" class="py-2">
           <nuxt-link to="/my/shop" @click="hideSidebar">我的商店</nuxt-link>
         </div>
         <div class="py-2">
@@ -69,7 +69,6 @@ const showAgeRestrictedModal = useShowAgeRestrictedModal();
 
 // Login
 const isLoggedIn = useIsLoggedIn();
-const isIgConnected = useIsIgConnected();
 const {
   logout
 } = useLogout();
