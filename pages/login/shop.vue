@@ -17,11 +17,7 @@
             <nuxt-link to="/verify" class="hover:underline cursor-pointer">立即申請</nuxt-link>
           </div>
         </div>
-
-
       </div>
-
-
     </div>
 </template>
 
@@ -40,6 +36,14 @@
 
     // Login
     const isLoggedIn = useIsLoggedIn();
+    watch(
+        () => isLoggedIn.value,
+        async (isLoggedIn, prevIsLoggedIn) => {
+          if (isLoggedIn === true) {
+            await navigateTo("/my/account");
+          }
+        }
+    )
 
     async function login() {
         try {
@@ -51,7 +55,7 @@
 
             // Signed in
             const user = userCredential.user;
-            await router.push({path: '/my/shop'});
+            await navigateTo("/my/account");
         } catch (firebaseSignInError) {
             const errorCode = firebaseSignInError.code;
             const errorMessage = firebaseSignInError.message;

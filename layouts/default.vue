@@ -110,7 +110,8 @@ import {
   const currentUser = useCurrentUser()
   const isLoginLoadingRoute = computed(() => {
     return [
-      "/my"
+      "/my",
+      "/login/shop"
     ].find((p) => route.path.startsWith(p))
   })
   const showLoginLoading = computed(() => {
