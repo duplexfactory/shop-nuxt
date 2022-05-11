@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
         }).sort({activeScore: -1}).limit(21).project(extraProj).toArray(),
     ])
 
+    event.res.setHeader('Cache-Control', 'max-age=300');
     return {
         hot,
         latest,
