@@ -26,17 +26,18 @@
                 <div class="table-row">
                     <div class="table-cell pr-2 pt-2">
                         <div>Instagram帳戶</div>
-                        <div v-if="!verifiedPage" class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
+                        <div v-if="!isIgConnected" class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
                     </div>
                     <div class="table-cell pt-2">
-                        <button v-if="!verifiedPage" class="text-pink-600 py-4" @click="authorize()"><i
+                        <button v-if="!isIgConnected" class="text-pink-600 py-4" @click="authorize()"><i
                             class="spr-instagram"></i>立即連結
                         </button>
                         <template v-else>
                             <a class="hover:underline text-pink-600 mr-2"
-                               :href="`https://www.instagram.com/${pageUsername}/`"
-                               target="_blank">{{ "@" + pageUsername }}</a>
-                            <button class="text-gray-500 py-2" @click="verifiedPage = false">解除連結</button>
+                               :href="`https://www.instagram.com/${igUsername}/`"
+                               target="_blank">{{ "@" + igUsername }}</a>
+                            <nuxt-link class="text-pink-600 py-2 ml-2 mr-4" :to="`/shop/${igUsername}`">商店頁面</nuxt-link>
+                            <button class="text-gray-500 py-2" @click="isIgConnected = false">解除連結</button>
                         </template>
                     </div>
                 </div>
@@ -85,8 +86,8 @@ import {getAuth, User} from "firebase/auth"
 import {EmailAuthProvider, reauthenticateWithCredential, updatePassword} from "@firebase/auth"
 
 const {code} = useRoute().query
-const verifiedPage = ref(false);
-const pageUsername = useIgUsername();
+const isIgConnected = useIsIgConnected()
+const igUsername = useIgUsername();
 const authLoading = ref(!!code);
 
 function authorize() {
@@ -109,8 +110,8 @@ onMounted(async () => {
       params: {code},
       headers: await getAuthHeader()
     })
-    pageUsername.value = username
-    verifiedPage.value = true
+    igUsername.value = username
+    isIgConnected.value = true
     authLoading.value = false
   }
 });
