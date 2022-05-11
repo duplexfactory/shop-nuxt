@@ -85,7 +85,9 @@ export default defineEventHandler(async (event) => {
             biography: "",
             mediaCount: 0,
             nextFetch: 1,
-            adult: false
+            adult: false,
+            locations: [],
+            extraData: {}
         }
         await pageSearchCollection.insertOne(p as PageSearch)
         await pageCollection().doc(pageId).set(p, {merge: true})
