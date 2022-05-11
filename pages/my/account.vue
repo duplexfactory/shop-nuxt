@@ -81,13 +81,12 @@
 
 <script setup lang="ts">
 
-import {useCurrentUser} from "~/composables/states";
 import {getAuth, User} from "firebase/auth"
 import {EmailAuthProvider, reauthenticateWithCredential, updatePassword} from "@firebase/auth"
 
 const {code} = useRoute().query
 const verifiedPage = ref(false);
-const pageUsername = ref("shoperuse");
+const pageUsername = useIgUsername();
 const authLoading = ref(!!code);
 
 function authorize() {

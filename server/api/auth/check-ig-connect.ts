@@ -12,5 +12,13 @@ export default defineEventHandler(async (event) => {
         userId: auth.uid
     })
 
-    return {connected: igAuth !== null}
+    if (igAuth === null)
+        return {
+            connected: false
+        };
+
+    return {
+        connected: true,
+        username: igAuth.username
+    }
 })
