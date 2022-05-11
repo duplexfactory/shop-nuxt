@@ -7,7 +7,7 @@ import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongod
 import {getAuth, noCache} from "~/server/util"
 import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
-import {saveMedias} from "~/server/dynamodb"
+import {initDynamo, saveMedias} from "~/server/dynamodb"
 
 interface RawMedia {
     "caption": string,
@@ -100,6 +100,7 @@ export default defineEventHandler(async (event) => {
         caption: m.caption,
         takenAt: dayjs(m.timestamp).unix(),
     }))
+    initDynamo();
     await saveMedias(dMedias)
 
     return {accessToken: longToken, userId, id, username}
