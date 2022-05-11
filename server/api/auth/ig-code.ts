@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
             adult: false
         }
         await pageSearchCollection.insertOne(p as PageSearch)
-        await pageCollection().doc(pageId).update(p)
+        await pageCollection().doc(pageId).set(p, {merge: true})
     }
 
     // fetch medias
