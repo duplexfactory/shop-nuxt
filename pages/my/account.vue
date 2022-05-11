@@ -53,7 +53,7 @@
                         當前密碼
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" placeholder="當前密碼"/>
+                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" v-model="currentPw" placeholder="當前密碼"/>
                     </div>
                 </div>
                 <div class="table-row">
@@ -61,7 +61,7 @@
                         新密碼
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" placeholder="新密碼"/>
+                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" v-model="password" placeholder="新密碼"/>
                     </div>
                 </div>
                 <div class="table-row">
@@ -69,11 +69,12 @@
                         重新輸入新密碼
                     </div>
                     <div class="table-cell pt-2">
-                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" placeholder="重新輸入新密碼"/>
+                        <input class="text-input-primary w-full" type="password" autocomplete="new-password" v-model="rePassword" placeholder="重新輸入新密碼"/>
                     </div>
                 </div>
             </div>
-            <button @click="" class="mt-4 btn btn-primary">儲存</button>
+            <div class="mt-2 font-semibold text-red-500" v-if="pwErr">{{pwErr}}</div>
+            <button @click="changePw" class="mt-4 btn btn-primary">儲存</button>
         </div>
     </div>
 </template>
@@ -81,7 +82,8 @@
 <script setup lang="ts">
 
 import {useCurrentUser} from "~/composables/states";
-import {User} from "firebase/auth";
+import {getAuth, User} from "firebase/auth"
+import {EmailAuthProvider, reauthenticateWithCredential, updatePassword} from "@firebase/auth"
 
 const {code} = useRoute().query
 const verifiedPage = ref(false);
@@ -124,6 +126,37 @@ watch(
     }
 )
 
+const currentPw = ref("")
+const password = ref("")
+const rePassword = ref("")
+const pwErr = ref("")
+
+async function changePw() {
+  if (password.value.length < 6) {
+    pwErr.value = "密碼最少為6位"
+    return;
+  }
+  if (password.value !== rePassword.value) {
+    pwErr.value = "確認密碼不符"
+    return;
+  }
+
+  try {
+    const credential = EmailAuthProvider.credential(
+      currentUser.value.email,
+      currentPw.value
+    );
+    await reauthenticateWithCredential(currentUser.value, credential)
+    await updatePassword(currentUser.value, password.value)
+  } catch(e) {
+    pwErr.value = "當前密碼不符"
+    return;
+  }
+
+  [currentPw, password, rePassword, pwErr].forEach(r => r.value = "")
+  const nuxt = useNuxtApp()
+  nuxt.vueApp.$toast.success("成功更改密碼", {position: "top"})
+}
 </script>
 
 <style scoped>
