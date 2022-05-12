@@ -36,7 +36,6 @@
                             <a class="hover:underline text-pink-600 mr-2"
                                :href="`https://www.instagram.com/${igUsername}/`"
                                target="_blank">{{ "@" + igUsername }}</a>
-                            <nuxt-link class="text-pink-600 py-2 ml-2 mr-4" :to="`/shop/${igUsername}`">商店頁面</nuxt-link>
                             <button class="text-gray-500 py-2" @click="isIgConnected = false">解除連結</button>
                         </template>
                     </div>

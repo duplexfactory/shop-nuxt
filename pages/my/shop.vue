@@ -104,6 +104,10 @@
     </template>
 
     <template v-else>
+      <div class="flex mb-4">
+        <nuxt-link class="btn-outline" :to="`/shop/${igUsername}`">查看商店頁面</nuxt-link>
+      </div>
+
       <div class="info-group">
         <div class="md:text-xl font-bold">
           基本資料
