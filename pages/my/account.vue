@@ -29,7 +29,7 @@
                         <div v-if="!isIgConnected" class="pt-2 text-gray-600 text-xs">連結帳戶後，你將能於本網站顯示貼文</div>
                     </div>
                     <div class="table-cell pt-2">
-                        <button v-if="!isIgConnected" class="text-pink-600 py-4" @click="authorize()"><i
+                        <button v-if="!isIgConnected" class="text-pink-600 py-4" @click="authorize"><i
                             class="spr-instagram"></i>立即連結
                         </button>
                         <template v-else>
@@ -90,18 +90,9 @@ const isIgConnected = useIsIgConnected()
 const igUsername = useIgUsername();
 const authLoading = ref(!!code);
 
-function authorize() {
-  const config = useRuntimeConfig();
-
-  const url = new URL(`https://api.instagram.com/oauth/authorize`)
-
-  url.searchParams.set("client_id", config.IG_APP_ID)
-  url.searchParams.set("redirect_uri", config.DOMAIN + `/my/account`)
-  url.searchParams.set("scope", "user_profile,user_media")
-  url.searchParams.set("response_type", "code")
-
-  window.location.assign(url.href)
-}
+const {
+  authorize
+} = useIgAuth();
 
 onMounted(async () => {
   if (code) {

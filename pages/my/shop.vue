@@ -84,6 +84,10 @@
     watch(igUsername, init)
   }
 
+  const {
+    authorize
+  } = useIgAuth();
+
 </script>
 
 <template>
@@ -91,7 +95,7 @@
     <template v-if="!isIgConnected || !shop">
       <div class="info-group flex justify-center">
         <div class="text-center w-3/5">
-          <button class="btn-primary"><i class="spr-instagram"></i>連結Instagram帳戶</button>
+          <button class="btn-primary" @click="authorize"><i class="spr-instagram"></i>連結Instagram帳戶</button>
           <div class="mt-4">
             以你的Instagram帳戶登入後，即可<b>隨意修改你的IG Shop在Shoperuse上的資訊</b>，更可於<b>Shoperuse搜尋結果顯示你的IG Shop貼文照片</b>！
           </div>
