@@ -22,28 +22,27 @@
   type PickType<T, U> = Record<{
     [K in keyof T]: T[K] extends U ? K : never;
   }[keyof T], U>
+  const extraDataStringFields: Ref<(keyof PickType<IgPageExtraData, string>)[]> = ref([
+    "phone",
+    "whatsapp",
+    "wechat",
+    "signal",
+    "email",
+    "address",
+    "openHours",
+    "link", // IgPage.externalUrl
+    "relatedPage",
+    "facebook",
+    "discount",
+    "shopSince",
+  ] as (keyof PickType<IgPageExtraData, string>)[])
 
-  const extraDataStringFields: Ref<PickType<IgPageExtraData, string>> = ref({
-    phone: "",
-    whatsapp: "",
-    wechat: "",
-    signal: "",
-    email: "",
-    address: "",
-    openHours: "",
-    link: "", // IgPage.externalUrl
-    relatedPage: "",
-    facebook: "",
-    discount: "",
-    shopSince: "",
-  } as PickType<IgPageExtraData, string>)
-
-  const extraDataBooleanFields: Ref<PickType<IgPageExtraData, boolean>> = ref({
-    br: false,
-    noRefund: false,
-    noIgDM: false,
-    noPhoneCall: false,
-  } as PickType<IgPageExtraData, boolean>)
+  const extraDataBooleanFields: Ref<(keyof PickType<IgPageExtraData, boolean>)[]> = ref([
+    "br",
+    "noRefund",
+    "noIgDM",
+    "noPhoneCall",
+  ] as (keyof PickType<IgPageExtraData, boolean>)[])
 
   const extraDataMultiStringFieldsTemp = ref({})
   const extraDataMultiStringFields: Ref<PickType<IgPageExtraData, string[]>> = ref({
@@ -209,7 +208,7 @@
 
         <div class="grid md:grid-cols-2 gap-8">
           <div class="table col-span-1">
-            <div v-for="extraDataStringFieldKey of Object.keys(extraDataStringFields)" class="table-row">
+            <div v-for="extraDataStringFieldKey of extraDataStringFields" class="table-row">
               <div class="table-cell fit-width pr-2 pt-2">
                 <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
               </div>
@@ -265,7 +264,7 @@
                 </div>
               </div>
 
-              <div v-for="extraDataBooleanFieldKey of Object.keys(extraDataBooleanFields)" class="table-row">
+              <div v-for="extraDataBooleanFieldKey of extraDataBooleanFields" class="table-row">
                 <div class="table-cell fit-width pr-2 pb-4">
                   <i :class="extraDataLookup[extraDataBooleanFieldKey].iconClass"></i>
                 </div>
