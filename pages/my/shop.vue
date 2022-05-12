@@ -43,6 +43,10 @@
   }[keyof IgPageExtraData], string>)
 
   const extraDataMultiStringFieldsTemp = ref({})
+  const extraDataMultiStringFields = ref({
+    paymentMethods: [],
+    mailing: [],
+  })
 
   // Licence
   const licenceChecked = ref(false)
@@ -73,6 +77,10 @@
 
     for (const key of Object.keys(extraDataBooleanFields.value)) {
       extraDataBooleanFields.value[key] = !!shop.value.extraData[key]
+    }
+
+    for (const key of Object.keys(extraDataMultiStringFields.value)) {
+      extraDataMultiStringFields.value[key] = [...(shop.value.extraData[key] ?? [])]
     }
 
     licenceChecked.value = !!shop.value.extraData.licence
@@ -173,7 +181,7 @@
           <div class="col-span-1">
             <div class="table w-full">
 
-              <div v-for="extraDataMultiStringFieldKey of ['paymentMethods', 'mailing']" class="table-row">
+              <div v-for="extraDataMultiStringFieldKey of Object.keys(extraDataMultiStringFields)" class="table-row">
                 <div class="table-cell fit-width pr-2 pb-4">
                   <i :class="extraDataLookup[extraDataMultiStringFieldKey].iconClass"></i>
                 </div>
@@ -184,16 +192,16 @@
                            class="text-input-primary" type="text"
                            :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
                     <button class="btn btn-outline ml-2"
-                            @click="shop.extraData[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">
+                            @click="extraDataMultiStringFields[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">
                       +
                     </button>
                   </div>
-                  <div v-for="value in shop.extraData[extraDataMultiStringFieldKey]"
+                  <div v-for="value in extraDataMultiStringFields[extraDataMultiStringFieldKey]"
                        :key="value"
                        class="chip">
                     {{ value }}
                     <button
-                      @click="shop.extraData[extraDataMultiStringFieldKey] = shop.extraData[extraDataMultiStringFieldKey].filter((v) => v !== value)">
+                      @click="extraDataMultiStringFields[extraDataMultiStringFieldKey] = extraDataMultiStringFields[extraDataMultiStringFieldKey].filter((v) => v !== value)">
                       <i class="spr-cancel"></i></button>
                   </div>
                 </div>
