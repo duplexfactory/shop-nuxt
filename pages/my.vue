@@ -20,7 +20,7 @@ watch(
 </script>
 
 <template>
-    <div class="container mx-auto mt-8">
+    <div class="container mx-auto mt-4 md:mt-0">
 
       <div class="mb-4 text-lg flex">
         <nuxt-link to="/my/account" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/account')}">我的帳戶</nuxt-link>
