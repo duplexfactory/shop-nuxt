@@ -2,10 +2,12 @@ import {Collection, MongoClient, MongoClientOptions} from "mongodb"
 import {PageSearch} from "~/models/PageSearch"
 import IgAuth from "~/models/IgAuth"
 import {PendingPage} from "~/models/PendingPage"
+import IgPageOverride from "~/models/IgPageOverride";
 
-export let pageSearchCollection: Collection<PageSearch>
 export let igAuthCollection: Collection<IgAuth>
+export let pageSearchCollection: Collection<PageSearch>
 export let pendingPageCollection: Collection<PendingPage>
+export let pageOverrideCollection: Collection<IgPageOverride>;
 
 const config = useRuntimeConfig()
 
@@ -19,9 +21,10 @@ export async function initMongo() {
             useUnifiedTopology: true
         } as MongoClientOptions)
         const db = client.db(config.DEV_DB ? "ig-dev" : "ig")
-        pageSearchCollection = db.collection("page")
         igAuthCollection = db.collection("igAuth")
-        pendingPageCollection = db.collection("pendingPage")
+        pageSearchCollection = db.collection("page")
+        pendingPageCollection = db.collection("pendingPage");
+        pageOverrideCollection = db.collection("pageOverride");
         init = true
     }
     return client
