@@ -8,6 +8,7 @@ import {pageCollection} from "~/server/firebase/collections";
 export default defineEventHandler(async (event) => {
     noCache(event);
     const auth = getAuth(event);
+    await initMongo();
 
     const igAuth = await igAuthCollection.findOne({
         userId: auth.uid
@@ -35,7 +36,6 @@ export default defineEventHandler(async (event) => {
     });
 
     // Upsert override data.
-    await initMongo();
     await pageOverrideCollection.updateOne({
         _id: igAuth.pageId
     }, {

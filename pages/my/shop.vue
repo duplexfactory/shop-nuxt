@@ -4,6 +4,7 @@
   import {extraDataLookup} from "~/models/PageInfoRow"
   import {useIgUsername} from "~/composables/states"
   import IgPage from "~/models/IgPage";
+  import type {Ref} from "vue";
 
   const nuxt = useNuxtApp();
 
@@ -18,7 +19,11 @@
     shop.value.tags.push(selectedTag.value)
   }
 
-  const extraDataStringFields = ref({
+  type PickType<T, U> = Record<{
+    [K in keyof T]: T[K] extends U ? K : never;
+  }[keyof T], U>
+
+  const extraDataStringFields: Ref<PickType<IgPageExtraData, string>> = ref({
     phone: "",
     whatsapp: "",
     wechat: "",
@@ -31,24 +36,20 @@
     facebook: "",
     discount: "",
     shopSince: "",
-  } as Record<{
-    [K in keyof IgPageExtraData]: IgPageExtraData[K] extends string ? K : never;
-  }[keyof IgPageExtraData], string>)
+  } as PickType<IgPageExtraData, string>)
 
-  const extraDataBooleanFields = ref({
+  const extraDataBooleanFields: Ref<PickType<IgPageExtraData, boolean>> = ref({
     br: false,
     noRefund: false,
     noIgDM: false,
     noPhoneCall: false,
-  } as Record<{
-    [K in keyof IgPageExtraData]: IgPageExtraData[K] extends boolean ? K : never;
-  }[keyof IgPageExtraData], string>)
+  } as PickType<IgPageExtraData, boolean>)
 
   const extraDataMultiStringFieldsTemp = ref({})
-  const extraDataMultiStringFields = ref({
+  const extraDataMultiStringFields: Ref<PickType<IgPageExtraData, string[]>> = ref({
     paymentMethods: [],
     mailing: [],
-  })
+  } as PickType<IgPageExtraData, string[]>)
 
   // Licence
   const licenceChecked = ref(false)
@@ -73,12 +74,9 @@
   async function init(username: string) {
     const {data} = await useFetch(`/api/shop/username/${username}`)
     shop.value = data.value.page
-    for (const key of Object.keys(extraDataStringFields.value)) {
-      extraDataStringFields.value[key] = shop.value.extraData[key] ?? ""
-    }
 
-    for (const key of Object.keys(extraDataBooleanFields.value)) {
-      extraDataBooleanFields.value[key] = !!shop.value.extraData[key]
+    if (!shop.value.extraData) {
+      shop.value.extraData = {};
     }
 
     for (const key of Object.keys(extraDataMultiStringFields.value)) {
@@ -112,10 +110,33 @@
 
     basicDataSaving.value = true;
     const {getAuthHeader} = useAuth()
-    await $fetch('/api/shop/edit/self-basic', { headers: await getAuthHeader(), method: 'POST', body})
+    await $fetch('/api/shop/edit/self-basic', { headers: await getAuthHeader(), method: 'PUT', body})
     basicDataSaving.value = false;
 
     nuxt.vueApp.$toast.success("成功儲存基本資料！", {position: "top"});
+  }
+
+  // Edit extra data.
+  const extraDataSaving = ref(false);
+  async function saveExtra() {
+
+    const body = {
+      ...shop.value.extraData,
+      ...extraDataMultiStringFields.value
+    };
+    if (licenceChecked.value) {
+      body.licence = licenceNumber.value === "" ? true : licenceNumber.value;
+    }
+    else {
+      body.licence = false;
+    }
+
+    extraDataSaving.value = true;
+    const {getAuthHeader} = useAuth()
+    await $fetch('/api/shop/edit/self-extra', { headers: await getAuthHeader(), method: 'PUT', body})
+    extraDataSaving.value = false;
+
+    nuxt.vueApp.$toast.success("成功儲存詳細資料！", {position: "top"});
   }
 
 </script>
@@ -263,7 +284,7 @@
 
         </div>
 
-        <button @click="" class="mt-4 btn btn-primary">儲存</button>
+        <button @click="saveExtra" :disabled="extraDataSaving" class="mt-4 btn btn-primary">儲存</button>
 
       </div>
     </template>
