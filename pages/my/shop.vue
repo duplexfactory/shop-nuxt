@@ -22,7 +22,7 @@
   type PickType<T, U> = Record<{
     [K in keyof T]: T[K] extends U ? K : never;
   }[keyof T], U>
-  const extraDataStringFields: Ref<(keyof PickType<IgPageExtraData, string>)[]> = ref([
+  const extraDataStringFields: (keyof PickType<IgPageExtraData, string>)[] = [
     "phone",
     "whatsapp",
     "wechat",
@@ -35,14 +35,13 @@
     "facebook",
     "discount",
     "shopSince",
-  ] as (keyof PickType<IgPageExtraData, string>)[])
-
-  const extraDataBooleanFields: Ref<(keyof PickType<IgPageExtraData, boolean>)[]> = ref([
+  ]
+  const extraDataBooleanFields:(keyof PickType<IgPageExtraData, boolean>)[] = [
     "br",
     "noRefund",
     "noIgDM",
     "noPhoneCall",
-  ] as (keyof PickType<IgPageExtraData, boolean>)[])
+  ]
 
   const extraDataMultiStringFieldsTemp = ref({})
   const extraDataMultiStringFields: Ref<PickType<IgPageExtraData, string[]>> = ref({
