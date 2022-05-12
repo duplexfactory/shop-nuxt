@@ -5,6 +5,8 @@
   import {useIgUsername} from "~/composables/states"
   import IgPage from "~/models/IgPage";
 
+  const nuxt = useNuxtApp();
+
   const shop = ref<IgPage>(null)
   const {categories, tagsLookup} = useTags()
   const selectedTag = ref("")
@@ -97,6 +99,25 @@
     authorize
   } = useIgAuth();
 
+  // Edit basic data.
+  const basicDataSaving = ref(false);
+  async function saveBasic() {
+    if (shop.value === null)
+      return;
+
+    const body = ["username", "fullName", "biography", "tags"].reduce((prev, k) => {
+      prev[k] = shop.value[k]
+      return prev
+    }, {});
+
+    basicDataSaving.value = true;
+    const {getAuthHeader} = useAuth()
+    await $fetch('/api/shop/edit/self-basic', { headers: await getAuthHeader(), method: 'POST', body})
+    basicDataSaving.value = false;
+
+    nuxt.vueApp.$toast.success("成功儲存基本資料！", {position: "top"});
+  }
+
 </script>
 
 <template>
@@ -158,7 +179,7 @@
             </div>
           </div>
         </div>
-        <button @click="" class="mt-4 btn btn-primary">儲存</button>
+        <button @click="saveBasic" :disabled="basicDataSaving" class="mt-4 btn btn-primary">儲存</button>
       </div>
       <div class="info-group">
         <div class="md:text-xl font-bold">
