@@ -16,9 +16,9 @@
                     </div>
 
                     <div class="my-4 flex text-gray-500 text-sm">
-                      <div v-if="page.followerCount" class="text-center flex-1">
+                      <div class="text-center flex-1">
                         <div>粉絲</div>
-                        <div>{{ page.followerCount.toLocaleString() }}</div>
+                        <div>{{ !!page.followerCount ? page.followerCount.toLocaleString() : "-" }}</div>
                       </div>
                       <div class="bg-gray-300 mx-4" style="width: 1px;"></div>
                       <div class="text-center flex-1">

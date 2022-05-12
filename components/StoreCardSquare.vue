@@ -43,9 +43,9 @@
 
                 <!-- Online show followers -->
                 <div v-else class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
-                    <div v-if="followerCount" class="text-center flex-1">
+                    <div class="text-center flex-1">
                         <div>粉絲</div>
-                        <div>{{ followerCount.toLocaleString() }}</div>
+                        <div>{{ !!followerCount ? followerCount.toLocaleString() : "-" }}</div>
                     </div>
                     <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
                     <div class="text-center flex-1">
