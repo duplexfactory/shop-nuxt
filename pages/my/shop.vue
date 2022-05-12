@@ -3,13 +3,14 @@
   import IgPageExtraData from "~/models/IgPageExtraData"
   import {extraDataLookup} from "~/models/PageInfoRow"
   import {useIgUsername} from "~/composables/states"
+  import IgPage from "~/models/IgPage";
 
   const shop = ref<IgPage>(null)
   const {categories, tagsLookup} = useTags()
   const selectedTag = ref("")
 
   function addSelectedTag() {
-    if (shop.value.tags.includes(selectedTag.value)) {
+    if (shop.value.tags.includes(selectedTag.value) || selectedTag.value === "") {
       return
     }
     shop.value.tags.push(selectedTag.value)
@@ -78,7 +79,7 @@
     licenceNumber.value = (!!shop.value.extraData.licence && typeof shop.value.extraData.licence === "string" ? shop.value.extraData.licence : "")
   }
 
-  if(igUsername.value) {
+  if (igUsername.value) {
     await init(igUsername.value)
   } else {
     watch(igUsername, init)
