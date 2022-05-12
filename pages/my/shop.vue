@@ -170,7 +170,7 @@
           </div>
 
           <div class="col-span-1">
-            <div class="table">
+            <div class="table w-full">
 
               <div v-for="extraDataMultiStringFieldKey of ['paymentMethods', 'mailing']" class="table-row">
                 <div class="table-cell fit-width pr-2 pb-4">
