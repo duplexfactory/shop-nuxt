@@ -1,12 +1,18 @@
-import {defineEventHandler} from "h3";
-import {getAuth, noCache} from "~/server/util";
-import {igAuthCollection, initMongo} from "~/server/mongodb";
+import {defineEventHandler} from "h3"
+import {getAuth} from "~/server/util"
+import {igAuthCollection, initMongo} from "~/server/mongodb"
+import {initFirebase} from "~/server/firebase/init"
+import {pageCollection} from "~/server/firebase/collections"
 
 export default defineEventHandler(async (event) => {
     const auth = getAuth(event)
     await initMongo()
 
-    const igAuth = await igAuthCollection.deleteOne({userId: auth.uid})
+    const igAuth = await igAuthCollection.findOneAndDelete({userId: auth.uid})
+    if (igAuth.value?.pageId) {
+        initFirebase()
+        await pageCollection().doc(igAuth.value.pageId).update({deleted: true})
+    }
 
     return {success: true}
 })

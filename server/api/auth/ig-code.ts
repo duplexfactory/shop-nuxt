@@ -89,8 +89,9 @@ export default defineEventHandler(async (event) => {
             locations: [],
             extraData: {},
             tags: [],
+            deleted: false
         }
-        await pageSearchCollection.insertOne(p as PageSearch)
+        await pageSearchCollection.updateOne({_id: pageId}, {$set: p}, {upsert: true})
         await pageCollection().doc(pageId).set(p, {merge: true})
     }
 
