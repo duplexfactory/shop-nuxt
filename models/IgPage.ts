@@ -31,9 +31,9 @@ export default interface IgPage {
     temp?: boolean
 
     // sub-docs
-    stories: IgStory[]
-    medias: IgMedia[] // max 252
-    trays: IgTray[]
+    // stories: IgStory[]
+    // medias: IgMedia[] // max 252
+    // trays: IgTray[]
 
     // marked
     tags: string[];

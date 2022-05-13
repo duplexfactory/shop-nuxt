@@ -9,10 +9,9 @@
                            :alt="page.username"
                            v-lazy="page.profilePicUrl"/>
                     </div>
-
                     <div>
                         <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
-                        <div class="text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
+                        <div v-if="lastActive" class="text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
                     </div>
 
                     <div class="my-4 flex text-gray-500 text-sm">
@@ -109,8 +108,6 @@
 
 <script setup lang="ts">
 
-import {notFound} from "~/utils/h3Error";
-
 const {tagsLookup, categories} = useTags();
 
 const verifiedPage = true;
@@ -149,12 +146,25 @@ const config = useRuntimeConfig();
 const route = useRoute();
 
 const {data, error} = await useLazyFetch(`/api/shop/username/${route.params.username}`)
-if (!!error && !!error.value) {
-  throwError(notFound);
-}
+const found = (!error?.value && data.value)
+// if (!!error && !!error.value) {
+//   throwError(notFound);
+// }
 
-const page = computed<IgPage | null>(() => data.value ? data.value.page : null);
-const lastActive = computed(() => page.value !== null ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
+const page = found ? computed<IgPage>(() => data.value?.page as IgPage || null) : computed<IgPage | null>(() => ({
+  _id: "",
+  temp: true,
+  pk: 0,
+  username: route.params.username,
+  fullName: "",
+  biography: "",
+  mediaCount: 0,
+  adult: false,
+  locations: [],
+  extraData: {},
+  tags: [],
+}) as IgPage)
+const lastActive = computed(() => (found && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).format('DD/MM/YYYY') : "");
 const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value));
 
 const selectedIndex = ref(0);
@@ -183,7 +193,7 @@ async function fetchMedias() {
     })
   }
 }
-await fetchMedias();
+if(found) await fetchMedias();
 
 async function showMedia(i: number) {
   if (i == medias.value.length - 1 && !mediaPending.value) {
@@ -293,6 +303,7 @@ import IgPageReview from "~/models/IgPageReview";
 const reviews = ref<IgPageReview[]>([]);
 
 async function fetchReviews() {
+  if(!found) return
   reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
       pageId: page.value._id,
     }}))['reviews'];
@@ -312,6 +323,7 @@ const {
 } = useCreateReview();
 
 async function sendReview() {
+  if(!found) return
   reviewingPageId.value = page.value._id;
   await createReview();
   await fetchReviews();
