@@ -12,7 +12,7 @@ export default function useCreateReview() {
         isCreatingReview.value = true;
 
         const body: any = {
-            pagePk: reviewingPageId.value,
+            pageId: reviewingPageId.value,
             rating: rating.value,
             content: content.value,
         };
