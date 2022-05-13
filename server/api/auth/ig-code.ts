@@ -44,10 +44,10 @@ export default defineEventHandler(async (event) => {
 
     // get username
     const url = new URL("https://graph.instagram.com/me")
-    url.searchParams.set("fields", "id,username")
+    url.searchParams.set("fields", "id,username,media_count")
     url.searchParams.set("access_token", shortToken)
     const idRes = await fetch(url.href)
-    const {id, username} = await idRes.json() as { id: string, username: string }
+    const {id, username, media_count} = await idRes.json() as { id: string, username: string, media_count: number }
 
     // exchange short lived access token for long lived access token
     const tokenUrl = new URL("https://graph.instagram.com/access_token")
@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
             username,
             fullName: "",
             biography: "",
-            mediaCount: 0,
+            mediaCount: media_count,
             nextFetch: 1,
             adult: false,
             locations: [],
@@ -117,7 +117,7 @@ export default defineEventHandler(async (event) => {
             lastMedia: lastMedia.takenAt,
             lastActivity: lastMedia.takenAt,
             lastMediaData: lastMedia,
-            mediaCount: dMedias.length
+            mediaCount: media_count
         }
         await pageSearchCollection.updateOne({_id: pageId}, {$set: update})
         await pageCollection().doc(pageId).update(update)
