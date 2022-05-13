@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     }
     else if (pageId != undefined) {
         reviewSS = await reviewCollection()
-            .where("pageId", "==", Number(pageId))
+            .where("pageId", "==", pageId)
             .where("deleted", "==", false)
             .orderBy("created", "desc")
             .get();
