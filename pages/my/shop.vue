@@ -88,7 +88,7 @@
   if (igUsername.value) {
     await init(igUsername.value)
   } else {
-    watch(igUsername, init)
+    watch(igUsername, () => init(igUsername.value))
   }
 
   const {
