@@ -5,11 +5,11 @@ import {assert} from "~/server/util"
 
 export default defineEventHandler(async (event) => {
     const {code} = await useQuery(event) as { code: string }
-    assert(event, code)
+    assert(code)
 
     initDynamo()
     const media = await getMediaByCode(code)
-    assert(event, media, notFound)
+    assert(media, notFound)
 
     return {media} as unknown as JSONValue
 })

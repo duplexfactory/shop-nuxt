@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
         userId: auth.uid
     });
 
-    assert(event, igAuth, notFound);
+    assert(igAuth, notFound);
 
     const extraData = await useBody<IgPageExtraData>(event);
 

@@ -5,11 +5,11 @@ import {notFound} from "~/utils/h3Error"
 
 export default defineEventHandler(async (event) => {
     const {code} = event.context.params
-    assert(event, code)
+    assert(code)
 
     initDynamo()
     const media = await getMediaByCode(code)
-    assert(event, media, notFound)
+    assert(media, notFound)
 
     return {media} as unknown as JSONValue
 })

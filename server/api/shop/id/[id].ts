@@ -5,13 +5,13 @@ import {notFound} from "~/utils/h3Error"
 
 export default defineEventHandler(async (event) => {
     const {id} = event.context.params
-    assert(event, id)
+    assert(id)
 
     const pageDoc = await pageCollection().doc(id).get()
-    assert(event, pageDoc.exists, notFound)
+    assert(pageDoc.exists, notFound)
 
     const page = pageDoc.data()
-    assert(event, !page.deleted, notFound)
+    assert(!page.deleted, notFound)
 
     return {
         page

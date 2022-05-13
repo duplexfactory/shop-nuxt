@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     } else {
         await initMongo()
         const p = await pageSearchCollection.findOne({username}, {projection: {_id: 1}})
-        assert(event, p, notFound)
+        assert(p, notFound)
         queryId = p._id
     }
 
