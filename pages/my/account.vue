@@ -36,7 +36,7 @@
                             <a class="hover:underline text-pink-600 mr-2"
                                :href="`https://www.instagram.com/${igUsername}/`"
                                target="_blank">{{ "@" + igUsername }}</a>
-                            <button class="text-gray-500 py-2" @click="isIgConnected = false">解除連結</button>
+                            <button class="text-gray-500 py-2" @click="disconnect">解除連結</button>
                         </template>
                     </div>
                 </div>
@@ -148,6 +148,16 @@ async function changePw() {
   [currentPw, password, rePassword, pwErr].forEach(r => r.value = "")
   const nuxt = useNuxtApp()
   nuxt.vueApp.$toast.success("成功更改密碼", {position: "top"})
+}
+
+async function disconnect() {
+  const {getAuthHeader} = useAuth()
+  await $fetch("/api/auth/disconnect-ig", {
+    headers: await getAuthHeader()
+  })
+  const nuxt = useNuxtApp()
+  nuxt.vueApp.$toast.success("已解除連結", {position: "top"})
+  isIgConnected.value = false
 }
 </script>
 
