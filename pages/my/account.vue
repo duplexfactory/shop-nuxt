@@ -96,12 +96,14 @@ const {
 onMounted(async () => {
   if (code) {
     const {getAuthHeader} = useAuth()
-    const {username} = await $fetch("/api/auth/ig-code", {
-      params: {code},
-      headers: await getAuthHeader()
-    })
-    igUsername.value = username
-    isIgConnected.value = true
+    try {
+      const {username} = await $fetch("/api/auth/ig-code", {
+        params: {code},
+        headers: await getAuthHeader()
+      })
+      igUsername.value = username
+      isIgConnected.value = true
+    } catch(e) {}
     authLoading.value = false
   }
 });
