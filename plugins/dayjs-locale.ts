@@ -4,6 +4,6 @@ import relativeTime from "dayjs/plugin/relativeTime.js";
 import {defineNuxtPlugin} from "nuxt3/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
-    // dayjs.locale('zh-hk');
-    // dayjs.extend(relativeTime);
+    dayjs.locale('zh-hk');
+    dayjs.extend(relativeTime);
 });

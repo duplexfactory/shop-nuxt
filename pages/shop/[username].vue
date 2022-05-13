@@ -113,7 +113,7 @@ import {notFound} from "~/utils/h3Error";
 
 const {tagsLookup, categories} = useTags();
 
-const verifiedPage = false;
+const verifiedPage = true;
 
 // const page = {
 //   lastActivity: 0,
