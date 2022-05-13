@@ -59,7 +59,7 @@
             <section class="mt-4">
                 <div class="mb-4 text-lg md:text-2xl flex">
                     <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}" @click="selectedIndex = 0">貼文</h2>
-                    <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
+                    <h2 v-if="found" class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
                 </div>
                 <div v-if="selectedIndex == 0" :class="verifiedPage ? 'grid' : 'md:grid'" class="grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
                   <!-- lazy component ratio for taking up space before scrolling to it -->
