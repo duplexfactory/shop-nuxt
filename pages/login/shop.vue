@@ -4,6 +4,14 @@
         <h1 class="mt-8 text-2xl md:text-4xl font-bold">
           商戶登入
         </h1>
+        <button @click="fbLogin">
+          以Facebook登入
+        </button>
+        <div class="flex items-center">
+          <hr class="flex-1"/>
+          <span class="text-gray-500">或</span>
+          <hr class="flex-1"/>
+        </div>
         <input v-model="email" class="mt-4 block text-input-primary w-full" type="text" name="email" placeholder="電郵">
         <input v-model="password" class="mt-4 block text-input-primary w-full" type="password" name="password" placeholder="密碼">
         <div class="mt-2 text-gray-400 text-right">
@@ -62,6 +70,16 @@
 
             // this.$toast.error("登入失敗", {position: "top"});
         }
+    }
+
+    function fbLogin() {
+      FB.login(function(response) {
+        if (response.status === 'connected') {
+          // Logged into your webpage and Facebook.
+        } else {
+          // The person is not logged into your webpage or we are unable to tell.
+        }
+      });
     }
 
 </script>
