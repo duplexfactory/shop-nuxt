@@ -4,15 +4,15 @@
         <h1 class="mt-8 text-2xl md:text-4xl font-bold">
           商戶登入
         </h1>
-        <button @click="fbLogin">
-          以Facebook登入
+        <button @click="fbLogin" class="mt-4 text-white rounded-md py-2 w-full" style="background: #4267b2;">
+          <i class="spr-facebook-squared"></i>以Facebook登入
         </button>
-        <div class="flex items-center">
+        <div class="my-4 flex items-center">
           <hr class="flex-1"/>
           <span class="text-gray-500">或</span>
           <hr class="flex-1"/>
         </div>
-        <input v-model="email" class="mt-4 block text-input-primary w-full" type="text" name="email" placeholder="電郵">
+        <input v-model="email" class="block text-input-primary w-full" type="text" name="email" placeholder="電郵">
         <input v-model="password" class="mt-4 block text-input-primary w-full" type="password" name="password" placeholder="密碼">
         <div class="mt-2 text-gray-400 text-right">
           <nuxt-link to="/auth/forgot-password" class="hover:underline cursor-pointer">忘記密碼</nuxt-link>
@@ -33,9 +33,10 @@
 
     import {
         getAuth,
-        signInWithEmailAndPassword
+        signInWithEmailAndPassword,
+        FacebookAuthProvider,
+        signInWithPopup
     } from "firebase/auth";
-
 
     const email = ref("");
     const password = ref("");
@@ -73,13 +74,32 @@
     }
 
     function fbLogin() {
-      FB.login(function(response) {
-        if (response.status === 'connected') {
-          // Logged into your webpage and Facebook.
-        } else {
-          // The person is not logged into your webpage or we are unable to tell.
-        }
-      });
+      const provider = new FacebookAuthProvider();
+
+      const auth = getAuth();
+      // auth.languageCode = ;
+      signInWithPopup(auth, provider)
+          .then((result) => {
+            // The signed-in user info.
+            const user = result.user;
+
+            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            const credential = FacebookAuthProvider.credentialFromResult(result);
+            const accessToken = credential.accessToken;
+
+            // ...
+          })
+          .catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = FacebookAuthProvider.credentialFromError(error);
+
+            // ...
+          });
     }
 
 </script>
