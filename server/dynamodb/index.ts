@@ -71,9 +71,9 @@ export async function getMediaByCode(code: string): Promise<IgMedia | null> {
 export async function patchMediaByCode(code: string, patchItem): Promise<boolean> {
     const res = await queryMediaByCode(code)
     if (res?.Count) {
-        const {pagePk, takenAt} = unmarshall(res.Items[0])
+        const {pageId, takenAt} = unmarshall(res.Items[0])
         await update("media", {
-            pagePk, takenAt
+            pageId, takenAt
         }, patchItem)
         return true
     } else {
