@@ -139,7 +139,7 @@ export default defineEventHandler(async (event) => {
         const dMedias: IgMedia[] = medias.map(m => ({
             code: m.permalink.split("/").filter(t => !!t).pop(),
             pageId,
-            caption: m.caption,
+            caption: m.caption || "",
             takenAt: dayjs(m.timestamp).unix(),
         }))
         initDynamo()
