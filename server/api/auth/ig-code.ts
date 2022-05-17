@@ -104,7 +104,7 @@ export default defineEventHandler(async (event) => {
             temp: true,
             pk: 0,
             username,
-            fullName: username,
+            fullName: "",
             biography: "",
             mediaCount: media_count,
             nextFetch: 1,
