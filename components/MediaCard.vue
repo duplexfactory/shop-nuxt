@@ -3,7 +3,7 @@
     <div class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="$imageUrl(code)"></div>
     <div style="aspect-ratio: 1.5;" class="pt-2 overflow-hidden flex flex-col">
       <div class="text-sm whitespace-pre-wrap overflow-hidden line-clamp-7" style="flex-shrink: 1;">{{ caption }}</div>
-      <div v-if="!!price" class="mt-2 text-pink-700">{{ formatMediaPrice(price) }}</div>
+      <div v-if="!!mediaPrice(media)" class="mt-2 text-pink-700">{{ formatMediaPrice(mediaPrice(media)) }}</div>
       <div class="mt-2 text-sm text-gray-500 break-all line-clamp-1" style="flex-shrink: 0;">{{ takenAtString + ' • ' + shop.username }}</div>
     </div>
 
@@ -17,7 +17,6 @@ import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
 import IgPage from "~/models/IgPage";
 import dayjs from "dayjs";
-import useMediaPrice from "~/composables/useMediaPrice";
 
 const {tagsLookup} = useTags()
 const {media, shop} = defineProps({
@@ -42,7 +41,10 @@ const {
 const takenAtString = dayjs(takenAt * 1000).fromNow();
 
 // Media Price
-const { formatMediaPrice } = useMediaPrice();
+const {
+  mediaPrice,
+  formatMediaPrice
+} = useMediaPrice();
 
 </script>
 
