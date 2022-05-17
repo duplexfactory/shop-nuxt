@@ -11,26 +11,33 @@ export class PageSearch {
     mediaCount: number;
     followerCount: number;
     followingCount: number;
+    externalUrl: string;
     profilePicUrl: string;
 
+    // private: boolean; // MongoDB remove directly, no need to mark.
+    // deleted: boolean; // MongoDB remove directly, no need to mark.
     adult: boolean;
 
+    lastMedia: number;
+    // lastFetch: number // For crawler.
+    nextFetch: number;
+    profilePicLastFetch: number;
+    lastActivity: number;
+    // tier: number // For crawler.
+    // temp?: boolean // For direct ig connect, not crawled.
+
+    // marked
     tags: string[];
     businessRegistration: boolean;
     brickAndMortar: boolean;
     locations: string[];
 
+    // computed
     activeScore: number;
 
-    mediaCodes: string[];
-
-    nextFetch: number;
-    fetching: boolean;
-    profilePicLastFetch: number;
-
-    lastActivity: number;
-    lastMedia: number;
+    // denormalize
     lastMediaData?: IgMedia;
+    mediaCodes: string[];
 
     extraData: IgPageExtraData;
 }
