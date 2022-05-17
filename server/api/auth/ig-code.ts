@@ -1,15 +1,14 @@
 import fetch from "node-fetch"
-import {defineEventHandler, useQuery} from "h3"
+import {createError, defineEventHandler, useQuery} from "h3"
 import dayjs from "dayjs"
 import {nanoid} from "nanoid"
 
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
-import {getAuth, noCache} from "~/server/util"
+import {assert, getAuth, noCache} from "~/server/util"
 import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
 import {initDynamo, saveMedias} from "~/server/dynamodb"
 import {pageCollection} from "~/server/firebase/collections"
-import {PageSearch} from "~/models/PageSearch"
 
 interface RawMedia {
     "caption": string,
@@ -33,21 +32,37 @@ export default defineEventHandler(async (event) => {
     form.append("redirect_uri", config.DOMAIN + `/my/account`)
     form.append("code", code as string)
 
-    const shortTokenRes = await fetch(" https://api.instagram.com/oauth/access_token", {
+    const shortTokenRes = await fetch("https://api.instagram.com/oauth/access_token", {
         method: "POST",
         body: form
     })
+    const shortTokenResJ = await shortTokenRes.json()
     const {
         access_token: shortToken,
         user_id: userId
-    } = await shortTokenRes.json() as { access_token: string, user_id: number }
+    } = shortTokenResJ as { access_token: string, user_id: number }
+    assert(shortToken, createError({
+        statusCode: 500,
+        data: {
+            url: shortTokenRes.url,
+            body: shortTokenResJ
+        }
+    }))
 
     // get username
     const url = new URL("https://graph.instagram.com/me")
     url.searchParams.set("fields", "id,username,media_count")
     url.searchParams.set("access_token", shortToken)
     const idRes = await fetch(url.href)
-    const {id, username, media_count} = await idRes.json() as { id: string, username: string, media_count: number }
+    const idResJ = await idRes.json()
+    const {id, username, media_count} = idResJ as { id: string, username: string, media_count: number }
+    assert(shortToken, createError({
+        statusCode: 500,
+        data: {
+            url: idRes.url,
+            body: idResJ
+        }
+    }))
 
     // exchange short lived access token for long lived access token
     const tokenUrl = new URL("https://graph.instagram.com/access_token")
@@ -55,10 +70,18 @@ export default defineEventHandler(async (event) => {
     tokenUrl.searchParams.set("client_secret", config.IG_APP_SECRET)
     tokenUrl.searchParams.set("access_token", shortToken)
     const longTokenRes = await fetch(tokenUrl.href)
+    const longTokenResJ = await longTokenRes.json()
     const {
         access_token: longToken,
         expires_in
-    } = await longTokenRes.json() as { access_token: string, expires_in: number }
+    } = longTokenResJ as { access_token: string, expires_in: number }
+    assert(longToken, createError({
+        statusCode: 500,
+        data: {
+            url: longTokenRes.url,
+            body: longTokenResJ
+        }
+    }))
 
     const page = await pageSearchCollection.findOne({username}) as { _id: string }
     const pageId = page ? page._id : nanoid()
@@ -102,7 +125,15 @@ export default defineEventHandler(async (event) => {
     mediaUrl.searchParams.set("fields", "caption,permalink,timestamp")
     mediaUrl.searchParams.set("access_token", longToken)
     const mediaRes = await fetch(mediaUrl.href)
-    const {data: medias} = await mediaRes.json() as { data: RawMedia[] }
+    const mediaResJ = await mediaRes.json()
+    const {data: medias} = mediaResJ as { data: RawMedia[] }
+    assert(medias, createError({
+        statusCode: 500,
+        data: {
+            url: mediaRes.url,
+            body: mediaResJ
+        }
+    }))
 
     if (medias.length) {
         const dMedias: IgMedia[] = medias.map(m => ({
