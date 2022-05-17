@@ -1,7 +1,9 @@
 <template>
   <div class="modal-mask" @click="$emit('close')">
 
-    <div v-if="$slots.container" class="w-full h-full flex items-center justify-center">
+    <div v-if="$slots.container"
+         class="w-full h-full flex items-center justify-center"
+         @click.stop="">
       <slot name="container"></slot>
     </div>
 

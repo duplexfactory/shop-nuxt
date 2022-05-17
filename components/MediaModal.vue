@@ -1,6 +1,6 @@
 <template>
   <LazyModal @close="close">
-    <template v-slot:body>
+    <template #body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
           <MediaCardIGEmbed v-if="localMediaCode && localPage" captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
