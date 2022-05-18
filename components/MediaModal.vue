@@ -132,7 +132,7 @@ const {
 } = useCreateReview();
 const isShowingCreateReview = ref<boolean>(false);
 reviewingCode.value = localMediaCode.value;
-reviewingPageId.value = showingMediaModalData.value.simplePage?._id || showingMediaModalData.value._id;
+reviewingPageId.value = showingMediaModalData.value.simplePage?._id || showingMediaModalData.value.pageId;
 
 const reviews = ref<IgPageReview[]>([]);
 

@@ -3,12 +3,12 @@
   import IgPageExtraData from "~/models/IgPageExtraData"
   import {extraDataLookup} from "~/models/PageInfoRow"
   import {useIgUsername} from "~/composables/states"
-  import IgPage from "~/models/IgPage";
   import type {Ref} from "vue";
+  import {PageSearch} from "~/models/PageSearch";
 
   const nuxt = useNuxtApp();
 
-  const shop = ref<IgPage>(null)
+  const shop = ref<PageSearch>(null)
   const {categories, tagsLookup} = useTags()
   const selectedTag = ref("")
 

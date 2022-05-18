@@ -39,5 +39,5 @@ export class PageSearch {
     lastMediaData?: IgMedia;
     mediaCodes: string[];
 
-    extraData: IgPageExtraData;
+    extraData?: IgPageExtraData;
 }

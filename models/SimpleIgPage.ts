@@ -1,6 +1,6 @@
-import IgPage from "~/models/IgPage";
+import {PageSearch} from "~/models/PageSearch";
 
-export type SimpleIgPage = Pick<IgPage,
+export type SimpleIgPage = Pick<PageSearch,
     "_id" |
     "fullName" |
     "pk" |

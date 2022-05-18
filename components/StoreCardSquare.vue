@@ -84,15 +84,17 @@
 </template>
 <script setup lang="ts">
 import {PropType} from "vue";
-import IgPage from '~/models/IgPage';
 import dayjs from "dayjs";
 import PageInfoRow from "~/models/PageInfoRow";
+import {PageSearch} from "~/models/PageSearch";
 
 const {tagsLookup} = useTags()
-const {shop} = defineProps({
-  shop: Object as PropType<IgPage>,
+const {
+  shop
+} = defineProps({
+  shop: Object as PropType<PageSearch>,
   showLocations: {type: Boolean, default: false}
-})
+}) as {shop: PageSearch, showLocations: boolean}
 
 const {
   _id,
@@ -101,7 +103,6 @@ const {
   lastActivity,
   followerCount,
   mediaCount,
-  mediaUrls,
   mediaCodes,
   profilePicUrl,
   tags,

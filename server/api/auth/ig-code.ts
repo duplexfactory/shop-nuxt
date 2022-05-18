@@ -116,9 +116,10 @@ export default defineEventHandler(async (event) => {
         }
         await pageSearchCollection.updateOne({_id: pageId}, {$set: p}, {upsert: true})
         await pageCollection().doc(pageId).set(p, {merge: true})
-    } else {
-        await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
     }
+    // else {
+    //     await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
+    // }
 
     // fetch medias
     const mediaUrl = new URL("https://graph.instagram.com/me/media")

@@ -1,38 +1,20 @@
-import {pageCollection} from "~/server/firebase/collections"
 import {defineEventHandler, JSONValue, sendError, useQuery} from "h3"
-import type IgPage from "~/models/IgPage"
-import {DocumentSnapshot, QuerySnapshot} from "@google-cloud/firestore"
 import {notFound} from "~/utils/h3Error"
 import {assert, guard} from "~/server/util"
+import {PageSearch} from "~/models/PageSearch";
+import {pageSearchCollection} from "~/server/mongodb";
 
 export default defineEventHandler(async (event) => {
     const {id, username} = await useQuery(event) as { id: string | undefined, username: string | undefined }
 
-    let pageDoc: DocumentSnapshot<IgPage> | QuerySnapshot<IgPage>
-    let exists: boolean
+    let page: PageSearch | null;
     if (!!id) {
-        pageDoc = await pageCollection().doc(id).get()
-        exists = pageDoc.exists
+        page = await pageSearchCollection.findOne({_id: id});
     } else {
-        pageDoc = await pageCollection().where("username", "==", username).get()
-        exists = !pageDoc.empty
+        page = await pageSearchCollection.findOne({username});
     }
 
-    assert(exists, notFound)
-
-    const data = pageDoc.data()
-    let page: IgPage
-    if (data instanceof Array) {
-        if (data.length !== 0) {
-            page = data[0]
-        } else {
-            throw sendError(event, notFound)
-        }
-    } else {
-        page = data
-    }
-
-    guard(page.deleted, notFound)
+    assert(page, notFound);
 
     // const now = Date.now()
     // if (now - page.profilePicLastFetch > 2 * 24 * 60 * 60 * 1000) {

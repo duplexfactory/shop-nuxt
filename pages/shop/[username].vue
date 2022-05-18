@@ -118,6 +118,8 @@
 
 <script setup lang="ts">
 
+  import {PageSearch} from "~/models/PageSearch";
+
   const {tagsLookup, categories} = useTags()
 
   const verifiedPage = true
@@ -148,7 +150,6 @@
   // };
 
   // Page Data Init
-  import IgPage from "~/models/IgPage"
   import PageInfoRow from "~/models/PageInfoRow"
   import dayjs from "dayjs"
 
@@ -161,19 +162,7 @@
   //   throwError(notFound);
   // }
 
-  const page = computed<IgPage>(() => found.value? data.value?.page as IgPage || null : {
-      _id: "",
-      temp: true,
-      pk: 0,
-      username: route.params.username,
-      fullName: "",
-      biography: "",
-      mediaCount: 0,
-      adult: false,
-      locations: [],
-      extraData: {},
-      tags: [],
-    } as IgPage)
+  const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null);
   const lastActive = computed(() => (found.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).format("DD/MM/YYYY") : "")
   const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value))
 

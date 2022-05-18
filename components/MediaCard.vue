@@ -15,13 +15,13 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
-import IgPage from "~/models/IgPage";
 import dayjs from "dayjs";
+import {PageSearch} from "~/models/PageSearch";
 
 const {tagsLookup} = useTags()
 const {media, shop} = defineProps({
   media: Object as PropType<IgMedia>,
-  shop: Object as PropType<Partial<IgPage>>,
+  shop: Object as PropType<Partial<PageSearch>>,
 })
 
 const {
