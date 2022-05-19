@@ -120,14 +120,13 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import IgPage from '~/models/IgPage';
 import {PageSearch} from "~/models/PageSearch";
 import dayjs from "dayjs";
 import PageInfoRow from "~/models/PageInfoRow";
 
 const {tagsLookup} = useTags()
 const {shop} = defineProps({
-  shop: Object as PropType<IgPage | PageSearch>
+  shop: Object as PropType<PageSearch>
 })
 //
 // const {

@@ -1,6 +1,5 @@
 import {defineEventHandler, JSONValue, sendError, useBody} from "h3";
 import {assert, getAuth, noCache} from "~/server/util";
-import IgPage from "~/models/IgPage";
 import {igAuthCollection, initMongo, pageOverrideCollection, pageSearchCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";
 import {pageCollection} from "~/server/firebase/collections";

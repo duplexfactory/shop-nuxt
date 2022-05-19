@@ -47,11 +47,11 @@
   import "swiper/css/pagination"
   import {PropType} from "vue"
   import loadIGEmbeds from "~/utils/loadIGEmbeds"
-  import IgPage from "~/models/IgPage"
   import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
   import useMediaPrice from "~/composables/useMediaPrice"
+  import {PageSearch} from "~/models/PageSearch";
 
-  const {lastMediaPage} = defineProps({lastMediaPage: Array as PropType<Pick<IgPage, "lastMediaData" | "fullName" | "_id" | "username">[]>})
+  const {lastMediaPage} = defineProps({lastMediaPage: Array as PropType<Pick<PageSearch, "lastMediaData" | "fullName" | "_id" | "username">[]>})
 
   const showMediaModal = useShowMediaModal()
   const showingMediaModalData = useShowingMediaModalData()

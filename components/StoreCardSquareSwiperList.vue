@@ -51,7 +51,7 @@
   import {PropType} from "vue"
   import {PageSearch} from "~/models/PageSearch";
 
-  const {shops} = defineProps({shops: Array as PropType<PageSearch[]>}) as { shops: PageSearch[]}
+  const {shops} = defineProps({shops: Array as PropType<PageSearch[]>})
 
   const {
     swiper,

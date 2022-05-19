@@ -20,14 +20,13 @@ export default interface IgPage {
     deleted: boolean
     adult: boolean
 
-    lastStory: number
     lastMedia: number
     lastFetch: number
     nextFetch: number
     profilePicLastFetch: number;
+    triggered: number;
     lastActivity: number
     tier: number
-
     temp?: boolean
 
     // sub-docs
@@ -46,7 +45,6 @@ export default interface IgPage {
 
     // denormalize
     lastMediaData?: IgMedia;
-    mediaUrls: string[];
     mediaCodes: string[];
 
     extraData?: IgPageExtraData;

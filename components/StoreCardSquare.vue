@@ -94,7 +94,7 @@ const {
 } = defineProps({
   shop: Object as PropType<PageSearch>,
   showLocations: {type: Boolean, default: false}
-}) as {shop: PageSearch, showLocations: boolean}
+})
 
 const {
   _id,

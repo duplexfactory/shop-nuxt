@@ -37,9 +37,9 @@
   import "swiper/css/navigation"
   import "swiper/css/pagination"
   import {PropType} from "vue"
-  import IgPage from "~/models/IgPage"
+  import {PageSearch} from "~/models/PageSearch";
 
-  const {shops} = defineProps({shops: Array as PropType<IgPage[]>})
+  const {shops} = defineProps({shops: Array as PropType<PageSearch[]>})
 
   const {
     swiper,

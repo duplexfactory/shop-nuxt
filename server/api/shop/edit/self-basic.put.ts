@@ -1,9 +1,9 @@
 import {defineEventHandler, JSONValue, sendError, useBody} from "h3"
 import {assert, getAuth, noCache} from "~/server/util"
-import IgPage from "~/models/IgPage"
 import {igAuthCollection, initMongo, pageOverrideCollection, pageSearchCollection} from "~/server/mongodb"
 import {notFound} from "~/utils/h3Error"
 import {pageCollection} from "~/server/firebase/collections"
+import {PageSearch} from "~/models/PageSearch";
 
 export default defineEventHandler(async (event) => {
     noCache(event)
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
         fullName,
         biography,
         tags
-    } = await useBody<Partial<Pick<IgPage, "username" | "fullName" | "biography" | "tags">>>(event)
+    } = await useBody<Partial<Pick<PageSearch, "username" | "fullName" | "biography" | "tags">>>(event)
 
     const updateData = {
         username,
