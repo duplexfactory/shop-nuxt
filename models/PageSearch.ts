@@ -38,6 +38,7 @@ export class PageSearch {
     // denormalize
     lastMediaData?: IgMedia;
     mediaCodes: string[];
+    igConnected: boolean;
 
     extraData?: IgPageExtraData;
 }
