@@ -112,14 +112,17 @@ export default defineEventHandler(async (event) => {
             locations: [],
             extraData: {},
             tags: [],
-            deleted: false
+            deleted: false,
+            igConnected: true
         }
         await pageSearchCollection.updateOne({_id: pageId}, {$set: p}, {upsert: true})
         await pageCollection().doc(pageId).set(p, {merge: true})
     }
-    // else {
-    //     await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
-    // }
+    else {
+        await pageSearchCollection.updateOne({_id: pageId}, {$set: {igConnected: false}})
+        await pageCollection().doc(pageId).update({igConnected: false})
+        // await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
+    }
 
     // fetch medias
     const mediaUrl = new URL("https://graph.instagram.com/me/media")
