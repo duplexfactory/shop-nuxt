@@ -155,7 +155,8 @@ export default defineEventHandler(async (event) => {
             lastMedia: lastMedia.takenAt,
             lastActivity: lastMedia.takenAt,
             lastMediaData: lastMedia,
-            mediaCount: media_count
+            mediaCount: media_count,
+            mediaCodes: dMedias.map((m) => m.code)
         }
         await pageSearchCollection.updateOne({_id: pageId}, {$set: update})
         await pageCollection().doc(pageId).update(update)
