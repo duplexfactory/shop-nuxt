@@ -119,8 +119,8 @@ export default defineEventHandler(async (event) => {
         await pageCollection().doc(pageId).set(p, {merge: true})
     }
     else {
-        await pageSearchCollection.updateOne({_id: pageId}, {$set: {igConnected: false}})
-        await pageCollection().doc(pageId).update({igConnected: false})
+        await pageSearchCollection.updateOne({_id: pageId}, {$set: {igConnected: true}})
+        await pageCollection().doc(pageId).update({igConnected: true})
         // await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
     }
 

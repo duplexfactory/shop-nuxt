@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
     const igAuth = await igAuthCollection.findOneAndDelete({userId: auth.uid})
     if (igAuth.value?.pageId) {
         initFirebase()
-        await pageSearchCollection.updateOne({_id: igAuth.value.pageId}, {$set: {igConnected: true}})
-        await pageCollection().doc(igAuth.value.pageId).update({igConnected: true})
+        await pageSearchCollection.updateOne({_id: igAuth.value.pageId}, {$set: {igConnected: false}})
+        await pageCollection().doc(igAuth.value.pageId).update({igConnected: false})
     //     await pageCollection().doc(igAuth.value.pageId).update({deleted: true})
     //     pageSearchCollection.deleteOne()
     }
