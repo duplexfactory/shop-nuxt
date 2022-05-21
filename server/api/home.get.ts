@@ -15,8 +15,9 @@ const cardFields = [
     "mediaCodes",
     "profilePicUrl",
     "tags",
-    "locations"
-] as const
+    "locations",
+    "igConnected"
+] as ReadonlyArray<(keyof PageSearch)>
 
 const cardProj = cardFields.reduce((obj, k) => Object.assign(obj, {[k]: 1}), {})
 const extraProj = {...cardProj, extraData: 1}

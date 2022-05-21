@@ -60,6 +60,7 @@
         </div>
 
         <div class="col-span-1">
+
             <template v-if="verifiedPage && mediaCodes">
                 <div class="image-container aspect-square" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
                 <div class="flex" style="margin-top: 2px;">
@@ -107,12 +108,13 @@ const {
   profilePicUrl,
   tags,
   locations,
-  extraData
+  extraData,
+  igConnected,
 } = shop;
 const lastActive = dayjs(lastActivity * 1000).format('DD/MM/YYYY');
 const description = 'description';
 
-const verifiedPage = false;
+const verifiedPage = igConnected;
 const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(shop).filter((r) => !["address", "whatsapp", "wechat", "signal", "email", "shopSince", "relatedPage"].includes(r.key)));
 
 const contactInfoRows = computed(() => PageInfoRow.rowsFromExtraData(extraData, ["whatsapp", "wechat", "signal"]));
