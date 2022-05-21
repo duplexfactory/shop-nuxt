@@ -112,7 +112,6 @@
         </div>
       </section>
     </div>
-
   </div>
 </template>
 
@@ -121,8 +120,6 @@
   import {PageSearch} from "~/models/PageSearch";
 
   const {tagsLookup, categories} = useTags()
-
-  const verifiedPage = true
 
   // const page = {
   //   lastActivity: 0,
@@ -163,6 +160,7 @@
   // }
 
   const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null);
+  const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false);
   const lastActive = computed(() => (found.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).format("DD/MM/YYYY") : "")
   const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value))
 
