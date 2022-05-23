@@ -1,5 +1,6 @@
 import IgPageExtraData from "~/models/IgPageExtraData";
 import IgMedia from "~/models/IgMedia";
+import IgPage from "~/models/IgPage";
 
 export class PageSearch {
     _id: string;
@@ -41,4 +42,39 @@ export class PageSearch {
     igConnected: boolean;
 
     extraData?: IgPageExtraData;
+}
+
+export function createPageSearchDoc(id: string, page: Partial<IgPage>): Partial<PageSearch> {
+    return {
+        _id: id,
+        pk: page.pk,
+        username: page.username,
+        fullName: page.fullName,
+        biography: page.biography,
+
+        mediaCount: page.mediaCount,
+        followerCount: page.followerCount,
+        followingCount: page.followingCount,
+        externalUrl: page.externalUrl,
+        profilePicUrl: page.profilePicUrl,
+
+        adult: page.adult,
+
+        tags: page.tags,
+        businessRegistration: page.businessRegistration,
+        brickAndMortar: page.brickAndMortar,
+        locations: page.locations,
+
+        activeScore: page.activeScore,
+
+        mediaCodes: page.mediaCodes,
+
+        nextFetch: page.nextFetch,
+
+        lastActivity: page.lastActivity,
+        lastMedia: page.lastMedia,
+        lastMediaData: page.lastMediaData,
+
+        extraData: page.extraData,
+    };
 }

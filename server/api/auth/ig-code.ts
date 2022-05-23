@@ -9,7 +9,7 @@ import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
 import {initDynamo, saveMedias} from "~/server/dynamodb"
 import {pageCollection} from "~/server/firebase/collections"
-import {PageSearch} from "~/models/PageSearch";
+import {createPageSearchDoc, PageSearch} from "~/models/PageSearch";
 
 interface RawMedia {
     "caption": string,
@@ -121,22 +121,9 @@ export default defineEventHandler(async (event) => {
         await pageCollection().doc(pageId).set(p, {merge: true})
     }
     else {
-        const p: Partial<IgPage> = {
-            _id: pageId,
-            temp: true,
-            pk: page.pk,
-            username,
-            fullName: page.fullName,
-            biography: page.biography,
-            mediaCount: page.mediaCount,
-            nextFetch: page.nextFetch,
-            adult: page.adult,
-            locations: page.locations,
-            extraData: page.extraData,
-            tags: page.tags,
-            deleted: false,
-            igConnected: true
-        }
+        const p: Partial<IgPage> = createPageSearchDoc(pageId, page)
+        p.deleted = false
+        p.igConnected = true
         await pageSearchCollection.updateOne({_id: pageId}, {$set: p}, {upsert: true})
         await pageCollection().doc(pageId).update({igConnected: true, deleted: false}) // set deleted to false incas deleted in crawler project.
         // await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
