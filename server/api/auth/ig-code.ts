@@ -9,6 +9,7 @@ import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
 import {initDynamo, saveMedias} from "~/server/dynamodb"
 import {pageCollection} from "~/server/firebase/collections"
+import {PageSearch} from "~/models/PageSearch";
 
 interface RawMedia {
     "caption": string,
@@ -83,7 +84,8 @@ export default defineEventHandler(async (event) => {
         }
     }))
 
-    const page = await pageSearchCollection.findOne({username}) as { _id: string }
+    const pageDoc = await pageCollection().where("username", "==", username).get();
+    const [page] = pageDoc.data();
     const pageId = page ? page._id : nanoid()
 
     await igAuthCollection.updateOne({username}, {
@@ -119,8 +121,24 @@ export default defineEventHandler(async (event) => {
         await pageCollection().doc(pageId).set(p, {merge: true})
     }
     else {
-        await pageSearchCollection.updateOne({_id: pageId}, {$set: {igConnected: true}})
-        await pageCollection().doc(pageId).update({igConnected: true})
+        const p: Partial<IgPage> = {
+            _id: pageId,
+            temp: true,
+            pk: page.pk,
+            username,
+            fullName: page.fullName,
+            biography: page.biography,
+            mediaCount: page.mediaCount,
+            nextFetch: page.nextFetch,
+            adult: page.adult,
+            locations: page.locations,
+            extraData: page.extraData,
+            tags: page.tags,
+            deleted: false,
+            igConnected: true
+        }
+        await pageSearchCollection.updateOne({_id: pageId}, {$set: p}, {upsert: true})
+        await pageCollection().doc(pageId).update({igConnected: true, deleted: false}) // set deleted to false incas deleted in crawler project.
         // await pageCollection().doc(pageId).set({mediaCount: media_count, deleted: false}, {merge: true})
     }
 
