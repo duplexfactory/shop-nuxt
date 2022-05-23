@@ -133,6 +133,7 @@
                   <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
                   <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
                   <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
+                  <div class="mt-4 text-gray-400">註冊即代表你已同意Shoperuse的<nuxt-link class="hover:underline" to="/privacy-policy">《私隱條款》</nuxt-link></div>
                 </div>
               </div>
             </div>
