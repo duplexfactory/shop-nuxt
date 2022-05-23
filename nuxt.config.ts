@@ -120,6 +120,7 @@ export default defineNuxtConfig({
       cacheTime: duration(6, "hours").asMilliseconds(),
       exclude: [
         '/hidden/**',
+        '/my',
         '/my/**',
       ],
       async routes() {
