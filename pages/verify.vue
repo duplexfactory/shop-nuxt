@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="flex items-center mt-8">
-                  <button class="btn btn-primary">立即免費認證</button>
+                  <button @click="scrollToVerify" class="btn btn-primary">立即免費認證</button>
                   <span class="mx-4">或</span>
                   <button>了解更多</button>
                 </div>
@@ -50,7 +50,7 @@
         </section>
 
 
-        <section>
+        <section ref="verifySection">
           <div class="container mx-auto">
             <h2 class="text-4xl md:text-5xl font-bold text-center">
               輕鬆兩步認證
@@ -174,6 +174,18 @@
         <!--</section>-->
     </div>
 </template>
+
+<script lang="ts" setup>
+
+const verifySection = ref(null);
+function scrollToVerify() {
+  if (verifySection.value !== null) {
+    // Use el.scrollIntoView() to instantly scroll to the element
+    verifySection.value.scrollIntoView({behavior: 'smooth'});
+  }
+}
+
+</script>
 
 <script lang="ts">
     import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
