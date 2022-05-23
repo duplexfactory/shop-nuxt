@@ -2,8 +2,14 @@ import { defineConfig } from 'windicss/helpers'
 import colors from 'windicss/colors'
 import plugin from 'windicss/plugin'
 
+const windiBreakpoints = ['', 'xs:', 'sm:', 'lg:', 'xl:', '2xl:'];
+
 export default defineConfig({
-  safelist: 'hidden xs:hidden sm:hidden lg:hidden xl:hidden 2xl:hidden xs:flex sm:flex lg:flex xl:flex 2xl:flex',
+  safelist: [
+    windiBreakpoints.map((s) => `${s}hidden`),
+    windiBreakpoints.map((s) => `${s}flex`),
+    ['none', ...Array(7).fill(0).map((_, i) => `${i + 1}`)].map((s) => `line-clamp-${s}`),
+  ],
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
