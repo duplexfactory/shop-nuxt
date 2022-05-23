@@ -2,11 +2,12 @@ import {defineEventHandler, JSONValue, sendError, useQuery} from "h3"
 import {notFound} from "~/utils/h3Error"
 import {assert, guard} from "~/server/util"
 import {PageSearch} from "~/models/PageSearch";
-import {pageSearchCollection} from "~/server/mongodb";
+import {initMongo, pageSearchCollection} from "~/server/mongodb";
 
 export default defineEventHandler(async (event) => {
     const {id, username} = await useQuery(event) as { id: string | undefined, username: string | undefined }
 
+    await initMongo();
     let page: PageSearch | null;
     if (!!id) {
         page = await pageSearchCollection.findOne({_id: id});
