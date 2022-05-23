@@ -26,7 +26,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig)
-        const analytics = config.DEV ? getAnalytics(app) : undefined
+        const analytics = config.DEV ? undefined : getAnalytics(app)
 
         // const auth = getAuth(app);
         // isLoggedIn.value = await new Promise((resolve: any, reject: any) =>
