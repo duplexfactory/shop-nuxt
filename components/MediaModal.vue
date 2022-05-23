@@ -6,6 +6,7 @@
           <template v-if="localMediaCode && localPage">
             <MediaCard v-if="localPage.igConnected"
                        size="l"
+                       contentClamp="none"
                        :media="localMedia"
                        :shop="localPage"></MediaCard>
             <MediaCardIGEmbed v-else captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
