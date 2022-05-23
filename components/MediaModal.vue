@@ -3,7 +3,13 @@
     <template #body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
-          <MediaCardIGEmbed v-if="localMediaCode && localPage" captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
+          <template v-if="localMediaCode && localPage">
+            <MediaCard v-if="localPage.igConnected"
+                       size="l"
+                       :media="localMedia"
+                       :shop="localPage"></MediaCard>
+            <MediaCardIGEmbed v-else captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
+          </template>
         </div>
         <div class="col-span-4">
           <div class="mt-4 md:mt-0">

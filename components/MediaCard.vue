@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="$imageUrl(code)"></div>
+    <div class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="$imageUrl(code, size)"></div>
     <div style="aspect-ratio: 1.5;" class="pt-2 overflow-hidden flex flex-col">
       <div class="text-sm whitespace-pre-wrap overflow-hidden line-clamp-7" style="flex-shrink: 1;">{{ caption }}</div>
       <div v-if="!!mediaPrice(media)" class="mt-2 text-pink-700">{{ formatMediaPrice(mediaPrice(media)) }}</div>
@@ -19,9 +19,10 @@ import dayjs from "dayjs";
 import {PageSearch} from "~/models/PageSearch";
 
 const {tagsLookup} = useTags()
-const {media, shop} = defineProps({
+const {media, shop, size} = defineProps({
   media: Object as PropType<IgMedia>,
   shop: Object as PropType<Partial<PageSearch>>,
+  size: {type: String, default: "m"}, // m or l
 })
 
 const {
