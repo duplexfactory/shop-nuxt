@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
 
     const pageDoc = await pageCollection().where("username", "==", username).get();
     const [page] = pageDoc.data();
-    const pageId = page ? page._id : nanoid()
+    const pageId = page ? (page._id || page.pk.toString()) : nanoid()
 
     await igAuthCollection.updateOne({username}, {
         $set: {
