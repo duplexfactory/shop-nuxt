@@ -11,18 +11,12 @@
           </div>
           <div>
             <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
-            <div v-if="lastActive" class="text-gray-400 text-xs">最後活躍 {{ lastActive }}</div>
           </div>
 
-          <div class="my-4 flex text-gray-500 text-sm">
-            <div class="text-center flex-1">
-              <div>粉絲</div>
-              <div>{{ !!page.followerCount ? page.followerCount.toLocaleString() : "-" }}</div>
-            </div>
-            <div class="bg-gray-300 mx-4" style="width: 1px;"></div>
-            <div class="text-center flex-1">
-              <div>貼文</div>
-              <div>{{ page.mediaCount.toLocaleString() }}</div>
+          <div class="my-4 flex">
+            <div v-for="metric in pageMetrics" :key="'metric-' + metric.title" class="flex-1 text-sm">
+              <div class="text-gray-500">{{ metric.title }}</div>
+              <div class="font-semibold text-gray-800">{{ metric.value }}</div>
             </div>
           </div>
 
@@ -161,10 +155,27 @@
 
   const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null);
   const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false);
-  const lastActive = computed(() => (found.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).format("DD/MM/YYYY") : "")
+  const lastActive = computed(() => (found.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).fromNow() : "")
   const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value))
 
   const selectedIndex = ref(0)
+
+  const pageMetrics = computed<{title: string, value: string}[]>(() => {
+    return [
+      {
+        title: "粉絲",
+        value: !!page.value.followerCount ? page.value.followerCount.toLocaleString() : "-"
+      },
+      {
+        title: "貼文",
+        value: page.value.mediaCount.toLocaleString()
+      },
+      {
+        title: "最後活躍",
+        value: lastActive.value
+      },
+    ]
+  });
 
   // Medias
   let mediaPending = ref(false)
