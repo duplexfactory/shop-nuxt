@@ -168,7 +168,7 @@ export default class PageInfoRow {
                 purchase += "（不設退款）";
             if (purchase.length !== 0)
                 rows.push(new PageInfoRow("paymentMethods", "spr-money", purchase));
-            if (!!extraData.mailing)
+            if (!!extraData.mailing && extraData.mailing.length !== 0)
                 rows.push(new PageInfoRow("mailing", "spr-paper-plane", extraData.mailing.join("、"))); // 全球免郵之類
             if (!!extraData.discount)
                 rows.push(new PageInfoRow("discount", "spr-tag", extraData.discount)); // 全單8折
