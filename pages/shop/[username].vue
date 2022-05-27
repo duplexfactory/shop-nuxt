@@ -110,8 +110,14 @@
 </template>
 
 <script setup lang="ts">
-
   import {PageSearch} from "~/models/PageSearch";
+  import PageInfoRow from "~/models/PageInfoRow"
+  import dayjs from "dayjs"
+  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
+  import IgPageReview from "~/models/IgPageReview"
+  import useCreateReview from "~/composables/useCreateReview"
+  import IgMedia from "~/models/IgMedia"
+  import useMediaPrice from "~/composables/useMediaPrice"
 
   const {tagsLookup, categories} = useTags()
 
@@ -141,8 +147,6 @@
   // };
 
   // Page Data Init
-  import PageInfoRow from "~/models/PageInfoRow"
-  import dayjs from "dayjs"
 
   const config = useRuntimeConfig()
   const route = useRoute()
@@ -180,8 +184,30 @@
   // Medias
   let mediaPending = ref(false)
   const medias = ref([])
+  const nextToken = ref("")
 
-  async function fetchMedias() {
+  async function fetchOfficialMedias() {
+    const params = {
+      id: page.value._id,
+      limit: 12
+    }
+    if (nextToken.value) params["token"] = nextToken.value
+
+    const {data: mediaData, pending} = await useLazyFetch(`/api/media/list/official`, {params})
+    if (mediaData.value != null) {
+      medias.value = [...medias.value, ...mediaData.value.medias]
+      nextToken.value = mediaData.value.nextToken
+      mediaPending.value = false
+    } else {
+      // Client navigation.
+      watch(mediaData, (newData) => {
+        medias.value = [...medias.value, ...newData.medias]
+        nextToken.value = mediaData.value.nextToken
+        mediaPending.value = false
+      })
+    }
+  }
+  async function fetchDynamoMedias() {
     const params = {
       username: route.params.username,
       limit: 12
@@ -189,6 +215,7 @@
     if (medias.value.length != 0) {
       params["before"] = medias.value[medias.value.length - 1].takenAt
     }
+
     const {data: mediaData, pending} = await useLazyFetch(`/api/media/list`, {params})
     if (mediaData.value != null) {
       medias.value = [...medias.value, ...mediaData.value.medias]
@@ -201,9 +228,11 @@
       })
     }
   }
-
-  if(found.value) await fetchMedias()
-  else watch(found, async (f) => {
+  async function fetchMedias() {
+    return (page.value.igConnected) ? fetchOfficialMedias() : fetchDynamoMedias()
+  }
+  if(page.value) await fetchMedias()
+  else watch(page, async (f) => {
     if(f) await fetchMedias()
   })
 
@@ -281,7 +310,6 @@
   }))
 
   // Media Modal
-  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
 
   const showModal = useShowMediaModal()
   const showingMediaModalData = useShowingMediaModalData()
@@ -307,7 +335,6 @@
   }
 
   // Reviews
-  import IgPageReview from "~/models/IgPageReview"
 
   const reviews = ref<IgPageReview[]>([])
 
@@ -321,9 +348,6 @@
   }
 
   // Create Review
-  import useCreateReview from "~/composables/useCreateReview"
-  import IgMedia from "~/models/IgMedia"
-  import useMediaPrice from "~/composables/useMediaPrice"
 
   const {
     reviewingPageId,

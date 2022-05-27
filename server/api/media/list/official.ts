@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1}})
     assert(p, notFound)
 
-    const {medias, nextToken} = await fetchIgMedias(p.accessToken, true, {
+    const {medias, nextToken} = await fetchIgMedias(id, p.accessToken, true, {
         limit: Number(limit),
         after: token
     })
