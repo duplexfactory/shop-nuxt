@@ -1,10 +1,10 @@
-import {defineEventHandler, JSONValue, useQuery} from 'h3';
-import {initMongo, pageSearchCollection} from "~/server/mongodb";
-import {PageSearch} from "~/models/PageSearch";
-import {Filter} from "mongodb";
+import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {initMongo, pageSearchCollection} from "~/server/mongodb"
+import {PageSearch} from "~/models/PageSearch"
+import {Filter, RootFilterOperators} from "mongodb"
 
 function escapeRegExp(string: string): string {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // $& means the whole matched string
 }
 
 export default defineEventHandler(async (event) => {
@@ -16,27 +16,35 @@ export default defineEventHandler(async (event) => {
         skip,
         limit,
         adult
-    } = await useQuery(event) as { q?: string, tag?: string, br?: string, phy?: string, skip: string, limit: string, adult: string };
+    } = await useQuery(event) as { q?: string, tag?: string, br?: string, phy?: string, skip: string, limit: string, adult: string }
 
-    const f: Filter<PageSearch> = q ? {
-        $or: [
-            {username: {$regex: escapeRegExp(q), $options: "i"}},
-            {fullName: {$regex: escapeRegExp(q), $options: "i"}},
-            {biography: {$regex: escapeRegExp(q), $options: "i"}},
-        ]
-    } : {};
+    let f: Filter<PageSearch> = {}
 
-    if (tag) f.tags = tag;
-    if (br) f.businessRegistration = true;
-    if (phy) f.brickAndMortar = true;
-    if (adult !== "true") f.adult = false;
+    if (q) {
+        const keywords = q.split(" ");
+        (f as RootFilterOperators<PageSearch>).$and = keywords.map(keyword => ({
+            $or: [
+                {username: {$regex: escapeRegExp(keyword), $options: "i"}},
+                {fullName: {$regex: escapeRegExp(keyword), $options: "i"}},
+                {biography: {$regex: escapeRegExp(keyword), $options: "i"}},
+            ]
+        }))
+    }
 
-    await initMongo();
+    if (tag) f.tags = tag
+    if (br) f.businessRegistration = true
+    if (phy) f.brickAndMortar = true
+    if (adult !== "true") f.adult = false
 
-    event.res.setHeader("Cache-Control", "max-age=120");
+    await initMongo()
+
+    event.res.setHeader("Cache-Control", "max-age=120")
 
     return {
-        pages: await pageSearchCollection.find(f).sort({activeScore: -1, lastActivity: -1}).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
+        pages: await pageSearchCollection.find(f).sort({
+            activeScore: -1,
+            lastActivity: -1
+        }).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
         count: await pageSearchCollection.countDocuments(f)
     } as unknown as JSONValue
 
