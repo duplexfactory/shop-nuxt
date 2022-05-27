@@ -20,7 +20,7 @@ export default function () {
         }
         return {
             pages: [],
-            count: 0
+            count: -1
         };
     })
 

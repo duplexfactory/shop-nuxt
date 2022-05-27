@@ -77,7 +77,7 @@
         </div>
 
         <div class="mb-2 md:mb-4 flex items-center justify-between">
-          <h1 class="text-sm text-gray-500">共 {{ searchResultTotalCount }} 間商店</h1>
+          <h1 class="text-sm text-gray-500">共 {{ searchResultTotalCount >= 0? searchResultTotalCount : "..." }} 間商店</h1>
 
           <Pagination v-if="searchResults.length !== 0"
                       v-model:currentPage="currentPage"
