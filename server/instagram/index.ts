@@ -8,12 +8,12 @@ export interface IgOfficialMedia {
     media_url?: string
 }
 
-export async function fetchIgMedias(pageId: string, token: string, returnMediaUrl: boolean, pg?: { limit: number, after?: string }) {
+export async function fetchIgMedias(pageId: string, token: string, returnMediaUrl: boolean, pg?: { limit: number, until?: number }) {
     const mediaUrl = new URL("https://graph.instagram.com/me/media")
     mediaUrl.searchParams.set("fields", "caption,permalink,timestamp" + (returnMediaUrl ? ",media_url" : ""))
     mediaUrl.searchParams.set("access_token", token)
     if (pg?.limit) mediaUrl.searchParams.set("limit", pg.limit.toString())
-    if (pg?.after) mediaUrl.searchParams.set("after", pg.after)
+    if (pg?.until) mediaUrl.searchParams.set("until", pg.until.toString())
     const mediaRes = await fetch(mediaUrl.href)
     const {data, paging} = await mediaRes.json() as {
         data: IgOfficialMedia[]
@@ -29,8 +29,5 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
     medias.forEach(m => {
         if (!m.mediaUrl) delete m.mediaUrl
     })
-    return {
-        medias,
-        nextToken: paging?.cursors?.after
-    }
+    return medias
 }

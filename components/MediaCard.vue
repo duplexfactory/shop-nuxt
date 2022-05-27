@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="$imageUrl(code, size)"></div>
+    <div class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="mediaUrl || $imageUrl(code, size)"></div>
 
     <!-- style="aspect-ratio: 1.5;"  -->
     <div class="pt-2 overflow-hidden flex flex-col">
@@ -29,17 +29,14 @@ const {media, shop, size} = defineProps({
 })
 
 const {
-  id,
+  pageId,
   code,
-  coverImageUrl,
   caption,
-
-  likeCount,
-  commentCount,
 
   takenAt,
 
   price,
+  mediaUrl
 } = media;
 
 const takenAtString = dayjs(takenAt * 1000).fromNow();

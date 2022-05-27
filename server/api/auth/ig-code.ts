@@ -124,7 +124,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // fetch medias
-    const {medias} = await fetchIgMedias(pageId, longToken, false)
+    const medias = await fetchIgMedias(pageId, longToken, false)
 
     if (medias.length) {
         initDynamo()

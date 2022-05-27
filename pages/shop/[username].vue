@@ -183,26 +183,25 @@
 
   // Medias
   let mediaPending = ref(false)
-  const medias = ref([])
-  const nextToken = ref("")
+  const medias = ref<IgMedia[]>([])
 
   async function fetchOfficialMedias() {
     const params = {
       id: page.value._id,
       limit: 12
     }
-    if (nextToken.value) params["token"] = nextToken.value
+
+    const ms = medias.value
+    if (ms.length) params["until"] = ms[ms.length - 1].takenAt
 
     const {data: mediaData, pending} = await useLazyFetch(`/api/media/list/official`, {params})
     if (mediaData.value != null) {
       medias.value = [...medias.value, ...mediaData.value.medias]
-      nextToken.value = mediaData.value.nextToken
       mediaPending.value = false
     } else {
       // Client navigation.
       watch(mediaData, (newData) => {
         medias.value = [...medias.value, ...newData.medias]
-        nextToken.value = mediaData.value.nextToken
         mediaPending.value = false
       })
     }
@@ -237,7 +236,7 @@
   })
 
   async function showMedia(i: number) {
-    if (i == medias.value.length - 1 && !mediaPending.value) {
+    if (i == medias.value.length - 1 && !mediaPending.value && medias.value.length < page.value.mediaCount) {
       mediaPending.value = true
       await fetchMedias()
     }

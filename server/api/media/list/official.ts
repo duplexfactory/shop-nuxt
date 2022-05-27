@@ -8,21 +8,20 @@ export default defineEventHandler(async (event) => {
     let {
         id,
         limit,
-        token
-    } = await useQuery(event) as { id: string, limit: string, token?: string }
+        until
+    } = await useQuery(event) as { id: string, limit: string, until?: string }
 
     await initMongo()
     const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1}})
     assert(p, notFound)
 
-    const {medias, nextToken} = await fetchIgMedias(id, p.accessToken, true, {
+    const medias = await fetchIgMedias(id, p.accessToken, true, {
         limit: Number(limit),
-        after: token
+        until: until? Number(until) - 1 : undefined
     })
 
     return {
-        medias,
-        nextToken: nextToken || ""
+        medias
     } as unknown as JSONValue
     // { medias: IgMedia[] }
 })
