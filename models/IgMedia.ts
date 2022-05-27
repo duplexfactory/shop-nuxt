@@ -7,4 +7,6 @@ export default interface IgMedia {
 
     price?: number;
     patchPrice?: number;
+
+    mediaUrl?: string; // only from official
 }

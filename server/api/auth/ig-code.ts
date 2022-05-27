@@ -9,13 +9,8 @@ import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
 import {initDynamo, saveMedias} from "~/server/dynamodb"
 import {pageCollection} from "~/server/firebase/collections"
-import {createPageSearchDoc, PageSearch} from "~/models/PageSearch";
-
-interface RawMedia {
-    "caption": string,
-    "permalink": string,
-    "timestamp": string
-}
+import {createPageSearchDoc, PageSearch} from "~/models/PageSearch"
+import {fetchIgMedias} from "~/server/instagram"
 
 export default defineEventHandler(async (event) => {
     noCache(event)
@@ -84,8 +79,8 @@ export default defineEventHandler(async (event) => {
         }
     }))
 
-    const pageDoc = await pageCollection().where("username", "==", username).get();
-    const [page] = pageDoc.data();
+    const pageDoc = await pageCollection().where("username", "==", username).get()
+    const [page] = pageDoc.data()
     const pageId = page ? (page._id || page.pk.toString()) : nanoid()
 
     await igAuthCollection.updateOne({username}, {
@@ -119,8 +114,7 @@ export default defineEventHandler(async (event) => {
         }
         await pageSearchCollection.updateOne({_id: pageId}, {$set: p}, {upsert: true})
         await pageCollection().doc(pageId).set(p, {merge: true})
-    }
-    else {
+    } else {
         const p: Partial<IgPage> = createPageSearchDoc(pageId, page)
         p.deleted = false
         p.igConnected = true
@@ -130,38 +124,20 @@ export default defineEventHandler(async (event) => {
     }
 
     // fetch medias
-    const mediaUrl = new URL("https://graph.instagram.com/me/media")
-    mediaUrl.searchParams.set("fields", "caption,permalink,timestamp")
-    mediaUrl.searchParams.set("access_token", longToken)
-    const mediaRes = await fetch(mediaUrl.href)
-    const mediaResJ = await mediaRes.json()
-    const {data: medias} = mediaResJ as { data: RawMedia[] }
-    assert(medias, createError({
-        statusCode: 500,
-        data: {
-            url: mediaRes.url,
-            body: mediaResJ
-        }
-    }))
+    const {medias} = await fetchIgMedias(longToken, false)
 
     if (medias.length) {
-        const dMedias: IgMedia[] = medias.map(m => ({
-            code: m.permalink.split("/").filter(t => !!t).pop(),
-            pageId,
-            caption: m.caption || "",
-            takenAt: dayjs(m.timestamp).unix(),
-        }))
         initDynamo()
-        await saveMedias(dMedias)
+        await saveMedias(medias)
 
-        const lastMedia = dMedias[0]
+        const lastMedia = medias[0]
 
         const update = {
             lastMedia: lastMedia.takenAt,
             lastActivity: lastMedia.takenAt,
             lastMediaData: lastMedia,
             mediaCount: media_count,
-            mediaCodes: dMedias.slice(0, 3).map((m) => m.code)
+            mediaCodes: medias.slice(0, 3).map((m) => m.code)
         }
         await pageSearchCollection.updateOne({_id: pageId}, {$set: update})
         await pageCollection().doc(pageId).update(update)
