@@ -21,8 +21,8 @@ export default defineEventHandler(async (event) => {
     let f: Filter<PageSearch> = {}
 
     if (q) {
-        const keywords = q.split(" ");
-        (f as RootFilterOperators<PageSearch>).$and = keywords.map(keyword => ({
+        const keywords = q.split(/\s/);
+        (f as RootFilterOperators<PageSearch>).$and = keywords.filter(k => !!k).map(keyword => ({
             $or: [
                 {username: {$regex: escapeRegExp(keyword), $options: "i"}},
                 {fullName: {$regex: escapeRegExp(keyword), $options: "i"}},
