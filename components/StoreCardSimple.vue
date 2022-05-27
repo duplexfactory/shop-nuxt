@@ -3,7 +3,7 @@
 
 <!--        <div class="rounded-full image-container aspect-square mx-auto" v-lazy:background-image="profilePicUrl" style="height: 100px;"></div>-->
 
-        <div class="mt-2 font-semibold text-lg">{{ username }}</div>
+        <nuxt-link :to="`/shop/${username}`" class="mt-2 font-semibold text-lg hover:underline">{{ username }}</nuxt-link>
 <!--        <div class="mt-1 text-gray-400 text-xs line-clamp-2" style="height: 2rem">{{ fullName }}</div>-->
         <div class="mt-2 text-sm text-gray-500">{{ `${shop.followerCount? "粉絲 " + shop.followerCount + " • " : ""}貼文 ${shop.mediaCount}` }}</div>
         <div class="mt-2 2xl:mt-2 line-clamp-1"

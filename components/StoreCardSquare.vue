@@ -6,7 +6,7 @@
 
                 <div class="overflow-hidden">
                   <div class="font-semibold text-lg truncate">
-                    <a class="hover:underline" :href="`https://www.instagram.com/${username}/`" target="_blank">{{ username }}</a>
+                    <nuxt-link class="hover:underline" :to="`/shop/${username}`">{{ username }}</nuxt-link>
                   </div>
                   <div v-if="verifiedPage" class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
                 </div>

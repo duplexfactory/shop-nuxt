@@ -11,7 +11,7 @@
              style="height: 70px;"></div>
 
         <div class="font-semibold text-lg truncate">
-          <a class="hover:underline" :href="`https://www.instagram.com/${shop.username}/`" target="_blank">{{ shop.username }}</a>
+          <nuxt-link class="hover:underline" :to="`/shop/${shop.username}`" target="_blank">{{ shop.username }}</nuxt-link>
         </div>
 
         <div class="hidden sm:block text-gray-400 font-light text-xs">最後活躍 {{ lastActive }}</div>

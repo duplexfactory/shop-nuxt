@@ -10,7 +10,10 @@
                  v-lazy="page.profilePicUrl"/>
           </div>
           <div>
-            <h1 class="font-semibold text-xl truncate">{{ page.username }}</h1>
+            <h1 class="font-semibold text-xl truncate">
+              <a :href="`https://www.instagram.com/${page.username}/`"
+                 target="_blank">{{ page.username }}</a>
+            </h1>
           </div>
 
           <div class="my-4 flex">
@@ -110,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-  import {PageSearch} from "~/models/PageSearch";
+  import {PageSearch} from "~/models/PageSearch"
   import PageInfoRow from "~/models/PageInfoRow"
   import dayjs from "dayjs"
   import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
@@ -157,14 +160,14 @@
   //   throwError(notFound);
   // }
 
-  const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null);
-  const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false);
+  const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null)
+  const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false)
   const lastActive = computed(() => (found.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).fromNow() : "")
   const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value))
 
   const selectedIndex = ref(0)
 
-  const pageMetrics = computed<{title: string, value: string}[]>(() => {
+  const pageMetrics = computed<{ title: string, value: string }[]>(() => {
     return [
       {
         title: "粉絲",
@@ -179,7 +182,7 @@
         value: lastActive.value
       },
     ]
-  });
+  })
 
   // Medias
   let mediaPending = ref(false)
@@ -206,6 +209,7 @@
       })
     }
   }
+
   async function fetchDynamoMedias() {
     const params = {
       username: route.params.username,
@@ -227,12 +231,14 @@
       })
     }
   }
+
   async function fetchMedias() {
     return (page.value.igConnected) ? fetchOfficialMedias() : fetchDynamoMedias()
   }
-  if(page.value) await fetchMedias()
+
+  if (page.value) await fetchMedias()
   else watch(page, async (f) => {
-    if(f) await fetchMedias()
+    if (f) await fetchMedias()
   })
 
   async function showMedia(i: number) {
