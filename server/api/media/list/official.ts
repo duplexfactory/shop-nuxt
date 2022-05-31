@@ -20,15 +20,19 @@ export default defineEventHandler(async (event) => {
 
     // Get existing medias from dynamo for price and patchPrice.
     initDynamo()
-    const existingMedias = await getPageMedias(id, limit ? Number(limit) : undefined, dayjs().unix())
+    const existingMedias = await getPageMedias(
+        id,
+        limit ? Number(limit) : undefined,
+        until ? Number(until) - 1 : undefined,
+    )
     let since: number | undefined;
     if (existingMedias.length) {
-        since = existingMedias[0].takenAt;
+        since = existingMedias[0].takenAt
     }
 
     const medias = await fetchIgMedias(id, p.accessToken, true, {
         limit: Number(limit),
-        until: until? Number(until) - 1 : undefined,
+        until: until ? Number(until) - 1 : undefined,
         since
     })
     medias.forEach((m) => {

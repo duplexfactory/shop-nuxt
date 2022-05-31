@@ -20,6 +20,8 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
         data: IgOfficialMedia[]
         paging: any
     }
+    if (!data)
+        return []
     const medias = data.map(m => ({
         code: m.permalink.split("/").filter(t => !!t).pop(),
         pageId,
