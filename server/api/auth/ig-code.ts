@@ -7,7 +7,7 @@ import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongod
 import {assert, getAuth, noCache} from "~/server/util"
 import IgPage from "~/models/IgPage"
 import IgMedia from "~/models/IgMedia"
-import {initDynamo, saveMedias} from "~/server/dynamodb"
+import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
 import {pageCollection} from "~/server/firebase/collections"
 import {createPageSearchDoc, PageSearch} from "~/models/PageSearch"
 import {fetchIgMedias} from "~/server/instagram"
@@ -128,6 +128,13 @@ export default defineEventHandler(async (event) => {
 
     if (medias.length) {
         initDynamo()
+
+        const oldMedias = await getPageMedias(pageId)
+        const oldMediasMap: Record<string, IgMedia> = oldMedias.reduce((prev, curr) => prev[curr.code] = curr, {})
+        medias.forEach((m) => {
+            m.price = oldMediasMap[m.code]?.price
+            m.patchPrice = oldMediasMap[m.code]?.patchPrice
+        })
         await saveMedias(medias)
 
         const lastMedia = medias[0]
