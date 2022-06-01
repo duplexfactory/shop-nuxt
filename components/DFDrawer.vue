@@ -12,15 +12,21 @@
     </div>
 
     <div class="p-4 flex-1 overflow-y-auto">
-      <template v-if="selectedBottomTabIndex == 0">
+
+      <div class="font-semibold py-2">商店分類</div>
+      <div>
         <div v-for="category in ageRestrictedCategories" :key="category['id']" >
           <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
           <ul v-if="selectedCategory == category['id']">
-            <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1" @click="tagPressed(tag.id)">{{ tag.label }}</li>
+            <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1 cursor-pointer" @click="tagPressed(tag.id)">{{ tag.label }}</li>
           </ul>
         </div>
-      </template>
-      <template v-else>
+      </div>
+
+      <hr class="my-4"/>
+
+      <div class="font-semibold py-2">設定</div>
+      <div>
         <div v-if="isLoggedIn" class="py-2">
           <nuxt-link to="/my/account" @click="hideSidebar">我的帳戶</nuxt-link>
         </div>
@@ -30,31 +36,15 @@
         <div class="py-2">
           <AgeRestrictionToggle/>
         </div>
-        <div v-if="isLoggedIn" class="py-2">
-          <button @click="hideSidebar(); logout();" class="">登出</button>
-        </div>
+      </div>
 
-<!--        <div class="py-2">-->
-<!--          <div @click="goTo('/verify')">認證我的商店</div>-->
-<!--        </div>-->
-<!--        <div class="py-2">-->
-<!--          <div @click="goTo('/login/shop')">商戶登入</div>-->
-<!--        </div>-->
-      </template>
-
-
+      <hr class="my-4"/>
     </div>
-
-    <div class="flex">
-      <button v-for="(tab, i) in bottomTabs"
-              :key="tab"
-              :class="{'border-pink-400': selectedBottomTabIndex == i}"
-              class="border-top-4 flex-1 text-center p-2"
-              @click="selectedBottomTabIndex = i">
-        {{ tab }}
-      </button>
+    <div class="p-4">
+      <nuxt-link v-if="!isLoggedIn" to="/login/shop" @click="hideSidebar" class="block btn btn-primary text-center w-full mb-4">商戶登入</nuxt-link>
+      <nuxt-link v-if="!isLoggedIn" to="/verify" @click="hideSidebar" class="block btn btn-outline text-center w-full">認證我的商店</nuxt-link>
+      <button v-if="isLoggedIn" @click="hideSidebar(); logout();" class="block btn btn-outline text-center w-full">登出</button>
     </div>
-
 
   </div>
 </template>
@@ -81,16 +71,9 @@ export default {
   components: {  },
   data() : {
     selectedCategory: string,
-    bottomTabs: string[],
-    selectedBottomTabIndex: number
   } {
     return {
       selectedCategory: "",
-      bottomTabs: [
-          "分類",
-          "設定"
-      ],
-      selectedBottomTabIndex: 0
     }
   },
   props: {
@@ -105,10 +88,6 @@ export default {
     },
     tagPressed(tagId: string) {
       this.$router.push({path: '/search', query: { tag: tagId }});
-      this.hideSidebar();
-    },
-    goTo(path: string) {
-      this.$router.push({path: path});
       this.hideSidebar();
     }
   },
