@@ -3,9 +3,10 @@ import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongod
 import {notFound} from "~/utils/h3Error"
 import {assert} from "~/server/util"
 import {fetchIgMedias} from "~/server/instagram"
-import {getPageMedias, initDynamo} from "~/server/dynamodb";
+import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb";
 import dayjs from "dayjs";
 import {detectPrice} from "~/utils/from-crawler/detect-price";
+import {pageCollection} from "~/server/firebase/collections";
 
 export default defineEventHandler(async (event) => {
     let {
@@ -25,20 +26,34 @@ export default defineEventHandler(async (event) => {
         limit ? Number(limit) : undefined,
         until ? Number(until) - 1 : undefined,
     )
-    let since: number | undefined;
-    if (existingMedias.length) {
-        since = existingMedias[0].takenAt
-    }
 
+    // Get new medias from official api.
+    const since: number | undefined = existingMedias.length ? existingMedias[0].takenAt : undefined
     const medias = await fetchIgMedias(id, p.accessToken, true, {
         limit: Number(limit),
         until: until ? Number(until) - 1 : undefined,
         since
     })
-    medias.forEach((m) => {
-        if (!!m.caption)
-            m.price = detectPrice(m.caption)
-    })
+    if (medias.length !== 0) {
+        // Contains not crawled data. Process and save to db.
+        medias.forEach((m) => {
+            if (!!m.caption)
+                m.price = detectPrice(m.caption)
+        })
+        await saveMedias(medias)
+
+        // Update media info of page.
+        const lastMedia = medias[0]
+        const update = {
+            lastMedia: lastMedia.takenAt,
+            lastActivity: lastMedia.takenAt,
+            lastMediaData: lastMedia,
+            mediaCount: medias.length + existingMedias.length,
+            mediaCodes: medias.slice(0, 3).map((m) => m.code)
+        }
+        await pageSearchCollection.updateOne({_id: id}, {$set: update})
+        await pageCollection().doc(id).update(update)
+    }
 
     return {
         medias: medias.concat(...existingMedias)
