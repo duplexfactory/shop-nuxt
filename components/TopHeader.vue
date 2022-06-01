@@ -4,18 +4,18 @@
       <!-- left -->
       <div class="flex items-center flex-1 md:mr-8">
 
-        <button class="md:hidden" @click="$emit('toggleDrawer')">
+        <button class="lg:hidden" @click="$emit('toggleDrawer')">
           <i class="spr-menu text-2xl"></i>
         </button>
 
         <nuxt-link to="/" class="md:mr-4"><img style="width: 100px; height: 50px;" src="/images/logo.png"/></nuxt-link>
 
         <!-- Mobile Search Button -->
-        <button @click="showSearchModal = true" class="sm:hidden border rounded-md py-2 px-4 text-sm text-gray-400 flex-1 mr-2">
+        <button @click="showSearchModal = true" class="md:hidden border rounded-md py-2 px-4 text-sm text-gray-400 flex-1 mr-4">
           搜尋商店<i class="spr-search ml-4"></i>
         </button>
         <!-- Desktop Search Input -->
-        <div class="hidden sm:block flex-1">
+        <div class="hidden md:block flex-1">
           <div class="flex w-full">
             <div class="dropdown flex-1" style="max-width: 350px;">
               <input @keyup.enter="search" @focusin="searchInputFocusIn" @focusout="searchInputFocusOut"
@@ -55,8 +55,10 @@
       <!-- right -->
       <div :class="{'sqr-menu': isLoggedIn}">
 
-        <nuxt-link v-if="!isLoggedIn" to="/verify" class="hidden md:inline-block btn btn-sm btn-primary mr-4">認證我的商店</nuxt-link>
-        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="md:(btn btn-sm btn-outline mr-4) text-pink-600 text-sm">商戶登入</nuxt-link>
+        <AgeRestrictionToggle v-if="!isLoggedIn" class="hidden lg:inline-block mr-6"/>
+        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="lg:mr-6 text-gray-500 font-semibold">商戶登入</nuxt-link>
+        <nuxt-link v-if="!isLoggedIn" to="/verify" class="hidden lg:inline-block btn btn-outline">認證我的商店</nuxt-link>
+
 
         <div class="hidden md:inline-block">
           <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
