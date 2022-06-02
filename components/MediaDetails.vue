@@ -99,7 +99,7 @@
                       class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改
               </button>
               <template #content>
-                <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">此價格由電腦偵查或用戶提出。如有錯漏，歡迎提出修改。</div>
+                <div class="tool-tip">此價格由電腦偵查或用戶提出。如有錯漏，歡迎提出修改。</div>
               </template>
             </Popper>
           </client-only>

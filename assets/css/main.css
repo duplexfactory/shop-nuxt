@@ -157,3 +157,7 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.tool-tip {
+    @apply bg-gray-900/80 text-white text-sm p-2 rounded-md;
+}

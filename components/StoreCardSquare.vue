@@ -13,15 +13,26 @@
                 </div>
 
                 <div v-if="!igConnected && contactInfoRows.length !== 0">
-                  <a v-for="(pageInfoRow, i) in contactInfoRows"
-                     @click.stop=""
-                     :key="pageInfoRow.value + i.toString()"
-                     :href="pageInfoRow.link"
-                     target="_blank">
-                    <i class="mr-1"
-                       :style="`color: #${contactColor(pageInfoRow.key)}`"
-                       :class="pageInfoRow.iconClass"></i>
-                  </a>
+                  <template v-for="(pageInfoRow, i) in contactInfoRows">
+                    <a v-if="!!pageInfoRow.link"
+                       :key="pageInfoRow.value + i.toString()"
+                       :href="pageInfoRow.link"
+                       target="_blank">
+                      <i class="mr-1"
+                         :style="`color: #${contactColor(pageInfoRow.key)}`"
+                         :class="pageInfoRow.iconClass"></i>
+                    </a>
+                    <Popper v-else :key="pageInfoRow.value + i.toString()" hover offsetDistance="0" placement="top">
+                      <i class="mr-1"
+                         :style="`color: #${contactColor(pageInfoRow.key)}`"
+                         :class="pageInfoRow.iconClass"></i>
+                      <template #content>
+                        <div class="tool-tip">
+                          {{ pageInfoRow.value }}
+                        </div>
+                      </template>
+                    </Popper>
+                  </template>
                 </div>
 
                 <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
@@ -96,6 +107,7 @@ import dayjs from "dayjs";
 import PageInfoRow from "~/models/PageInfoRow";
 import {PageSearch} from "~/models/PageSearch";
 import IgMedia from "~/models/IgMedia"
+import Popper from "vue3-popper"
 
 const {tagsLookup} = useTags()
 const {
