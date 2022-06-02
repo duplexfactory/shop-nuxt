@@ -88,8 +88,8 @@ export const categories = [{
     "label": "通用",
     "disabled": true,
     "tags": [
-        {"id": "south-korea", "label": "韓國", "keywords": {or: ["韓國", "韓式"]}},
-        {"id": "japan", "label": "日本"},
+        {"id": "south-korea", "label": "韓國", "keywords": {or: ["韓國", "韓式", "日韓"]}},
+        {"id": "japan", "label": "日本", "keywords": {or: ["日本", "日韓"]}},
         {"id": "purchase", "label": "代購"},
         {"id": "second-hand", "label": "二手"},
         {"id": "customize", "label": "訂製"}
