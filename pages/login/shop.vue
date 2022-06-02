@@ -19,7 +19,7 @@
         </div>
 
         <div class="mt-4">
-          <button @click="login" class="btn btn-primary">登入</button>
+          <button @click="login" class="btn btn-primary" :disabled="loginLoading">登入</button>
           <div class="mt-2 text-gray-400">
             <span class="mr-1">未有帳戶？</span>
             <nuxt-link to="/verify" class="hover:underline cursor-pointer">立即申請</nuxt-link>
@@ -38,9 +38,6 @@
         signInWithPopup
     } from "firebase/auth";
 
-    const email = ref("");
-    const password = ref("");
-
     const router = useRouter();
 
     // Login
@@ -54,12 +51,18 @@
         }
     )
 
+    // Email password login.
+    const email = ref("");
+    const password = ref("");
+    const loginLoading = ref(false);
     async function login() {
         try {
-            const auth = getAuth();
+            loginLoading.value = true;
 
+            const auth = getAuth();
             const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
 
+            loginLoading.value = false;
             isLoggedIn.value = true;
 
             // Signed in
