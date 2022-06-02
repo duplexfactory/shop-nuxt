@@ -37,8 +37,11 @@ export default defineEventHandler(async (event) => {
     if (medias.length !== 0) {
         // Contains not crawled data. Process and save to db.
         medias.forEach((m) => {
-            if (!!m.caption)
-                m.price = detectPrice(m.caption)
+            if (!!m.caption) {
+                const price = detectPrice(m.caption)
+                if (price !== undefined)
+                    m.price = price
+            }
         })
         await saveMedias(medias)
 
