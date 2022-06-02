@@ -161,6 +161,17 @@ const {
   fbLogin
 } = useFbLogin()
 
+// Login
+const isLoggedIn = useIsLoggedIn();
+watch(
+    () => isLoggedIn.value,
+    async (isLoggedIn, prevIsLoggedIn) => {
+      if (isLoggedIn === true) {
+        await navigateTo("/my/account");
+      }
+    }
+)
+
 </script>
 
 <script lang="ts">
@@ -196,7 +207,7 @@ const {
 
                 // Signed in
                 const user = userCredential.user;
-                this.$router.push({path: '/my/shop'});
+                // this.$router.push({path: '/my/shop'});
               }
               catch (firebaseSignInError) {
                 const errorCode = firebaseSignInError.code;
