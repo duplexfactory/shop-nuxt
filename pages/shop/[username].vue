@@ -26,7 +26,7 @@
           <div class="mb-2 line-clamp-2" style="font-size: 0;">
             <div v-for="tag in page.tags"
                  :key="tag"
-                 class="tag mr-1 2xl:mr-2 !md:text-lg">{{ `#${tagsLookup[tag]}` }}
+                 class="tag mr-2">{{ `#${tagsLookup[tag]}` }}
             </div>
           </div>
         </div>
