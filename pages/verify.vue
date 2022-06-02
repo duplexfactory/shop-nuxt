@@ -115,7 +115,7 @@
                   <input v-model="email" class="mt-4 block w-full text-input-primary" type="text" name="email" placeholder="電郵">
                   <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
                   <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
-                  <button @click="register" class="mt-4 btn btn-primary">立即註冊</button>
+                  <button :disabled="isRegisterLoading" @click="register" class="mt-4 btn btn-primary">立即註冊</button>
                   <div class="mt-4 text-gray-400">註冊即代表你已同意Shoperuse的<nuxt-link class="hover:underline" to="/privacy-policy">《私隱條款》</nuxt-link></div>
                 </div>
               </div>
@@ -126,6 +126,9 @@
 </template>
 
 <script lang="ts" setup>
+
+import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+const nuxt = useNuxtApp();
 
 const verifySection = ref(null);
 function scrollToVerify() {
@@ -157,6 +160,56 @@ const points = [
   {title: "更改資料", subtitle: "修改分類、描述", content: "假如你認爲Shoperuse上你的商店分類或資料有任何錯誤，認證後你將可以隨意修改。"},
 ]
 
+// Register
+const isRegisterLoading = ref(false);
+const email = ref("");
+const password = ref("");
+const confirmPassword = ref("");
+async function register() {
+  if (email.value == "" || password.value == "" || confirmPassword.value == "") {
+    nuxt.vueApp.$toast.error("請填寫所有欄位！", {position: "top"});
+    return;
+  }
+
+  if (password.value !== confirmPassword.value) {
+    nuxt.vueApp.$toast.error("請確保兩次輸入的密碼一致！", {position: "top"});
+    return;
+  }
+
+  try {
+    isRegisterLoading.value = true;
+
+    (await $fetch('/api/auth/register', { method: 'POST', body: { email: email.value, password: password.value }}));
+
+    nuxt.vueApp.$toast.success("成功註冊！");
+
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+
+      // Signed in
+      const user = userCredential.user;
+      // $router.push({path: '/my/shop'});
+
+      isRegisterLoading.value = false;
+    }
+    catch (firebaseSignInError) {
+      const errorCode = firebaseSignInError.code;
+      const errorMessage = firebaseSignInError.message;
+      nuxt.vueApp.$toast.error("登入失敗", {position: "top"});
+
+      isRegisterLoading.value = false;
+    }
+  }
+  catch(e) {
+    nuxt.vueApp.$toast.error("電郵已被使用！");
+
+    isRegisterLoading.value = false;
+  }
+
+}
+
+// Facebook login
 const {
   fbLogin
 } = useFbLogin()
@@ -172,57 +225,6 @@ watch(
     }
 )
 
-</script>
-
-<script lang="ts">
-    import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-    export default {
-        data() {
-            return {
-                email: "",
-                password: "",
-                confirmPassword: "",
-            }
-        },
-        methods: {
-          async register() {
-            if (this.email == "" || this.password == "" || this.confirmPassword == "") {
-              this.$toast.error("請填寫所有欄位！", {position: "top"});
-              return;
-            }
-
-            if (this.password !== this.confirmPassword) {
-              this.$toast.error("請確保兩次輸入的密碼一致！", {position: "top"});
-              return;
-            }
-
-            try {
-              (await $fetch('/api/auth/register', { method: 'POST', body: { email: this.email, password: this.password }}));
-
-              this.$toast.success("成功註冊！");
-
-              try {
-                const auth = getAuth();
-                const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
-
-                // Signed in
-                const user = userCredential.user;
-                // this.$router.push({path: '/my/shop'});
-              }
-              catch (firebaseSignInError) {
-                const errorCode = firebaseSignInError.code;
-                const errorMessage = firebaseSignInError.message;
-                this.$toast.error("登入失敗", {position: "top"});
-              }
-
-            }
-            catch(e) {
-              this.$toast.error("電郵已被使用！");
-            }
-
-          }
-        }
-    }
 </script>
 
 <style scoped>
