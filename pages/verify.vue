@@ -104,6 +104,14 @@
                   <h2 class="text-xl md:text-2xl font-bold">
                     註冊
                   </h2>
+                  <button @click="fbLogin" class="mt-4 text-white rounded-md py-2 w-full" style="background: #4267b2;">
+                    <i class="spr-facebook-squared"></i>以Facebook註冊
+                  </button>
+                  <div class="my-4 flex items-center">
+                    <hr class="flex-1"/>
+                    <span class="text-gray-500">或</span>
+                    <hr class="flex-1"/>
+                  </div>
                   <input v-model="email" class="mt-4 block w-full text-input-primary" type="text" name="email" placeholder="電郵">
                   <input v-model="password" class="mt-4 block w-full text-input-primary" type="password" name="password" placeholder="密碼">
                   <input v-model="confirmPassword" @keyup.enter="register" class="mt-4 block w-full text-input-primary" type="password" name="reenter-password" placeholder="重新輸入密碼">
@@ -149,6 +157,9 @@ const points = [
   {title: "更改資料", subtitle: "修改分類、描述", content: "假如你認爲Shoperuse上你的商店分類或資料有任何錯誤，認證後你將可以隨意修改。"},
 ]
 
+const {
+  fbLogin
+} = useFbLogin()
 
 </script>
 
