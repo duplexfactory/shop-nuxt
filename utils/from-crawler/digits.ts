@@ -1,5 +1,6 @@
 // https://blog.alyssachan.space/wp-content/cache/all/symbol/index.html
 const spDigits = [
+    "0\t➀\t➁\t➂\t➃\t➄\t➅\t➆\t➇\t➈",
     "0\t⓵\t⓶\t⓷\t⓸\t⓹\t⓺\t⓻\t⓼\t⓽", // no zero
     "⓿\t❶\t❷\t❸\t❹\t❺\t❻\t❼\t❽\t❾",
     "🄁\t🄂\t🄃\t🄄\t🄅\t🄆\t🄇\t🄈\t🄉\t🄊",
