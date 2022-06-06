@@ -37,6 +37,7 @@
         FacebookAuthProvider,
         signInWithPopup
     } from "firebase/auth";
+    import useFbLogin from "~/composables/useFbLogin";
 
     const router = useRouter();
 
