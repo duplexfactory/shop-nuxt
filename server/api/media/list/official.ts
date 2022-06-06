@@ -6,6 +6,7 @@ import {fetchIgMedias, fetchIgProfile} from "~/server/instagram"
 import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
 import {detectPrice} from "~/utils/from-crawler/detect-price"
 import {pageCollection} from "~/server/firebase/collections"
+import IgMedia from "~/models/IgMedia"
 
 export default defineEventHandler(async (event) => {
     let {
@@ -26,42 +27,46 @@ export default defineEventHandler(async (event) => {
         until ? Number(until) - 1 : undefined,
     )
 
-    // Get new medias from official api.
-    const since: number | undefined = existingMedias.length ? existingMedias[0].takenAt : undefined
-    const medias = await fetchIgMedias(id, p.accessToken, true, {
-        limit: Number(limit),
-        until: until ? Number(until) - 1 : undefined,
-        since
-    })
-    if (medias.length !== 0) {
-        // Contains not crawled data. Process and save to db.
-        medias.forEach((m) => {
-            if (!!m.caption) {
-                const price = detectPrice(m.caption)
-                if (price !== undefined)
-                    m.price = price
+    let medias: IgMedia[] = []
+
+    if (!until) {
+        // Get new medias from official api.
+        const since: number | undefined = existingMedias.length ? existingMedias[0].takenAt : undefined
+        medias = await fetchIgMedias(id, p.accessToken, true, {
+            limit: Number(limit),
+            until: until ? Number(until) - 1 : undefined,
+            since
+        })
+        if (medias.length !== 0) {
+            // Contains not crawled data. Process and save to db.
+            medias.forEach((m) => {
+                if (!!m.caption) {
+                    const price = detectPrice(m.caption)
+                    if (price !== undefined)
+                        m.price = price
+                }
+            })
+
+            const rmUrl = medias.map(m => {
+                const {mediaUrl, ...props} = m
+                return props
+            })
+            await saveMedias(rmUrl)
+
+            const {media_count} = await fetchIgProfile(p.accessToken)
+
+            // Update media info of page.
+            const lastMedia = rmUrl[0]
+            const update = {
+                lastMedia: lastMedia.takenAt,
+                lastActivity: lastMedia.takenAt,
+                lastMediaData: lastMedia,
+                mediaCount: media_count,
+                mediaCodes: medias.slice(0, 3).map((m) => m.code)
             }
-        })
-
-        const rmUrl = medias.map(m => {
-            const {mediaUrl, ...props} = m
-            return props
-        })
-        await saveMedias(rmUrl)
-
-        const {media_count} = await fetchIgProfile(p.accessToken)
-
-        // Update media info of page.
-        const lastMedia = rmUrl[0]
-        const update = {
-            lastMedia: lastMedia.takenAt,
-            lastActivity: lastMedia.takenAt,
-            lastMediaData: lastMedia,
-            mediaCount: media_count,
-            mediaCodes: medias.slice(0, 3).map((m) => m.code)
+            await pageSearchCollection.updateOne({_id: id}, {$set: update})
+            await pageCollection().doc(id).update(update)
         }
-        await pageSearchCollection.updateOne({_id: id}, {$set: update})
-        await pageCollection().doc(id).update(update)
     }
 
     return {
