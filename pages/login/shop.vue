@@ -40,6 +40,7 @@
     import useFbLogin from "~/composables/useFbLogin";
 
     const router = useRouter();
+    const nuxt = useNuxtApp();
 
     // Login
     const isLoggedIn = useIsLoggedIn();
@@ -73,7 +74,13 @@
             const errorCode = firebaseSignInError.code;
             const errorMessage = firebaseSignInError.message;
 
-            // this.$toast.error("登入失敗", {position: "top"});
+            if (errorCode === "auth/user-not-found") {
+              nuxt.vueApp.$toast.error("電郵或密碼錯誤", {position: "top"});
+            }
+            else {
+              nuxt.vueApp.$toast.error("登入失敗", {position: "top"});
+            }
+            loginLoading.value = false;
         }
     }
 
