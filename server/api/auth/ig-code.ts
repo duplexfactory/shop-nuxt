@@ -10,7 +10,7 @@ import IgMedia from "~/models/IgMedia"
 import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
 import {pageCollection} from "~/server/firebase/collections"
 import {createPageSearchDoc, PageSearch} from "~/models/PageSearch"
-import {fetchIgMedias} from "~/server/instagram"
+import {fetchIgMedias, fetchIgProfile} from "~/server/instagram"
 import {detectPrice} from "~/utils/from-crawler/detect-price";
 
 export default defineEventHandler(async (event) => {
@@ -47,19 +47,7 @@ export default defineEventHandler(async (event) => {
     }))
 
     // get username
-    const url = new URL("https://graph.instagram.com/me")
-    url.searchParams.set("fields", "id,username,media_count")
-    url.searchParams.set("access_token", shortToken)
-    const idRes = await fetch(url.href)
-    const idResJ = await idRes.json()
-    const {id, username, media_count} = idResJ as { id: string, username: string, media_count: number }
-    assert(shortToken, createError({
-        statusCode: 500,
-        data: {
-            url: idRes.url,
-            body: idResJ
-        }
-    }))
+    const {id, username, media_count} = await fetchIgProfile(shortToken)
 
     // exchange short lived access token for long lived access token
     const tokenUrl = new URL("https://graph.instagram.com/access_token")

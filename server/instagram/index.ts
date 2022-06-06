@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
 import IgMedia from "~/models/IgMedia"
+import fetch from "node-fetch"
 
 export interface IgOfficialMedia {
     caption: string,
@@ -33,4 +34,12 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
         if (!m.mediaUrl) delete m.mediaUrl
     })
     return medias
+}
+
+export async function fetchIgProfile(accessToken: string) {
+    const url = new URL("https://graph.instagram.com/me")
+    url.searchParams.set("fields", "id,username,media_count")
+    url.searchParams.set("access_token", accessToken)
+    const idRes = await fetch(url.href)
+    return await idRes.json() as { id: string, username: string, media_count: number }
 }

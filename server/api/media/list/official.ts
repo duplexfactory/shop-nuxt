@@ -2,9 +2,8 @@ import {defineEventHandler, JSONValue, useQuery} from "h3"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {notFound} from "~/utils/h3Error"
 import {assert} from "~/server/util"
-import {fetchIgMedias} from "~/server/instagram"
+import {fetchIgMedias, fetchIgProfile} from "~/server/instagram"
 import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
-import dayjs from "dayjs"
 import {detectPrice} from "~/utils/from-crawler/detect-price"
 import {pageCollection} from "~/server/firebase/collections"
 
@@ -50,13 +49,15 @@ export default defineEventHandler(async (event) => {
         })
         await saveMedias(rmUrl)
 
+        const {media_count} = await fetchIgProfile(p.accessToken)
+
         // Update media info of page.
         const lastMedia = rmUrl[0]
         const update = {
             lastMedia: lastMedia.takenAt,
             lastActivity: lastMedia.takenAt,
             lastMediaData: lastMedia,
-            mediaCount: medias.length + existingMedias.length,
+            mediaCount: media_count,
             mediaCodes: medias.slice(0, 3).map((m) => m.code)
         }
         await pageSearchCollection.updateOne({_id: id}, {$set: update})
