@@ -163,7 +163,7 @@
 
         <div class="mt-2 flex items-center">
           <span>名稱</span>
-          <input v-model="shop.username" class="ml-2 text-input-primary flex-1" type="text" name="username"
+          <input v-model="shop.username" disabled class="ml-2 text-input-primary flex-1" type="text" name="username"
                  placeholder="名稱"/>
         </div>
         <div class="mt-2 flex items-center">
