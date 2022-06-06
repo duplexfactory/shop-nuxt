@@ -3,10 +3,10 @@ import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongod
 import {notFound} from "~/utils/h3Error"
 import {assert} from "~/server/util"
 import {fetchIgMedias} from "~/server/instagram"
-import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb";
-import dayjs from "dayjs";
-import {detectPrice} from "~/utils/from-crawler/detect-price";
-import {pageCollection} from "~/server/firebase/collections";
+import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
+import dayjs from "dayjs"
+import {detectPrice} from "~/utils/from-crawler/detect-price"
+import {pageCollection} from "~/server/firebase/collections"
 
 export default defineEventHandler(async (event) => {
     let {
@@ -43,10 +43,15 @@ export default defineEventHandler(async (event) => {
                     m.price = price
             }
         })
-        await saveMedias(medias)
+
+        const rmUrl = medias.map(m => {
+            const {mediaUrl, ...props} = m
+            return props
+        })
+        await saveMedias(rmUrl)
 
         // Update media info of page.
-        const lastMedia = medias[0]
+        const lastMedia = rmUrl[0]
         const update = {
             lastMedia: lastMedia.takenAt,
             lastActivity: lastMedia.takenAt,
