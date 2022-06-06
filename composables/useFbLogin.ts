@@ -1,6 +1,6 @@
 import {FacebookAuthProvider, getAuth, signInWithPopup} from "firebase/auth";
 
-export default function useCreateReview() {
+export default function useFbLogin() {
 
     function fbLogin() {
         const provider = new FacebookAuthProvider();

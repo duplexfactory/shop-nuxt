@@ -128,6 +128,7 @@
 <script lang="ts" setup>
 
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import useFbLogin from "~/composables/useFbLogin";
 const nuxt = useNuxtApp();
 
 const verifySection = ref(null);
@@ -168,6 +169,11 @@ const confirmPassword = ref("");
 async function register() {
   if (email.value == "" || password.value == "" || confirmPassword.value == "") {
     nuxt.vueApp.$toast.error("請填寫所有欄位！", {position: "top"});
+    return;
+  }
+
+  if (password.value.length < 6) {
+    nuxt.vueApp.$toast.error("密碼長度最少為6！", {position: "top"});
     return;
   }
 
