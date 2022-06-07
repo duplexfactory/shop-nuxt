@@ -34,7 +34,13 @@ export default defineEventHandler(async (event) => {
         f.adult = false
     }
 
-    const [hot, latest, active, physical] = await Promise.all([
+    const [
+        hot,
+        latest,
+        active,
+        // physical,
+        featured
+    ] = await Promise.all([
         pageSearchCollection.find(f).sort({followerCount: -1}).limit(21).project(extraProj).toArray(),
         pageSearchCollection.find({...f, lastMedia: {$gt: 0}}).sort({lastMedia: -1}).limit(12).project({
             _id: 1,
@@ -43,9 +49,13 @@ export default defineEventHandler(async (event) => {
             lastMediaData: 1
         }).toArray(),
         pageSearchCollection.find(f).sort({activeScore: -1}).limit(30).project(cardProj).toArray(),
+        // pageSearchCollection.find({
+        //     ...f,
+        //     brickAndMortar: true
+        // }).sort({activeScore: -1}).limit(21).project(extraProj).toArray(),
         pageSearchCollection.find({
             ...f,
-            brickAndMortar: true
+            igConnected: true
         }).sort({activeScore: -1}).limit(21).project(extraProj).toArray(),
     ])
 
@@ -54,7 +64,8 @@ export default defineEventHandler(async (event) => {
         hot,
         latest,
         active,
-        physical,
+        // physical,
+        featured
     } as any as JSONValue
 })
 

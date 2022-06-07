@@ -26,10 +26,11 @@
 
     <div class="sm:container mx-auto">
 
-      <template v-if="hot.length">
-        <h2 class="section-title px-4 md:px-0">熱門店鋪</h2>
-        <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
+      <template v-if="featured.length">
+        <h2 class="section-title px-4 md:px-0">精選店鋪</h2>
+        <StoreCardSquareSwiperList class="swiper-padding" :shops="featured"></StoreCardSquareSwiperList>
       </template>
+
       <!--      <StoreCardRectangle v-for="shop in hot" :shop="shop"></StoreCardRectangle>-->
 
 <!--      <div class="px-4 md:px-0">-->
@@ -49,11 +50,10 @@
         <StoreCardSimpleSwiperList :shops="active"></StoreCardSimpleSwiperList>
       </div>
 
-      <template v-if="physical.length">
-        <h2 class="section-title px-4 md:px-0">實體店鋪</h2>
-        <StoreCardOfflineSwiperList class="swiper-padding" :shops="physical"></StoreCardOfflineSwiperList>
+      <template v-if="hot.length">
+        <h2 class="section-title px-4 md:px-0">熱門店鋪</h2>
+        <StoreCardSquareSwiperList class="swiper-padding" :shops="hot"></StoreCardSquareSwiperList>
       </template>
-
 
     </div>
 
@@ -70,7 +70,7 @@ const showAgeRestrictedContent = useShowAgeRestrictedContent();
 const hot = ref([]);
 const active = ref([]);
 const latest = ref([]);
-const physical = ref([]);
+const featured = ref([]);
 
 
 await fetchHomeData();
@@ -82,19 +82,19 @@ async function fetchHomeData() {
   }
   const {data} = await useLazyFetch(`/api/home`, {params});
   if (data.value) {
-    const {hot: _hot, active: _active, latest: _latest, physical: _physical} = data.value;
+    const {hot: _hot, active: _active, latest: _latest, featured: _featured} = data.value;
     hot.value = _hot;
     active.value = _active;
     latest.value = _latest;
-    physical.value = _physical;
+    featured.value = _featured;
   }
 
   watch(data, (newData) => {
-    const {hot: _hot, active: _active, latest: _latest, physical: _physical} = newData;
+    const {hot: _hot, active: _active, latest: _latest, featured: _featured} = newData;
     hot.value = _hot;
     active.value = _active;
     latest.value = _latest;
-    physical.value = _physical;
+    featured.value = _featured;
   })
 }
 
