@@ -88,6 +88,7 @@ const {code} = useRoute().query
 const isIgConnected = useIsIgConnected()
 const igUsername = useIgUsername();
 const authLoading = ref(!!code);
+const nuxt = useNuxtApp();
 
 const {
   authorize
@@ -103,7 +104,11 @@ onMounted(async () => {
       })
       igUsername.value = username
       isIgConnected.value = true
-    } catch(e) {}
+    } catch(e) {
+      if (e.statusCode === 401 && e.statusMessage === "Instagram Permission Needed") {
+        nuxt.vueApp.$toast.error("連結失敗！請確保Instagram登入時批准所有存取權！", {position: "top"})
+      }
+    }
     authLoading.value = false
   }
 });
