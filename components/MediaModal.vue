@@ -7,7 +7,7 @@
             <template v-if="localPage.igConnected && localMedia">
               <div class="image-container aspect-square rounded-md overflow-hidden"
                    v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
-              <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ localMedia.caption }}</div>
+              <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ stripTrailingHashtags(localMedia.caption) }}</div>
               <div v-if="!!mediaPrice(localMedia.media)"
                    class="mt-2 text-pink-700">
                 {{ formatMediaPrice(mediaPrice(localMedia.media)) }}
@@ -56,7 +56,10 @@
 <!--              </div>-->
 <!--            </div>-->
 
-            <div v-if="localMediaCode && localPage && localPage.igConnected" class="mt-4 md:hidden text-sm whitespace-pre-wrap break-words">{{ localMedia.caption }}</div>
+            <div v-if="localMediaCode && localPage && localPage.igConnected"
+                 class="mt-4 md:hidden text-sm whitespace-pre-wrap break-words">
+              {{ stripTrailingHashtags(localMedia.caption) }}
+            </div>
 
             <div v-if="localPage" class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
             <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
@@ -146,6 +149,10 @@ const pageInfoRows = computed(() => {
   }
   return PageInfoRow.rowsFromExtraData(localPage.value.extraData, fields);
 });
+
+function stripTrailingHashtags(s: string): string {
+  return s.replace(/(?:[\n\r\s]*[#][^\n\r\s]+)+[\n\r\s]*$/i, "");
+}
 
 // Media Price
 const { mediaPrice, formatMediaPrice } = useMediaPrice();
