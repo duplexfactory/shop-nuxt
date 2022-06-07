@@ -131,6 +131,20 @@ import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import useFbLogin from "~/composables/useFbLogin";
 const nuxt = useNuxtApp();
 
+// Meta
+useMeta(computed(() => {
+  const title = `認證 IG Shop | IG Shop 推薦及評論平台 | Shoperuse`;
+  const metaDescription = "立即於Shoperuse免費認證你IG Shop以增加客戶及曝光。Shoperuse已整理及分類超過3000間香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！";
+  return {
+    title,
+    meta: [
+      {name: "description", hid: "description", content: metaDescription},
+      {property: "og:title", hid: "og:title", content: title},
+      {property: "og:description", hid: "og:description", content: metaDescription}
+    ]
+  }
+}));
+
 const verifySection = ref(null);
 function scrollToVerify() {
   if (verifySection.value !== null) {
