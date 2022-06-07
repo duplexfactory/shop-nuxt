@@ -39,16 +39,22 @@
               {{ localPage.username }}
             </nuxt-link>
 
-            <div v-if="pageInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">
-              <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">
-                <i class="mr-2" :class="pageInfoRow.iconClass"></i>
-                <component :is="pageInfoRow.link ? 'a' : 'span'"
-                           class="break-words"
-                           :class="{'hover:underline': pageInfoRow.link}"
-                           target="_blank"
-                           :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
-              </div>
+            <div class="mt-2">
+              <button class="btn btn-primary w-full">
+                聯絡店主下單
+              </button>
             </div>
+
+<!--            <div v-if="pageInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
+<!--              <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
+<!--                <i class="mr-2" :class="pageInfoRow.iconClass"></i>-->
+<!--                <component :is="pageInfoRow.link ? 'a' : 'span'"-->
+<!--                           class="break-words"-->
+<!--                           :class="{'hover:underline': pageInfoRow.link}"-->
+<!--                           target="_blank"-->
+<!--                           :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>-->
+<!--              </div>-->
+<!--            </div>-->
 
             <div v-if="localMediaCode && localPage && localPage.igConnected" class="mt-4 md:hidden text-sm whitespace-pre-wrap break-words">{{ localMedia.caption }}</div>
 
@@ -111,13 +117,15 @@ import Popper from "vue3-popper";
 import type {Ref} from "vue";
 import IgMedia from "~/models/IgMedia";
 import useMediaPrice from "~/composables/useMediaPrice";
+import IgPage from "~/models/IgPage";
+import IgPageExtraData from "~/models/IgPageExtraData";
 
 // Media Modal
 const showMediaModal = useShowMediaModal();
 const showingMediaModalData = useShowingMediaModalData();
 
 const fetchedPage = ref(null);
-const localPage = computed(() => {
+const localPage = computed<IgPage>(() => {
   return showingMediaModalData.value.simplePage || fetchedPage.value;
 });
 
@@ -131,7 +139,12 @@ const localMedia = computed(() => {
 
 const pageInfoRows = computed(() => {
   if (!localPage.value) return []
-  return PageInfoRow.rowsFromExtraData(localPage.value.extraData, ["phone", "whatsapp", "wechat", "signal"]);
+
+  const fields: (keyof IgPageExtraData)[] = ["whatsapp", "wechat", "signal"]
+  if (!localPage.value.extraData || !localPage.value.extraData.noPhoneCall) {
+    fields.unshift("phone");
+  }
+  return PageInfoRow.rowsFromExtraData(localPage.value.extraData, fields);
 });
 
 // Media Price
