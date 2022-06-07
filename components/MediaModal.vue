@@ -4,12 +4,20 @@
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
           <template v-if="localMediaCode && localPage">
-            <MediaCard v-if="localPage.igConnected"
-                       size="l"
-                       contentClamp="none"
-                       :media="localMedia"
-                       :shop="localPage"></MediaCard>
-            <MediaCardIGEmbed v-else captioned :post-id="localMediaCode" :fixed-aspect-ratio="0" :username="localPage.username"></MediaCardIGEmbed>
+            <template v-if="localPage.igConnected">
+              <div class="image-container aspect-square rounded-md overflow-hidden"
+                   v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
+              <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ localMedia.caption }}</div>
+              <div v-if="!!mediaPrice(localMedia.media)"
+                   class="mt-2 text-pink-700">
+                {{ formatMediaPrice(mediaPrice(localMedia.media)) }}
+              </div>
+            </template>
+            <MediaCardIGEmbed v-else
+                              captioned
+                              :post-id="localMediaCode"
+                              :fixed-aspect-ratio="0"
+                              :username="localPage.username"></MediaCardIGEmbed>
           </template>
         </div>
         <div class="col-span-4">
@@ -41,6 +49,8 @@
                            :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
               </div>
             </div>
+
+            <div v-if="localMediaCode && localPage && localPage.igConnected" class="mt-4 md:hidden text-sm whitespace-pre-wrap break-words">{{ localMedia.caption }}</div>
 
             <div v-if="localPage" class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
             <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>

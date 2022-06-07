@@ -4,7 +4,7 @@
 
     <!-- style="aspect-ratio: 1.5;"  -->
     <div class="pt-2 overflow-hidden flex flex-col">
-      <div class="text-sm whitespace-pre-wrap overflow-hidden" :class="'line-clamp-' + contentClamp" style="flex-shrink: 1;">{{ caption }}</div>
+      <div class="text-sm whitespace-pre-wrap break-words overflow-hidden" :class="'line-clamp-' + contentClamp" style="flex-shrink: 1;">{{ caption }}</div>
       <div v-if="!!mediaPrice(media)" class="mt-2 text-pink-700">{{ formatMediaPrice(mediaPrice(media)) }}</div>
       <div class="mt-2 text-sm text-gray-500 break-all line-clamp-1" style="flex-shrink: 0;">{{ takenAtString + ' • ' + shop.username }}</div>
     </div>
