@@ -1,5 +1,5 @@
 .btn {
-    @apply text-md px-6 py-2 rounded-md;
+    @apply text-md px-6 py-2 rounded-md font-semibold;
 }
 
 .btn-primary {

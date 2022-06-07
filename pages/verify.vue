@@ -104,7 +104,7 @@
                   <h2 class="text-xl md:text-2xl font-bold">
                     註冊
                   </h2>
-                  <button @click="fbLogin" class="mt-4 text-white rounded-md py-2 w-full" style="background: #4267b2;">
+                  <button @click="fbLogin" class="mt-4 btn text-white w-full" style="background: #4267b2;">
                     <i class="spr-facebook-squared"></i>以Facebook註冊
                   </button>
                   <div class="my-4 flex items-center">

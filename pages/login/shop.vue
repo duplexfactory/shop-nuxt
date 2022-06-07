@@ -4,7 +4,7 @@
         <h1 class="mt-8 text-2xl md:text-4xl font-bold">
           商戶登入
         </h1>
-        <button @click="fbLogin" class="mt-4 text-white rounded-md py-2 w-full" style="background: #4267b2;">
+        <button @click="fbLogin" class="mt-4 btn text-white w-full" style="background: #4267b2;">
           <i class="spr-facebook-squared"></i>以Facebook登入
         </button>
         <div class="my-4 flex items-center">
