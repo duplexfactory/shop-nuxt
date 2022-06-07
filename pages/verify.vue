@@ -26,7 +26,7 @@
                 <div class="flex items-center mt-8">
                   <button @click="scrollToVerify" class="btn btn-primary">立即免費認證</button>
                   <span class="mx-4">或</span>
-                  <button>了解更多</button>
+                  <button @click="scrollToPoints">了解更多</button>
                 </div>
 
               </div>
@@ -37,7 +37,7 @@
           </div>
         </section>
 
-        <section>
+        <section ref="pointsSection">
           <div class="container mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div v-for="point in points" class="col-span-1 rounded bg-white md:text-center p-4">
@@ -150,6 +150,13 @@ function scrollToVerify() {
   if (verifySection.value !== null) {
     // Use el.scrollIntoView() to instantly scroll to the element
     verifySection.value.scrollIntoView({behavior: 'smooth'});
+  }
+}
+
+const pointsSection = ref(null);
+function scrollToPoints() {
+  if (pointsSection.value !== null) {
+    pointsSection.value.scrollIntoView({behavior: 'smooth'});
   }
 }
 
