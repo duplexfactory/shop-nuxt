@@ -30,7 +30,7 @@
                     </div>
                     <div class="table-cell pt-2">
                         <button v-if="!isIgConnected" class="text-pink-600 py-4" @click="authorize"><i
-                            class="spr-instagram"></i>立即連結
+                            class="spr-instagram mr-2"></i>立即連結
                         </button>
                         <template v-else>
                             <a class="hover:underline text-pink-600 mr-2"
