@@ -40,7 +40,7 @@
             </nuxt-link>
 
             <div class="mt-2">
-              <button class="btn btn-primary w-full">
+              <button class="btn btn-primary w-full" @click="showContactModal = true">
                 聯絡店主下單
               </button>
             </div>
@@ -96,6 +96,28 @@
                 <div class="flex justify-end mt-2">
                   <button @click="submitPrice" class="btn-primary btn-sm mr-2">提交</button>
                   <button @click="showPriceSuggestionModal = false" class="btn-outline btn-sm">取消</button>
+                </div>
+              </div>
+            </template>
+          </LazyModal>
+        </transition>
+      </Teleport>
+
+
+      <Teleport to="body">
+        <transition name="modal">
+          <LazyModal v-if="showContactModal" @close="showContactModal = false">
+            <template #container>
+              <div class="flex items-end h-full w-full" @click="showContactModal = false">
+                <div v-if="pageInfoRows.length !== 0" class="bg-white p-4 rounded-t-md w-full text-gray-500">
+                <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="py-2">
+                  <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                  <component :is="pageInfoRow.link ? 'a' : 'span'"
+                             class="break-words"
+                             :class="{'hover:underline': pageInfoRow.link}"
+                             target="_blank"
+                             :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+                </div>
                 </div>
               </div>
             </template>
@@ -223,6 +245,9 @@ async function submitPrice() {
   nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"});
   showPriceSuggestionModal.value = false;
 }
+
+// Contact
+const showContactModal = ref(false);
 
 // Mounted
 onMounted(async () => {
