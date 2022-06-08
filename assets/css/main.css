@@ -93,3 +93,9 @@ textarea {
 .image-container {
     @apply bg-center bg-cover bg-gray-300;
 }
+
+/* Icons no margin. */
+
+[class^="spr-"]:before, [class*=" spr-"]:before {
+    margin: 0px !important;
+}

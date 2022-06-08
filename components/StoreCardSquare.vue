@@ -11,7 +11,7 @@
                   <div v-if="verifiedPage" class="text-gray-500 text-xs line-clamp-2">{{ fullName }}</div>
                 </div>
 
-                <div v-if="contactInfoRows.length !== 0">
+                <div v-if="!igConnected && contactInfoRows.length !== 0">
                   <a v-for="(pageInfoRow, i) in contactInfoRows"
                      :key="pageInfoRow.value + i.toString()"
                      :href="pageInfoRow.link"
@@ -22,11 +22,15 @@
                   </a>
                 </div>
 
-                <div class="mt-2 2xl:mt-4 line-clamp-2"
-                     style="font-size: 0;">
-                  <div v-for="tag in tags"
-                       :key="tag"
-                       class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
+                <div class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
+                    <div class="text-sm flex-1">
+                      <div class="text-gray-500">粉絲</div>
+                      <div class="font-semibold text-gray-800">{{ formatMetric(followerCount) }}</div>
+                    </div>
+                    <div class="text-sm flex-1">
+                      <div class="text-gray-500">貼文</div>
+                      <div class="font-semibold text-gray-800">{{ formatMetric(mediaCount) }}</div>
+                    </div>
                 </div>
 
                 <div v-if="showLocations && addressInfoRow" class="mt-2 2xl:mt-4 text-sm text-gray-500 flex items-start">
@@ -41,20 +45,16 @@
                   </component>
                 </div>
 
-                <!-- Online show followers -->
-                <div v-else class="mt-2 2xl:mt-4 text-sm text-gray-500 flex flex-row">
-                    <div class="text-center flex-1">
-                        <div>粉絲</div>
-                        <div>{{ !!followerCount ? followerCount.toLocaleString() : "-" }}</div>
-                    </div>
-                    <div class="bg-gray-300 mx-2" style="width: 1px;"></div>
-                    <div class="text-center flex-1">
-                        <div>貼文</div>
-                        <div>{{ mediaCount.toLocaleString() }}</div>
-                    </div>
+                <div v-if="tags.length !== 0"
+                     class="mt-2 2xl:mt-4 line-clamp-1 md:line-clamp-2"
+                     style="font-size: 0;">
+                  <div v-for="tag in tags"
+                       :key="tag"
+                       class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
                 </div>
 
-                <nuxt-link :to="`/shop/${username}`"
+                <nuxt-link v-if="!igConnected"
+                           :to="`/shop/${username}`"
                            class="absolute block mt-2 2xl:mt-4 btn-outline btn-primary-hover btn-sm sm:btn" style="bottom: 0px;">進入店鋪</nuxt-link>
             </div>
         </div>
@@ -62,10 +62,10 @@
         <div class="col-span-1">
 
             <template v-if="verifiedPage && mediaCodes">
-                <div class="image-container aspect-square" v-lazy:background-image="$imageUrl(mediaCodes[0])"></div>
+                <div class="image-container aspect-square cursor-pointer" v-lazy:background-image="$imageUrl(mediaCodes[0])" @click="openMedia(mediaCodes[0])"></div>
                 <div class="flex" style="margin-top: 2px;">
-                  <div class="image-container aspect-square flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])"></div>
-                  <div class="image-container aspect-square flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])"></div>
+                  <div class="image-container aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])" @click="openMedia(mediaCodes[1])"></div>
+                  <div class="image-container aspect-square cursor-pointer flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])" @click="openMedia(mediaCodes[2])"></div>
                 </div>
             </template>
             <template v-else>
@@ -88,6 +88,7 @@ import {PropType} from "vue";
 import dayjs from "dayjs";
 import PageInfoRow from "~/models/PageInfoRow";
 import {PageSearch} from "~/models/PageSearch";
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
 const {tagsLookup} = useTags()
 const {
@@ -138,5 +139,25 @@ const addressInfoRow = computed(() => {
   });
   return rows.length === 0 ? undefined : rows[0];
 });
+
+// Metrics.
+function formatMetric(count: number | undefined) {
+  if (!count)
+    return "-"
+  if (count >= 10000)
+    return `${(Math.round(count / 100) / 10).toLocaleString()}k`
+  return count.toLocaleString()
+}
+
+// Media interaction.
+const showMediaModal = useShowMediaModal()
+const showingMediaModalData = useShowingMediaModalData()
+function openMedia(mediaCode: string) {
+  showMediaModal.value = true;
+  showingMediaModalData.value = {
+    code: mediaCode,
+    pageId: shop._id
+  };
+}
 
 </script>

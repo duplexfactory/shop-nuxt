@@ -10,3 +10,10 @@ export default interface IgMedia {
 
     mediaUrl?: string; // only from official
 }
+
+export default interface IgPageCommerceData {
+    _id: string; // Same as IgMedia code.
+    active: boolean;
+    customPrice: boolean;
+    stock?: number;
+}
