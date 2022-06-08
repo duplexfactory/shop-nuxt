@@ -1,5 +1,6 @@
 <template>
-    <div class="overflow-hidden border rounded-md grid grid-cols-2">
+    <div class="overflow-hidden border rounded-md grid grid-cols-2 cursor-pointer" @click="navigateToPage()">
+
         <div class="p-4 col-span-1">
             <div class="relative h-full">
                 <div v-if="verifiedPage" class="hidden sm:block mb-1 2xl:mb-2 rounded-full image-container aspect-square" v-lazy:background-image="profilePicUrl" style="height: 60px;"></div>
@@ -13,6 +14,7 @@
 
                 <div v-if="!igConnected && contactInfoRows.length !== 0">
                   <a v-for="(pageInfoRow, i) in contactInfoRows"
+                     @click.stop=""
                      :key="pageInfoRow.value + i.toString()"
                      :href="pageInfoRow.link"
                      target="_blank">
@@ -36,6 +38,7 @@
                 <div v-if="showLocations && addressInfoRow" class="mt-2 2xl:mt-4 text-sm text-gray-500 flex items-start">
                   <span><i class="mr-2" :class="addressInfoRow.iconClass"></i></span>
                   <component :is="addressInfoRow.link ? 'a' : 'span'"
+                             @click="stopPropagation($event, !!addressInfoRow.link)"
                              class="break-all"
                              :class="{'hover:underline': addressInfoRow.link}"
                              target="_blank"
@@ -53,19 +56,18 @@
                        class="tag mr-1 2xl:mr-2">{{ `#${tagsLookup[tag]}` }}</div>
                 </div>
 
-                <nuxt-link v-if="!igConnected"
-                           :to="`/shop/${username}`"
-                           class="absolute block mt-2 2xl:mt-4 btn-outline btn-primary-hover btn-sm sm:btn" style="bottom: 0px;">進入店鋪</nuxt-link>
+<!--                <nuxt-link :to="`/shop/${username}`"-->
+<!--                           class="absolute block mt-2 2xl:mt-4 btn-outline btn-primary-hover btn-sm sm:btn" style="bottom: 0px;">進入店鋪</nuxt-link>-->
             </div>
         </div>
 
         <div class="col-span-1">
 
             <template v-if="verifiedPage && mediaCodes">
-                <div class="image-container aspect-square cursor-pointer" v-lazy:background-image="$imageUrl(mediaCodes[0])" @click="openMedia(mediaCodes[0])"></div>
+                <div class="image-container aspect-square cursor-pointer" v-lazy:background-image="$imageUrl(mediaCodes[0])" @click.stop="openMedia(mediaCodes[0])"></div>
                 <div class="flex" style="margin-top: 2px;">
-                  <div class="image-container aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])" @click="openMedia(mediaCodes[1])"></div>
-                  <div class="image-container aspect-square cursor-pointer flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])" @click="openMedia(mediaCodes[2])"></div>
+                  <div class="image-container aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])" @click.stop="openMedia(mediaCodes[1])"></div>
+                  <div class="image-container aspect-square cursor-pointer flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])" @click.stop="openMedia(mediaCodes[2])"></div>
                 </div>
             </template>
             <template v-else>
@@ -73,6 +75,7 @@
                 <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="flex items-start mb-1">
                   <span><i class="mr-2" :class="pageInfoRow.iconClass"></i></span>
                   <component :is="pageInfoRow.link ? 'a' : 'span'"
+                             @click="stopPropagation($event, !!pageInfoRow.link)"
                              class="break-all"
                              :class="{'hover:underline': pageInfoRow.link}"
                              target="_blank"
@@ -156,8 +159,19 @@ function openMedia(mediaCode: string) {
   showMediaModal.value = true;
   showingMediaModalData.value = {
     code: mediaCode,
-    pageId: shop._id
+    pageId: _id
   };
+}
+
+// Card base click.
+function stopPropagation(e: Event, stop: boolean) {
+  if (stop) {
+    e.stopPropagation();
+  }
+}
+
+function navigateToPage() {
+  navigateTo(`/shop/${username}`);
 }
 
 </script>
