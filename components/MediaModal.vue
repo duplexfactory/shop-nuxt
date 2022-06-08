@@ -3,8 +3,8 @@
     <template #body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
-          <template v-if="localMediaCode && localPage">
-            <template v-if="localPage.igConnected">
+          <template v-if="localPage">
+            <template v-if="localPage.igConnected && localMedia">
               <div class="image-container aspect-square rounded-md overflow-hidden"
                    v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
               <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ localMedia.caption }}</div>
@@ -13,7 +13,7 @@
                 {{ formatMediaPrice(mediaPrice(localMedia.media)) }}
               </div>
             </template>
-            <MediaCardIGEmbed v-else
+            <MediaCardIGEmbed v-if="!localPage.igConnected && localMediaCode"
                               captioned
                               :post-id="localMediaCode"
                               :fixed-aspect-ratio="0"
@@ -204,14 +204,15 @@ async function submitPrice() {
   showPriceSuggestionModal.value = false;
 }
 
-// Init data on modal open
-if (!localMedia.value) {
-  const {data, pending} = await useFetch(`/api/media/${localMediaCode.value}`);
-  fetchedMedia.value = data.value.media;
-}
-
 // Mounted
 onMounted(async () => {
+
+  // Init data on modal open
+  if (!localMedia.value) {
+    const {data, pending} = await useFetch(`/api/media/${localMediaCode.value}`);
+    fetchedMedia.value = data.value.media;
+  }
+
   if (!localPage.value) {
     const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`);
     fetchedPage.value = data.value.page;
