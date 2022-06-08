@@ -53,7 +53,7 @@
       </div>
 
       <!-- right -->
-      <div :class="{'sqr-menu': isLoggedIn}">
+      <div :class="{'sqr-menu': isLoggedIn}" class="flex items-center">
 
         <AgeRestrictionToggle v-if="!isLoggedIn" class="hidden lg:inline-block mr-6"/>
         <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="lg:mr-6 text-gray-500 font-semibold">商戶登入</nuxt-link>
