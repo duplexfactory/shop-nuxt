@@ -45,8 +45,8 @@
               </button>
             </div>
 
-<!--            <div v-if="pageInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
-<!--              <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
+<!--            <div v-if="contactInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
+<!--              <div v-for="(pageInfoRow, i) in contactInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
 <!--                <i class="mr-2" :class="pageInfoRow.iconClass"></i>-->
 <!--                <component :is="pageInfoRow.link ? 'a' : 'span'"-->
 <!--                           class="break-words"-->
@@ -105,20 +105,23 @@
 
 
       <Teleport to="body">
-        <transition name="modal">
+        <transition :duration="500" name="modal">
           <LazyModal v-if="showContactModal" @close="showContactModal = false">
             <template #container>
               <div class="flex items-end h-full w-full" @click="showContactModal = false">
-                <div v-if="pageInfoRows.length !== 0" class="bg-white p-4 rounded-t-md w-full text-gray-500">
-                <div v-for="(pageInfoRow, i) in pageInfoRows" :key="pageInfoRow.value + i.toString()" class="py-2">
-                  <i class="mr-2" :class="pageInfoRow.iconClass"></i>
-                  <component :is="pageInfoRow.link ? 'a' : 'span'"
-                             class="break-words"
-                             :class="{'hover:underline': pageInfoRow.link}"
-                             target="_blank"
-                             :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>
+
+                <div v-if="contactInfoRows.length !== 0"
+                     @click.stop=""
+                     class="inner-sheet bg-white p-4 rounded-t-md w-full text-gray-500">
+                  <button v-for="(pageInfoRow, i) in contactInfoRows"
+                          :key="pageInfoRow.value + i.toString()"
+                          @click="clickContactInfoRow(pageInfoRow)"
+                          class="py-2 block">
+                    <i class="mr-2" :class="pageInfoRow.iconClass"></i>
+                    <span class="break-words">{{ pageInfoRow.value }}</span>
+                  </button>
                 </div>
-                </div>
+
               </div>
             </template>
           </LazyModal>
@@ -145,6 +148,8 @@ import useMediaPrice from "~/composables/useMediaPrice";
 import IgPage from "~/models/IgPage";
 import IgPageExtraData from "~/models/IgPageExtraData";
 
+const nuxt = useNuxtApp();
+
 // Media Modal
 const showMediaModal = useShowMediaModal();
 const showingMediaModalData = useShowingMediaModalData();
@@ -160,16 +165,6 @@ const localMediaCode = computed(() => {
 const fetchedMedia: Ref<IgMedia | null> = ref(null);
 const localMedia = computed(() => {
   return showingMediaModalData.value.media || fetchedMedia.value;
-});
-
-const pageInfoRows = computed(() => {
-  if (!localPage.value) return []
-
-  const fields: (keyof IgPageExtraData)[] = ["whatsapp", "wechat", "signal"]
-  if (!localPage.value.extraData || !localPage.value.extraData.noPhoneCall) {
-    fields.unshift("phone");
-  }
-  return PageInfoRow.rowsFromExtraData(localPage.value.extraData, fields);
 });
 
 function stripTrailingHashtags(s: string): string {
@@ -226,7 +221,6 @@ const screenSize = useScreenSize();
 // Suggest price
 const showPriceSuggestionModal = ref(false);
 const suggestedPrice = ref(null);
-const nuxt = useNuxtApp();
 async function submitPrice() {
   if (suggestedPrice.value === null) {
     nuxt.vueApp.$toast.error("請輸入價格！", {position: "top"});
@@ -248,6 +242,43 @@ async function submitPrice() {
 
 // Contact
 const showContactModal = ref(false);
+type ContactInfoRow = {
+  key: keyof IgPageExtraData | string;
+  iconClass: string;
+  value: string;
+  link?: string;
+};
+const contactInfoRows = computed(() => {
+  if (!localPage.value) return [] as ContactInfoRow[]
+
+  const fields: (keyof IgPageExtraData)[] = ["whatsapp", "wechat", "signal"]
+  if (!localPage.value.extraData || !localPage.value.extraData.noPhoneCall) {
+    fields.unshift("phone");
+  }
+
+  const rows: ContactInfoRow[] = PageInfoRow.rowsFromExtraData(localPage.value.extraData, fields);
+  if (!localPage.value.extraData || !localPage.value.extraData.noIgDM) {
+    rows.unshift({
+      key: "igPage",
+      iconClass: "spr-instagram",
+      value: localPage.value.username,
+      link: `https://www.instagram.com/${localPage.value.username}/`
+    });
+  }
+  return rows;
+});
+function clickContactInfoRow(row: ContactInfoRow) {
+  if (!!row.link) {
+    window.open(row.link, '_blank').focus();
+  }
+  else if (row.key === "phone") {
+    window.open(`tel:${row.value}`, '_self');
+  }
+  else {
+    navigator.clipboard.writeText(row.value);
+    nuxt.vueApp.$toast.success("已複製至剪貼簿！", {position: "top"});
+  }
+}
 
 // Mounted
 onMounted(async () => {
@@ -266,3 +297,20 @@ onMounted(async () => {
 });
 
 </script>
+
+<style scoped>
+
+.modal-enter-active .inner-sheet,
+.modal-leave-active .inner-sheet {
+  transition: all 0.25s ease;
+}
+
+.modal-enter-active .inner-sheet {
+  transition-delay: 0.25s;
+}
+
+.modal-enter-from .inner-sheet,
+.modal-leave-to .inner-sheet {
+  transform: translateY(100%);
+}
+</style>
