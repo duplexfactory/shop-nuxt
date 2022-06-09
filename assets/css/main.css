@@ -99,3 +99,17 @@ textarea {
 [class^="spr-"]:before, [class*=" spr-"]:before {
     margin: 0px !important;
 }
+
+/* Toast custom CSS. */
+
+.c-toast {
+    @apply !py-2 !px-4 !rounded-md;
+}
+
+.c-toast.c-toast--error {
+    @apply !bg-red-100 !text-red-500;
+}
+
+.c-toast.c-toast--success {
+    @apply !bg-green-100 !text-green-700;
+}
