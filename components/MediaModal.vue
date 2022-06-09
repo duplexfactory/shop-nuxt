@@ -40,7 +40,7 @@
             </nuxt-link>
 
             <div class="mt-2">
-              <button class="btn btn-primary w-full" @click="showContactModal = true">
+              <button class="btn btn-primary w-full" @click="clickContactShop">
                 聯絡店主下單
               </button>
             </div>
@@ -242,12 +242,24 @@ async function submitPrice() {
 
 // Contact
 const showContactModal = ref(false);
+
+function clickContactShop() {
+  if (contactInfoRows.value.length === 0) {
+    // Force open IG page if no contact info available.
+    window.open(`https://www.instagram.com/${localPage.value.username}/`, '_blank').focus();
+  }
+  else {
+    showContactModal.value = true;
+  }
+}
+
 type ContactInfoRow = {
   key: keyof IgPageExtraData | string;
   iconClass: string;
   value: string;
   link?: string;
 };
+
 const contactInfoRows = computed(() => {
   if (!localPage.value) return [] as ContactInfoRow[]
 
@@ -267,6 +279,7 @@ const contactInfoRows = computed(() => {
   }
   return rows;
 });
+
 function clickContactInfoRow(row: ContactInfoRow) {
   if (!!row.link) {
     window.open(row.link, '_blank').focus();
