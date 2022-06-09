@@ -50,18 +50,16 @@ export default defineEventHandler(async (event) => {
                 m.patchPrice = existingMedia.patchPrice
             }
             else {
-                newMedias.push(m)
-            }
-        })
-        if (newMedias.length !== 0) {
-            // Contains not crawled data. Process and save to db.
-            newMedias.forEach((m) => {
                 if (!!m.caption) {
                     const price = detectPrice(m.caption)
                     if (price !== undefined)
                         m.price = price
                 }
-            })
+                newMedias.push(m)
+            }
+        })
+        if (newMedias.length !== 0) {
+            // Contains not crawled data. Process and save to db.
             const rmUrl = newMedias.map(m => {
                 const {mediaUrl, ...props} = m
                 return props
