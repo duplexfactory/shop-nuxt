@@ -34,8 +34,9 @@
     import {
         getAuth,
         signInWithEmailAndPassword,
-        FacebookAuthProvider,
-        signInWithPopup
+        // FacebookAuthProvider,
+        // signInWithPopup,
+        AuthErrorCodes
     } from "firebase/auth";
     import useFbLogin from "~/composables/useFbLogin";
 
@@ -72,9 +73,7 @@
             await navigateTo("/my/account");
         } catch (firebaseSignInError) {
             const errorCode = firebaseSignInError.code;
-            const errorMessage = firebaseSignInError.message;
-
-            if (errorCode === "auth/user-not-found") {
+            if ([AuthErrorCodes.INVALID_EMAIL, AuthErrorCodes.INVALID_PASSWORD].includes(errorCode)) {
               nuxt.vueApp.$toast.error("電郵或密碼錯誤", {position: "top"});
             }
             else {
