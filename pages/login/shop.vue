@@ -13,7 +13,7 @@
           <hr class="flex-1"/>
         </div>
         <input v-model="email" class="block text-input-primary w-full" type="text" name="email" placeholder="電郵">
-        <input v-model="password" class="mt-4 block text-input-primary w-full" type="password" name="password" placeholder="密碼">
+        <input v-model="password" class="mt-4 block text-input-primary w-full" type="password" name="password" placeholder="密碼" @keyup.enter="login">
         <div class="mt-2 text-gray-400 text-right">
           <nuxt-link to="/auth/forgot-password" class="hover:underline cursor-pointer">忘記密碼</nuxt-link>
         </div>
