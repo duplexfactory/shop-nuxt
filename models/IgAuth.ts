@@ -6,4 +6,5 @@ export default interface IgAuth {
 
     accessToken: string;
     expiry: Date;
+    invalid?: boolean;
 }

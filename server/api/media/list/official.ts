@@ -16,17 +16,8 @@ export default defineEventHandler(async (event) => {
     } = await useQuery(event) as { id: string, limit: string, until?: string }
 
     await initMongo()
-    const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1}})
+    const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1, invalid: 1}})
     assert(p, notFound)
-
-    // Get new medias from official api.
-
-    const medias: IgMedia[] = await fetchIgMedias(id, p.accessToken, true, {
-        limit: Number(limit),
-        until: until ? Number(until) - 1 : undefined,
-    })
-
-    // const since: number | undefined = medias.length ? medias[0].takenAt : undefined
 
     // Get existing medias from dynamo for price and patchPrice.
     initDynamo()
@@ -36,49 +27,65 @@ export default defineEventHandler(async (event) => {
         until ? Number(until) - 1 : undefined,
     )
 
-    const newMedias: IgMedia[] = []
-    medias.forEach((m) => {
-        const existingMedia = existingMedias.find((em) => em.code === m.code)
-        if (!!existingMedia) {
-            m.price = existingMedia.price
-        }
-        else {
-            newMedias.push(m)
-        }
-    })
-    if (newMedias.length !== 0) {
-        // Contains not crawled data. Process and save to db.
-        newMedias.forEach((m) => {
-            if (!!m.caption) {
-                const price = detectPrice(m.caption)
-                if (price !== undefined)
-                    m.price = price
+    let medias: IgMedia[]
+    if (!!p.invalid) {
+        // Token is invalid.
+        // Get use existing medias from dynamo.
+        medias = existingMedias
+    }
+    else {
+        // Token is valid.
+        // Get new medias from official api.
+        medias = await fetchIgMedias(id, p.accessToken, true, {
+            limit: Number(limit),
+            until: until ? Number(until) - 1 : undefined,
+        })
+        // const since: number | undefined = medias.length ? medias[0].takenAt : undefined
+
+        const newMedias: IgMedia[] = []
+        medias.forEach((m) => {
+            const existingMedia = existingMedias.find((em) => em.code === m.code)
+            if (!!existingMedia) {
+                m.price = existingMedia.price
+                m.patchPrice = existingMedia.patchPrice
+            }
+            else {
+                newMedias.push(m)
             }
         })
-        const rmUrl = newMedias.map(m => {
-            const {mediaUrl, ...props} = m
-            return props
-        })
-        await saveMedias(rmUrl)
+        if (newMedias.length !== 0) {
+            // Contains not crawled data. Process and save to db.
+            newMedias.forEach((m) => {
+                if (!!m.caption) {
+                    const price = detectPrice(m.caption)
+                    if (price !== undefined)
+                        m.price = price
+                }
+            })
+            const rmUrl = newMedias.map(m => {
+                const {mediaUrl, ...props} = m
+                return props
+            })
+            await saveMedias(rmUrl)
 
-        const {media_count} = await fetchIgProfile(p.accessToken)
+            const {media_count} = await fetchIgProfile(p.accessToken)
 
-        // Update media info of page.
-        const lastMedia = rmUrl[0]
-        const update = {
-            lastMedia: lastMedia.takenAt,
-            lastActivity: lastMedia.takenAt,
-            lastMediaData: lastMedia,
-            mediaCount: media_count,
-            mediaCodes: medias.slice(0, 3).map((m) => m.code)
+            // Update media info of page.
+            const lastMedia = rmUrl[0]
+            const update = {
+                lastMedia: lastMedia.takenAt,
+                lastActivity: lastMedia.takenAt,
+                lastMediaData: lastMedia,
+                mediaCount: media_count,
+                mediaCodes: medias.slice(0, 3).map((m) => m.code)
+            }
+            await pageSearchCollection.updateOne({_id: id}, {$set: update})
+            await pageCollection().doc(id).update(update)
         }
-        await pageSearchCollection.updateOne({_id: id}, {$set: update})
-        await pageCollection().doc(id).update(update)
     }
 
-
     return {
-        medias: medias
+        medias
     } as unknown as JSONValue
     // { medias: IgMedia[] }
 })
