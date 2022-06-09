@@ -5,7 +5,7 @@ export default function useCreateReview() {
     const reviewingCode = ref<string>("");
     const reviewingPageId = ref<string>("");
     const isCreatingReview = ref<boolean>(false);
-    const rating = ref<number>(0);
+    const rating = ref<number>(5);
     const content = ref<string>("");
 
     async function createReview() {
