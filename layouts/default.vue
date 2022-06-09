@@ -1,5 +1,11 @@
 <template>
   <div class="min-h-screen flex flex-col" :class="showLoginLoading ? 'h-screen overflow-hidden' : ''">
+
+    <div v-if="isIgConnected && !isIgAuthTokenValid" class="container bg-red-100 text-gray-800 text-xs py-2">
+      由於你更改了Instagram帳戶密碼或基於安全理由，Facebook已經暫停了你的帳戶連結。為確保你的專頁在Shoperuse上正常運作，請儘快至 "我的帳戶" 解除連結後重新連結。
+      <nuxt-link class="hover:underline font-semibold" to="/my/account">立即前往</nuxt-link>
+    </div>
+
     <div v-if="isIGBrowser && !isIGHintClosed" class="py-2 px-4 bg-gray-100">
       <div class="text-xs">如在IG瀏覽器内未能正常加載，請按 "<i class="spr-dot-3 text-xs"></i>" > "瀏覽器設定" > "清除瀏覽資料" 後重新整理。</div>
       <button @click="isIGHintClosed = true" class="mt-2 text-xs">知道了</button>
@@ -106,6 +112,7 @@
   // Login
   const isLoggedIn = useIsLoggedIn()
   const isIgConnected = useIsIgConnected();
+  const isIgAuthTokenValid = ref(true);
   const igUsername = useIgUsername();
   const currentUser = useCurrentUser()
   const isLoginLoadingRoute = computed(() => {
@@ -165,6 +172,7 @@
           headers: await getAuthHeader()
         })
         isIgConnected.value = res.connected;
+        isIgAuthTokenValid.value = !res.invalid;
         igUsername.value = res.username ?? "";
       }
       else {

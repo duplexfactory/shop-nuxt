@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         connected: true,
+        invalid: !!igAuth.invalid,
         username: igAuth.username
     }
 })
