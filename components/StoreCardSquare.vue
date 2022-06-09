@@ -43,8 +43,8 @@
                              :class="{'hover:underline': addressInfoRow.link}"
                              target="_blank"
                              :href="addressInfoRow.link">
-                    <span v-if="addressInfoRow.link" class="md:hidden">查看地址</span>
-                    <span :class="addressInfoRow.link ? 'hidden md:inline-block' : ''">{{ addressInfoRow.value }}</span>
+                    <span v-if="addressInfoRow.link" class="md:hidden hover:underline">查看地址</span>
+                    <span :class="addressInfoRow.link ? 'hidden md:inline-block hover:underline' : ''">{{ addressInfoRow.value }}</span>
                   </component>
                 </div>
 
@@ -64,10 +64,10 @@
         <div class="col-span-1">
 
             <template v-if="verifiedPage && mediaCodes">
-                <div class="image-container aspect-square cursor-pointer" v-lazy:background-image="$imageUrl(mediaCodes[0])" @click.stop="openMedia(mediaCodes[0])"></div>
+                <div class="image-container image-container-clickable aspect-square cursor-pointer" v-lazy:background-image="$imageUrl(mediaCodes[0])" @click.stop="openMedia(mediaCodes[0])"></div>
                 <div class="flex" style="margin-top: 2px;">
-                  <div class="image-container aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])" @click.stop="openMedia(mediaCodes[1])"></div>
-                  <div class="image-container aspect-square cursor-pointer flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])" @click.stop="openMedia(mediaCodes[2])"></div>
+                  <div class="image-container image-container-clickable aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])" @click.stop="openMedia(mediaCodes[1])"></div>
+                  <div class="image-container image-container-clickable aspect-square cursor-pointer flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])" @click.stop="openMedia(mediaCodes[2])"></div>
                 </div>
             </template>
             <template v-else>

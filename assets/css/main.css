@@ -91,7 +91,15 @@ textarea {
 }
 
 .image-container {
-    @apply bg-center bg-cover bg-gray-300;
+    @apply relative bg-center bg-cover bg-gray-300;
+}
+
+.image-container-clickable:hover::after {
+    content: "";
+    left: 0;
+    top: 0;
+    background-color: #fff6;
+    @apply z-1 w-full h-full absolute;
 }
 
 /* Icons no margin. */
