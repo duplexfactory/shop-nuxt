@@ -36,6 +36,14 @@
     "discount",
     "shopSince",
   ]
+  function extraDataStringFieldKeyPress(e: KeyboardEvent, key: (keyof PickType<IgPageExtraData, string>)) {
+    if (key === "phone" || key === "whatsapp") {
+      if (e.key === " " || isNaN(Number(e.key))) {
+        return e.preventDefault();
+      }
+    }
+  }
+
   const extraDataBooleanFields: (keyof PickType<IgPageExtraData, boolean>)[] = [
     "br",
     "noRefund",
@@ -145,6 +153,20 @@
     nuxt.vueApp.$toast.success("成功儲存詳細資料！", {position: "top"});
   }
 
+  // Placeholder.
+  function placeholder(extraDataKey: keyof IgPageExtraData) {
+    if (extraDataKey === "whatsapp") {
+      return extraDataLookup[extraDataKey].title + " （不用加號）"
+    }
+    if (extraDataKey === "relatedPage") {
+      return extraDataLookup[extraDataKey].title + " （請輸入IG名稱）"
+    }
+    if (extraDataKey === "facebook") {
+      return extraDataLookup[extraDataKey].title + " （e.g. https://www.facebook.com/igshop）"
+    }
+    return extraDataLookup[extraDataKey].title
+  }
+
 </script>
 
 <template>
@@ -223,8 +245,11 @@
                 <i :class="extraDataLookup[extraDataStringFieldKey].iconClass"></i>
               </div>
               <div class="table-cell pt-2">
-                <input v-model="shop.extraData[extraDataStringFieldKey]" class="text-input-primary w-full"
-                       type="text" :placeholder="extraDataLookup[extraDataStringFieldKey].title"/>
+                <input v-model="shop.extraData[extraDataStringFieldKey]"
+                       @keypress="extraDataStringFieldKeyPress($event, extraDataStringFieldKey)"
+                       class="text-input-primary w-full"
+                       type="text"
+                       :placeholder="placeholder(extraDataStringFieldKey)"/>
               </div>
             </div>
           </div>
