@@ -179,6 +179,9 @@
         </div>
         <div class="mt-2">
           <div>分類</div>
+          <div class="my-1 text-sm text-gray-500">
+            建議選擇最少一個分類，否則用戶按分類搜尋時不會找到你的IG Shop。
+          </div>
           <div class="flex items-center">
             <select class="border rounded-sm" v-model="selectedTag">
               <option value="" selected>選擇分類</option>
