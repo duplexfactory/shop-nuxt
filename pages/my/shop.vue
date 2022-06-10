@@ -48,6 +48,15 @@
     "paymentMethods",
     "mailing"
   ]
+  function addMultiStringField(key: (keyof PickType<IgPageExtraData, string[]>)) {
+    if (!!extraDataMultiStringFieldsTemp.value[key]) {
+      shop.value.extraData[key].push(extraDataMultiStringFieldsTemp.value[key])
+      extraDataMultiStringFieldsTemp.value[key] = ''
+    }
+    else {
+      nuxt.vueApp.$toast.error("不能增加空白！", {position: "top"});
+    }
+  }
 
   // Licence
   const licenceChecked = ref(false)
@@ -234,7 +243,7 @@
                            class="text-input-primary" type="text"
                            :placeholder="extraDataLookup[extraDataMultiStringFieldKey].title"/>
                     <button class="btn btn-outline ml-2"
-                            @click="shop.extraData[extraDataMultiStringFieldKey].push(extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey]); extraDataMultiStringFieldsTemp[extraDataMultiStringFieldKey] = ''">
+                            @click="addMultiStringField(extraDataMultiStringFieldKey)">
                       +
                     </button>
                   </div>
