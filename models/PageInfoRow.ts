@@ -179,7 +179,7 @@ export default class PageInfoRow {
             if (!!extraData.relatedPage)
                 rows.push(new PageInfoRow("relatedPage", "spr-instagram", `${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage.replace("@", "")}/`));
             if (!!extraData.facebook)
-                rows.push(new PageInfoRow("facebook", "spr-facebook-squared", extraData.facebook, `https://www.facebook.com/${extraData.facebook}/`));
+                rows.push(new PageInfoRow("facebook", "spr-facebook-squared", extraData.facebook, extraData.facebook));
 
             // Other info
             if (!!extraData.shopSince)
