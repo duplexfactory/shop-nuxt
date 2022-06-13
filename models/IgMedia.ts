@@ -8,12 +8,18 @@ export default interface IgMedia {
     price?: number;
     patchPrice?: number;
 
-    mediaUrl?: string; // only from official
+    mediaUrl?: string; // Only from official.
 }
 
-export default interface IgPageCommerceData {
-    _id: string; // Same as IgMedia code.
-    active: boolean;
-    customPrice: boolean;
-    stock?: number;
-}
+
+
+
+
+
+
+
+
+
+
+
+
