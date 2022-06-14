@@ -1,7 +1,7 @@
 import {defineEventHandler, JSONValue, useQuery} from "h3"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
-import {notFound} from "~/utils/h3Error"
-import {assert} from "~/server/util"
+import {badRequest, notFound} from "~/utils/h3Error"
+import {assert, getAuth} from "~/server/util"
 import {fetchIgMedias, fetchIgProfile} from "~/server/instagram"
 import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
 import {detectPrice} from "~/utils/from-crawler/detect-price"
@@ -16,8 +16,15 @@ export default defineEventHandler(async (event) => {
     } = await useQuery(event) as { id: string, limit: string, until?: string }
 
     await initMongo()
-    const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1, invalid: 1}})
+    const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1, invalid: 1, userId: 1}})
     assert(p, notFound)
+
+    const auth = getAuth(event, false)
+    if (!!auth) {
+        assert( p.userId === auth.uid, badRequest)
+
+    }
+
 
     // Get existing medias from dynamo for price and patchPrice.
     initDynamo()
