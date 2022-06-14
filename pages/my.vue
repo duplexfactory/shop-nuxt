@@ -25,6 +25,7 @@ watch(
       <div class="mb-4 text-lg flex">
         <nuxt-link to="/my/account" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/account')}">我的帳戶</nuxt-link>
         <nuxt-link to="/my/shop" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/shop')}">我的商店</nuxt-link>
+        <nuxt-link to="/my/media-list" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/media-list')}">我的貼文</nuxt-link>
       </div>
 
       <nuxt-child></nuxt-child>

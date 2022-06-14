@@ -7,6 +7,8 @@ import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
 import {detectPrice} from "~/utils/from-crawler/detect-price"
 import {pageCollection} from "~/server/firebase/collections"
 import IgMedia from "~/models/IgMedia"
+import IgAuth from "~/models/IgAuth";
+import {WithId} from "mongodb";
 
 export default defineEventHandler(async (event) => {
     let {
@@ -16,14 +18,17 @@ export default defineEventHandler(async (event) => {
     } = await useQuery(event) as { id: string, limit: string, until?: string }
 
     await initMongo()
-    const p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1, invalid: 1, userId: 1}})
-    assert(p, notFound)
 
     const auth = getAuth(event, false)
+    let p: WithId<IgAuth>
     if (!!auth) {
-        assert( p.userId === auth.uid, badRequest)
-
+        p = await igAuthCollection.findOne({userId: auth.uid}, {projection: {pageId: 1, accessToken: 1, invalid: 1, userId: 1}})
+        id = p.pageId
     }
+    else {
+        p = await igAuthCollection.findOne({pageId: id}, {projection: {accessToken: 1, invalid: 1, userId: 1}})
+    }
+    assert(p, notFound)
 
 
     // Get existing medias from dynamo for price and patchPrice.
