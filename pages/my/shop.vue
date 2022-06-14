@@ -3,12 +3,12 @@
   import IgPageExtraData from "~/models/IgPageExtraData"
   import {extraDataLookup} from "~/models/PageInfoRow"
   import {useIgUsername} from "~/composables/states"
-  import type {Ref} from "vue";
-  import {PageSearch} from "~/models/PageSearch";
+  import type {Ref} from "vue"
+  import {PageSearch} from "~/models/PageSearch"
 
-  const nuxt = useNuxtApp();
+  const nuxt = useNuxtApp()
 
-  const shop = ref<PageSearch>(null)
+  const shop: Ref<PageSearch> = ref<PageSearch>(null)
   const {categories, tagsLookup} = useTags()
   const selectedTag = ref("")
 
@@ -20,7 +20,7 @@
   }
 
   type PickType<T, U> = Record<{
-    [K in keyof T]: T[K] extends U ? K : never;
+    [K in keyof T]: T[K] extends U ? K : never
   }[keyof T], U>
   const extraDataStringFields: (keyof PickType<IgPageExtraData, string>)[] = [
     "phone",
@@ -36,10 +36,17 @@
     "discount",
     "shopSince",
   ]
+  function extraDataStringFieldPaste(e, key: (keyof PickType<IgPageExtraData, string>)) {
+    if (key === "phone" || key === "whatsapp" || key === "signal") {
+      let paste = (e.clipboardData || window.clipboardData).getData('text')
+      shop.value.extraData[key] = paste.replace(/[^0-9]/g, '')
+      e.preventDefault()
+    }
+  }
   function extraDataStringFieldKeyPress(e: KeyboardEvent, key: (keyof PickType<IgPageExtraData, string>)) {
-    if (key === "phone" || key === "whatsapp") {
+    if (key === "phone" || key === "whatsapp" || key === "signal") {
       if (e.key === " " || isNaN(Number(e.key))) {
-        return e.preventDefault();
+        return e.preventDefault()
       }
     }
   }
@@ -91,11 +98,11 @@
     shop.value = data.value.page
 
     if (!shop.value.extraData) {
-      shop.value.extraData = {};
+      shop.value.extraData = {}
     }
     for (const key of extraDataMultiStringFields) {
       if (!shop.value.extraData[key])
-        shop.value.extraData[key] = [];
+        shop.value.extraData[key] = []
     }
 
     licenceChecked.value = !!shop.value.extraData.licence
@@ -139,10 +146,10 @@
       ...shop.value.extraData,
     };
     if (licenceChecked.value) {
-      body.licence = licenceNumber.value === "" ? true : licenceNumber.value;
+      body.licence = licenceNumber.value === "" ? true : licenceNumber.value
     }
     else {
-      body.licence = false;
+      body.licence = false
     }
 
     extraDataSaving.value = true;
@@ -155,8 +162,8 @@
 
   // Placeholder.
   function placeholder(extraDataKey: keyof IgPageExtraData) {
-    if (extraDataKey === "whatsapp") {
-      return extraDataLookup[extraDataKey].title + " （不用加號）"
+    if (extraDataKey === "phone" || extraDataKey === "whatsapp" || extraDataKey === "signal") {
+      return extraDataLookup[extraDataKey].title + " （不用 +號 或 空白鍵）"
     }
     if (extraDataKey === "relatedPage") {
       return extraDataLookup[extraDataKey].title + " （請輸入IG名稱）"
@@ -249,6 +256,7 @@
               </div>
               <div class="table-cell pt-2">
                 <input v-model="shop.extraData[extraDataStringFieldKey]"
+                       @paste="extraDataStringFieldPaste($event, extraDataStringFieldKey)"
                        @keypress="extraDataStringFieldKeyPress($event, extraDataStringFieldKey)"
                        class="text-input-primary w-full"
                        type="text"
