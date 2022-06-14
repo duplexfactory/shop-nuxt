@@ -204,6 +204,9 @@
         </div>
         <div class="mt-2">
           描述
+          <div class="my-1 text-sm text-gray-500">
+            建議電話、WhatsApp、地址等資料於「詳細資料」部分才填寫，避免重複。
+          </div>
           <textarea v-model="shop.biography"
                     class="mt-1 w-full border rounded-md p-2"
                     rows="5"></textarea>
