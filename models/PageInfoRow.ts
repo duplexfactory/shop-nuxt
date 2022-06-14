@@ -127,13 +127,15 @@ export default class PageInfoRow {
                 rows.push(new PageInfoRow("phone", "spr-phone", phone));
 
             if (!!extraData.whatsapp)
-                rows.push(new PageInfoRow("whatsapp", "spr-whatsapp", formattedPhone(extraData.whatsapp), `https://api.whatsapp.com/send/?phone=${extraData.whatsapp.length == 8 ? '852' : ''}${extraData.whatsapp}`))
+                // WhatsApp regional code is optional.
+                rows.push(new PageInfoRow("whatsapp", "spr-whatsapp", formattedPhone(extraData.whatsapp), `https://api.whatsapp.com/send/?phone=${extraData.whatsapp}`))
             if (!!extraData.signal)
-                rows.push(new PageInfoRow("signal", "spr-signal", formattedPhone(extraData.signal), `https://signal.me/#p/+${extraData.signal}`),);
+                // Signal must add regional code and + sign.
+                rows.push(new PageInfoRow("signal", "spr-signal", formattedPhone(extraData.signal), `https://signal.me/#p/+${extraData.signal.length == 8 ? '852' : ''}${extraData.signal}`),);
             if (!!extraData.wechat)
                 rows.push(new PageInfoRow("wechat", "spr-wechat", formattedPhone(extraData.wechat)),);
             if (!!extraData.email)
-                rows.push(new PageInfoRow("email", "spr-mail-alt", formattedPhone(extraData.email)),);
+                rows.push(new PageInfoRow("email", "spr-mail-alt", extraData.email),);
 
             // Brick and mortar
             if (!!extraData.address) {
