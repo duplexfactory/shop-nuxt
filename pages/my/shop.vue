@@ -224,7 +224,7 @@
             建議選擇最少一個分類，否則用戶按分類搜尋時不會找到你的IG Shop。
           </div>
           <div class="flex items-center">
-            <select class="border rounded-sm" v-model="selectedTag">
+            <select class="border rounded-sm text-sm p-1" v-model="selectedTag">
               <option value="" selected>選擇分類</option>
               <optgroup v-for="category in categories" :key="category['id']" :label="category['label']">
                 <option v-for="tag in category.tags" :key="tag.id" :value="tag.id">{{ tag.label }}</option>
