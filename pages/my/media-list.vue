@@ -8,15 +8,24 @@
         <div class="table-cell">
           接受訂單
           <Popper hover offsetDistance="0" placement="top">
-            i
-            <i class="spr-"></i>
+<!--            <i class="spr-"></i>-->
+            <span>i</span>
             <template #content>
-              <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">此價格由電腦偵查或用戶提出。如有錯漏，歡迎提出修改。</div>
+              <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">開啓接受訂單後，客戶可以直接下單購買產品。</div>
             </template>
           </Popper>
         </div>
         <div class="table-cell">
           自訂價錢
+          <Popper hover offsetDistance="0" placement="top">
+            <!--            <i class="spr-"></i>-->
+            <span>i</span>
+            <template #content>
+              <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
+                開啓後，客戶下單購買時可以自由輸入價格。客戶下單後需待你確認價格才付款。適用於訂製產品。
+              </div>
+            </template>
+          </Popper>
         </div>
         <div class="table-cell">折扣</div>
       </div>
@@ -38,9 +47,9 @@
 <!--        {{ media.price }}-->
 
 <!--        <input size="1"-->
-<!--               v-model=""-->
+<!--               v-model.number=""-->
 <!--               class="text-input-primary"-->
-<!--               type="text"/>-->
+<!--               type="number"/>-->
       </div>
       <div class="table-cell align-top">
 
