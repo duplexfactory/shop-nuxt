@@ -1,110 +1,104 @@
 <template>
   <div>
+    <lazy-component @show="loadSwiper">
+      <!-- Slider main container -->
+      <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper lg:pb-8">
+          <!-- Slides -->
+          <StoreCardSquare v-for="shop in shops"
+                           class="swiper-slide"
+                           :shop="shop"
+                           :showLocations="true"
+                           :key="shop.username + '-store-card-sq'"></StoreCardSquare>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
+
+        <!-- If we need navigation buttons -->
+        <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+        <div ref="swiperButtonNext" class="swiper-button-next"></div>
+
+        <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
+        <!--        <div class="swiper-scrollbar"></div>-->
+      </div>
+    </lazy-component>
+
     <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3"
                                :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
       <template v-slot:default="slotProps">
         <div class="h-full w-full bg-loading"></div>
       </template>
     </swiper-slides-placeholder>
-    <!-- Slider main container -->
-    <div :class="{'hidden': !swiperReady || shops.length === 0}" class="swiper" ref="swiper">
-      <!-- Additional required wrapper -->
-      <div class="swiper-wrapper lg:pb-8">
-        <!-- Slides -->
-        <StoreCardSquare v-for="shop in shops"
-                         class="swiper-slide"
-                         :shop="shop"
-                         :showLocations="true"
-                         :key="shop.username + '-store-card-sq'"></StoreCardSquare>
-      </div>
-
-      <div ref="swiperPagination" class="swiper-pagination hidden lg:block" style="bottom: 0px !important;"></div>
-
-      <!-- If we need navigation buttons -->
-      <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-      <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-      <!--        <div class="swiper-scrollbar"></div>-->
-    </div>
 
   </div>
 </template>
 
-<!--<script setup lang="ts">-->
-
-<!--function slideStyle(spaceBetween: number, slidesPerView: number, index: number) {-->
-<!--  const lastIndex = Math.ceil(slidesPerView) - 1;-->
-<!--  if (index == lastIndex) {-->
-<!--    return 'flex: 1;';-->
-<!--  }-->
-<!--  return `aspect-ratio: 4/3; margin-right: ${spaceBetween}px; width: calc(${100 / slidesPerView}% - ${(spaceBetween * (slidesPerView - 1) / slidesPerView)}px);`;-->
-<!--}-->
-
-<!--</script>-->
 <script setup lang="ts">
-  import {FreeMode, Navigation, Pagination} from "swiper"
-  // import Swiper and modules styles
-  import "swiper/css/navigation"
-  import "swiper/css/pagination"
-  import "swiper/css/free-mode"
-  import {PropType} from "vue"
-  import {PageSearch} from "~/models/PageSearch";
 
-  const {shops} = defineProps({shops: Array as PropType<PageSearch[]>})
+import {FreeMode, Navigation, Pagination} from "swiper"
+// import Swiper and modules styles
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import "swiper/css/free-mode"
+import {PropType} from "vue"
+import {PageSearch} from "~/models/PageSearch";
 
-  const {
-    swiper,
-    swiperButtonPrev,
-    swiperButtonNext,
-    swiperReady,
-    swiperOptions,
-    loadSwiper
-  } = useSwiper({
+const {shops} = defineProps({shops: Array as PropType<PageSearch[]>})
 
-    modules: [Navigation, FreeMode, Pagination],
-    // Optional parameters
-    // direction: 'vertical',
-    // loop: true,
+const {
+  swiper,
+  swiperButtonPrev,
+  swiperButtonNext,
+  swiperLoaded,
+  swiperReady,
+  swiperOptions,
+  loadSwiper
+} = useSwiper({
 
-    on: {
-      init: () => {
-        swiperReady.value = true
-      },
+  modules: [Navigation, FreeMode, Pagination],
+
+  // Optional parameters
+  // direction: 'vertical',
+  // loop: true,
+
+  on: {
+    init: () => {
+      swiperReady.value = true
     },
+  },
 
-    spaceBetween: 16,
-    slidesPerView: 1.2,
-    slidesPerGroup: 1,
-    freeMode: true,
+  spaceBetween: 16,
+  slidesPerView: 1.2,
+  slidesPerGroup: 1,
+  freeMode: true,
 
-    breakpoints: {
-      1024: { // lg
-        spaceBetween: 16,
-        slidesPerView: 2.2,
-        slidesPerGroup: 2,
-        freeMode: false,
-      },
-      1280: { // xl
-        spaceBetween: 16,
-        slidesPerView: 2.5,
-        slidesPerGroup: 2,
-        freeMode: false,
-      },
-      1536: { // 2xl
-        spaceBetween: 16,
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-        freeMode: false,
-      }
+  breakpoints: {
+    1024: { // lg
+      spaceBetween: 16,
+      slidesPerView: 2.2,
+      slidesPerGroup: 2,
+      freeMode: false,
     },
+    1280: { // xl
+      spaceBetween: 16,
+      slidesPerView: 2.5,
+      slidesPerGroup: 2,
+      freeMode: false,
+    },
+    1536: { // 2xl
+      spaceBetween: 16,
+      slidesPerView: 3,
+      slidesPerGroup: 3,
+      freeMode: false,
+    }
+  },
 
-    // // And if we need scrollbar
-    // scrollbar: {
-    //   el: '.swiper-scrollbar',
-    // },
-  })
+  pagination: {
+    el: ".swiper-pagination",
+  },
+})
 
-  onMounted(loadSwiper)
+watch(swiper, loadSwiper)
+
 </script>
-

@@ -2,8 +2,8 @@
   <LazyModal @close="closeModal">
     <template v-slot:header>
       <div class="flex">
-        <button style="aspect-ratio: 1;" @click="closeModal">
-          <i class="spr-angle-left text-2xl"></i>
+        <button @click="closeModal">
+          <i class="spr-angle-left text-2xl px-3"></i>
         </button>
         <input @keyup.enter="search"
                v-model="searchText"
@@ -11,8 +11,8 @@
                placeholder="搜尋 商店 或 貼文"
                type="search"
                autocomplete="off"/>
-        <button @click="search" class="bg-pink-400 text-white px-2">
-          <i class="spr-search text-xl"></i>
+        <button @click="search" class="bg-pink-400 text-white">
+          <i class="spr-search text-2xl px-3"></i>
         </button>
       </div>
     </template>
