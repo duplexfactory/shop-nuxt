@@ -8,7 +8,6 @@
         <div class="table-cell">
           接受訂單
           <Popper hover offsetDistance="0" placement="top">
-<!--            <i class="spr-"></i>-->
             <span>i</span>
             <template #content>
               <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">開啓接受訂單後，客戶可以直接下單購買產品。</div>
@@ -18,7 +17,6 @@
         <div class="table-cell">
           自訂價錢
           <Popper hover offsetDistance="0" placement="top">
-            <!--            <i class="spr-"></i>-->
             <span>i</span>
             <template #content>
               <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
@@ -31,35 +29,14 @@
       </div>
     </div>
 
-
-    <div v-for="media in medias" :key="media.code" class="table-row">
-      <div class="table-cell">
-        <div class="image-container aspect-square rounded-md overflow-hidden"
-             style="width: 90px"
-             v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
-      </div>
-      <div class="table-cell align-top text-sm whitespace-pre-wrap break-words overflow-hidden">
-        <div class="line-clamp-7">
-          {{ media.caption }}
-        </div>
-      </div>
-      <div class="table-cell align-top">
-<!--        {{ media.price }}-->
-
-<!--        <input size="1"-->
-<!--               v-model.number=""-->
-<!--               class="text-input-primary"-->
-<!--               type="number"/>-->
-      </div>
-      <div class="table-cell align-top">
-
-
-      </div>
-      <div class="table-cell align-top">
-
-
-      </div>
-    </div>
+<!--    <template v-if="!commerceDataPending">-->
+<!--      {{ commerceData }}-->
+      <LazyMediaTableRow v-for="media in medias"
+                         :key="media.code"
+                         :media="media"
+                         v-model:mediaCommerceData="commerceData[media.code]">
+      </LazyMediaTableRow>
+<!--    </template>-->
   </div>
 </template>
 
@@ -68,6 +45,8 @@
 import Popper from "vue3-popper";
 
 import useMediaList from "~/composables/useMediaList";
+import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
+import IgMedia from "~/models/IgMedia";
 
 const {
   mediaPending,
@@ -75,19 +54,27 @@ const {
   fetchOwnOfficialMedias
 } = useMediaList();
 
-onMounted(() => {
-  fetchOwnOfficialMedias()
-})
+// const commerceDataPending = ref(true)
+const commerceData = ref<Record<string, IgMediaCommerceData>>({})
 
-const price = computed({
-  get: () => count.value + 1,
-  set: val => {
-    count.value = val - 1
-  }
+onMounted(async () => {
+  await fetchOwnOfficialMedias()
+  for (const m of medias.value)
+    commerceData.value[m.code] = null
+  // commerceDataPending.value = false
 })
 
 </script>
 
 <style scoped>
+
+.table, .table-cell {
+  border-collapse: collapse;
+  @apply border;
+}
+
+.table-cell {
+  @apply align-middle p-2;
+}
 
 </style>
