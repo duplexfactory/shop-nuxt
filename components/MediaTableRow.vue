@@ -176,7 +176,17 @@ function editDiscount() {
 }
 
 function createDiscount() {
-  const data: IgMediaCommerceData = Object.assign({}, mediaCommerceData.value)
+  let data: IgMediaCommerceData
+  if (!mediaCommerceData.value) {
+   data = {
+      _id: media.value.code,
+      active: false,
+      customPrice: false,
+    }
+  }
+  else {
+    data = Object.assign({}, mediaCommerceData.value)
+  }
   data.discount = localDiscount.value
   emit("update:mediaCommerceData", data)
   editing.value = false
