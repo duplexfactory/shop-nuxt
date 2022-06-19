@@ -199,18 +199,18 @@ const currentDiscount = computed(() => {
   }
 
   let text = ""
-  if (mediaCommerceData.value.thresholdType === ThresholdType.COUNT) {
-    text += `滿 ${mediaCommerceData.value.threshold}件`
+  if (mediaCommerceData.value.discount.thresholdType === ThresholdType.COUNT) {
+    text += `滿 ${mediaCommerceData.value.discount.threshold}件`
   }
-  else if (mediaCommerceData.value.thresholdType === ThresholdType.VALUE) {
-    text += `滿 HK$ ${mediaCommerceData.value.threshold}`
+  else if (mediaCommerceData.value.discount.thresholdType === ThresholdType.VALUE) {
+    text += `滿 HK$ ${mediaCommerceData.value.discount.threshold}`
   }
 
-  if (mediaCommerceData.value.discountType === DiscountType.FLAT) {
-    text += `- HK$ ${mediaCommerceData.value.discount}`
+  if (mediaCommerceData.value.discount.discountType === DiscountType.FLAT) {
+    text += `，- HK$ ${mediaCommerceData.value.discount.discount}`
   }
-  else if (mediaCommerceData.value.discountType === DiscountType.RATIO) {
-    text += `${mediaCommerceData.value.discount}% off`
+  else if (mediaCommerceData.value.discount.discountType === DiscountType.RATIO) {
+    text += `，${mediaCommerceData.value.discount.discount}% off`
   }
 
   return text
