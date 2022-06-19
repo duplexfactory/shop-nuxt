@@ -1,9 +1,9 @@
-enum ThresholdType {
+export enum ThresholdType {
     COUNT,
     VALUE
 }
 
-enum DiscountType {
+export enum DiscountType {
     FLAT,
     RATIO
 }
