@@ -37,25 +37,25 @@
 
       <template v-else>
 
-        <input v-model="mediaCommerceData.discount.title"
+        <input v-model="localDiscount.title"
                class="text-input-primary w-full"
                placeholder="折扣名稱（選填）"/>
 
         <div class="mt-4">
           <span class="font-semibold mb-1">折扣條件</span>
           <div class="mb-1">
-            <lazy-spr-select v-model="mediaCommerceData.discount.thresholdType">
+            <lazy-spr-select v-model="localDiscount.thresholdType">
               <option :value="ThresholdType.COUNT">數量</option>
               <option :value="ThresholdType.VALUE">價錢</option>
             </lazy-spr-select>
           </div>
           <div>
-            <span>滿{{mediaCommerceData.discount.thresholdType === ThresholdType.VALUE ? " HK$" : ""}}</span>
-            <input v-model.number="mediaCommerceData.discount.threshold"
+            <span>滿{{localDiscount.thresholdType === ThresholdType.VALUE ? " HK$" : ""}}</span>
+            <input v-model.number="localDiscount.threshold"
                    type="number"
                    class="text-input-primary mx-2"
                    placeholder="折扣"/>
-            <span v-if="mediaCommerceData.discount.thresholdType === ThresholdType.COUNT">件</span>
+            <span v-if="localDiscount.thresholdType === ThresholdType.COUNT">件</span>
           </div>
           <!-- thresholdType: ThresholdType; // COUNT, VALUE -->
           <!-- threshold: number; -->
@@ -64,20 +64,20 @@
         <div class="mt-4">
           <span class="font-semibold mb-1">折扣類型</span>
           <div class="mb-1">
-            <lazy-spr-select v-model="mediaCommerceData.discount.discountType">
+            <lazy-spr-select v-model="localDiscount.discountType">
               <option :value="DiscountType.FLAT">實數</option>
               <option :value="DiscountType.RATIO">百分比</option>
             </lazy-spr-select>
             <!-- discountType: DiscountType; // FLAT, RATIO -->
           </div>
           <div>
-            <span v-if="mediaCommerceData.discount.discountType === DiscountType.FLAT" class="mr-2">- HK$</span>
+            <span v-if="localDiscount.discountType === DiscountType.FLAT" class="mr-2">- HK$</span>
             <input size="1"
-                   v-model.number="mediaCommerceData.discount.discount"
+                   v-model.number="localDiscount.discount"
                    type="number"
                    class="text-input-primary"
                    placeholder="折扣"/>
-            <span v-if="mediaCommerceData.discount.discountType === DiscountType.RATIO" class="ml-2">% off</span>
+            <span v-if="localDiscount.discountType === DiscountType.RATIO" class="ml-2">% off</span>
           </div>
         </div>
 
@@ -115,6 +115,7 @@ const {
 const emit = defineEmits(["update:mediaCommerceData"])
 
 const editing = ref(false)
+const localDiscount = ref(null)
 
 const price = computed({
   get: () => media.value.patchPrice || media.value.price || 0,
@@ -161,34 +162,24 @@ const customPrice = computed({
 
 function editDiscount() {
   editing.value = true
-  createDiscount()
-}
-
-function createDiscount() {
-  if (!mediaCommerceData.value) {
-    const data: IgMediaCommerceData = {
-      _id: media.value.code,
-      active: false,
-      customPrice: false,
-      discount: {
-        thresholdType: ThresholdType.COUNT, // COUNT, VALUE
-        discountType: DiscountType.FLAT, // FLAT, RATIO
-        threshold: 1,
-        discount: 0,
-      }
-    }
-    emit("update:mediaCommerceData", data)
+  if (mediaCommerceData.value && mediaCommerceData.value.discount) {
+    localDiscount.value = Object.assign({}, mediaCommerceData.value.discount)
   }
   else {
-    const data: IgMediaCommerceData = Object.assign({}, mediaCommerceData.value)
-    data.discount = {
+    localDiscount.value = {
       thresholdType: ThresholdType.COUNT, // COUNT, VALUE
       discountType: DiscountType.FLAT, // FLAT, RATIO
       threshold: 1,
       discount: 0,
     }
-    emit("update:mediaCommerceData", data)
   }
+}
+
+function createDiscount() {
+  const data: IgMediaCommerceData = Object.assign({}, mediaCommerceData.value)
+  data.discount = localDiscount.value
+  emit("update:mediaCommerceData", data)
+  editing.value = false
 }
 
 
