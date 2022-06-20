@@ -31,8 +31,10 @@
     <div class="table-cell align-top whitespace-nowrap">
 
       <div v-if="!editing">
-        <span class="mr-2">{{ currentDiscount }}</span>
-        <button @click="editDiscount" class="hover:underline text-pink-600">修改</button>
+        <div v-if="hasDiscount">{{ mediaCommerceData.discount.title }}</div>
+        <div>{{ currentDiscount }}</div>
+        <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">修改</button>
+        <button v-if="hasDiscount" @click="removeDiscount" class="hover:underline text-red-500">刪除折扣</button>
       </div>
 
       <template v-else>
@@ -162,7 +164,7 @@ const customPrice = computed({
 
 function editDiscount() {
   editing.value = true
-  if (mediaCommerceData.value && mediaCommerceData.value.discount) {
+  if (hasDiscount.value) {
     localDiscount.value = Object.assign({}, mediaCommerceData.value.discount)
   }
   else {
@@ -172,6 +174,14 @@ function editDiscount() {
       threshold: 1,
       discount: 0,
     }
+  }
+}
+
+function removeDiscount() {
+  if (hasDiscount.value) {
+    const data = Object.assign({}, mediaCommerceData.value)
+    delete data.discount
+    emit("update:mediaCommerceData", data)
   }
 }
 
@@ -192,9 +202,10 @@ function createDiscount() {
   editing.value = false
 }
 
+const hasDiscount = computed(() => mediaCommerceData.value && mediaCommerceData.value.discount)
 
 const currentDiscount = computed(() => {
-  if (mediaCommerceData.value == null || mediaCommerceData.value.discount == null) {
+  if (!hasDiscount.value) {
     return "沒有折扣"
   }
 
