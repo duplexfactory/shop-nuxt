@@ -14,8 +14,9 @@ export default defineEventHandler(async (event) => {
     let {
         id,
         limit,
+        since,
         until
-    } = await useQuery(event) as { id: string, limit: string, until?: string }
+    } = await useQuery(event) as { id: string, limit: string, since?: string, until?: string }
 
     await initMongo()
 
@@ -37,6 +38,7 @@ export default defineEventHandler(async (event) => {
         id,
         limit ? Number(limit) : undefined,
         until ? Number(until) - 1 : undefined,
+        since ? Number(since) - 1 : undefined,
     )
 
     let medias: IgMedia[]
@@ -50,6 +52,7 @@ export default defineEventHandler(async (event) => {
         // Get new medias from official api.
         medias = await fetchIgMedias(id, p.accessToken, true, {
             limit: Number(limit),
+            since: since ? Number(since) - 1 : undefined,
             until: until ? Number(until) - 1 : undefined,
         })
         // const since: number | undefined = medias.length ? medias[0].takenAt : undefined

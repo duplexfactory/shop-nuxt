@@ -28,15 +28,27 @@ export async function initDynamo() {
     return client
 }
 
-export async function getPageMedias(pageId: string, limit?: number, before = dayjs().unix()) {
+export async function getPageMedias(pageId: string, limit?: number, before?: number, since?: number) {
+
+    if (!!since) {
+        const res = await client.send(new QueryCommand({
+            TableName: "media",
+            KeyConditionExpression: "pageId = :pageId AND takenAt > :since",
+            ExpressionAttributeValues: marshall({":pageId": pageId, ":since": since}),
+            ScanIndexForward: false,
+            Limit: limit
+        }))
+        return res.Items?.map(m => unmarshall(m)) as IgMedia[]
+    }
+
+    const b = before || dayjs().unix();
     const res = await client.send(new QueryCommand({
         TableName: "media",
         KeyConditionExpression: "pageId = :pageId AND takenAt < :before",
-        ExpressionAttributeValues: marshall({":pageId": pageId, ":before": before}),
+        ExpressionAttributeValues: marshall({":pageId": pageId, ":before": b}),
         ScanIndexForward: false,
         Limit: limit
     }))
-
     return res.Items?.map(m => unmarshall(m)) as IgMedia[]
 }
 
