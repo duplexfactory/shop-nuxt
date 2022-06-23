@@ -15,8 +15,10 @@ export default defineEventHandler(async (event) => {
         id,
         limit,
         since,
-        until
-    } = await useQuery(event) as { id: string, limit: string, since?: string, until?: string }
+        until,
+        before,
+        after
+    } = await useQuery(event) as { id: string, limit: string, since?: string, until?: string, before?: string, after?: string }
 
     await initMongo()
 
@@ -42,6 +44,7 @@ export default defineEventHandler(async (event) => {
     )
 
     let medias: IgMedia[]
+    let paging: { cursors: {before: string, after: string} }
     if (!!p.invalid) {
         // Token is invalid.
         // Get use existing medias from dynamo.
@@ -50,11 +53,23 @@ export default defineEventHandler(async (event) => {
     else {
         // Token is valid.
         // Get new medias from official api.
-        medias = await fetchIgMedias(id, p.accessToken, true, {
-            limit: Number(limit),
-            since: since ? Number(since) - 1 : undefined,
-            until: until ? Number(until) - 1 : undefined,
-        })
+        const paginate = {
+            limit: Number(limit)
+        }
+        if (!!before) {
+            paginate["before"] = before
+        }
+        else if (!!after) {
+            paginate["after"] = after
+        }
+        else {
+            paginate["since"] = since ? Number(since) + 1 : undefined
+            paginate["until"] = until ? Number(until) - 1 : undefined
+        }
+
+        const res = await fetchIgMedias(id, p.accessToken, true, paginate)
+        medias = res.medias
+        paging = res.paging
         // const since: number | undefined = medias.length ? medias[0].takenAt : undefined
 
         const newMedias: IgMedia[] = []
@@ -98,7 +113,8 @@ export default defineEventHandler(async (event) => {
     }
 
     return {
-        medias
+        medias,
+        paging
     } as unknown as JSONValue
     // { medias: IgMedia[] }
 })

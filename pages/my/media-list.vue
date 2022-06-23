@@ -1,5 +1,17 @@
 <template>
   <div v-if="!mediaPending">
+    <div class="flex justify-between mb-4">
+      <button @click="clickPrevPage"
+              class="hover:underline text-pink-600">
+        上一頁
+      </button>
+      {{ cursors }}
+      <button v-if="cursors && cursors.after"
+              @click="clickNextPage"
+              class="hover:underline text-pink-600">
+        下一頁
+      </button>
+    </div>
     <div class="table">
       <div class="table-header-group">
         <div class="table-row">
@@ -53,6 +65,7 @@ import IgMedia from "~/models/IgMedia";
 const {
   mediaPending,
   medias,
+  cursors,
   fetchOwnOfficialMedias
 } = useMediaList();
 
@@ -65,6 +78,14 @@ onMounted(async () => {
     commerceData.value[m.code] = null
   // commerceDataPending.value = false
 })
+
+async function clickPrevPage() {
+  await fetchOwnOfficialMedias(true);
+}
+
+async function clickNextPage() {
+  await fetchOwnOfficialMedias();
+}
 
 </script>
 

@@ -28,7 +28,7 @@ export async function initDynamo() {
     return client
 }
 
-export async function getPageMedias(pageId: string, limit?: number, before?: number, since?: number) {
+export async function getPageMedias(pageId: string, limit?: number, until?: number, since?: number, before?: string, after?: string) {
 
     if (!!since) {
         const res = await client.send(new QueryCommand({
@@ -41,7 +41,7 @@ export async function getPageMedias(pageId: string, limit?: number, before?: num
         return res.Items?.map(m => unmarshall(m)) as IgMedia[]
     }
 
-    const b = before || dayjs().unix();
+    const b = until || dayjs().unix();
     const res = await client.send(new QueryCommand({
         TableName: "media",
         KeyConditionExpression: "pageId = :pageId AND takenAt < :before",
