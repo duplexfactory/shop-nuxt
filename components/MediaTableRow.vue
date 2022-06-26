@@ -105,6 +105,8 @@ import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {ThresholdType, DiscountType} from "~/models/Discount";
 
+const nuxt = useNuxtApp();
+
 const props = defineProps({
   media: Object as PropType<IgMedia>,
   mediaCommerceData: Object as PropType<IgMediaCommerceData>,
@@ -185,7 +187,7 @@ function removeDiscount() {
   }
 }
 
-function createDiscount() {
+async function createDiscount() {
   let data: IgMediaCommerceData
   if (!mediaCommerceData.value) {
    data = {
@@ -199,6 +201,25 @@ function createDiscount() {
   }
   data.discount = localDiscount.value
   emit("update:mediaCommerceData", data)
+
+
+  const { data: d, error } = await useFetch(
+    `/api/media/${media.value.code}/commerce-data/edit`,
+    {
+      method: 'PUT',
+      params: {
+        discount: localDiscount.value
+      }
+    }
+  );
+
+  if (error.value !== null) {
+    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    return;
+  }
+
+  nuxt.vueApp.$toast.success("成功！", {position: "top"});
+
   editing.value = false
 }
 
