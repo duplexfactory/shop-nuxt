@@ -1,18 +1,21 @@
 <template>
   <div v-if="!mediaPending">
     <div class="flex justify-between mb-4">
-      <button @click="clickPrevPage"
+      <button v-if="cursors && cursors.before"
+              @click="clickPrevPage"
               class="hover:underline text-pink-600">
         上一頁
       </button>
-      {{ cursors }}
+      <span v-else></span>
+
       <button v-if="cursors && cursors.after"
               @click="clickNextPage"
               class="hover:underline text-pink-600">
         下一頁
       </button>
+      <span v-else></span>
     </div>
-    <div class="table">
+    <div class="table mb-8">
       <div class="table-header-group">
         <div class="table-row">
           <div class="table-cell">相片</div>

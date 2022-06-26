@@ -27,7 +27,14 @@ export default function useMediaList() {
         const {getAuthHeader} = useAuth()
         const res = await $fetch(`/api/media/list/official`, { headers: await getAuthHeader(), params})
         medias.value = res["medias"]
+
         cursors.value = res["paging"]["cursors"]
+        if (!res["paging"]["previous"]) {
+            delete cursors.value["before"]
+        }
+        if (!res["paging"]["next"]) {
+            delete cursors.value["after"]
+        }
         mediaPending.value = false
     }
 
