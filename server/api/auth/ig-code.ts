@@ -81,7 +81,8 @@ export default defineEventHandler(async (event) => {
             username,
             localUserId: userId,
             expiry: dayjs().add(expires_in, "seconds").toDate(),
-            accessToken: longToken
+            accessToken: longToken,
+            invalid: false
         }
     }, {upsert: true})
 
