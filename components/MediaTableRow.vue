@@ -207,7 +207,7 @@ async function createDiscount() {
     `/api/media/${media.value.code}/commerce-data/edit`,
     {
       method: 'PUT',
-      params: {
+      body: {
         discount: localDiscount.value
       }
     }

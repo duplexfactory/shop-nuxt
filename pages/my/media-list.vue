@@ -77,8 +77,13 @@ const commerceData = ref<Record<string, IgMediaCommerceData>>({})
 
 onMounted(async () => {
   await fetchOwnOfficialMedias()
+
+  const {data, error} = await useFetch('/api/media/commerce-data', { method: 'GET', params: {
+      ids: medias.value.map((m) => m.code).join(',')
+    }})
+
   for (const m of medias.value)
-    commerceData.value[m.code] = null
+    commerceData.value[m.code] = data.value["data"][m.code]
   // commerceDataPending.value = false
 })
 

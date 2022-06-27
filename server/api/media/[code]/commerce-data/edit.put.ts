@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
             stock,
             discount
         }
-    });
+    }, { upsert: true });
 
     return {
         success: true
