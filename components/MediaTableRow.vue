@@ -179,8 +179,22 @@ function editDiscount() {
   }
 }
 
-function removeDiscount() {
+async function removeDiscount() {
   if (hasDiscount.value) {
+    const { data: d, error } = await useFetch(
+        `/api/media/${media.value.code}/commerce-data/discount`,
+        {
+          method: 'DELETE',
+        }
+    );
+
+    if (error.value !== null) {
+      nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+      return;
+    }
+
+    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+
     const data = Object.assign({}, mediaCommerceData.value)
     delete data.discount
     emit("update:mediaCommerceData", data)
