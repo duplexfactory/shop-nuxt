@@ -10,11 +10,22 @@
         {{ media.caption }}
       </div>
     </div>
-    <div class="table-cell align-top">
-      <input size="1"
-             v-model.number="price"
-             class="text-input-primary"
-             type="number"/>
+    <div class="table-cell align-top whitespace-nowrap" style="width: 150px">
+      <div v-if="editingPrice">
+        <input size="1"
+               v-model.number="price"
+               class="text-input-primary mr-2"
+               style="max-width: 120px"
+               type="number"/>
+        <div class="mt-2">
+          <button @click="createDiscount" class="btn-primary btn-sm mr-2">儲存</button>
+          <button @click="editingPrice = false" class="btn-outline btn-sm">取消</button>
+        </div>
+      </div>
+      <div v-else class="flex">
+        <div class="mr-2">{{ formatMediaPrice(price) }}</div>
+        <button @click="editingPrice = true" class="hover:underline text-pink-600">修改</button>
+      </div>
     </div>
     <div class="table-cell align-top">
       <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="active">
@@ -30,7 +41,7 @@
     </div>
     <div class="table-cell align-top whitespace-nowrap">
 
-      <div v-if="!editing">
+      <div v-if="!editingDiscount">
         <div v-if="hasDiscount">{{ mediaCommerceData.discount.title }}</div>
         <div>{{ currentDiscount }}</div>
         <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">修改</button>
@@ -90,7 +101,7 @@
 
         <div class="mt-4">
           <button @click="createDiscount" class="btn-primary btn-sm mr-2">儲存</button>
-          <button @click="editing = false" class="btn-outline btn-sm">取消</button>
+          <button @click="editingDiscount = false" class="btn-outline btn-sm">取消</button>
         </div>
 
       </template>
@@ -104,6 +115,7 @@ import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {ThresholdType, DiscountType} from "~/models/Discount";
+import useMediaPrice from "~/composables/useMediaPrice";
 
 const nuxt = useNuxtApp();
 
@@ -118,9 +130,12 @@ const {
 
 const emit = defineEmits(["update:mediaCommerceData"])
 
-const editing = ref(false)
+const editingDiscount = ref(false)
 const localDiscount = ref(null)
 
+// Media Price
+const editingPrice = ref(false)
+const { formatMediaPrice } = useMediaPrice();
 const price = computed({
   get: () => media.value.patchPrice || media.value.price || 0,
   set: val => {
@@ -165,7 +180,7 @@ const customPrice = computed({
 })
 
 function editDiscount() {
-  editing.value = true
+  editingDiscount.value = true
   if (hasDiscount.value) {
     localDiscount.value = Object.assign({}, mediaCommerceData.value.discount)
   }
@@ -234,7 +249,7 @@ async function createDiscount() {
 
   nuxt.vueApp.$toast.success("成功！", {position: "top"});
 
-  editing.value = false
+  editingDiscount.value = false
 }
 
 const hasDiscount = computed(() => mediaCommerceData.value && mediaCommerceData.value.discount)
