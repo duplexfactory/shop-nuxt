@@ -18,13 +18,13 @@
                style="max-width: 120px"
                type="number"/>
         <div class="mt-2">
-          <button @click="savePrice" class="btn-primary btn-sm mr-2">儲存</button>
+          <button @click="savePrice" :disabled="editPriceLoading" class="btn-primary btn-sm mr-2">儲存</button>
           <button @click="editingPrice = false" class="btn-outline btn-sm">取消</button>
         </div>
       </div>
       <div v-else class="flex">
         <div class="mr-2">{{ formatMediaPrice(price) }}</div>
-        <button @click="editingPrice = true" class="hover:underline text-pink-600">修改</button>
+        <button @click="localPrice = price; editingPrice = true" class="hover:underline text-pink-600">修改</button>
       </div>
     </div>
     <div class="table-cell align-top">
@@ -136,6 +136,7 @@ const localDiscount = ref(null)
 
 // Media Price
 const editingPrice = ref(false)
+const editPriceLoading = ref(false)
 const { formatMediaPrice } = useMediaPrice();
 // const price = computed({
 //   get: () => media.value.patchPrice || media.value.price || 0,
@@ -146,6 +147,7 @@ const { formatMediaPrice } = useMediaPrice();
 const price = computed(() => media.value.patchPrice || media.value.price || 0)
 const localPrice = ref(0)
 async function savePrice() {
+  editPriceLoading.value = true
 
   try {
     await $fetch(
@@ -168,6 +170,7 @@ async function savePrice() {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
   }
 
+  editPriceLoading.value = false
 }
 
 const active = computed({
@@ -223,23 +226,23 @@ function editDiscount() {
 
 async function removeDiscount() {
   if (hasDiscount.value) {
-    const { data: d, error } = await useFetch(
-        `/api/media/${media.value.code}/commerce-data/discount`,
-        {
-          method: 'DELETE',
-        }
-    );
+    try {
+      await $fetch(
+          `/api/media/${media.value.code}/commerce-data/discount`,
+          {
+            method: 'DELETE',
+            headers: await getAuthHeader(),
+          }
+      );
+      nuxt.vueApp.$toast.success("成功！", {position: "top"});
 
-    if (error.value !== null) {
-      nuxt.vueApp.$toast.error("失敗！", {position: "top"});
-      return;
+      const data = Object.assign({}, mediaCommerceData.value)
+      delete data.discount
+      emit("update:mediaCommerceData", data)
     }
-
-    nuxt.vueApp.$toast.success("成功！", {position: "top"});
-
-    const data = Object.assign({}, mediaCommerceData.value)
-    delete data.discount
-    emit("update:mediaCommerceData", data)
+    catch (e) {
+      nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    }
   }
 }
 

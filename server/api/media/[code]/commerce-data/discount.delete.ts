@@ -1,12 +1,13 @@
 import {defineEventHandler} from "h3";
-import {assert} from "~/server/util";
-import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb";
+import {assert, isOwnMedia, noCache} from "~/server/util";
+import {mediaCommerceDataCollection} from "~/server/mongodb";
 
 export default defineEventHandler(async (event) => {
+    noCache(event);
     const {code} = event.context.params
     assert(code)
+    assert(await isOwnMedia(event, code))
 
-    await initMongo()
     await mediaCommerceDataCollection.deleteOne({
         _id: code
     })

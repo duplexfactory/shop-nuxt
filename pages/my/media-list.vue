@@ -54,6 +54,21 @@
       </LazyMediaTableRow>
       <!--    </template>-->
     </div>
+    <div class="flex justify-between mb-4">
+      <button v-if="cursors && cursors.before"
+              @click="clickPrevPage"
+              class="hover:underline text-pink-600">
+        上一頁
+      </button>
+      <span v-else></span>
+
+      <button v-if="cursors && cursors.after"
+              @click="clickNextPage"
+              class="hover:underline text-pink-600">
+        下一頁
+      </button>
+      <span v-else></span>
+    </div>
   </div>
 </template>
 
