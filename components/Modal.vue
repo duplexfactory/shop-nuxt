@@ -76,7 +76,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   font-family: Helvetica, Arial, sans-serif;
   /*@apply mx-auto;*/
-  @apply flex-1;
+  /*@apply flex-1;*/
 }
 
 @screen sm {
