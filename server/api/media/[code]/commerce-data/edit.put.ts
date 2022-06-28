@@ -1,12 +1,14 @@
 import {defineEventHandler, useBody} from "h3";
-import {assert} from "~/server/util";
+import {assert, isOwnMedia, noCache} from "~/server/util";
 import {Discount} from "~/models/Discount";
 import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb";
 
 export default defineEventHandler(async (event) => {
+
+    noCache(event);
     const {code} = event.context.params
     assert(code)
-
+    assert(await isOwnMedia(event, code))
     const {
         active,
         customPrice,
@@ -38,7 +40,6 @@ export default defineEventHandler(async (event) => {
             delete defaults[key]
         }
     }
-
 
     await initMongo();
     await mediaCommerceDataCollection.updateOne({

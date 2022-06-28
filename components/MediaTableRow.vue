@@ -13,12 +13,12 @@
     <div class="table-cell align-top whitespace-nowrap" style="width: 150px">
       <div v-if="editingPrice">
         <input size="1"
-               v-model.number="price"
+               v-model.number="localPrice"
                class="text-input-primary mr-2"
                style="max-width: 120px"
                type="number"/>
         <div class="mt-2">
-          <button @click="createDiscount" class="btn-primary btn-sm mr-2">儲存</button>
+          <button @click="savePrice" class="btn-primary btn-sm mr-2">儲存</button>
           <button @click="editingPrice = false" class="btn-outline btn-sm">取消</button>
         </div>
       </div>
@@ -117,7 +117,8 @@ import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {ThresholdType, DiscountType} from "~/models/Discount";
 import useMediaPrice from "~/composables/useMediaPrice";
 
-const nuxt = useNuxtApp();
+const nuxt = useNuxtApp()
+const {getAuthHeader} = useAuth()
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
@@ -136,12 +137,38 @@ const localDiscount = ref(null)
 // Media Price
 const editingPrice = ref(false)
 const { formatMediaPrice } = useMediaPrice();
-const price = computed({
-  get: () => media.value.patchPrice || media.value.price || 0,
-  set: val => {
-    media.value.patchPrice = val
+// const price = computed({
+//   get: () => media.value.patchPrice || media.value.price || 0,
+//   set: val => {
+//     media.value.patchPrice = val
+//   }
+// })
+const price = computed(() => media.value.patchPrice || media.value.price || 0)
+const localPrice = ref(0)
+async function savePrice() {
+
+  try {
+    await $fetch(
+        `/api/media/${media.value.code}/price/edit`,
+        {
+          method: 'POST',
+          headers: await getAuthHeader(),
+          body: {
+            price: localPrice.value
+          }
+        }
+    );
+
+    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+
+    media.value.patchPrice = localPrice.value
+    editingPrice.value = false
   }
-})
+  catch (e) {
+    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+  }
+
+}
 
 const active = computed({
   get: () => !!mediaCommerceData.value ? mediaCommerceData.value.active : false,
@@ -217,39 +244,39 @@ async function removeDiscount() {
 }
 
 async function createDiscount() {
-  let data: IgMediaCommerceData
-  if (!mediaCommerceData.value) {
-   data = {
-      _id: media.value.code,
-      active: false,
-      customPrice: false,
-    }
-  }
-  else {
-    data = Object.assign({}, mediaCommerceData.value)
-  }
-  data.discount = localDiscount.value
-  emit("update:mediaCommerceData", data)
+  try {
+    await $fetch(
+      `/api/media/${media.value.code}/commerce-data/edit`,
+      {
+        method: 'PUT',
+        headers: await getAuthHeader(),
+        body: {
+          discount: localDiscount.value
+        }
+      }
+    );
 
+    nuxt.vueApp.$toast.success("成功！", {position: "top"});
 
-  const { data: d, error } = await useFetch(
-    `/api/media/${media.value.code}/commerce-data/edit`,
-    {
-      method: 'PUT',
-      body: {
-        discount: localDiscount.value
+    let data: IgMediaCommerceData
+    if (!mediaCommerceData.value) {
+      data = {
+        _id: media.value.code,
+        active: false,
+        customPrice: false,
       }
     }
-  );
+    else {
+      data = Object.assign({}, mediaCommerceData.value)
+    }
+    data.discount = localDiscount.value
+    emit("update:mediaCommerceData", data)
 
-  if (error.value !== null) {
-    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
-    return;
+    editingDiscount.value = false
   }
-
-  nuxt.vueApp.$toast.success("成功！", {position: "top"});
-
-  editingDiscount.value = false
+  catch (e) {
+    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+  }
 }
 
 const hasDiscount = computed(() => mediaCommerceData.value && mediaCommerceData.value.discount)

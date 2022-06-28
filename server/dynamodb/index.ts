@@ -60,6 +60,12 @@ export async function getMedia(pageId: number, takenAt: number): Promise<IgMedia
     return res.Item ? unmarshall(res.Item) as IgMedia : null
 }
 
+export async function patchMedia(pageId: string, takenAt: number, patchItem): Promise<void> {
+    await update("media", {
+        pageId, takenAt
+    }, patchItem)
+}
+
 async function queryMediaByCode(code: string) {
     return client.send(new QueryCommand({
         TableName: "media",
@@ -84,9 +90,7 @@ export async function patchMediaByCode(code: string, patchItem): Promise<boolean
     const res = await queryMediaByCode(code)
     if (res?.Count) {
         const {pageId, takenAt} = unmarshall(res.Items[0])
-        await update("media", {
-            pageId, takenAt
-        }, patchItem)
+        await patchMedia(pageId, takenAt, patchItem)
         return true
     } else {
         return false
