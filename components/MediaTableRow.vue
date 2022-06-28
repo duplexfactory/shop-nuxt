@@ -28,16 +28,18 @@
       </div>
     </div>
     <div class="table-cell align-top">
-      <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="active">
-        <option :value="true">是</option>
-        <option :value="false">否</option>
-      </lazy-spr-select>
+      <lazy-basic-toggle v-model="active" @change="activeChanged"></lazy-basic-toggle>
+<!--      <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="active">-->
+<!--        <option :value="true">是</option>-->
+<!--        <option :value="false">否</option>-->
+<!--      </lazy-spr-select>-->
     </div>
     <div class="table-cell align-top">
-      <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="customPrice">
-        <option :value="true">是</option>
-        <option :value="false">否</option>
-      </lazy-spr-select>
+      <lazy-basic-toggle v-model="customPrice"></lazy-basic-toggle>
+<!--      <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="customPrice">-->
+<!--        <option :value="true">是</option>-->
+<!--        <option :value="false">否</option>-->
+<!--      </lazy-spr-select>-->
     </div>
     <div class="table-cell align-top whitespace-nowrap">
 
@@ -189,6 +191,9 @@ const active = computed({
     }
   }
 })
+function activeChanged(value) {
+  console.log(value);
+}
 
 const customPrice = computed({
   get: () => {

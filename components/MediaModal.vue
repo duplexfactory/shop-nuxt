@@ -24,7 +24,6 @@
           <div class="mt-4 md:mt-0">
 
             <div class="flex items-baseline">
-              <!-- Do not use ?? because price 0 should show - as well -->
               <div class="text-xl md:text-2xl text-pink-700">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
 
               <Popper hover offsetDistance="0" placement="top">
