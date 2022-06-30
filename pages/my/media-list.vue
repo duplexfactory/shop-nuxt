@@ -25,7 +25,7 @@
           <div class="table-cell whitespace-nowrap">
             接受訂單
             <Popper hover offsetDistance="0" placement="top">
-              <span>i</span>
+              <i class="spr-info-circled-alt text-gray-600"></i>
               <template #content>
                 <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">開啓接受訂單後，客戶可以直接下單購買產品。</div>
               </template>
@@ -34,7 +34,7 @@
           <div class="table-cell whitespace-nowrap">
             自訂價錢
             <Popper hover offsetDistance="0" placement="top">
-              <span>i</span>
+              <i class="spr-info-circled-alt text-gray-600"></i>
               <template #content>
                 <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
                   開啓後，客戶下單購買時可以自由輸入價格。客戶下單後需待你確認價格才付款。適用於訂製產品。
