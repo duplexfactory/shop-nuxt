@@ -39,7 +39,7 @@
       </transition>
 
       <transition name="modal">
-        <AgeRestrictedModal></AgeRestrictedModal>
+        <LazyAgeRestrictedModal v-if="showAgeRestrictedModal"></LazyAgeRestrictedModal>
       </transition>
 
     </div>
@@ -55,6 +55,7 @@
   import {
     ScreenSize,
     useScreenSize,
+    useShowAgeRestrictedModal,
     useShowingMediaModalData,
     useShowMediaModal
   } from "~/composables/states"
@@ -89,6 +90,9 @@
   // Search Modal
   const showSearchModal = useShowSearchModal()
   watch(showSearchModal, (show, prevShow) => toggleOverflow(show))
+
+  // Age Restricted Modal
+  const showAgeRestrictedModal = useShowAgeRestrictedModal()
 
   // Drawer
   const drawerOpen = ref<boolean>(false)

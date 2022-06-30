@@ -1,5 +1,5 @@
 <template>
-  <LazyModal @close="$emit('close')">
+  <Modal @close="$emit('close')">
     <template #header>
       <slot name="header"></slot>
     </template>
@@ -10,7 +10,7 @@
       <button class="w-1/2 p-4" @click="$emit('close')">{{ cancelButtonTitle }}</button>
       <button class="w-1/2 p-4 bg-pink-400 text-white" @click="$emit('confirm')">{{ confirmButtonTitle }}</button>
     </template>
-  </LazyModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +24,3 @@ const {
 })
 
 </script>
-
-<style scoped>
-
-</style>
