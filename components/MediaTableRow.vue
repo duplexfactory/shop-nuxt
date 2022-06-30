@@ -120,7 +120,7 @@ import {ThresholdType, DiscountType} from "~/models/Discount";
 import useMediaPrice from "~/composables/useMediaPrice";
 
 const nuxt = useNuxtApp()
-const {getAuthHeader} = useAuth()
+const {getAuthHeader, headersToObject} = useAuth()
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
@@ -199,7 +199,7 @@ const customPrice = computed({
   get: () => {
     return !!mediaCommerceData.value ? mediaCommerceData.value.customPrice : false
   },
-  set: val => {
+  set: async val => {
     if (!mediaCommerceData.value) {
       const data: IgMediaCommerceData = {
         _id: media.value.code,
@@ -211,6 +211,26 @@ const customPrice = computed({
     else {
       mediaCommerceData.value.customPrice = val
     }
+
+
+    try {
+      await useFetch(
+          `/api/media/${media.value.code}/commerce-data/edit`,
+          {
+            method: 'PUT',
+            headers: headersToObject(await getAuthHeader()),
+            body: {
+              customPrice: val
+            } as Partial<IgMediaCommerceData>
+          }
+      );
+      nuxt.vueApp.$toast.success("成功！", {position: "top"});
+    }
+    catch (e) {
+      nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    }
+
+
   }
 })
 
