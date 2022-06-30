@@ -78,7 +78,7 @@
         <LazyConfirmModal v-if="togglingMediaCode"
                           cancelButtonTitle="取消"
                           confirmButtonTitle="確定"
-                          @close="togglingMediaCode = false"
+                          @close="cancelToggleActive"
                           @confirm="confirmToggleActive">
           <template #body>
             <div class="px-4 pb-4">
@@ -160,6 +160,11 @@ async function confirmToggleActive() {
   catch (e) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
   }
+}
+async function cancelToggleActive() {
+  showConfirmToggleActiveModal.value = false
+  commerceData.value[togglingMediaCode.value].active = !commerceData.value[togglingMediaCode.value].active
+  togglingMediaCode.value = ""
 }
 
 </script>
