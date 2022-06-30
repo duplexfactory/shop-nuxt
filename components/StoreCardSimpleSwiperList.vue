@@ -24,9 +24,6 @@
     </lazy-component>
     <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :height="268" :swiper-options="swiperOptions"
                                class="pb-8">
-      <template v-slot:default="slotProps">
-        <div class="h-full w-full bg-loading"></div>
-      </template>
     </swiper-slides-placeholder>
   </div>
 </template>

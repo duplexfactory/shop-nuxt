@@ -2,9 +2,6 @@
   <div>
     <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slide-aspect-ratio="3/5"
                                :swiper-options="swiperOptions" class="pb-8">
-      <template v-slot:default="slotProps">
-        <div class="h-full w-full bg-loading"></div>
-      </template>
     </swiper-slides-placeholder>
     <!-- Slider main container -->
     <div :class="{'hidden': !swiperReady || lastMediaPage.length === 0}" class="swiper" ref="swiper">

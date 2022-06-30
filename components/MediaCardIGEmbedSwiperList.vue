@@ -30,10 +30,6 @@
     </lazy-component>
     <swiper-slides-placeholder v-if="!swiperReady || lastMediaPage.length === 0" :slideAspectRatio="0.5"
                                :swiper-options="swiperOptions" class="pb-8">
-      <template v-slot:default="slotProps">
-        <!--        <MediaCardIGEmbed class="h-full w-full"></MediaCardIGEmbed>-->
-        <div class="h-full w-full bg-loading"></div>
-      </template>
     </swiper-slides-placeholder>
 
   </div>

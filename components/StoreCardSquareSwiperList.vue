@@ -26,9 +26,6 @@
 
     <swiper-slides-placeholder v-if="!swiperReady || shops.length === 0" :slide-aspect-ratio="4/3"
                                :swiper-options="swiperOptions" class="swiper-placeholder lg:pb-8">
-      <template v-slot:default="slotProps">
-        <div class="h-full w-full bg-loading"></div>
-      </template>
     </swiper-slides-placeholder>
 
   </div>

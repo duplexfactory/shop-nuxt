@@ -1,17 +1,17 @@
 <template>
-
   <div class="w-full">
     <div v-for="config in configs()" class="w-full" :class="`${config.classBreakpoint}flex ${config.nextClassBreakpoint}:hidden`">
       <template v-for="(_, i) of Array(Math.ceil(config.slidesPerView)).fill(0)">
         <div :style="slideStyle(config.spaceBetween, config.slidesPerView, i)">
-          <slot></slot>
+          <slot>
+            <div class="placeholder" style="background-color: #ddd;">
+              <div class="h-full w-full bg-loading"></div>
+            </div>
+          </slot>
         </div>
       </template>
     </div>
   </div>
-
-
-
 </template>
 
 <script lang="ts">
@@ -86,5 +86,9 @@ export default {
 </script>
 
 <style scoped>
+
+.placeholder {
+  @apply h-full w-full overflow-hidden rounded-md;
+}
 
 </style>
