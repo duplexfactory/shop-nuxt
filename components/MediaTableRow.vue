@@ -99,6 +99,11 @@
         <div class="mt-4">
           <span class="font-semibold">折扣限期（選填）</span>
           <!-- deadline?: number; -->
+          <datepicker
+              v-model="localDiscountDeadline"
+              :lowerLimit="Date.now()"
+              :clearable="true"
+          />
         </div>
 
         <div class="mt-4">
@@ -234,6 +239,8 @@ const customPrice = computed({
   }
 })
 
+const localDiscountDeadline = ref(null)
+
 function editDiscount() {
   editingDiscount.value = true
   if (hasDiscount.value) {
@@ -246,6 +253,13 @@ function editDiscount() {
       threshold: 1,
       discount: 0,
     }
+  }
+
+  if (!localDiscount.value.deadline) {
+    localDiscountDeadline.value = null
+  }
+  else {
+    localDiscountDeadline.value = Date(localDiscount.value.deadline)
   }
 }
 
@@ -332,6 +346,16 @@ const currentDiscount = computed(() => {
   return text
 
 })
+
+</script>
+
+<script lang="ts">
+
+import Datepicker from 'vue3-datepicker';
+
+export default {
+  components: { Datepicker }
+}
 
 </script>
 
