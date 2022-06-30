@@ -1,5 +1,5 @@
 <template>
-  <Modal @close="$emit('close')">
+  <Modal>
     <template #header>
       <slot name="header"></slot>
     </template>
