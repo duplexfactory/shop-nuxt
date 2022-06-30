@@ -22,7 +22,7 @@
           <div class="table-cell">相片</div>
           <div class="table-cell">描述</div>
           <div class="table-cell">價錢</div>
-          <div class="table-cell">
+          <div class="table-cell whitespace-nowrap">
             接受訂單
             <Popper hover offsetDistance="0" placement="top">
               <span>i</span>
@@ -31,7 +31,7 @@
               </template>
             </Popper>
           </div>
-          <div class="table-cell">
+          <div class="table-cell whitespace-nowrap">
             自訂價錢
             <Popper hover offsetDistance="0" placement="top">
               <span>i</span>
