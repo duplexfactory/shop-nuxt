@@ -37,6 +37,14 @@ export default defineNuxtConfig({
     title: 'IG Shop 推薦及評論平台 | IG Shop 搜尋器 | Shoperuse',
     link: [
       {rel: 'preconnect dns-prefetch', href: process.env.IMG_PROXY},
+      {rel: 'preconnect dns-prefetch', href: 'https://instagram.com'},
+      {rel: 'preconnect dns-prefetch', href: 'https://cdninstagram.com'},
+    ],
+    script: [
+      {
+        src: '//www.instagram.com/embed.js',
+        defer: true
+      }
     ],
     meta: [
       {charset: 'utf-8'},
