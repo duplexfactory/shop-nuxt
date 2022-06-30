@@ -131,7 +131,7 @@ const {
   mediaCommerceData
 } = toRefs(props)
 
-const emit = defineEmits(["update:mediaCommerceData"])
+const emit = defineEmits(["update:mediaCommerceData", "showConfirmToggleActive"])
 
 const editingDiscount = ref(false)
 const localDiscount = ref(null)
@@ -191,8 +191,8 @@ const active = computed({
     }
   }
 })
-function activeChanged(value) {
-  console.log(value);
+function activeChanged() {
+  emit("showConfirmToggleActive", media.value.code)
 }
 
 const customPrice = computed({

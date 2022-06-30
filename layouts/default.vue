@@ -149,6 +149,11 @@
   }
 
   // Mounted
+  const {
+    auth,
+    getAuthHeader,
+    headersToObject
+  } = useAuth()
   onMounted(() => {
     if (navigator.userAgent.includes("Instagram")) {
       isIGBrowser.value = true
@@ -164,20 +169,22 @@
       }
     }, 500))
 
-    const auth = getAuth()
-    onAuthStateChanged(auth, async (user?: User) => {
+    onAuthStateChanged(auth.value, async (user?: User) => {
       // console.log("onAuthStateChanged");
       currentUser.value = user
       isLoggedIn.value = !!user
 
       if (isLoggedIn.value) {
-        const {getAuthHeader} = useAuth()
-        const res = await $fetch("/api/auth/check-ig-connect", {
-          headers: await getAuthHeader()
+        const {
+          data,
+          error
+        } = await useFetch("/api/auth/check-ig-connect", {
+          headers: headersToObject(await getAuthHeader()),
         })
-        isIgConnected.value = res.connected;
-        isIgAuthTokenValid.value = !res.invalid;
-        igUsername.value = res.username ?? "";
+        isIgConnected.value = data.value.connected;
+        isIgAuthTokenValid.value = !data.value.invalid;
+        igUsername.value = data.value.username ?? "";
+
       }
       else {
         isIgConnected.value = false;

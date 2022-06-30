@@ -11,6 +11,11 @@ export default function useMediaList() {
     // Official only
     const cursors = ref(null)
 
+    const {
+        getAuthHeader,
+        headersToObject
+    } = useAuth()
+
     async function fetchOwnOfficialMedias(prev: boolean = false) {
         const params = {
             limit: limit.value
@@ -24,16 +29,22 @@ export default function useMediaList() {
                 params["after"] = cursors.value["after"]
             }
         }
-        const {getAuthHeader} = useAuth()
-        const res = await $fetch(`/api/media/list/official`, { headers: await getAuthHeader(), params})
-        medias.value = res["medias"]
 
-        cursors.value = res["paging"]["cursors"]
-        if (!res["paging"]["previous"]) {
-            delete cursors.value["before"]
-        }
-        if (!res["paging"]["next"]) {
-            delete cursors.value["after"]
+        const {
+            data,
+            pending,
+            error
+        } = await useFetch(`/api/media/list/official`, { headers: headersToObject(await getAuthHeader()), params })
+        if (!!data.value) {
+            medias.value = data.value["medias"]
+
+            cursors.value = data.value["paging"]["cursors"]
+            if (!data.value["paging"]["previous"]) {
+                delete cursors.value["before"]
+            }
+            if (!data.value["paging"]["next"]) {
+                delete cursors.value["after"]
+            }
         }
         mediaPending.value = false
     }

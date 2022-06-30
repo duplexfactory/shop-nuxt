@@ -51,6 +51,7 @@
       <LazyMediaTableRow v-for="media in medias"
                          :key="media.code"
                          :media="media"
+                         @showConfirmToggleActive="showConfirmToggleActive"
                          v-model:mediaCommerceData="commerceData[media.code]">
       </LazyMediaTableRow>
       <!--    </template>-->
@@ -74,10 +75,13 @@
 
     <Teleport to="body">
       <transition name="modal">
-<!--        v-if="showPriceSuggestionModal" @close="showPriceSuggestionModal = false"-->
-        <LazyConfirmModal cancelButtonTitle="取消" confirmButtonTitle="確定">
+        <LazyConfirmModal v-if="togglingMediaCode"
+                          cancelButtonTitle="取消"
+                          confirmButtonTitle="確定"
+                          @close="togglingMediaCode = false"
+                          @confirm="confirmToggleActive">
           <template #body>
-            <div>
+            <div class="px-4 pb-4">
               <div>你是否確定開啓接受訂單？</div>
               <div>開啓後，客戶可直接在Shoperuse向你下單購買產品。</div>
             </div>
@@ -85,7 +89,6 @@
         </LazyConfirmModal>
       </transition>
     </Teleport>
-
 
   </div>
 </template>
@@ -96,36 +99,67 @@ import Popper from "vue3-popper";
 
 import useMediaList from "~/composables/useMediaList";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
-import IgMedia from "~/models/IgMedia";
 
 const {
   mediaPending,
   medias,
   cursors,
   fetchOwnOfficialMedias
-} = useMediaList();
+} = useMediaList()
+const nuxt = useNuxtApp()
+const {getAuthHeader, headersToObject} = useAuth()
 
 // const commerceDataPending = ref(true)
 const commerceData = ref<Record<string, IgMediaCommerceData>>({})
 
 onMounted(async () => {
   await fetchOwnOfficialMedias()
-
-  const {data, error} = await useFetch('/api/media/commerce-data', { method: 'GET', params: {
+  const {data, error} = await useFetch('/api/media/commerce-data', {
+    params: {
       ids: medias.value.map((m) => m.code).join(',')
-    }})
+    }
+  })
 
   for (const m of medias.value)
     commerceData.value[m.code] = data.value["data"][m.code]
-  // commerceDataPending.value = false
+// commerceDataPending.value = false
 })
 
 async function clickPrevPage() {
-  await fetchOwnOfficialMedias(true);
+  await fetchOwnOfficialMedias(true)
 }
 
 async function clickNextPage() {
-  await fetchOwnOfficialMedias();
+  await fetchOwnOfficialMedias()
+}
+
+const showConfirmToggleActiveModal = ref(false)
+const togglingMediaCode = ref("")
+function showConfirmToggleActive(mediaCode: string) {
+  showConfirmToggleActiveModal.value = true
+  togglingMediaCode.value = mediaCode
+}
+async function confirmToggleActive() {
+  showConfirmToggleActiveModal.value = false
+  try {
+    await useFetch(
+        `/api/media/${togglingMediaCode.value}/commerce-data/edit`,
+        {
+          method: 'PUT',
+          headers: headersToObject(await getAuthHeader()),
+          body: {
+            active: commerceData.value[togglingMediaCode.value].active
+          } as Partial<IgMediaCommerceData>
+        }
+    );
+
+    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+    togglingMediaCode.value = ""
+
+  }
+  catch (e) {
+    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+  }
 }
 
 </script>
