@@ -15,6 +15,7 @@
       </button>
       <span v-else></span>
     </div>
+
     <div class="table mb-8">
       <div class="table-header-group">
         <div class="table-row">
@@ -54,6 +55,7 @@
       </LazyMediaTableRow>
       <!--    </template>-->
     </div>
+
     <div class="flex justify-between mb-4">
       <button v-if="cursors && cursors.before"
               @click="clickPrevPage"
@@ -69,6 +71,22 @@
       </button>
       <span v-else></span>
     </div>
+
+    <Teleport to="body">
+      <transition name="modal">
+<!--        v-if="showPriceSuggestionModal" @close="showPriceSuggestionModal = false"-->
+        <LazyConfirmModal cancelButtonTitle="取消" confirmButtonTitle="確定">
+          <template #body>
+            <div>
+              <div>你是否確定開啓接受訂單？</div>
+              <div>開啓後，客戶可直接在Shoperuse向你下單購買產品。</div>
+            </div>
+          </template>
+        </LazyConfirmModal>
+      </transition>
+    </Teleport>
+
+
   </div>
 </template>
 

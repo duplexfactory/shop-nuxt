@@ -66,23 +66,22 @@
 }
 
 .modal-container {
-  /*width: 80%;*/
-  height: 100%;
-  max-height: 100%;
   overflow: auto;
-  /*margin: 0px auto;*/
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   font-family: Helvetica, Arial, sans-serif;
-  /*@apply mx-auto;*/
-  /*@apply flex-1;*/
+
+  max-height: 100%;
+  @apply h-full w-full;
 }
 
 @screen sm {
   .modal-container {
     max-height: 80%;
     height: auto;
+    width: auto;
+    @apply mx-auto;
   }
 }
 
