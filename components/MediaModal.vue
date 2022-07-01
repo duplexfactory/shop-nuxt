@@ -146,6 +146,7 @@ import IgMedia from "~/models/IgMedia";
 import useMediaPrice from "~/composables/useMediaPrice";
 import IgPage from "~/models/IgPage";
 import IgPageExtraData from "~/models/IgPageExtraData";
+import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 
 const nuxt = useNuxtApp();
 
@@ -292,6 +293,9 @@ function clickContactInfoRow(row: ContactInfoRow) {
   }
 }
 
+// Commerce
+const commerceData: Ref<IgMediaCommerceData | null> = ref(null)
+
 // Mounted
 onMounted(async () => {
 
@@ -306,6 +310,13 @@ onMounted(async () => {
     fetchedPage.value = data.value.page;
   }
   await fetchReviews();
+
+  const {data, error} = await useFetch('/api/media/commerce-data', {
+    params: {
+      ids: localMedia.value.code
+    }
+  })
+  commerceData.value = data.value["data"][localMedia.value.code]
 });
 
 </script>
