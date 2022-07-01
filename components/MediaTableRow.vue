@@ -97,11 +97,12 @@
         </div>
 
         <div class="mt-4">
-          <span class="font-semibold">折扣限期（選填）</span>
+          <span class="font-semibold mb-1">折扣限期（選填）</span>
           <!-- deadline?: number; -->
           <datepicker
               v-model="localDiscountDeadline"
-              :lowerLimit="Date.now()"
+              class="text-input-primary"
+              :lowerLimit="new Date()"
               :clearable="true"
           />
         </div>
@@ -121,7 +122,7 @@
 import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
-import {ThresholdType, DiscountType} from "~/models/Discount";
+import {ThresholdType, DiscountType, Discount} from "~/models/Discount";
 import useMediaPrice from "~/composables/useMediaPrice";
 
 const nuxt = useNuxtApp()
@@ -259,7 +260,7 @@ function editDiscount() {
     localDiscountDeadline.value = null
   }
   else {
-    localDiscountDeadline.value = Date(localDiscount.value.deadline)
+    localDiscountDeadline.value = new Date(localDiscount.value.deadline)
   }
 }
 
@@ -287,6 +288,7 @@ async function removeDiscount() {
 
 async function createDiscount() {
   try {
+    localDiscount.value.deadline = (localDiscountDeadline.value as Date).getTime()
     await $fetch(
       `/api/media/${media.value.code}/commerce-data/edit`,
       {
@@ -296,7 +298,7 @@ async function createDiscount() {
           discount: localDiscount.value
         }
       }
-    );
+    )
 
     nuxt.vueApp.$toast.success("成功！", {position: "top"});
 
