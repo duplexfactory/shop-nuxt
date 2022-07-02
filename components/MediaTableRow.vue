@@ -124,6 +124,7 @@ import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {ThresholdType, DiscountType, Discount} from "~/models/Discount";
 import useMediaPrice from "~/composables/useMediaPrice";
+import {discountToText} from "~/utils/discountText";
 
 const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
@@ -330,22 +331,7 @@ const currentDiscount = computed(() => {
     return "沒有折扣"
   }
 
-  let text = ""
-  if (mediaCommerceData.value.discount.thresholdType === ThresholdType.COUNT) {
-    text += `滿 ${mediaCommerceData.value.discount.threshold}件`
-  }
-  else if (mediaCommerceData.value.discount.thresholdType === ThresholdType.VALUE) {
-    text += `滿 HK$ ${mediaCommerceData.value.discount.threshold}`
-  }
-
-  if (mediaCommerceData.value.discount.discountType === DiscountType.FLAT) {
-    text += `，- HK$ ${mediaCommerceData.value.discount.discount}`
-  }
-  else if (mediaCommerceData.value.discount.discountType === DiscountType.RATIO) {
-    text += `，${mediaCommerceData.value.discount.discount}% off`
-  }
-
-  return text
+  return discountToText(mediaCommerceData.value.discount)
 
 })
 

@@ -8,10 +8,6 @@
               <div class="image-container aspect-square rounded-md overflow-hidden"
                    v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
               <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ stripTrailingHashtags(localMedia.caption) }}</div>
-              <div v-if="!!mediaPrice(localMedia.media)"
-                   class="mt-2 text-pink-700">
-                {{ formatMediaPrice(mediaPrice(localMedia.media)) }}
-              </div>
             </template>
             <MediaCardIGEmbed v-if="!localPage.igConnected && localMediaCode"
                               captioned
@@ -34,12 +30,26 @@
               </Popper>
             </div>
 
-            <nuxt-link v-if="localPage" class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
-              {{ localPage.username }}
-            </nuxt-link>
+            <div v-if="!!commerceData && !!(commerceData.discount)" class="mt-2 border p-2 rounded-md">
+              <div class="">折扣優惠</div>
+              <div v-if="!!commerceData.discount.title" class="font-bold text-pink-700">{{ commerceData.discount.title + " - " + discountToText(commerceData.discount) }}</div>
+              <div v-if="!!commerceData.discount.deadline" class="flex items-baseline">
+                <div>優惠尚餘</div>
+                <div>{{ discountCountdownText }}</div>
+              </div>
+            </div>
 
-            <div class="mt-2">
-              <button class="btn btn-primary w-full" @click="clickContactShop">
+            <div>
+              <nuxt-link v-if="localPage" class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                {{ localPage.username }}
+              </nuxt-link>
+            </div>
+
+            <div v-if="commerceDataLoaded" class="mt-2">
+              <button v-if="!!commerceData && commerceData.active" class="btn btn-primary w-full" @click="clickBuyNow">
+                立即購買
+              </button>
+              <button v-else class="btn btn-primary w-full" @click="clickContactShop">
                 聯絡店主下單
               </button>
             </div>
@@ -147,6 +157,7 @@ import useMediaPrice from "~/composables/useMediaPrice";
 import IgPage from "~/models/IgPage";
 import IgPageExtraData from "~/models/IgPageExtraData";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
+import { discountToText } from "~/utils/discountText";
 
 const nuxt = useNuxtApp();
 
@@ -295,6 +306,20 @@ function clickContactInfoRow(row: ContactInfoRow) {
 
 // Commerce
 const commerceData: Ref<IgMediaCommerceData | null> = ref(null)
+const commerceDataLoaded = ref(false)
+const discountSecondsLeft = ref(0)
+const discountCountdownText = computed(() => {
+  const days = Math.floor(discountSecondsLeft.value / (60 * 60 * 24))
+
+  const secs = discountSecondsLeft.value - days * (60 * 60 * 24)
+  const hhmmss = new Date(secs * 1000).toISOString().substring(11, 19).split(":")
+
+  return days.toString() + "日" + hhmmss[0] + "時" + hhmmss[1] + "分" + hhmmss[2] + "秒"
+
+})
+function clickBuyNow() {
+
+}
 
 // Mounted
 onMounted(async () => {
@@ -309,6 +334,7 @@ onMounted(async () => {
     const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`);
     fetchedPage.value = data.value.page;
   }
+
   await fetchReviews();
 
   const {data, error} = await useFetch('/api/media/commerce-data', {
@@ -316,7 +342,16 @@ onMounted(async () => {
       ids: localMedia.value.code
     }
   })
-  commerceData.value = data.value["data"][localMedia.value.code]
+  commerceData.value = data.value["data"][localMedia.value.code] || null
+  discountSecondsLeft.value = (commerceData.value.discount.deadline - Date.now()) / 1000
+  const interval = setInterval(() => {
+    if (discountSecondsLeft.value === 0) {
+      clearInterval(interval)
+    } else {
+      discountSecondsLeft.value--
+    }
+  }, 1000)
+  commerceDataLoaded.value = true
 });
 
 </script>
