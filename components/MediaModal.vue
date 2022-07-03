@@ -32,15 +32,24 @@
 
             <div v-if="!!commerceData && !!(commerceData.discount)" class="mt-2 border p-2 rounded-md">
               <div class="">折扣優惠</div>
-              <div v-if="!!commerceData.discount.title" class="font-bold text-pink-700">{{ commerceData.discount.title + " - " + discountToText(commerceData.discount) }}</div>
+              <div class="font-bold text-pink-700">
+                {{ (!!commerceData.discount.title ? (commerceData.discount.title + " - ") : "") + discountToText(commerceData.discount) }}
+              </div>
               <div v-if="!!commerceData.discount.deadline" class="flex items-baseline">
                 <div>優惠尚餘</div>
                 <div>{{ discountCountdownText }}</div>
               </div>
             </div>
 
-            <div>
-              <nuxt-link v-if="localPage" class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+            <div v-if="localPage" class="mt-2 flex items-center">
+              <div v-if="localPage.igConnected"
+                   class="rounded-full overflow-hidden image-container aspect-square mr-2"
+                   style="height: 50px;">
+                <img class="h-full w-full"
+                     :alt="localPage.username"
+                     v-lazy="localPage.profilePicUrl"/>
+              </div>
+              <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
                 {{ localPage.username }}
               </nuxt-link>
             </div>
@@ -70,8 +79,11 @@
               {{ stripTrailingHashtags(localMedia.caption) }}
             </div>
 
-            <div v-if="localPage" class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
-            <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
+            <template v-if="localPage && !(localPage.igConnected)">
+              <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
+              <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
+            </template>
+
 
             <div class="flex items-center mt-4">
               <div class="text-xl md:text-2xl">評論</div>
