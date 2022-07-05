@@ -176,12 +176,17 @@
               </template>
             </div>
 
-            <button class="mt-4 btn-primary" @click="configCommerceDataStep = 2">下一步</button>
+            <button class="mt-4 btn-primary" @click="configCommerceDataStep = 3">下一步</button>
 
           </template>
+          <template v-else-if="configCommerceDataStep == 3">
+            <div class="text-2xl">
+              店鋪折扣優惠
+            </div>
+            <LazyDiscountEditor v-model="tempDiscount">
+            </LazyDiscountEditor>
 
-
-
+          </template>
 
         </div>
       </div>
@@ -201,6 +206,7 @@ import {
 } from "~/models/IgPageCommerceData"
 import {Mailing, MailingType} from "~/models/Order"
 import {mailingMethods, mailingTypeToText, paymentMethods, paymentMethodsToText} from "~/data/commerce";
+import {Discount, DiscountType, ThresholdType} from "~/models/Discount";
 
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
 const commerceDataLoaded = ref(false)
@@ -303,6 +309,13 @@ function addPayment() {
   } as BankTransferPaymentMethodData
 }
 
+// Discount
+const tempDiscount: Ref<Discount> = ref({
+  thresholdType: ThresholdType.COUNT, // COUNT, VALUE
+  discountType: DiscountType.FLAT, // FLAT, RATIO
+  threshold: 1,
+  discount: 0,
+})
 // discount?: Discount;
 
 
