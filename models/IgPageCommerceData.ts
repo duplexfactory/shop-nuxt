@@ -8,12 +8,12 @@ export interface IgPageCommerceData {
     paymentMethodData: PaymentMethodData[];
 }
 
-enum PaymentType {
+export enum PaymentType {
     BANK_TRANSFER,
     FPS,
     PAYME,
-    WECHAT_PAY,
-    ALIPAY
+    WECHAT_PAY_HK,
+    ALIPAY_HK
 }
 
 export interface PaymentMethodData {
@@ -35,7 +35,7 @@ export interface FPSPaymentMethodData extends PaymentMethodData {
 }
 
 export interface QRCodePaymentMethodData extends PaymentMethodData {
-    method: PaymentType.PAYME | PaymentType.WECHAT_PAY | PaymentType.ALIPAY;
+    method: PaymentType.PAYME | PaymentType.WECHAT_PAY_HK | PaymentType.ALIPAY_HK;
     qrCodeUrl: string;
 }
 

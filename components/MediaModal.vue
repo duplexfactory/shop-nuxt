@@ -1,5 +1,5 @@
 <template>
-  <LazyModal @close="close">
+  <LazyModal class="text-gray-800" @close="close">
     <template #body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
@@ -30,28 +30,41 @@
               </Popper>
             </div>
 
-            <div v-if="!!commerceData && !!(commerceData.discount)" class="mt-2 border p-2 rounded-md">
-              <div class="">折扣優惠</div>
-              <div class="font-bold text-pink-700">
+            <div v-if="!!commerceData && !!(commerceData.discount) && (!commerceData.discount.deadline || discountSecondsLeft > 0)" class="mt-2 border border-yellow-400 p-2 rounded-md">
+              <div>折扣優惠</div>
+              <div class="text-yellow-500 font-bold">
                 {{ (!!commerceData.discount.title ? (commerceData.discount.title + " - ") : "") + discountToText(commerceData.discount) }}
               </div>
               <div v-if="!!commerceData.discount.deadline" class="flex items-baseline">
-                <div>優惠尚餘</div>
+                <div class="text-sm text-gray-500 mr-2">優惠尚餘</div>
                 <div>{{ discountCountdownText }}</div>
               </div>
             </div>
 
             <div v-if="localPage" class="mt-2 flex items-center">
-              <div v-if="localPage.igConnected"
-                   class="rounded-full overflow-hidden image-container aspect-square mr-2"
-                   style="height: 50px;">
-                <img class="h-full w-full"
-                     :alt="localPage.username"
-                     v-lazy="localPage.profilePicUrl"/>
-              </div>
-              <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
-                {{ localPage.username }}
-              </nuxt-link>
+
+
+              <template v-if="localPage.igConnected">
+                <div class="rounded-full overflow-hidden image-container aspect-square mr-2"
+                     style="height: 50px;">
+                  <img class="h-full w-full"
+                       :alt="localPage.username"
+                       v-lazy="localPage.profilePicUrl"/>
+                </div>
+                <div>
+                  <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                    {{ localPage.username }}
+                  </nuxt-link>
+                  <div class="text-gray-500 text-sm">
+                    {{ localPage.fullName }}
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                  {{ localPage.username }}
+                </nuxt-link>
+              </template>
             </div>
 
             <div v-if="commerceDataLoaded" class="mt-2">
@@ -326,7 +339,7 @@ const discountCountdownText = computed(() => {
   const secs = discountSecondsLeft.value - days * (60 * 60 * 24)
   const hhmmss = new Date(secs * 1000).toISOString().substring(11, 19).split(":")
 
-  return days.toString() + "日" + hhmmss[0] + "時" + hhmmss[1] + "分" + hhmmss[2] + "秒"
+  return days.toString() + "日 " + hhmmss[0] + "時 " + hhmmss[1] + "分 " + hhmmss[2] + "秒 "
 
 })
 function clickBuyNow() {
@@ -356,13 +369,15 @@ onMounted(async () => {
   })
   commerceData.value = data.value["data"][localMedia.value.code] || null
   discountSecondsLeft.value = (commerceData.value.discount.deadline - Date.now()) / 1000
-  const interval = setInterval(() => {
-    if (discountSecondsLeft.value === 0) {
-      clearInterval(interval)
-    } else {
-      discountSecondsLeft.value--
-    }
-  }, 1000)
+  if (discountSecondsLeft.value > 0) {
+    const interval = setInterval(() => {
+      if (discountSecondsLeft.value === 0) {
+        clearInterval(interval)
+      } else {
+        discountSecondsLeft.value--
+      }
+    }, 1000)
+  }
   commerceDataLoaded.value = true
 });
 

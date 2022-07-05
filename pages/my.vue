@@ -17,15 +17,25 @@ watch(
     }
 )
 
+const tabs: {route: string, title: string}[] = [
+  {route: "account", title: "我的帳戶"},
+  {route: "shop", title: "商店資料"},
+  {route: "media-list", title: "我的貼文"},
+  {route: "e-commerce", title: "網店設定"},
+
+]
+
 </script>
 
 <template>
     <div class="container mx-auto mt-4 md:mt-0">
 
       <div class="mb-4 text-lg flex">
-        <nuxt-link to="/my/account" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/account')}">我的帳戶</nuxt-link>
-        <nuxt-link to="/my/shop" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/shop')}">我的商店</nuxt-link>
-        <nuxt-link to="/my/media-list" class="px-5 py-2" :class="{'tab-selected': route.path.includes('/my/media-list')}">我的貼文</nuxt-link>
+        <nuxt-link v-for="tab in tabs"
+                   :key="tab.route"
+                   :to="`/my/${tab.route}`"
+                   class="px-5 py-2"
+                   :class="{'tab-selected': route.path.includes(`/my/${tab.route}`)}">{{ tab.title }}</nuxt-link>
       </div>
 
       <nuxt-child></nuxt-child>

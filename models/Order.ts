@@ -1,6 +1,6 @@
 import {Discount, MailingDiscount} from "~/models/Discount";
 
-enum MailingType {
+export enum MailingType {
     SF_STATION,
     SF_LOCKER,
     OTHERS

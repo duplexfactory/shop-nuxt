@@ -54,6 +54,14 @@
     @apply outline-none border-pink-400;
 }
 
+.text-input-primary--prefixed {
+    @apply rounded-l-none pl-2 !important;
+}
+
+.text-input-prefix-primary {
+    @apply rounded-l-md border-b border-t border-l text-md py-2 pl-4 pr-2;
+}
+
 textarea {
     outline-color: #f472b6;
 }
@@ -111,13 +119,13 @@ textarea {
 /* Toast custom CSS. */
 
 .c-toast {
-    @apply !py-2 !px-4 !rounded-md;
+    @apply py-2 px-4 rounded-md !important;
 }
 
 .c-toast.c-toast--error {
-    @apply !bg-red-100 !text-red-500;
+    @apply bg-red-100 text-red-500 !important;
 }
 
 .c-toast.c-toast--success {
-    @apply !bg-green-100 !text-green-700;
+    @apply bg-green-100 text-green-700 !important;
 }
