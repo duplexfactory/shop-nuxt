@@ -18,23 +18,23 @@
             <div class="mt-4">
 
               <div class="flex items-center">
-                <lazy-spr-select v-model="tempMailingType" class="w-1/2 mr-2">
+                <lazy-spr-select v-model="tempMailing.type" class="w-1/2 mr-2">
                   <option value="" disabled>郵寄類型</option>
                   <option v-for="method in mailingMethods" :key="'mailing-method-' + method" :value="method">{{ mailingTypeToText[method] }}</option>
                 </lazy-spr-select>
 
                 <div class="flex items-center justify-between w-1/2 rounded-md border py-2 px-4">
                   <div class="mr-2">到付</div>
-                  <lazy-basic-toggle v-model="tempPayOnArrive"></lazy-basic-toggle>
+                  <lazy-basic-toggle v-model="tempMailing.payOnArrive" @change="payOnArriveChanged"></lazy-basic-toggle>
                 </div>
               </div>
 
-              <div v-if="!tempPayOnArrive" class="flex flex-1 mt-2">
+              <div v-if="!tempMailing.payOnArrive" class="flex flex-1 mt-2">
                 <div class="flex-0 text-input-prefix-primary">HK$</div>
-                <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailingCost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
+                <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailing.cost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
               </div>
               <input class="w-full text-input-primary mt-2"
-                     v-model="tempMailingTitle"
+                     v-model="tempMailing.title"
                      type="text"
                      name="mailing"
                      :placeholder="tempMailingTitlePlaceholder"/>
@@ -54,13 +54,15 @@
                 <div v-for="(mailing, i) in configCommerceData.mailing"
                      :key="mailing.title"
                      :class="{'mt-2': i !== 0}"
-                     class="flex bg-white rounded-md p-2">
+                     class="flex items-center bg-white rounded-md p-2">
                   <div class="flex-1 text-left">
                     <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[mailing.type] }}</div>
                     <div class="inline-block">{{ mailing.title }}</div>
                   </div>
                   <div>
-                    <div class="inline-block mr-2">{{ `HK$ ${mailing.cost}` }}</div>
+                    <div class="inline-block mr-2">
+                      {{ formatMailingPrice(mailing) }}
+                    </div>
                     <button @click="configCommerceData.mailing.splice(i, 1)"><i class="spr-cancel"></i></button>
                   </div>
                 </div>
@@ -224,34 +226,40 @@ const configCommerceData = ref({
 })
 
 // Mailing
-const tempMailingType = ref(MailingType.SF_STATION)
-const tempMailingTitle = ref("")
-const tempMailingTitlePlaceholder = computed(() => {
-  if (tempMailingType.value === MailingType.SF_STATION || tempMailingType.value === MailingType.SF_LOCKER) {
-    return "郵寄説明（e.g. 貨到付款）"
+const tempMailing: Ref<Mailing> = ref(null)
+const tempMailingTitlePlaceholder = computed(() =>
+  [MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type) ?
+      "郵寄説明（e.g. 參考運費 $16/kg）" :
+      "郵寄方法（e.g. 面交、平郵）"
+)
+function payOnArriveChanged() {
+  tempMailing.value.cost = tempMailing.value.payOnArrive ? 0 : null
+}
+function resetTempMailing() {
+  tempMailing.value = {
+    title: "",
+    type: MailingType.SF_STATION,
+    cost: null,
+    payOnArrive: false
   }
-  return "郵寄方法（e.g. 面交、平郵）"
-})
-const tempMailingCost = ref(null)
-const tempPayOnArrive = ref(false)
-
+}
 function addMailing() {
-  if (tempMailingCost.value == null || tempMailingTitle.value == "") {
+  if (tempMailing.value.title == "") {
     return
   }
-
-  const mailing: Mailing = {
-    title: tempMailingTitle.value,
-    type: tempMailingType.value, // SF_STATION, SF_LOCKER, OTHERS
-    cost: tempMailingCost.value,
-    payOnArrive: tempPayOnArrive.value
+  if (tempMailing.value.cost == null) {
+    return
   }
-  configCommerceData.value.mailing.push(mailing)
-
-  tempMailingCost.value = null
-  tempMailingTitle.value = ""
-  tempPayOnArrive.value = false
+  configCommerceData.value.mailing.push(Object.assign({}, tempMailing.value))
+  resetTempMailing()
 }
+function formatMailingPrice(mailing: Mailing) {
+  if (mailing.payOnArrive) {
+    return "到付"
+  }
+  return mailing.cost === 0 ? "免費" : `HK$ ${mailing.cost}`
+}
+resetTempMailing()
 
 // Payment Method
 const tempPaymentType = ref(PaymentType.BANK_TRANSFER)
@@ -325,7 +333,6 @@ const tempDiscount: Ref<Discount> = ref({
   discount: 0,
 })
 // discount?: Discount;
-
 
 </script>
 
