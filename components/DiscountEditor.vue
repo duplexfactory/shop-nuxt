@@ -4,15 +4,13 @@
            class="text-input-primary w-full"
            placeholder="折扣名稱（選填）"/>
 
-    <div class="mt-4">
-      <span class="font-semibold mb-1">折扣條件</span>
-      <div class="mb-1">
-        <lazy-spr-select v-model="value.thresholdType">
+    <div class="mt-4 text-left">
+      <div class="font-semibold mb-1">折扣條件</div>
+      <div class="flex items-center">
+        <lazy-spr-select class="mr-2" v-model="value.thresholdType">
           <option :value="ThresholdType.COUNT">數量</option>
           <option :value="ThresholdType.VALUE">價錢</option>
         </lazy-spr-select>
-      </div>
-      <div>
         <span>滿{{value.thresholdType === ThresholdType.VALUE ? " HK$" : ""}}</span>
         <input v-model.number="value.threshold"
                type="number"
@@ -24,28 +22,30 @@
       <!-- threshold: number; -->
     </div>
 
-    <div class="mt-4">
-      <span class="font-semibold mb-1">折扣類型</span>
-      <div class="mb-1">
-        <lazy-spr-select v-model="value.discountType">
+    <div class="mt-4 text-left">
+      <div class="font-semibold mb-1">折扣類型</div>
+      <div class="flex items-center">
+        <lazy-spr-select class="mr-2" v-model="value.discountType">
           <option :value="DiscountType.FLAT">實數</option>
           <option :value="DiscountType.RATIO">百分比</option>
         </lazy-spr-select>
         <!-- discountType: DiscountType; // FLAT, RATIO -->
+        <div class="flex">
+          <span v-if="value.discountType === DiscountType.FLAT" class="text-input-prefix-primary">- HK$</span>
+          <input size="1"
+                 v-model.number="value.discount"
+                 type="number"
+                 class="text-input-primary"
+                 :class="{'text-input-primary--prefixed': value.discountType === DiscountType.FLAT, 'text-input-primary--suffixed': value.discountType === DiscountType.RATIO}"
+                 placeholder="折扣"/>
+          <span v-if="value.discountType === DiscountType.RATIO" class="text-input-suffix-primary">% off</span>
+        </div>
       </div>
-      <div>
-        <span v-if="value.discountType === DiscountType.FLAT" class="mr-2">- HK$</span>
-        <input size="1"
-               v-model.number="value.discount"
-               type="number"
-               class="text-input-primary"
-               placeholder="折扣"/>
-        <span v-if="value.discountType === DiscountType.RATIO" class="ml-2">% off</span>
-      </div>
+
     </div>
 
-    <div class="mt-4">
-      <span class="font-semibold mb-1">折扣限期（選填）</span>
+    <div class="mt-4 flex items-center">
+      <span class="font-semibold mr-2">折扣限期（選填）</span>
       <!-- deadline?: number; -->
       <datepicker
           v-model="localDiscountDeadline"

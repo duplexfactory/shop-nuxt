@@ -185,8 +185,9 @@
             <div class="p-6 bg-gray-100 rounded-md text-center">
               <div v-if="configCommerceData.paymentMethodData.length === 0">
                 <div class="text-lg">沒有付款方法</div>
-<!--                <div class="my-1 text-sm text-gray-500">-->
-<!--                </div>-->
+                <div class="my-1 text-sm text-gray-500">
+                  請增加最少一種付款方法以繼續。
+                </div>
               </div>
               <template v-else>
                 <div v-for="(paymentMethodData, i) in configCommerceData.paymentMethodData"
@@ -219,7 +220,7 @@
 
             <div class="flex justify-between">
               <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>
-              <button class="mt-4 btn-primary" @click="incrementStep">下一步</button>
+              <button class="mt-4 btn-primary" :disabled="configCommerceData.paymentMethodData.length === 0" @click="incrementStep">下一步</button>
             </div>
 
           </template>
@@ -227,7 +228,11 @@
             <div class="text-2xl">
               店鋪折扣優惠
             </div>
-            <LazyDiscountEditor v-model="tempDiscount">
+            <div class="text-gray-500">
+              此優惠為全店優惠，適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請稍後在「我的貼文」設定。
+            </div>
+
+            <LazyDiscountEditor class="mt-4" v-model="tempDiscount">
             </LazyDiscountEditor>
 
             <div class="flex justify-between">
