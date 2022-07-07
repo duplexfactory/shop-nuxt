@@ -383,6 +383,12 @@ function addPayment() {
       return
     }
   }
+  else if (tempPaymentType.value === PaymentType.IN_PERSON) {
+    const d = tempPaymentMethodData.value as InPersonPaymentMethodData
+    if (d.description == "") {
+      return
+    }
+  }
   else {
     const d = tempPaymentMethodData.value as QRCodePaymentMethodData
     if (d.qrCodeUrl == "") {
