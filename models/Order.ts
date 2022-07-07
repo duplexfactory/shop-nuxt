@@ -24,4 +24,5 @@ export interface Mailing {
     title: string;
     type: MailingType; // SF_STATION, SF_LOCKER, OTHERS
     cost: number;
+    payOnArrive: boolean;
 }

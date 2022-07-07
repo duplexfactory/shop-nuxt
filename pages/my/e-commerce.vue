@@ -16,17 +16,22 @@
             </div>
 
             <div class="mt-4">
+
               <div class="flex items-center">
-                <lazy-spr-select v-model="tempMailingType">
+                <lazy-spr-select v-model="tempMailingType" class="w-1/2 mr-2">
                   <option value="" disabled>郵寄類型</option>
                   <option v-for="method in mailingMethods" :key="'mailing-method-' + method" :value="method">{{ mailingTypeToText[method] }}</option>
                 </lazy-spr-select>
 
-                <div class="flex flex-1 ml-2">
-                  <div class="flex-0 text-input-prefix-primary">HK$</div>
-                  <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailingCost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
+                <div class="flex items-center justify-between w-1/2 rounded-md border py-2 px-4">
+                  <div class="mr-2">到付</div>
+                  <lazy-basic-toggle v-model="tempPayOnArrive"></lazy-basic-toggle>
                 </div>
+              </div>
 
+              <div v-if="!tempPayOnArrive" class="flex flex-1 mt-2">
+                <div class="flex-0 text-input-prefix-primary">HK$</div>
+                <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailingCost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
               </div>
               <input class="w-full text-input-primary mt-2"
                      v-model="tempMailingTitle"
@@ -228,6 +233,7 @@ const tempMailingTitlePlaceholder = computed(() => {
   return "郵寄方法（e.g. 面交、平郵）"
 })
 const tempMailingCost = ref(null)
+const tempPayOnArrive = ref(false)
 
 function addMailing() {
   if (tempMailingCost.value == null || tempMailingTitle.value == "") {
@@ -237,12 +243,14 @@ function addMailing() {
   const mailing: Mailing = {
     title: tempMailingTitle.value,
     type: tempMailingType.value, // SF_STATION, SF_LOCKER, OTHERS
-    cost: tempMailingCost.value
+    cost: tempMailingCost.value,
+    payOnArrive: tempPayOnArrive.value
   }
   configCommerceData.value.mailing.push(mailing)
 
   tempMailingCost.value = null
   tempMailingTitle.value = ""
+  tempPayOnArrive.value = false
 }
 
 // Payment Method
