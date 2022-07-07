@@ -52,61 +52,7 @@
 
       <template v-else>
 
-        <input v-model="localDiscount.title"
-               class="text-input-primary w-full"
-               placeholder="折扣名稱（選填）"/>
-
-        <div class="mt-4">
-          <span class="font-semibold mb-1">折扣條件</span>
-          <div class="mb-1">
-            <lazy-spr-select v-model="localDiscount.thresholdType">
-              <option :value="ThresholdType.COUNT">數量</option>
-              <option :value="ThresholdType.VALUE">價錢</option>
-            </lazy-spr-select>
-          </div>
-          <div>
-            <span>滿{{localDiscount.thresholdType === ThresholdType.VALUE ? " HK$" : ""}}</span>
-            <input v-model.number="localDiscount.threshold"
-                   type="number"
-                   class="text-input-primary mx-2"
-                   placeholder="折扣"/>
-            <span v-if="localDiscount.thresholdType === ThresholdType.COUNT">件</span>
-          </div>
-          <!-- thresholdType: ThresholdType; // COUNT, VALUE -->
-          <!-- threshold: number; -->
-        </div>
-
-        <div class="mt-4">
-          <span class="font-semibold mb-1">折扣類型</span>
-          <div class="mb-1">
-            <lazy-spr-select v-model="localDiscount.discountType">
-              <option :value="DiscountType.FLAT">實數</option>
-              <option :value="DiscountType.RATIO">百分比</option>
-            </lazy-spr-select>
-            <!-- discountType: DiscountType; // FLAT, RATIO -->
-          </div>
-          <div>
-            <span v-if="localDiscount.discountType === DiscountType.FLAT" class="mr-2">- HK$</span>
-            <input size="1"
-                   v-model.number="localDiscount.discount"
-                   type="number"
-                   class="text-input-primary"
-                   placeholder="折扣"/>
-            <span v-if="localDiscount.discountType === DiscountType.RATIO" class="ml-2">% off</span>
-          </div>
-        </div>
-
-        <div class="mt-4">
-          <span class="font-semibold mb-1">折扣限期（選填）</span>
-          <!-- deadline?: number; -->
-          <datepicker
-              v-model="localDiscountDeadline"
-              class="text-input-primary"
-              :lowerLimit="new Date()"
-              :clearable="true"
-          />
-        </div>
-
+        <LazyDiscountEditor v-model="localDiscount"></LazyDiscountEditor>
         <div class="mt-4">
           <button @click="createDiscount" class="btn-primary btn-sm mr-2">儲存</button>
           <button @click="editingDiscount = false" class="btn-outline btn-sm">取消</button>
@@ -125,7 +71,6 @@ import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {ThresholdType, DiscountType, Discount} from "~/models/Discount";
 import useMediaPrice from "~/composables/useMediaPrice";
 import {discountToText} from "~/utils/discountText";
-
 const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
 
@@ -241,8 +186,6 @@ const customPrice = computed({
   }
 })
 
-const localDiscountDeadline = ref(null)
-
 function editDiscount() {
   editingDiscount.value = true
   if (hasDiscount.value) {
@@ -255,13 +198,6 @@ function editDiscount() {
       threshold: 1,
       discount: 0,
     }
-  }
-
-  if (!localDiscount.value.deadline) {
-    localDiscountDeadline.value = null
-  }
-  else {
-    localDiscountDeadline.value = new Date(localDiscount.value.deadline)
   }
 }
 
@@ -289,7 +225,6 @@ async function removeDiscount() {
 
 async function createDiscount() {
   try {
-    localDiscount.value.deadline = (localDiscountDeadline.value as Date).getTime()
     await $fetch(
       `/api/media/${media.value.code}/commerce-data/edit`,
       {

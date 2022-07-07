@@ -62,7 +62,21 @@
 import {ThresholdType, DiscountType, Discount} from "~/models/Discount";
 
 // const localDiscount = ref(null)
-const localDiscountDeadline = ref(null)
+const localDiscountDeadline = computed({
+  get: () => {
+    return value.value.deadline ? new Date(value.value.deadline) : null
+  },
+  set: val => {
+    if (val == null) {
+      value.value.deadline = undefined
+    }
+    else {
+      value.value.deadline = (val as Date).getTime()
+    }
+  }
+})
+
+ref(null)
 
 // const props = defineProps({
 //   discount: Object as PropType<Discount>,
