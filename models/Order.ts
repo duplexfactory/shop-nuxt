@@ -23,6 +23,6 @@ export interface Order {
 export interface Mailing {
     title: string;
     type: MailingType; // SF_STATION, SF_LOCKER, OTHERS
-    cost: number;
+    cost?: number;
     payOnArrive: boolean;
 }

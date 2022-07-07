@@ -18,7 +18,8 @@ export const paymentMethods = [
     PaymentType.FPS,
     PaymentType.PAYME,
     PaymentType.WECHAT_PAY_HK,
-    PaymentType.ALIPAY_HK
+    PaymentType.ALIPAY_HK,
+    PaymentType.IN_PERSON
 ]
 
 export const paymentMethodsToText = {
@@ -26,5 +27,6 @@ export const paymentMethodsToText = {
     [PaymentType.FPS]: "FPS",
     [PaymentType.PAYME]: "PayMe",
     [PaymentType.WECHAT_PAY_HK]: "WeChat Pay HK",
-    [PaymentType.ALIPAY_HK]: "AlipayHK"
+    [PaymentType.ALIPAY_HK]: "AlipayHK",
+    [PaymentType.IN_PERSON]: "親身付款"
 }

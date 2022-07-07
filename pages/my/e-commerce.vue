@@ -1,18 +1,31 @@
 <template>
   <div>
     <template v-if="!commerceData">
-      <div class="info-group flex justify-center">
-        <div class="text-center w-full md:w-3/5">
+      <div class="info-group">
 
-          <template v-if="configCommerceDataStep == 0">
+        <!-- Stepper -->
+        <div v-if="step != Step.INIT" class="flex items-center mb-4">
+          <div v-for="(s, i) in steps.slice(1)"
+               :key="s"
+               class="h-1 mr-2"
+               :class="currentStepIndex > i ? 'bg-pink-400' : 'bg-gray-200'"
+               :style="'width: ' + (100 / (steps.length - 1)) + '%'"></div>
+          <div class="text-xs text-gray-500">{{ currentStepIndex }}/{{ steps.length - 1 }}</div>
+        </div>
+
+        <div class="text-center w-full md:w-3/5 mx-auto">
+          <template v-if="step == Step.INIT">
             <div class="">
-              設定你的網店後，用戶便可直接在Shoperuse上下單購買你的產品！
+              設定你的網店後，顧客便可直接在Shoperuse上下單購買你的產品！
             </div>
-            <button class="mt-4 btn-primary" @click="configCommerceDataStep = 1">立即開始設定</button>
+            <button class="mt-4 btn-primary" @click="incrementStep">立即開始設定</button>
           </template>
-          <template v-else-if="configCommerceDataStep == 1">
+          <template v-else-if="step == Step.MAILING">
             <div class="text-2xl">
               郵寄方法
+            </div>
+            <div class="text-gray-500">
+              郵寄優惠（e.g. 滿3件免郵）將在稍後步驟填寫，此步驟只需填寫郵寄原價。
             </div>
 
             <div class="mt-4">
@@ -25,19 +38,23 @@
 
                 <div class="flex items-center justify-between w-1/2 rounded-md border py-2 px-4">
                   <div class="mr-2">到付</div>
-                  <lazy-basic-toggle v-model="tempMailing.payOnArrive" @change="payOnArriveChanged"></lazy-basic-toggle>
+                  <lazy-basic-toggle v-model="tempMailing.payOnArrive"></lazy-basic-toggle>
                 </div>
               </div>
 
-              <div v-if="!tempMailing.payOnArrive" class="flex flex-1 mt-2">
-                <div class="flex-0 text-input-prefix-primary">HK$</div>
-                <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailing.cost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
-              </div>
               <input class="w-full text-input-primary mt-2"
                      v-model="tempMailing.title"
                      type="text"
                      name="mailing"
                      :placeholder="tempMailingTitlePlaceholder"/>
+              <div class="flex flex-1 mt-2">
+                <div class="flex-0 text-input-prefix-primary">HK$</div>
+                <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailing.cost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
+              </div>
+              <div class="mt-1 text-sm text-gray-700 w-full text-left">
+                *到付而且不知道運費請留空。
+              </div>
+
               <button class="btn-outline mt-2 ml-2" @click="addMailing">增加 +</button>
             </div>
 
@@ -69,12 +86,15 @@
               </template>
             </div>
 
-            <button class="mt-4 btn-primary" :disabled="configCommerceData.mailing.length === 0" @click="configCommerceDataStep = 2">下一步</button>
+            <button class="mt-4 btn-primary" :disabled="configCommerceData.mailing.length === 0" @click="incrementStep">下一步</button>
 
           </template>
-          <template v-else-if="configCommerceDataStep == 2">
+          <template v-else-if="step == Step.PAYMENT">
             <div class="text-2xl">
               付款方法
+            </div>
+            <div class="text-gray-500">
+              顧客將會直接付款給你，所有款項皆不會經過Shoperuse。
             </div>
 
             <div class="mt-4">
@@ -145,6 +165,18 @@
                 </div>
               </template>
 
+              <template v-if="tempPaymentType === PaymentType.IN_PERSON">
+                <div class="mt-2 flex items-center">
+                  <span>描述</span>
+                  <input v-model="tempPaymentMethodData.description"
+                         size="1"
+                         class="w-full flex-1 ml-2 text-input-primary"
+                         type="text"
+                         name="in-person-description"
+                         placeholder="（e.g. 旺角門市付款、面交付款）"/>
+                </div>
+              </template>
+
               <button class="btn-outline mt-2 ml-2" @click="addPayment">增加 +</button>
             </div>
 
@@ -153,9 +185,8 @@
             <div class="p-6 bg-gray-100 rounded-md text-center">
               <div v-if="configCommerceData.paymentMethodData.length === 0">
                 <div class="text-lg">沒有付款方法</div>
-                <div class="my-1 text-sm text-gray-500">
-                  請增加最少一種郵寄方法以繼續。
-                </div>
+<!--                <div class="my-1 text-sm text-gray-500">-->
+<!--                </div>-->
               </div>
               <template v-else>
                 <div v-for="(paymentMethodData, i) in configCommerceData.paymentMethodData"
@@ -174,6 +205,9 @@
                       <div class="mt-1">{{ "收款賬戶：" + paymentMethodData.account }}</div>
                       <div class="mt-1">{{ "戶口名稱：" + paymentMethodData.accountName }}</div>
                     </template>
+                    <template v-if="paymentMethodData.method === PaymentType.IN_PERSON">
+                      <div class="mt-1">{{ "描述：" + paymentMethodData.description }}</div>
+                    </template>
 
                   </div>
                   <div>
@@ -183,16 +217,23 @@
               </template>
             </div>
 
-            <button class="mt-4 btn-primary" @click="configCommerceDataStep = 3">下一步</button>
+            <div class="flex justify-between">
+              <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>
+              <button class="mt-4 btn-primary" @click="incrementStep">下一步</button>
+            </div>
 
           </template>
-          <template v-else-if="configCommerceDataStep == 3">
+          <template v-else-if="step == Step.DISCOUNT">
             <div class="text-2xl">
               店鋪折扣優惠
             </div>
             <LazyDiscountEditor v-model="tempDiscount">
             </LazyDiscountEditor>
 
+            <div class="flex justify-between">
+              <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>
+              <button class="mt-4 btn-primary" @click="incrementStep">下一步</button>
+            </div>
           </template>
 
         </div>
@@ -207,7 +248,7 @@
 import {Ref} from "vue"
 import {
   BankTransferPaymentMethodData, FPSPaymentMethodData,
-  IgPageCommerceData,
+  IgPageCommerceData, InPersonPaymentMethodData,
   PaymentMethodData,
   PaymentType, QRCodePaymentMethodData
 } from "~/models/IgPageCommerceData"
@@ -218,12 +259,33 @@ import {Discount, DiscountType, ThresholdType} from "~/models/Discount";
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
 const commerceDataLoaded = ref(false)
 
-const configCommerceDataStep = ref(0)
 const configCommerceData = ref({
   discount: null,
   mailing: [],
   paymentMethodData: []
 })
+
+// Steps
+enum Step {
+  INIT,
+  MAILING,
+  PAYMENT,
+  DISCOUNT
+}
+const steps = [
+  Step.INIT,
+  Step.MAILING,
+  Step.PAYMENT,
+  Step.DISCOUNT
+]
+const step = ref(Step.INIT)
+const currentStepIndex = computed(() => steps.findIndex((s) => s === step.value))
+function decrementStep() {
+  step.value = steps[currentStepIndex.value - 1]
+}
+function incrementStep() {
+  step.value = steps[currentStepIndex.value + 1]
+}
 
 // Mailing
 const tempMailing: Ref<Mailing> = ref(null)
@@ -232,9 +294,9 @@ const tempMailingTitlePlaceholder = computed(() =>
       "郵寄説明（e.g. 參考運費 $16/kg）" :
       "郵寄方法（e.g. 面交、平郵）"
 )
-function payOnArriveChanged() {
-  tempMailing.value.cost = tempMailing.value.payOnArrive ? 0 : null
-}
+// function payOnArriveChanged() {
+//   tempMailing.value.cost = tempMailing.value.payOnArrive ? 0 : null
+// }
 function resetTempMailing() {
   tempMailing.value = {
     title: "",
@@ -247,17 +309,24 @@ function addMailing() {
   if (tempMailing.value.title == "") {
     return
   }
-  if (tempMailing.value.cost == null) {
+  if (!tempMailing.value.cost && (tempMailing.value.cost !== 0) && !tempMailing.value.payOnArrive) {
+    // Not pay on arrive but unknown cost.
     return
   }
   configCommerceData.value.mailing.push(Object.assign({}, tempMailing.value))
   resetTempMailing()
 }
 function formatMailingPrice(mailing: Mailing) {
-  if (mailing.payOnArrive) {
+  if (mailing.cost === 0) {
+    return "免費"
+  }
+  if (!mailing.cost) {
     return "到付"
   }
-  return mailing.cost === 0 ? "免費" : `HK$ ${mailing.cost}`
+  if (mailing.payOnArrive) {
+    return `到付 HK$ ${mailing.cost}`
+  }
+  return `HK$ ${mailing.cost}`
 }
 resetTempMailing()
 
@@ -286,6 +355,12 @@ function tempPaymentTypeChanged() {
       account: "",
       accountName: "",
     } as FPSPaymentMethodData
+  }
+  else if (tempPaymentType.value === PaymentType.IN_PERSON) {
+    tempPaymentMethodData.value = {
+      method: PaymentType.IN_PERSON,
+      description: ""
+    } as InPersonPaymentMethodData
   }
   else {
     tempPaymentMethodData.value = {

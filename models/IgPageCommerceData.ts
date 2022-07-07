@@ -14,7 +14,8 @@ export enum PaymentType {
     FPS,
     PAYME,
     WECHAT_PAY_HK,
-    ALIPAY_HK
+    ALIPAY_HK,
+    IN_PERSON
 }
 
 export interface PaymentMethodData {
@@ -40,3 +41,7 @@ export interface QRCodePaymentMethodData extends PaymentMethodData {
     qrCodeUrl: string;
 }
 
+export interface InPersonPaymentMethodData extends PaymentMethodData {
+    method: PaymentType.IN_PERSON;
+    description: string;
+}
