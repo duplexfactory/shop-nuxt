@@ -229,18 +229,48 @@
               店鋪折扣優惠
             </div>
             <div class="text-gray-500">
-              此優惠為全店優惠，適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請稍後在「我的貼文」設定。
+              此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請稍後在「我的貼文」設定。
             </div>
 
             <LazyDiscountEditor class="mt-4" v-model="tempDiscount">
             </LazyDiscountEditor>
 
+            <hr class="my-4"/>
+
+            <div class="text-2xl">
+              免郵優惠
+            </div>
+            <div class="text-gray-500">
+              在指定條件下免除郵費。
+            </div>
+            <div class="mt-4">
+              <input v-model="tempMailingDiscount.title"
+                     class="text-input-primary w-full"
+                     placeholder="優惠名稱（選填）"/>
+              <div class="mt-4 text-left">
+                <div class="font-semibold mb-1">優惠條件</div>
+                <div class="flex items-center">
+                  <lazy-spr-select class="mr-2" v-model="tempMailingDiscount.thresholdType">
+                    <option :value="ThresholdType.COUNT">數量</option>
+                    <option :value="ThresholdType.VALUE">價錢</option>
+                  </lazy-spr-select>
+                  <span>滿{{tempMailingDiscount.thresholdType === ThresholdType.VALUE ? " HK$" : ""}}</span>
+                  <input v-model.number="tempMailingDiscount.threshold"
+                         type="number"
+                         class="text-input-primary mx-2"
+                         placeholder="折扣"/>
+                  <span v-if="tempMailingDiscount.thresholdType === ThresholdType.COUNT">件</span>
+                  <span>免郵</span>
+                </div>
+              </div>
+            </div>
+
             <div class="flex justify-between">
               <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>
               <button class="mt-4 btn-primary" @click="incrementStep">下一步</button>
             </div>
-          </template>
 
+          </template>
         </div>
       </div>
     </template>
@@ -259,7 +289,7 @@ import {
 } from "~/models/IgPageCommerceData"
 import {Mailing, MailingType} from "~/models/Order"
 import {mailingMethods, mailingTypeToText, paymentMethods, paymentMethodsToText} from "~/data/commerce";
-import {Discount, DiscountType, ThresholdType} from "~/models/Discount";
+import {Discount, DiscountType, MailingDiscount, ThresholdType} from "~/models/Discount";
 
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
 const commerceDataLoaded = ref(false)
@@ -419,6 +449,12 @@ const tempDiscount: Ref<Discount> = ref({
   discount: 0,
 })
 // discount?: Discount;
+
+// Mailing discount
+const tempMailingDiscount: Ref<MailingDiscount> = ref({
+  thresholdType: ThresholdType.COUNT, // COUNT, VALUE
+  threshold: 1,
+})
 
 </script>
 

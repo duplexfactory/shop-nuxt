@@ -18,8 +18,6 @@
                placeholder="折扣"/>
         <span v-if="value.thresholdType === ThresholdType.COUNT">件</span>
       </div>
-      <!-- thresholdType: ThresholdType; // COUNT, VALUE -->
-      <!-- threshold: number; -->
     </div>
 
     <div class="mt-4 text-left">
@@ -29,7 +27,6 @@
           <option :value="DiscountType.FLAT">實數</option>
           <option :value="DiscountType.RATIO">百分比</option>
         </lazy-spr-select>
-        <!-- discountType: DiscountType; // FLAT, RATIO -->
         <div class="flex">
           <span v-if="value.discountType === DiscountType.FLAT" class="text-input-prefix-primary">- HK$</span>
           <input size="1"
@@ -61,7 +58,6 @@
 
 import {ThresholdType, DiscountType, Discount} from "~/models/Discount";
 
-// const localDiscount = ref(null)
 const localDiscountDeadline = computed({
   get: () => {
     return value.value.deadline ? new Date(value.value.deadline) : null
@@ -75,16 +71,6 @@ const localDiscountDeadline = computed({
     }
   }
 })
-
-ref(null)
-
-// const props = defineProps({
-//   discount: Object as PropType<Discount>,
-// })
-// const {
-//   discount,
-// } = toRefs(props)
-//
 
 const props = defineProps<{modelValue: Discount}>()
 const emit = defineEmits(["update:modelValue"])
