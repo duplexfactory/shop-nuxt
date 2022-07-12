@@ -32,14 +32,14 @@
     <hr class="my-4"/>
 
     <div class="p-6 bg-gray-100 rounded-md text-center">
-      <div v-if="value.mailing.length === 0">
+      <div v-if="value.length === 0">
         <div class="text-lg">沒有郵寄方法</div>
         <div class="my-1 text-sm text-gray-500">
           請增加最少一種郵寄方法以繼續。
         </div>
       </div>
       <template v-else>
-        <div v-for="(mailing, i) in value.mailing"
+        <div v-for="(mailing, i) in value"
              :key="mailing.title"
              :class="{'mt-2': i !== 0}"
              class="flex items-center bg-white rounded-md p-2">
@@ -51,7 +51,7 @@
             <div class="inline-block mr-2">
               {{ formatMailingPrice(mailing) }}
             </div>
-            <button @click="value.mailing.splice(i, 1)"><i class="spr-cancel"></i></button>
+            <button @click="value.splice(i, 1)"><i class="spr-cancel"></i></button>
           </div>
         </div>
       </template>
@@ -67,7 +67,7 @@ import {Mailing, MailingType} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import {mailingMethods, mailingTypeToText} from "~/data/commerce";
 
-const props = defineProps<{modelValue: IgPageCommerceData}>()
+const props = defineProps<{modelValue: Mailing[]}>()
 const emit = defineEmits(["update:modelValue"])
 const value = computed({
   get: () => props.modelValue,
@@ -99,7 +99,7 @@ function addMailing() {
     // Not pay on arrive but unknown cost.
     return
   }
-  value.value.mailing.push(Object.assign({}, tempMailing.value))
+  value.value.push(Object.assign({}, tempMailing.value))
   resetTempMailing()
 }
 function formatMailingPrice(mailing: Mailing) {

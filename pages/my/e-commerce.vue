@@ -38,7 +38,7 @@
             免郵優惠（e.g. 滿3件免郵）將在稍後步驟填寫，此步驟只需填寫郵寄原價。
           </div>
 
-          <LazyMailingEditor class="mt-4" v-model="configCommerceData"></LazyMailingEditor>
+          <LazyMailingEditor class="mt-4" v-model="configCommerceData.mailing"></LazyMailingEditor>
 
           <button class="mt-4 btn-primary" :disabled="configCommerceData.mailing.length === 0" @click="incrementStep">下一步</button>
         </template>
@@ -70,7 +70,7 @@
             <lazy-basic-toggle v-model="hasDiscount"></lazy-basic-toggle>
           </div>
           <div class="text-left text-gray-500">
-            此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請稍後在「我的貼文」設定。
+            此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請在「我的貼文」設定。
           </div>
 
           <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount">
@@ -141,10 +141,40 @@
 
     <div v-else>
       <div class="info-group">
-        <LazyMailingEditor class="mt-4" v-model="commerceData"></LazyMailingEditor>
+        <div class="text-2xl">
+          郵寄方法
+        </div>
+        <LazyMailingEditor class="mt-4" v-model="commerceData.mailing"></LazyMailingEditor>
       </div>
       <div class="info-group">
+        <div class="text-2xl">
+          付款方法
+        </div>
+        <div class="text-gray-500">
+          顧客將會直接付款給你，所有款項皆不會經過Shoperuse。
+        </div>
         <LazyPaymentEditor class="mt-4" v-model="commerceData"></LazyPaymentEditor>
+      </div>
+      <div class="info-group">
+        <div class="text-2xl">
+          優惠設定
+        </div>
+
+        <div class="mt-4">
+          <div class="flex justify-between items-center">
+            <div class="text-left text-xl font-semibold">
+              店鋪折扣優惠
+            </div>
+            <lazy-basic-toggle v-model="hasDiscount"></lazy-basic-toggle>
+          </div>
+          <div class="text-left text-gray-500">
+            此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請在「我的貼文」設定。
+          </div>
+          <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount"></LazyDiscountEditor>
+
+
+        </div>
+
       </div>
 
     </div>
@@ -183,6 +213,11 @@ async function init() {
     error
   } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
   commerceData.value = data.value["commerceData"]
+
+  if (!!commerceData.value) {
+    hasDiscount.value = !!commerceData.value.discount
+    hasMailingDiscount.value = !!commerceData.value.mailingDiscount
+  }
 }
 
 const configCommerceData: Ref<Partial<Omit<IgPageCommerceData, "_id">>> = ref({
