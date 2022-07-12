@@ -139,7 +139,15 @@
 
     </div>
 
-    
+    <div v-else>
+      <div class="info-group">
+        <LazyMailingEditor class="mt-4" v-model="commerceData"></LazyMailingEditor>
+      </div>
+      <div class="info-group">
+        <LazyPaymentEditor class="mt-4" v-model="commerceData"></LazyPaymentEditor>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -159,9 +167,23 @@ const {
   headersToObject
 } = useAuth()
 const nuxt = useNuxtApp()
+const igPageId = useIgPageId();
 
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
-const commerceDataLoaded = ref(false)
+
+if (igPageId.value) {
+  await init()
+}
+else {
+  watch(igPageId, init)
+}
+async function init() {
+  const {
+    data,
+    error
+  } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+  commerceData.value = data.value["commerceData"]
+}
 
 const configCommerceData: Ref<Partial<Omit<IgPageCommerceData, "_id">>> = ref({
   discount: null,

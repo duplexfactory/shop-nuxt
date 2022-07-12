@@ -52,13 +52,13 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    ScreenSize,
-    useScreenSize,
-    useShowAgeRestrictedModal,
-    useShowingMediaModalData,
-    useShowMediaModal
-  } from "~/composables/states"
+import {
+  ScreenSize, useIgPageId,
+  useScreenSize,
+  useShowAgeRestrictedModal,
+  useShowingMediaModalData,
+  useShowMediaModal
+} from "~/composables/states"
   import throttle from "lodash.throttle"
   import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 
@@ -118,6 +118,7 @@
   const isIgConnected = useIsIgConnected();
   const isIgAuthTokenValid = ref(true);
   const igUsername = useIgUsername();
+  const igPageId = useIgPageId();
   const currentUser = useCurrentUser()
   const isLoginLoadingRoute = computed(() => {
     return [
@@ -184,11 +185,12 @@
         isIgConnected.value = data.value.connected;
         isIgAuthTokenValid.value = !data.value.invalid;
         igUsername.value = data.value.username ?? "";
-
+        igPageId.value = data.value.pageId ?? "";
       }
       else {
         isIgConnected.value = false;
         igUsername.value = "";
+        igPageId.value = "";
       }
 
     })

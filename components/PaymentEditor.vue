@@ -80,7 +80,7 @@
         </div>
       </template>
 
-      <button class="btn-outline mt-2 ml-2" @click="addPayment">增加 +</button>
+      <button class="btn-outline mt-2" @click="addPayment">增加 +</button>
     </div>
 
     <hr class="my-4"/>

@@ -83,10 +83,12 @@
 
 import {getAuth, User} from "firebase/auth"
 import {EmailAuthProvider, reauthenticateWithCredential, updatePassword} from "@firebase/auth"
+import {useIgPageId} from "~/composables/states";
 
 const {code} = useRoute().query
 const isIgConnected = useIsIgConnected()
 const igUsername = useIgUsername();
+const igPageId = useIgPageId();
 const authLoading = ref(!!code);
 const nuxt = useNuxtApp();
 
@@ -98,11 +100,15 @@ onMounted(async () => {
   if (code) {
     const {getAuthHeader} = useAuth()
     try {
-      const {username} = await $fetch("/api/auth/ig-code", {
+      const {
+        username,
+        id
+      } = await $fetch("/api/auth/ig-code", {
         params: {code},
         headers: await getAuthHeader()
       })
       igUsername.value = username
+      igPageId.value = id
       isIgConnected.value = true
     } catch(e) {
       if (e.data.statusCode === 401 && e.data.statusMessage === "Instagram Permission Needed") {

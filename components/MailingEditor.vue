@@ -26,7 +26,7 @@
         *到付而且不知道運費請留空。
       </div>
 
-      <button class="btn-outline mt-2 ml-2" @click="addMailing">增加 +</button>
+      <button class="btn-outline mt-2 " @click="addMailing">增加 +</button>
     </div>
 
     <hr class="my-4"/>
