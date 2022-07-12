@@ -73,8 +73,7 @@
             此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請在「我的貼文」設定。
           </div>
 
-          <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount">
-          </LazyDiscountEditor>
+          <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount"></LazyDiscountEditor>
 
           <hr class="my-4"/>
 
@@ -88,27 +87,7 @@
             在指定條件下免除郵費。
           </div>
 
-          <div v-if="hasMailingDiscount" class="mt-4">
-            <input v-model="tempMailingDiscount.title"
-                   class="text-input-primary w-full"
-                   placeholder="優惠名稱（選填）"/>
-            <div class="mt-4 text-left">
-              <div class="mb-1">優惠條件</div>
-              <div class="flex items-center">
-                <lazy-spr-select class="mr-2" v-model="tempMailingDiscount.thresholdType">
-                  <option :value="ThresholdType.COUNT">數量</option>
-                  <option :value="ThresholdType.VALUE">價錢</option>
-                </lazy-spr-select>
-                <span>滿{{tempMailingDiscount.thresholdType === ThresholdType.VALUE ? " HK$" : ""}}</span>
-                <input v-model.number="tempMailingDiscount.threshold"
-                       type="number"
-                       class="text-input-primary mx-2"
-                       :placeholder="tempMailingDiscount.thresholdType === ThresholdType.VALUE ? '金額' : '數量'"/>
-                <span v-if="tempMailingDiscount.thresholdType === ThresholdType.COUNT">件</span>
-                <span>免郵</span>
-              </div>
-            </div>
-          </div>
+          <LazyMailingDiscountEditor v-if="hasMailingDiscount" class="mt-4" v-model="tempMailingDiscount"></LazyMailingDiscountEditor>
 
           <div class="flex justify-between">
             <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>
@@ -145,6 +124,7 @@
           郵寄方法
         </div>
         <LazyMailingEditor class="mt-4" v-model="commerceData.mailing"></LazyMailingEditor>
+        <button class="mt-4 btn-primary" @click="">儲存</button>
       </div>
       <div class="info-group">
         <div class="text-2xl">
@@ -154,27 +134,38 @@
           顧客將會直接付款給你，所有款項皆不會經過Shoperuse。
         </div>
         <LazyPaymentEditor class="mt-4" v-model="commerceData"></LazyPaymentEditor>
+        <button class="mt-4 btn-primary" @click="">儲存</button>
       </div>
       <div class="info-group">
         <div class="text-2xl">
           優惠設定
         </div>
 
-        <div class="mt-4">
-          <div class="flex justify-between items-center">
-            <div class="text-left text-xl font-semibold">
-              店鋪折扣優惠
-            </div>
-            <lazy-basic-toggle v-model="hasDiscount"></lazy-basic-toggle>
+        <div class="mt-4 flex justify-between items-center">
+          <div class="text-left text-xl font-semibold">
+            店鋪折扣優惠
           </div>
-          <div class="text-left text-gray-500">
-            此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請在「我的貼文」設定。
-          </div>
-          <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount"></LazyDiscountEditor>
+          <lazy-basic-toggle v-model="hasDiscount"></lazy-basic-toggle>
+        </div>
+        <div class="text-left text-gray-500">
+          此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請在「我的貼文」設定。
+        </div>
+        <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount"></LazyDiscountEditor>
 
 
+        <div class="mt-4 flex justify-between items-center">
+          <div class="text-left text-xl font-semibold">
+            免郵優惠
+          </div>
+          <lazy-basic-toggle v-model="hasMailingDiscount"></lazy-basic-toggle>
+        </div>
+        <div class="text-left text-gray-500">
+          在指定條件下免除郵費。
         </div>
 
+        <LazyMailingDiscountEditor v-if="hasMailingDiscount" class="mt-4" v-model="tempMailingDiscount"></LazyMailingDiscountEditor>
+
+        <button class="mt-4 btn-primary" @click="">儲存</button>
       </div>
 
     </div>
@@ -217,6 +208,13 @@ async function init() {
   if (!!commerceData.value) {
     hasDiscount.value = !!commerceData.value.discount
     hasMailingDiscount.value = !!commerceData.value.mailingDiscount
+
+    if (hasDiscount.value) {
+      tempDiscount.value = commerceData.value.discount
+    }
+    if (hasMailingDiscount.value) {
+      tempMailingDiscount.value = commerceData.value.mailingDiscount
+    }
   }
 }
 
