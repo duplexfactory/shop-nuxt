@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         mailingDiscount,
         mailing,
         paymentMethodData,
-    } = await useBody<Partial<Pick<IgPageCommerceData, "discount" | "mailingDiscount" | "mailing" | "paymentMethodData">>>(event)
+    } = await useBody<Partial<Omit<IgPageCommerceData, "_id">>>(event)
 
     const updateData = {
         discount,
