@@ -109,8 +109,8 @@
             所有設定可於「網店設定」隨時修改
           </div>
           <div class="flex justify-center">
-            <button class="mt-4 mr-4 btn-outline" @click="decrementStep">返回網店設定</button>
-            <button class="mt-4 btn-primary" @click="incrementStep">查看訂單列表</button>
+            <button class="mt-4 mr-4 btn-outline" @click="navigateToCommerceSettings">返回網店設定</button>
+            <button class="mt-4 btn-primary" @click="navigateToOrderList">查看訂單列表</button>
           </div>
         </template>
 
@@ -199,10 +199,17 @@ else {
   watch(igPageId, init)
 }
 async function init() {
+  console.log(igPageId.value)
   const {
     data,
     error
   } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+
+  if (error.value) {
+    console.log(error.value)
+    return
+  }
+
   commerceData.value = data.value["commerceData"]
 
   if (!!commerceData.value) {
@@ -282,6 +289,15 @@ async function incrementStep() {
     }
   }
   step.value = steps[currentStepIndex.value + 1]
+}
+
+async function navigateToCommerceSettings() {
+  console.log(igPageId.value)
+  await init()
+}
+
+function navigateToOrderList() {
+
 }
 
 // Discount
