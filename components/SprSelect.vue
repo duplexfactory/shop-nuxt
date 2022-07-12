@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex items-center">
+  <div class="relative flex items-center bg-white">
     <i class="spr-angle-down absolute right-0 pr-2"></i>
     <select class="select-primary w-full" v-model="value">
       <slot></slot>
@@ -21,7 +21,7 @@ const value = computed({
 <style scoped>
 
 .select-primary {
-  @apply rounded-md border py-2 pl-4 pr-8 appearance-none text-md;
+  @apply rounded-md border py-2 pl-4 pr-8 appearance-none text-md bg-transparent z-1;
 }
 
 </style>

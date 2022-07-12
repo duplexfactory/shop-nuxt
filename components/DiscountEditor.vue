@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="text-left">
+    <div class="mb-1">折扣名稱（選填）</div>
     <input v-model="value.title"
            class="text-input-primary w-full"
-           placeholder="折扣名稱（選填）"/>
+           placeholder="聖誕大減價"/>
 
-    <div class="mt-4 text-left">
-      <div class="font-semibold mb-1">折扣條件</div>
+    <div class="mt-4">
+      <div class="mb-1">折扣條件</div>
       <div class="flex items-center">
         <lazy-spr-select class="mr-2" v-model="value.thresholdType">
           <option :value="ThresholdType.COUNT">數量</option>
@@ -15,13 +16,13 @@
         <input v-model.number="value.threshold"
                type="number"
                class="text-input-primary mx-2"
-               placeholder="折扣"/>
+               :placeholder="value.thresholdType === ThresholdType.VALUE ? '金額' : '數量'"/>
         <span v-if="value.thresholdType === ThresholdType.COUNT">件</span>
       </div>
     </div>
 
-    <div class="mt-4 text-left">
-      <div class="font-semibold mb-1">折扣類型</div>
+    <div class="mt-4">
+      <div class="mb-1">折扣類型</div>
       <div class="flex items-center">
         <lazy-spr-select class="mr-2" v-model="value.discountType">
           <option :value="DiscountType.FLAT">實數</option>
@@ -41,15 +42,21 @@
 
     </div>
 
-    <div class="mt-4 flex items-center">
-      <span class="font-semibold mr-2">折扣限期（選填）</span>
+    <div class="mt-4">
+      <div class="mb-1">折扣限期（選填）</div>
       <!-- deadline?: number; -->
       <datepicker
           v-model="localDiscountDeadline"
           class="text-input-primary"
           :lowerLimit="new Date()"
           :clearable="true"
-      />
+      >
+        <template v-slot:clear="{ onClear }">
+          <button class="pr-2 right-0" @click="onClear">
+            <i class="spr-cancel"></i>
+          </button>
+        </template>
+      </datepicker>
     </div>
   </div>
 </template>
@@ -93,6 +100,10 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
+
+.v3dp__clearable {
+  left: -30px;
+}
 
 </style>

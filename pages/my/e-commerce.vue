@@ -226,29 +226,40 @@
           </template>
           <template v-else-if="step == Step.DISCOUNT">
             <div class="text-2xl">
-              店鋪折扣優惠
+              優惠設定
             </div>
-            <div class="text-gray-500">
+
+            <div class="flex justify-between items-center">
+              <div class="text-left text-xl font-semibold">
+                店鋪折扣優惠
+              </div>
+              <lazy-basic-toggle v-model="hasDiscount"></lazy-basic-toggle>
+            </div>
+            <div class="text-left text-gray-500">
               此優惠適用於你的店鋪内所有的產品。如果只想為特定產品設定優惠，請稍後在「我的貼文」設定。
             </div>
 
-            <LazyDiscountEditor class="mt-4" v-model="tempDiscount">
+            <LazyDiscountEditor class="mt-4" v-if="hasDiscount" v-model="tempDiscount">
             </LazyDiscountEditor>
 
             <hr class="my-4"/>
 
-            <div class="text-2xl">
-              免郵優惠
+            <div class="flex justify-between items-center">
+              <div class="text-left text-xl font-semibold">
+                免郵優惠
+              </div>
+              <lazy-basic-toggle v-model="hasMailingDiscount"></lazy-basic-toggle>
             </div>
-            <div class="text-gray-500">
+            <div class="text-left text-gray-500">
               在指定條件下免除郵費。
             </div>
-            <div class="mt-4">
+
+            <div v-if="hasMailingDiscount" class="mt-4">
               <input v-model="tempMailingDiscount.title"
                      class="text-input-primary w-full"
                      placeholder="優惠名稱（選填）"/>
               <div class="mt-4 text-left">
-                <div class="font-semibold mb-1">優惠條件</div>
+                <div class="mb-1">優惠條件</div>
                 <div class="flex items-center">
                   <lazy-spr-select class="mr-2" v-model="tempMailingDiscount.thresholdType">
                     <option :value="ThresholdType.COUNT">數量</option>
@@ -258,7 +269,7 @@
                   <input v-model.number="tempMailingDiscount.threshold"
                          type="number"
                          class="text-input-primary mx-2"
-                         placeholder="折扣"/>
+                         :placeholder="tempMailingDiscount.thresholdType === ThresholdType.VALUE ? '金額' : '數量'"/>
                   <span v-if="tempMailingDiscount.thresholdType === ThresholdType.COUNT">件</span>
                   <span>免郵</span>
                 </div>
@@ -267,7 +278,7 @@
 
             <div class="flex justify-between">
               <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>
-              <button class="mt-4 btn-primary" @click="incrementStep">下一步</button>
+              <button class="mt-4 btn-primary" @click="incrementStep">完成</button>
             </div>
 
           </template>
@@ -291,11 +302,19 @@ import {Mailing, MailingType} from "~/models/Order"
 import {mailingMethods, mailingTypeToText, paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {Discount, DiscountType, MailingDiscount, ThresholdType} from "~/models/Discount";
 
+const {
+  auth,
+  getAuthHeader,
+  headersToObject
+} = useAuth()
+const nuxt = useNuxtApp()
+
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
 const commerceDataLoaded = ref(false)
 
-const configCommerceData = ref({
+const configCommerceData: Ref<Partial<Omit<IgPageCommerceData, "_id">>> = ref({
   discount: null,
+  mailingDiscount: null,
   mailing: [],
   paymentMethodData: []
 })
@@ -318,7 +337,35 @@ const currentStepIndex = computed(() => steps.findIndex((s) => s === step.value)
 function decrementStep() {
   step.value = steps[currentStepIndex.value - 1]
 }
-function incrementStep() {
+async function incrementStep() {
+  if (currentStepIndex.value === steps.length - 1) {
+    // Last step.
+    let errorText: string | undefined
+    if (hasDiscount.value) {
+      if (!tempDiscount.value.threshold && (tempDiscount.value.threshold !== 0))
+        errorText = errorText ?? "請填寫店鋪折扣條件"
+      if (!tempDiscount.value.discount && (tempDiscount.value.discount !== 0))
+        errorText = errorText ?? "請填寫店鋪折扣"
+    }
+    if (hasMailingDiscount.value) {
+      if (!tempMailingDiscount.value.threshold && (tempMailingDiscount.value.threshold !== 0))
+        errorText = errorText ?? "請填寫免郵優惠條件"
+    }
+
+    if (!!errorText) {
+      nuxt.vueApp.$toast.error(errorText, {position: "top"});
+      return
+    }
+
+    const {
+      data,
+      error
+    } = await useFetch(
+      '/api/shop/edit/self-commerce',
+      { headers: headersToObject(await getAuthHeader()), method: 'PUT', body: configCommerceData.value}
+    )
+    return
+  }
   step.value = steps[currentStepIndex.value + 1]
 }
 
@@ -442,6 +489,7 @@ function addPayment() {
 }
 
 // Discount
+const hasDiscount = ref(false)
 const tempDiscount: Ref<Discount> = ref({
   thresholdType: ThresholdType.COUNT, // COUNT, VALUE
   discountType: DiscountType.FLAT, // FLAT, RATIO
@@ -451,6 +499,7 @@ const tempDiscount: Ref<Discount> = ref({
 // discount?: Discount;
 
 // Mailing discount
+const hasMailingDiscount = ref(false)
 const tempMailingDiscount: Ref<MailingDiscount> = ref({
   thresholdType: ThresholdType.COUNT, // COUNT, VALUE
   threshold: 1,
