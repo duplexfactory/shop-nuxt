@@ -192,25 +192,33 @@ const igPageId = useIgPageId();
 
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
 
-if (igPageId.value) {
+let commerceRawData;
+let commerceDataRefresh;
+let commerceDataRefreshError;
+async function initCommerceData() {
+  const {
+    data,
+    refresh,
+    error
+  } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+  commerceRawData = data
+  commerceDataRefresh = refresh
+  commerceDataRefreshError = error
+
+  if (!!commerceRawData.value) {
+    await init()
+  }
+}
+await initCommerceData()
+if (!!commerceRawData.value) {
   await init()
 }
 else {
-  watch(igPageId, init)
+  watch(igPageId, initCommerceData)
 }
+
 async function init() {
-  console.log(igPageId.value)
-  const {
-    data,
-    error
-  } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
-
-  if (error.value) {
-    console.log(error.value)
-    return
-  }
-
-  commerceData.value = data.value["commerceData"]
+  commerceData.value = commerceRawData.value["commerceData"]
 
   if (!!commerceData.value) {
     hasDiscount.value = !!commerceData.value.discount
@@ -292,8 +300,10 @@ async function incrementStep() {
 }
 
 async function navigateToCommerceSettings() {
-  console.log(igPageId.value)
-  await init()
+  await commerceDataRefresh()
+  if (!!commerceRawData.value) {
+    await init()
+  }
 }
 
 function navigateToOrderList() {
