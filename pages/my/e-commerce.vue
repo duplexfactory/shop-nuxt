@@ -14,7 +14,7 @@
       </div>
 
       <!-- Loading -->
-      <div v-if="configLoading" class="text-center py-16">
+      <div v-if="savingConfig" class="text-center py-16">
         <i class="spr-spin4 animate-spin text-6xl text-pink-400"></i>
         <div class="mt-4 text-2xl text-pink-700 font-semibold">
           設定中
@@ -124,7 +124,7 @@
           郵寄方法
         </div>
         <LazyMailingEditor class="mt-4" v-model="commerceData.mailing"></LazyMailingEditor>
-        <button class="mt-4 btn-primary" @click="">儲存</button>
+        <button class="mt-4 btn-primary" :disabled="savingMailing || commerceData.mailing.length === 0" @click="saveMailing">儲存</button>
       </div>
       <div class="info-group">
         <div class="text-2xl">
@@ -134,7 +134,7 @@
           顧客將會直接付款給你，所有款項皆不會經過Shoperuse。
         </div>
         <LazyPaymentEditor class="mt-4" v-model="commerceData"></LazyPaymentEditor>
-        <button class="mt-4 btn-primary" @click="">儲存</button>
+        <button class="mt-4 btn-primary" :disabled="savingPayment || commerceData.paymentMethodData.length === 0" @click="savePayment">儲存</button>
       </div>
       <div class="info-group">
         <div class="text-2xl">
@@ -165,7 +165,7 @@
 
         <LazyMailingDiscountEditor v-if="hasMailingDiscount" class="mt-4" v-model="tempMailingDiscount"></LazyMailingDiscountEditor>
 
-        <button class="mt-4 btn-primary" @click="">儲存</button>
+        <button class="mt-4 btn-primary" :disabled="savingDiscount" @click="saveDiscount">儲存</button>
       </div>
 
     </div>
@@ -177,7 +177,7 @@
 // Commerce
 import {Ref} from "vue"
 import {
-  IgPageCommerceData
+  IgPageCommerceData, PaymentMethodData
 } from "~/models/IgPageCommerceData"
 import {Mailing} from "~/models/Order"
 import {Discount, DiscountType, MailingDiscount, ThresholdType} from "~/models/Discount";
@@ -192,54 +192,13 @@ const igPageId = useIgPageId();
 
 const commerceData: Ref<IgPageCommerceData | null> = ref(null)
 
-let commerceRawData;
-let commerceDataRefresh;
-let commerceDataRefreshError;
-async function initCommerceData() {
-  const {
-    data,
-    refresh,
-    error
-  } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
-  commerceRawData = data
-  commerceDataRefresh = refresh
-  commerceDataRefreshError = error
-
-  if (!!commerceRawData.value) {
-    await init()
-  }
-}
-await initCommerceData()
-if (!!commerceRawData.value) {
-  await init()
-}
-else {
-  watch(igPageId, initCommerceData)
-}
-
-async function init() {
-  commerceData.value = commerceRawData.value["commerceData"]
-
-  if (!!commerceData.value) {
-    hasDiscount.value = !!commerceData.value.discount
-    hasMailingDiscount.value = !!commerceData.value.mailingDiscount
-
-    if (hasDiscount.value) {
-      tempDiscount.value = commerceData.value.discount
-    }
-    if (hasMailingDiscount.value) {
-      tempMailingDiscount.value = commerceData.value.mailingDiscount
-    }
-  }
-}
-
 const configCommerceData: Ref<Partial<Omit<IgPageCommerceData, "_id">>> = ref({
   discount: null,
   mailingDiscount: null,
   mailing: [],
   paymentMethodData: []
 })
-const configLoading = ref(false)
+const savingConfig = ref(false)
 
 // Steps
 enum Step {
@@ -281,15 +240,12 @@ async function incrementStep() {
       return
     }
 
-    configLoading.value = true
+    savingConfig.value = true
     const {
       data,
       error
-    } = await useFetch(
-      '/api/shop/edit/self-commerce',
-      { headers: headersToObject(await getAuthHeader()), method: 'PUT', body: configCommerceData.value}
-    )
-    configLoading.value = false
+    } = await patchCommerce(configCommerceData.value);
+    savingConfig.value = false
 
     if (error.value) {
       nuxt.vueApp.$toast.error("設定失敗，請重新嘗試！", {position: "top"})
@@ -326,6 +282,110 @@ const tempMailingDiscount: Ref<MailingDiscount> = ref({
   thresholdType: ThresholdType.COUNT, // COUNT, VALUE
   threshold: 1,
 })
+
+// Init data
+let commerceRawData;
+let commerceDataRefresh;
+let commerceDataRefreshError;
+async function initCommerceData() {
+  const {
+    data,
+    refresh,
+    error
+  } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+  commerceRawData = data
+  commerceDataRefresh = refresh
+  commerceDataRefreshError = error
+
+  if (!!commerceRawData.value) {
+    await init()
+  }
+}
+await initCommerceData()
+if (!!commerceRawData.value) {
+  await init()
+}
+else {
+  watch(igPageId, initCommerceData)
+}
+
+async function init() {
+  commerceData.value = commerceRawData.value["commerceData"]
+
+  if (!!commerceData.value) {
+    hasDiscount.value = !!commerceData.value.discount
+    hasMailingDiscount.value = !!commerceData.value.mailingDiscount
+
+    if (hasDiscount.value) {
+      tempDiscount.value = commerceData.value.discount
+    }
+    if (hasMailingDiscount.value) {
+      tempMailingDiscount.value = commerceData.value.mailingDiscount
+    }
+  }
+}
+
+// Individual part saving
+const savingMailing = ref(false)
+async function saveMailing() {
+  savingMailing.value = true
+  const {
+    data,
+    error
+  } = await patchCommerce({
+    mailing: commerceData.value.mailing
+  });
+  savingMailing.value = false
+  if (error.value) {
+    nuxt.vueApp.$toast.error("儲存失敗，請重新嘗試！", {position: "top"})
+    return
+  }
+  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"})
+}
+const savingPayment = ref(false)
+async function savePayment() {
+  savingPayment.value = true
+  const {
+    data,
+    error
+  } = await patchCommerce({
+    paymentMethodData: commerceData.value.paymentMethodData
+  });
+  savingPayment.value = false
+  if (error.value) {
+    nuxt.vueApp.$toast.error("儲存失敗，請重新嘗試！", {position: "top"})
+    return
+  }
+  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"})
+}
+const savingDiscount = ref(false)
+async function saveDiscount() {
+  savingDiscount.value = true
+  const {
+    data,
+    error
+  } = await patchCommerce({
+    discount: hasDiscount.value ? tempDiscount.value : null,
+    mailingDiscount: hasMailingDiscount.value ? tempMailingDiscount.value : null,
+  });
+  savingDiscount.value = false
+  if (error.value) {
+    nuxt.vueApp.$toast.error("儲存失敗，請重新嘗試！", {position: "top"})
+    return
+  }
+  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"})
+}
+
+async function patchCommerce(patch: Partial<Omit<IgPageCommerceData, "_id">>) {
+  return useFetch(
+      '/api/shop/edit/self-commerce',
+      {
+        headers: headersToObject(await getAuthHeader()),
+        method: 'PATCH',
+        body: patch
+      }
+  );
+}
 
 </script>
 

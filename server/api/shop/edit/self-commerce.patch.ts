@@ -26,23 +26,31 @@ export default defineEventHandler(async (event) => {
         paymentMethodData,
     } = await useBody<Partial<Omit<IgPageCommerceData, "_id">>>(event)
 
-    const updateData = {
+    const set = {
         discount,
         mailingDiscount,
-        mailing: mailing ?? [],
-        paymentMethodData: paymentMethodData ?? [],
+        mailing,
+        paymentMethodData
     }
-    // Remove empty fields.
-    Object.keys(updateData).forEach((k) => {
-        if (updateData[k] === undefined)
-            delete updateData[k]
-    })
+    let defaults = {
+        mailing: [],
+        paymentMethodData: []
+    }
+    for (const key of Object.keys(set)) {
+        if (set[key] === undefined) {
+            delete set[key]
+        }
+        else {
+            delete defaults[key]
+        }
+    }
 
     // Upsert override data.
     await pageCommerceDataCollection.updateOne({
         _id: igAuth.pageId
     }, {
-        $set: updateData
+        $set: set,
+        $setOnInsert: defaults
     }, {upsert: true})
 
     return {
