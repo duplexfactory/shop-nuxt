@@ -381,7 +381,7 @@ async function patchCommerce(patch: Partial<Omit<IgPageCommerceData, "_id">>) {
       '/api/shop/edit/self-commerce',
       {
         headers: headersToObject(await getAuthHeader()),
-        method: 'PATCH',
+        method: 'PUT',
         body: patch
       }
   );

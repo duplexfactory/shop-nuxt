@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div class="flex items-center">
+      <div class="mb-4 flex items-center">
         <lazy-spr-select @change="tempPaymentTypeChanged" v-model="tempPaymentType">
           <option value="" disabled>付款方法</option>
           <option v-for="method in paymentMethods" :key="'payment-method-' + method" :value="method">{{ paymentMethodsToText[method] }}</option>
@@ -9,7 +9,7 @@
       </div>
 
       <template v-if="tempPaymentType === PaymentType.BANK_TRANSFER">
-        <div class="mt-2 flex items-center">
+        <div class="flex items-center">
           <span>銀行名稱</span>
           <input v-model="tempPaymentMethodData.bank"
                  size="1"
@@ -39,7 +39,7 @@
       </template>
 
       <template v-if="tempPaymentType === PaymentType.FPS">
-        <div class="mt-2 flex items-center">
+        <div class="flex items-center">
           <span>電話號碼</span>
           <input v-model="tempPaymentMethodData.phone"
                  size="1"
@@ -69,7 +69,7 @@
       </template>
 
       <template v-if="tempPaymentType === PaymentType.IN_PERSON">
-        <div class="mt-2 flex items-center">
+        <div class="flex items-center">
           <span>描述</span>
           <input v-model="tempPaymentMethodData.description"
                  size="1"
@@ -80,7 +80,18 @@
         </div>
       </template>
 
-      <button class="btn-outline mt-2" @click="addPayment">增加 +</button>
+      <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType)">
+        <div>QR Code照片</div>
+        <div class="mt-2">
+          <img v-if="!!tempPaymentImageFileUrl"
+               :src="tempPaymentImageFileUrl"
+               class="mb-2"
+               style="max-width: 150px; max-height: 150px;"/>
+          <input ref="inputFile" type="file" @change="handleFileSelection( $event )"/>
+        </div>
+      </template>
+
+      <button class="btn-outline mt-4" @click="addPayment">增加 +</button>
     </div>
 
     <hr class="my-4"/>
@@ -112,7 +123,11 @@
             <template v-if="paymentMethodData.method === PaymentType.IN_PERSON">
               <div class="mt-1">{{ "描述：" + paymentMethodData.description }}</div>
             </template>
-
+            <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(paymentMethodData.method)">
+              <div class="mt-2">
+                <img :src="paymentMethodData.qrCodeUrl" style="max-width: 150px; max-height: 150px;"/>
+              </div>
+            </template>
           </div>
           <div>
             <button @click="value.paymentMethodData.splice(i, 1)"><i class="spr-cancel"></i></button>
@@ -145,6 +160,14 @@ const value = computed({
   set: val => emit('update:modelValue', val)
 })
 
+const {
+  auth,
+  getAuthHeader,
+  headersToObject
+} = useAuth()
+
+const inputFile = ref(null)
+
 const tempPaymentType = ref(PaymentType.BANK_TRANSFER)
 const tempPaymentMethodData: Ref<PaymentMethodData> = ref({
   method: PaymentType.BANK_TRANSFER,
@@ -152,6 +175,8 @@ const tempPaymentMethodData: Ref<PaymentMethodData> = ref({
   accountNumber: null,
   accountName: "",
 })
+const tempPaymentImageFile = ref(null)
+const tempPaymentImageFileUrl = ref(null)
 
 function tempPaymentTypeChanged() {
   if (tempPaymentType.value === PaymentType.BANK_TRANSFER) {
@@ -176,7 +201,7 @@ function tempPaymentTypeChanged() {
       description: ""
     } as InPersonPaymentMethodData
   }
-  else {
+  else if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType.value)) {
     tempPaymentMethodData.value = {
       method: tempPaymentType.value,
       qrCodeUrl: "",
@@ -184,7 +209,21 @@ function tempPaymentTypeChanged() {
   }
 }
 
-function addPayment() {
+
+function handleFileSelection( event ){
+  const uploadedFiles = event.target.files;
+  if (uploadedFiles.length != 0) {
+    tempPaymentImageFile.value = uploadedFiles[0]
+
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      tempPaymentImageFileUrl.value = reader.result;
+    }
+    reader.readAsDataURL(tempPaymentImageFile.value);
+  }
+}
+
+async function addPayment() {
   if (tempPaymentType.value === PaymentType.BANK_TRANSFER) {
     const d = tempPaymentMethodData.value as BankTransferPaymentMethodData
     if (d.accountNumber == null || d.bank == "" || d.accountName == "") {
@@ -203,11 +242,32 @@ function addPayment() {
       return
     }
   }
-  else {
-    const d = tempPaymentMethodData.value as QRCodePaymentMethodData
-    if (d.qrCodeUrl == "") {
+  else if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType.value)) {
+
+    if (tempPaymentImageFile.value == null) {
       return
     }
+
+    // Upload image first.
+    let formData = new FormData();
+    // formData.append('name', paymentMethodsToText[tempPaymentType.value]);
+    formData.append( 'image', tempPaymentImageFile.value);
+    const {
+      url
+    } = await $fetch(
+        '/api/file/payment',
+        {
+          headers: await getAuthHeader(),
+          method: 'POST',
+          params: {
+            type: tempPaymentType.value
+          },
+          body: formData
+        }
+    );
+
+    const d = tempPaymentMethodData.value as QRCodePaymentMethodData
+    d.qrCodeUrl = url
   }
 
   value.value.paymentMethodData.push(tempPaymentMethodData.value)
@@ -218,6 +278,9 @@ function addPayment() {
     accountNumber: null,
     accountName: "",
   } as BankTransferPaymentMethodData
+  tempPaymentImageFile.value = null
+  tempPaymentImageFileUrl.value = null
+  inputFile.value.value = null
 }
 
 </script>
