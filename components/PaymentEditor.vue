@@ -41,7 +41,7 @@
       </template>
       <div v-else class="text-lg">新增付款方法</div>
     </div>
-    <div v-else class="p-6 bg-white rounded-md text-center">
+    <div v-else class="p-6 bg-white rounded-md text-left">
       <div class="mb-4 flex items-center">
         <lazy-spr-select @change="tempPaymentTypeChanged" v-model="tempPaymentType">
           <option value="" disabled>付款方法</option>
@@ -163,6 +163,7 @@ const value = computed({
   set: val => emit('update:modelValue', val)
 })
 
+const nuxt = useNuxtApp()
 const {
   auth,
   getAuthHeader,
@@ -230,25 +231,50 @@ const adding = ref(false)
 async function addPayment() {
   if (tempPaymentType.value === PaymentType.BANK_TRANSFER) {
     const d = tempPaymentMethodData.value as BankTransferPaymentMethodData
-    if (d.accountNumber == null || d.bank == "" || d.accountName == "") {
+
+    let errorText: string | undefined
+    if (d.bank == "")
+      errorText = errorText ?? "請填寫銀行名稱！"
+    if (d.accountNumber == null)
+      errorText = errorText ?? "請填寫戶口號碼！"
+    if (d.accountName == "")
+      errorText = errorText ?? "請填寫戶口名稱！"
+    if (!!errorText) {
+      nuxt.vueApp.$toast.error(errorText, {position: "top"})
       return
     }
   }
   else if (tempPaymentType.value === PaymentType.FPS) {
     const d = tempPaymentMethodData.value as FPSPaymentMethodData
-    if (d.phone == "" || d.account == "" || d.accountName == "") {
+    let errorText: string | undefined
+    if (d.phone == "")
+      errorText = errorText ?? "請填寫電話號碼！"
+    if (d.account == "")
+      errorText = errorText ?? "請填寫收款賬戶！"
+    if (d.accountName == "")
+      errorText = errorText ?? "請填寫戶口名稱！"
+    if (!!errorText) {
+      nuxt.vueApp.$toast.error(errorText, {position: "top"})
       return
     }
   }
   else if (tempPaymentType.value === PaymentType.IN_PERSON) {
     const d = tempPaymentMethodData.value as InPersonPaymentMethodData
-    if (d.description == "") {
+    let errorText: string | undefined
+    if (d.description == "")
+      errorText = errorText ?? "請填寫描述！"
+    if (!!errorText) {
+      nuxt.vueApp.$toast.error(errorText, {position: "top"})
       return
     }
   }
   else if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType.value)) {
 
-    if (tempPaymentImageFile.value == null) {
+    let errorText: string | undefined
+    if (tempPaymentImageFile.value == null)
+      errorText = errorText ?? "請上載QR Code照片！"
+    if (!!errorText) {
+      nuxt.vueApp.$toast.error(errorText, {position: "top"})
       return
     }
 

@@ -80,6 +80,8 @@ const value = computed({
   set: val => emit('update:modelValue', val)
 })
 
+const nuxt = useNuxtApp()
+
 const tempMailing: Ref<Mailing> = ref(null)
 const tempMailingTitlePlaceholder = computed(() =>
     [MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type) ?
@@ -100,10 +102,15 @@ function resetTempMailing() {
 const adding = ref(false)
 function addMailing() {
   if (tempMailing.value.title == "") {
+    nuxt.vueApp.$toast.error(
+        `請填寫${[MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type) ? "郵寄説明" : "郵寄方法"}！`,
+        {position: "top"}
+    );
     return
   }
   if (!tempMailing.value.cost && (tempMailing.value.cost !== 0) && !tempMailing.value.payOnArrive) {
     // Not pay on arrive but unknown cost.
+    nuxt.vueApp.$toast.error("請填寫郵寄費用！", {position: "top"});
     return
   }
   value.value.push(Object.assign({}, tempMailing.value))
