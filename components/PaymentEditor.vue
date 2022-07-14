@@ -280,7 +280,8 @@ async function addPayment() {
   } as BankTransferPaymentMethodData
   tempPaymentImageFile.value = null
   tempPaymentImageFileUrl.value = null
-  inputFile.value.value = null
+  if (!!inputFile.value)
+    inputFile.value.value = null
 }
 
 </script>
