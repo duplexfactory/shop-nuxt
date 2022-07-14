@@ -1,6 +1,36 @@
 <template>
-  <div>
-    <div>
+  <div class="p-6 bg-gray-100 rounded-md text-center">
+    <template v-if="value.length !== 0">
+      <div v-for="(mailing, i) in value"
+           :key="mailing.title"
+           :class="{'mt-2': i !== 0}"
+           class="flex items-center bg-white rounded-md p-2">
+        <div class="flex-1 text-left">
+          <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[mailing.type] }}</div>
+          <div class="inline-block">{{ mailing.title }}</div>
+        </div>
+        <div>
+          <div class="inline-block mr-2">
+            {{ formatMailingPrice(mailing) }}
+          </div>
+          <button @click="value.splice(i, 1)"><i class="spr-cancel"></i></button>
+        </div>
+      </div>
+      <hr class="my-4"/>
+    </template>
+
+    <div v-if="!adding" @click="adding = true" class="p-6 rounded-md text-center border-dashed border-2 cursor-pointer">
+      <div class="text-6xl text-gray-500">+</div>
+      <template v-if="value.length === 0">
+        <div class="text-lg">沒有郵寄方法</div>
+        <div class="my-1 text-sm text-gray-500">
+          請增加最少一種郵寄方法以繼續。
+        </div>
+      </template>
+      <div v-else class="text-lg">新增郵寄方法</div>
+    </div>
+
+    <div v-else class="p-6 bg-white rounded-md text-center">
       <div class="flex items-center">
         <lazy-spr-select v-model="tempMailing.type" class="w-1/2 mr-2">
           <option value="" disabled>郵寄類型</option>
@@ -26,35 +56,11 @@
         *到付而且不知道運費請留空。
       </div>
 
-      <button class="btn-outline mt-2 " @click="addMailing">增加 +</button>
-    </div>
-
-    <hr class="my-4"/>
-
-    <div class="p-6 bg-gray-100 rounded-md text-center">
-      <div v-if="value.length === 0">
-        <div class="text-lg">沒有郵寄方法</div>
-        <div class="my-1 text-sm text-gray-500">
-          請增加最少一種郵寄方法以繼續。
-        </div>
+      <div class="flex justify-center w-full">
+        <button class="btn-outline mt-2 mr-8" @click="addMailing">增加 +</button>
+        <button class="text-pink-400 mt-2" @click="adding = false">取消</button>
       </div>
-      <template v-else>
-        <div v-for="(mailing, i) in value"
-             :key="mailing.title"
-             :class="{'mt-2': i !== 0}"
-             class="flex items-center bg-white rounded-md p-2">
-          <div class="flex-1 text-left">
-            <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[mailing.type] }}</div>
-            <div class="inline-block">{{ mailing.title }}</div>
-          </div>
-          <div>
-            <div class="inline-block mr-2">
-              {{ formatMailingPrice(mailing) }}
-            </div>
-            <button @click="value.splice(i, 1)"><i class="spr-cancel"></i></button>
-          </div>
-        </div>
-      </template>
+
     </div>
   </div>
 </template>
@@ -91,6 +97,7 @@ function resetTempMailing() {
     payOnArrive: false
   }
 }
+const adding = ref(false)
 function addMailing() {
   if (tempMailing.value.title == "") {
     return
@@ -101,6 +108,7 @@ function addMailing() {
   }
   value.value.push(Object.assign({}, tempMailing.value))
   resetTempMailing()
+  adding.value = false
 }
 function formatMailingPrice(mailing: Mailing) {
   if (mailing.cost === 0) {
