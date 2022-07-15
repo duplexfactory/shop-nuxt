@@ -368,15 +368,17 @@ onMounted(async () => {
     }
   })
   commerceData.value = data.value["data"][localMedia.value.code] || null
-  discountSecondsLeft.value = (commerceData.value.discount.deadline - Date.now()) / 1000
-  if (discountSecondsLeft.value > 0) {
-    const interval = setInterval(() => {
-      if (discountSecondsLeft.value === 0) {
-        clearInterval(interval)
-      } else {
-        discountSecondsLeft.value--
-      }
-    }, 1000)
+  if (!!commerceData.value.discount) {
+    discountSecondsLeft.value = (commerceData.value.discount.deadline - Date.now()) / 1000
+    if (discountSecondsLeft.value > 0) {
+      const interval = setInterval(() => {
+        if (discountSecondsLeft.value === 0) {
+          clearInterval(interval)
+        } else {
+          discountSecondsLeft.value--
+        }
+      }, 1000)
+    }
   }
   commerceDataLoaded.value = true
 });
