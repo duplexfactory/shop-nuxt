@@ -41,9 +41,32 @@
               </div>
             </div>
 
-            <div v-if="localPage" class="mt-2 flex items-center">
+            <div v-if="commerceDataLoaded" class="mt-2" >
+              <template v-if="!!commerceData && commerceData.active">
+                <div class="flex items-center">
+                  <div class="mr-4">數量</div>
+                  <button @click="minusQuantity" class="text-input-prefix-primary">-</button>
+                  <input size="1"
+                         v-model.number="quantity"
+                         @change="quantityChanged"
+                         type="number"
+                         style="width: 40px;"
+                         class="text-center text-input-primary text-input-primary--prefixed text-input-primary--suffixed"/>
+                  <button @click="addQuantity" class="text-input-suffix-primary">+</button>
+                </div>
 
+                <button class="btn btn-primary w-full mt-2" @click="clickBuyNow">
+                  立即購買
+                </button>
+              </template>
+              <button v-else class="btn btn-primary w-full" @click="clickContactShop">
+                聯絡店主下單
+              </button>
+            </div>
 
+            <hr class="my-4"/>
+
+            <div v-if="localPage" class="flex items-center">
               <template v-if="localPage.igConnected">
                 <div class="rounded-full overflow-hidden image-container aspect-square mr-2"
                      style="height: 50px;">
@@ -67,14 +90,7 @@
               </template>
             </div>
 
-            <div v-if="commerceDataLoaded" class="mt-2">
-              <button v-if="!!commerceData && commerceData.active" class="btn btn-primary w-full" @click="clickBuyNow">
-                立即購買
-              </button>
-              <button v-else class="btn btn-primary w-full" @click="clickContactShop">
-                聯絡店主下單
-              </button>
-            </div>
+            <hr class="my-4"/>
 
 <!--            <div v-if="contactInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
 <!--              <div v-for="(pageInfoRow, i) in contactInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
@@ -342,6 +358,20 @@ const discountCountdownText = computed(() => {
   return days.toString() + "日 " + hhmmss[0] + "時 " + hhmmss[1] + "分 " + hhmmss[2] + "秒 "
 
 })
+
+// Create order
+const quantity = ref(1)
+function addQuantity() {
+  quantity.value++
+}
+function minusQuantity() {
+  if (quantity.value > 1)
+    quantity.value--
+}
+function quantityChanged() {
+  if (!quantity.value)
+    quantity.value = 1
+}
 function clickBuyNow() {
 
 }

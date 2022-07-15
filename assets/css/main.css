@@ -59,7 +59,7 @@
 }
 
 .text-input-primary--suffixed {
-    @apply rounded-r-none !important;
+    @apply rounded-r-none pr-2 !important;
 }
 
 .text-input-prefix-primary {
@@ -136,4 +136,16 @@ textarea {
 
 .c-toast.c-toast--success {
     @apply bg-green-100 text-green-700 !important;
+}
+
+/* Input number no arrows */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }
