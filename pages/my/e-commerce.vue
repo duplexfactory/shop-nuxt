@@ -133,8 +133,8 @@
         <div class="text-gray-500">
           顧客將會直接付款給你，所有款項皆不會經過Shoperuse。
         </div>
-        <LazyPaymentEditor class="mt-4" v-model="commerceData"></LazyPaymentEditor>
-        <button class="mt-4 btn-primary" :disabled="savingPayment || commerceData.paymentMethodData.length === 0" @click="savePayment">儲存</button>
+        <LazyPaymentEditor class="mt-4" v-model="commerceData" @save="savePayment"></LazyPaymentEditor>
+<!--        :disabled="savingPayment || commerceData.paymentMethodData.length === 0" @click="savePayment"-->
       </div>
       <div class="info-group">
         <div class="text-2xl">

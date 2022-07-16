@@ -2,36 +2,38 @@
   <div class="p-6 bg-gray-100 rounded-md text-center">
     <div v-for="(paymentMethodData, i) in value.paymentMethodData"
          :key="paymentMethodData.method + '-' + i"
-         :class="{'mt-2': i !== 0}"
-         class="flex bg-white rounded-md p-4">
-      <div class="flex-1 text-left">
-        <div class="inline-block border text-lg bg-white rounded-md py-1 px-2">{{ paymentMethodsToText[paymentMethodData.method] }}</div>
-        <template v-if="paymentMethodData.method === PaymentType.BANK_TRANSFER">
-          <div class="mt-1">{{ "銀行名稱：" + paymentMethodData.bank }}</div>
-          <div class="mt-1">{{ "戶口號碼：" + paymentMethodData.accountNumber }}</div>
-          <div class="mt-1">{{ "戶口名稱：" + paymentMethodData.accountName }}</div>
-        </template>
-        <template v-if="paymentMethodData.method === PaymentType.FPS">
-          <div class="mt-1">{{ "電話號碼：" + paymentMethodData.phone }}</div>
-          <div class="mt-1">{{ "收款賬戶：" + paymentMethodData.account }}</div>
-          <div class="mt-1">{{ "戶口名稱：" + paymentMethodData.accountName }}</div>
-        </template>
-        <template v-if="paymentMethodData.method === PaymentType.IN_PERSON">
-          <div class="mt-1">{{ "描述：" + paymentMethodData.description }}</div>
-        </template>
-        <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(paymentMethodData.method)">
-          <div class="mt-2">
-            <img :src="paymentMethodData.qrCodeUrl" style="max-width: 150px; max-height: 150px;"/>
-          </div>
-        </template>
+         :class="{'mt-2': i !== 0}">
+      <div class="flex bg-white rounded-md p-4">
+        <div class="flex-1 text-left">
+          <div class="inline-block border text-lg bg-white rounded-md py-1 px-2">{{ paymentMethodsToText[paymentMethodData.method] }}</div>
+          <template v-if="paymentMethodData.method === PaymentType.BANK_TRANSFER">
+            <div class="mt-1">{{ "銀行名稱：" + paymentMethodData.bank }}</div>
+            <div class="mt-1">{{ "戶口號碼：" + paymentMethodData.accountNumber }}</div>
+            <div class="mt-1">{{ "戶口名稱：" + paymentMethodData.accountName }}</div>
+          </template>
+          <template v-if="paymentMethodData.method === PaymentType.FPS">
+            <div class="mt-1">{{ "電話號碼：" + paymentMethodData.phone }}</div>
+            <div class="mt-1">{{ "收款賬戶：" + paymentMethodData.account }}</div>
+            <div class="mt-1">{{ "戶口名稱：" + paymentMethodData.accountName }}</div>
+          </template>
+          <template v-if="paymentMethodData.method === PaymentType.IN_PERSON">
+            <div class="mt-1">{{ "描述：" + paymentMethodData.description }}</div>
+          </template>
+          <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(paymentMethodData.method)">
+            <div class="mt-2">
+              <img :src="paymentMethodData.qrCodeUrl" style="max-width: 150px; max-height: 150px;"/>
+            </div>
+          </template>
+        </div>
+        <div>
+          <button @click="editingPaymentMethodDataIndex = i">edit</button>
+          <button @click="remove(i)"><i class="spr-cancel"></i></button>
+        </div>
       </div>
-      <div>
-        <button @click="value.paymentMethodData.splice(i, 1)"><i class="spr-cancel"></i></button>
-      </div>
-    </div>
-    <hr v-if="value.paymentMethodData.length !== 0" class="my-4"/>
 
-    <div v-if="!adding" @click="adding = true" class="p-6 rounded-md text-center border-dashed border-2 cursor-pointer">
+    </div>
+
+    <div @click="editingPaymentMethodDataIndex = -1" class="mt-2 p-6 rounded-md text-center border-dashed border-2 cursor-pointer">
       <div class="text-6xl text-gray-500">+</div>
       <template v-if="value.paymentMethodData.length === 0">
         <div class="text-lg">沒有付款方法</div>
@@ -41,103 +43,21 @@
       </template>
       <div v-else class="text-lg">新增付款方法</div>
     </div>
-    <div v-else class="p-6 bg-white rounded-md text-left">
-      <div class="mb-4 flex items-center">
-        <lazy-spr-select @change="tempPaymentTypeChanged" v-model="tempPaymentType">
-          <option value="" disabled>付款方法</option>
-          <option v-for="method in paymentMethods" :key="'payment-method-' + method" :value="method">{{ paymentMethodsToText[method] }}</option>
-        </lazy-spr-select>
-      </div>
 
-      <template v-if="tempPaymentType === PaymentType.BANK_TRANSFER">
-        <div class="flex items-center">
-          <span>銀行名稱</span>
-          <input v-model="tempPaymentMethodData.bank"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="text"
-                 name="bank"
-                 placeholder="（e.g. HSBC）"/>
-        </div>
-        <div class="mt-2 flex items-center">
-          <div>戶口號碼</div>
-          <input v-model.number="tempPaymentMethodData.accountNumber"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="number"
-                 name="bank"
-                 placeholder=""/>
-        </div>
-        <div class="mt-2 flex items-center">
-          <div>戶口名稱</div>
-          <input v-model="tempPaymentMethodData.accountName"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="text"
-                 name="account-name"
-                 placeholder="（e.g. Chan Tai Man）"/>
-        </div>
-      </template>
+    <Teleport to="body">
+      <transition name="modal">
+        <LazyModal v-if="editingPaymentMethodDataIndex !== null" @close="editingPaymentMethodDataIndex = null">
+          <template #container>
+            <div class="w-full md:w-1/2">
+              <PaymentEditorItem :paymentMethodData="editingPaymentMethodDataIndex === -1 ? null : value.paymentMethodData[editingPaymentMethodDataIndex]"
+                                 @save="savePaymentMethodData($event)"
+                                 @cancel="editingPaymentMethodDataIndex = null"></PaymentEditorItem>
+            </div>
+          </template>
+        </LazyModal>
+      </transition>
+    </Teleport>
 
-      <template v-if="tempPaymentType === PaymentType.FPS">
-        <div class="flex items-center">
-          <span>電話號碼</span>
-          <input v-model="tempPaymentMethodData.phone"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="text"
-                 name="phone"
-                 placeholder="（e.g. 91234567）"/>
-        </div>
-        <div class="mt-2 flex items-center">
-          <div>收款賬戶</div>
-          <input v-model="tempPaymentMethodData.account"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="text"
-                 name="account"
-                 placeholder=""/>
-        </div>
-        <div class="mt-2 flex items-center">
-          <div>戶口名稱</div>
-          <input v-model="tempPaymentMethodData.accountName"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="text"
-                 name="account-name"
-                 placeholder="（e.g. Chan Tai Man）"/>
-        </div>
-      </template>
-
-      <template v-if="tempPaymentType === PaymentType.IN_PERSON">
-        <div class="flex items-center">
-          <span>描述</span>
-          <input v-model="tempPaymentMethodData.description"
-                 size="1"
-                 class="w-full flex-1 ml-2 text-input-primary"
-                 type="text"
-                 name="in-person-description"
-                 placeholder="（e.g. 旺角門市付款、面交付款）"/>
-        </div>
-      </template>
-
-      <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType)">
-        <div>QR Code照片</div>
-        <div class="mt-2">
-          <img v-if="!!tempPaymentImageFileUrl"
-               :src="tempPaymentImageFileUrl"
-               class="mb-2"
-               style="max-width: 150px; max-height: 150px;"/>
-          <input ref="inputFile" type="file" @change="handleFileSelection( $event )"/>
-        </div>
-      </template>
-
-      <div class="flex justify-center w-full">
-        <button class="btn-outline mt-2 mr-8" @click="addPayment">增加 +</button>
-        <button class="text-pink-400 mt-2" @click="adding = false">取消</button>
-      </div>
-
-    </div>
   </div>
 </template>
 
@@ -145,10 +65,7 @@
 
 // Payment Method
 import {
-  BankTransferPaymentMethodData,
-  FPSPaymentMethodData,
   IgPageCommerceData,
-  InPersonPaymentMethodData,
   PaymentMethodData,
   PaymentType,
   QRCodePaymentMethodData
@@ -170,150 +87,22 @@ const {
   headersToObject
 } = useAuth()
 
-const inputFile = ref(null)
+const editingPaymentMethodDataIndex: Ref<number | null> = ref(null)
 
-const tempPaymentType = ref(PaymentType.BANK_TRANSFER)
-const tempPaymentMethodData: Ref<PaymentMethodData> = ref({
-  method: PaymentType.BANK_TRANSFER,
-  bank: "",
-  accountNumber: null,
-  accountName: "",
-})
-const tempPaymentImageFile = ref(null)
-const tempPaymentImageFileUrl = ref(null)
-
-function tempPaymentTypeChanged() {
-  if (tempPaymentType.value === PaymentType.BANK_TRANSFER) {
-    tempPaymentMethodData.value = {
-      method: PaymentType.BANK_TRANSFER,
-      bank: "",
-      accountNumber: null,
-      accountName: "",
-    } as BankTransferPaymentMethodData
+function savePaymentMethodData(data) {
+  if (editingPaymentMethodDataIndex.value === -1) {
+    value.value.paymentMethodData.push(data)
   }
-  else if (tempPaymentType.value === PaymentType.FPS) {
-    tempPaymentMethodData.value = {
-      method: PaymentType.FPS,
-      phone: "",
-      account: "",
-      accountName: "",
-    } as FPSPaymentMethodData
+  else {
+    value.value.paymentMethodData[editingPaymentMethodDataIndex.value] = data
   }
-  else if (tempPaymentType.value === PaymentType.IN_PERSON) {
-    tempPaymentMethodData.value = {
-      method: PaymentType.IN_PERSON,
-      description: ""
-    } as InPersonPaymentMethodData
-  }
-  else if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType.value)) {
-    tempPaymentMethodData.value = {
-      method: tempPaymentType.value,
-      qrCodeUrl: "",
-    } as QRCodePaymentMethodData
-  }
+  editingPaymentMethodDataIndex.value = null
+  emit("save")
 }
 
-
-function handleFileSelection( event ){
-  const uploadedFiles = event.target.files;
-  if (uploadedFiles.length != 0) {
-    tempPaymentImageFile.value = uploadedFiles[0]
-
-    const reader = new FileReader();
-    reader.onloadend = function() {
-      tempPaymentImageFileUrl.value = reader.result;
-    }
-    reader.readAsDataURL(tempPaymentImageFile.value);
-  }
-}
-
-const adding = ref(false)
-async function addPayment() {
-  if (tempPaymentType.value === PaymentType.BANK_TRANSFER) {
-    const d = tempPaymentMethodData.value as BankTransferPaymentMethodData
-
-    let errorText: string | undefined
-    if (d.bank == "")
-      errorText = errorText ?? "請填寫銀行名稱！"
-    if (d.accountNumber == null)
-      errorText = errorText ?? "請填寫戶口號碼！"
-    if (d.accountName == "")
-      errorText = errorText ?? "請填寫戶口名稱！"
-    if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
-      return
-    }
-  }
-  else if (tempPaymentType.value === PaymentType.FPS) {
-    const d = tempPaymentMethodData.value as FPSPaymentMethodData
-    let errorText: string | undefined
-    if (d.phone == "")
-      errorText = errorText ?? "請填寫電話號碼！"
-    if (d.account == "")
-      errorText = errorText ?? "請填寫收款賬戶！"
-    if (d.accountName == "")
-      errorText = errorText ?? "請填寫戶口名稱！"
-    if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
-      return
-    }
-  }
-  else if (tempPaymentType.value === PaymentType.IN_PERSON) {
-    const d = tempPaymentMethodData.value as InPersonPaymentMethodData
-    let errorText: string | undefined
-    if (d.description == "")
-      errorText = errorText ?? "請填寫描述！"
-    if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
-      return
-    }
-  }
-  else if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType.value)) {
-
-    let errorText: string | undefined
-    if (tempPaymentImageFile.value == null)
-      errorText = errorText ?? "請上載QR Code照片！"
-    if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
-      return
-    }
-
-    // Upload image first.
-    let formData = new FormData();
-    // formData.append('name', paymentMethodsToText[tempPaymentType.value]);
-    formData.append( 'image', tempPaymentImageFile.value);
-    const {
-      url
-    } = await $fetch(
-        '/api/file/payment',
-        {
-          headers: await getAuthHeader(),
-          method: 'POST',
-          params: {
-            type: tempPaymentType.value
-          },
-          body: formData
-        }
-    );
-
-    const d = tempPaymentMethodData.value as QRCodePaymentMethodData
-    d.qrCodeUrl = url
-  }
-
-  value.value.paymentMethodData.push(tempPaymentMethodData.value)
-
-  tempPaymentMethodData.value = {
-    method: PaymentType.BANK_TRANSFER,
-    bank: "",
-    accountNumber: null,
-    accountName: "",
-  } as BankTransferPaymentMethodData
-  tempPaymentImageFile.value = null
-  tempPaymentImageFileUrl.value = null
-  if (!!inputFile.value)
-    inputFile.value.value = null
-
-  adding.value = false
+function remove(i: number) {
+  value.value.paymentMethodData.splice(i, 1)
+  emit("save")
 }
 
 </script>
