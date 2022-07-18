@@ -74,7 +74,7 @@ import {paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {Ref} from "vue";
 
 const props = defineProps<{modelValue: IgPageCommerceData}>()
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue", "save"])
 const value = computed({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val)
