@@ -20,7 +20,7 @@
           <div class="mt-4 md:mt-0">
 
             <div class="flex items-baseline">
-              <div class="text-xl md:text-2xl text-pink-700">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
+              <div class="text-xl md:text-2xl text-pink-700 font-semibold">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
 
               <Popper hover offsetDistance="0" placement="top">
                 <button @click="showPriceSuggestionModal = true" class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
@@ -30,29 +30,42 @@
               </Popper>
             </div>
 
-            <div v-if="!!commerceData && !!(commerceData.discount) && (!commerceData.discount.deadline || discountSecondsLeft > 0)" class="mt-2 border border-yellow-400 p-2 rounded-md">
-              <div>折扣優惠</div>
-              <div class="text-yellow-500 font-bold">
-                {{ (!!commerceData.discount.title ? (commerceData.discount.title + " - ") : "") + discountToText(commerceData.discount) }}
+            <div v-if="!!mediaCommerceData && !!(mediaCommerceData.discount) && (!mediaCommerceData.discount.deadline || mediaDiscountSecondsLeft > 0)"
+                 class="mt-2 bg-yellow-100 px-4 py-2 rounded-md">
+              <div class="text-gray-600">{{ mediaCommerceData.discount.title ?? "產品優惠" }}</div>
+              <div class="font-semibold">
+                {{ "此產品買" + discountToText(mediaCommerceData.discount) }}
               </div>
-              <div v-if="!!commerceData.discount.deadline" class="flex items-baseline">
+              <div v-if="!!mediaCommerceData.discount.deadline" class="flex items-baseline">
                 <div class="text-sm text-gray-500 mr-2">優惠尚餘</div>
-                <div>{{ discountCountdownText }}</div>
+                <div>{{ countdownSecondsToText(mediaDiscountSecondsLeft) }}</div>
               </div>
             </div>
 
-            <div v-if="commerceDataLoaded" class="mt-2" >
-              <template v-if="!!commerceData && commerceData.active">
+            <div v-if="!!pageCommerceData && !!(pageCommerceData.discount) && (!pageCommerceData.discount.deadline || pageDiscountSecondsLeft > 0)"
+                 class="mt-2 bg-yellow-100 px-4 py-2 rounded-md">
+              <div class="text-gray-600">{{ pageCommerceData.discount.title ?? "店鋪優惠" }}</div>
+              <div class="font-semibold">
+                {{ "全店買" + discountToText(pageCommerceData.discount) }}
+              </div>
+              <div v-if="!!pageCommerceData.discount.deadline" class="flex items-baseline">
+                <div class="text-sm text-gray-500 mr-2">優惠尚餘</div>
+                <div>{{ countdownSecondsToText(pageDiscountSecondsLeft) }}</div>
+              </div>
+            </div>
+
+            <div v-if="mediaCommerceDataLoaded" class="mt-2" >
+              <template v-if="!!mediaCommerceData && mediaCommerceData.active">
                 <div class="flex items-center">
-                  <div class="mr-4">數量</div>
-                  <button @click="minusQuantity" class="text-input-prefix-primary">-</button>
+                  <div class="mr-4 text-gray-600">數量</div>
+                  <button @click="minusQuantity" class="text-input-prefix-primary !py-1">-</button>
                   <input size="1"
                          v-model.number="quantity"
                          @change="quantityChanged"
                          type="number"
                          style="width: 40px;"
-                         class="text-center text-input-primary text-input-primary--prefixed text-input-primary--suffixed"/>
-                  <button @click="addQuantity" class="text-input-suffix-primary">+</button>
+                         class="text-center text-input-primary text-input-primary--prefixed text-input-primary--suffixed !py-1"/>
+                  <button @click="addQuantity" class="text-input-suffix-primary !py-1">+</button>
                 </div>
 
                 <button class="btn btn-primary w-full mt-2" @click="clickBuyNow">
@@ -199,6 +212,7 @@ import IgPage from "~/models/IgPage";
 import IgPageExtraData from "~/models/IgPageExtraData";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import { discountToText } from "~/utils/discountText";
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
 const nuxt = useNuxtApp();
 
@@ -346,18 +360,32 @@ function clickContactInfoRow(row: ContactInfoRow) {
 }
 
 // Commerce
-const commerceData: Ref<IgMediaCommerceData | null> = ref(null)
-const commerceDataLoaded = ref(false)
-const discountSecondsLeft = ref(0)
-const discountCountdownText = computed(() => {
-  const days = Math.floor(discountSecondsLeft.value / (60 * 60 * 24))
+const mediaCommerceData: Ref<IgMediaCommerceData | null> = ref(null)
+const mediaCommerceDataLoaded = ref(false)
+const mediaDiscountSecondsLeft = ref(0)
+const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
+const pageCommerceDataLoaded = ref(false)
+const pageDiscountSecondsLeft = ref(0)
+function countdownSecondsToText(secondsLeft: number) {
+  const days = Math.floor(secondsLeft / (60 * 60 * 24))
 
-  const secs = discountSecondsLeft.value - days * (60 * 60 * 24)
+  const secs = secondsLeft - days * (60 * 60 * 24)
   const hhmmss = new Date(secs * 1000).toISOString().substring(11, 19).split(":")
 
   return days.toString() + "日 " + hhmmss[0] + "時 " + hhmmss[1] + "分 " + hhmmss[2] + "秒 "
-
-})
+}
+function configureCountdown(secondsLeft: Ref<number>, deadline: number) {
+  secondsLeft.value = (deadline - Date.now()) / 1000
+  if (secondsLeft.value > 0) {
+    const interval = setInterval(() => {
+      if (secondsLeft.value === 0) {
+        clearInterval(interval)
+      } else {
+        secondsLeft.value--
+      }
+    }, 1000)
+  }
+}
 
 // Create order
 const quantity = ref(1)
@@ -392,25 +420,30 @@ onMounted(async () => {
 
   await fetchReviews();
 
-  const {data, error} = await useFetch('/api/media/commerce-data', {
+  const {
+    data: mediaCommerceDataRaw,
+    error: mediaCommerceDataError
+  } = await useFetch('/api/media/commerce-data', {
     params: {
       ids: localMedia.value.code
     }
   })
-  commerceData.value = data.value["data"][localMedia.value.code] || null
-  if (!!commerceData.value.discount) {
-    discountSecondsLeft.value = (commerceData.value.discount.deadline - Date.now()) / 1000
-    if (discountSecondsLeft.value > 0) {
-      const interval = setInterval(() => {
-        if (discountSecondsLeft.value === 0) {
-          clearInterval(interval)
-        } else {
-          discountSecondsLeft.value--
-        }
-      }, 1000)
-    }
+  mediaCommerceData.value = mediaCommerceDataRaw.value["data"][localMedia.value.code] || null
+  if (!!mediaCommerceData.value && !!mediaCommerceData.value.discount) {
+    configureCountdown(mediaDiscountSecondsLeft, mediaCommerceData.value.discount.deadline)
   }
-  commerceDataLoaded.value = true
+  mediaCommerceDataLoaded.value = true
+
+  const {
+    data: pageCommerceDataRaw,
+    error: pageCommerceDataError
+  } = await useFetch(`/api/shop/id/${localPage.value._id}/commerce-data`)
+  pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
+  if (!!pageCommerceData.value && !!pageCommerceData.value.discount) {
+    configureCountdown(pageDiscountSecondsLeft, pageCommerceData.value.discount.deadline)
+  }
+  pageCommerceDataLoaded.value = true
+
 });
 
 </script>
