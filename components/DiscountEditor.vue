@@ -50,6 +50,8 @@
           class="text-input-primary"
           :lowerLimit="new Date()"
           :clearable="true"
+          minimumView="time"
+          inputFormat="yyyy-MM-dd HH:mm"
       >
         <template v-slot:clear="{ onClear }">
           <button class="pr-2 right-0" @click="onClear">
