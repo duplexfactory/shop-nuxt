@@ -50,9 +50,7 @@
                           @close="showDeleteConfirmation = false"
                           @confirm="confirmDelete">
           <template #body>
-            <div class="p-4">
-              <div>你是否確定刪除？</div>
-            </div>
+            <div class="p-4">你是否確定刪除？</div>
           </template>
         </LazyConfirmModal>
       </transition>
@@ -107,6 +105,7 @@ function saveMailing(data) {
   emit("save")
 }
 
+// Deletion
 const showDeleteConfirmation = ref(false)
 const deletingIndex = ref(null)
 function deleteMailing(index: number) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-md text-left">
+  <div class="p-8 bg-white rounded-md text-left">
     <div class="mb-4 flex items-center">
       <lazy-spr-select @change="tempPaymentTypeChanged" v-model="tempPaymentType">
         <option value="" disabled>付款方法</option>
@@ -90,9 +90,9 @@
       </div>
     </template>
 
-    <div class="flex justify-center w-full">
-      <button class="btn-outline mt-2 mr-8" @click="addPayment">增加 +</button>
-      <button class="text-pink-400 mt-2" @click="cancel">取消</button>
+    <div class="mt-8 flex justify-center w-full">
+      <button class="btn-outline mr-8" @click="addPayment">增加 +</button>
+      <button class="text-pink-400" @click="cancel">取消</button>
     </div>
 
   </div>

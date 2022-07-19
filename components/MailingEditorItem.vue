@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-md text-center">
+  <div class="p-8 bg-white rounded-md text-center">
     <div class="flex items-center">
       <lazy-spr-select v-model="tempMailing.type" class="w-1/2 mr-2">
         <option value="" disabled>郵寄類型</option>
@@ -25,9 +25,9 @@
       *到付而且不知道運費請留空。
     </div>
 
-    <div class="flex justify-center w-full">
-      <button class="btn-outline mt-2 mr-8" @click="addMailing">增加 +</button>
-      <button class="text-pink-400 mt-2" @click="cancel">取消</button>
+    <div class="mt-8 flex justify-center w-full">
+      <button class="btn-outline mr-8" @click="addMailing">增加 +</button>
+      <button class="text-pink-400" @click="cancel">取消</button>
     </div>
 
   </div>

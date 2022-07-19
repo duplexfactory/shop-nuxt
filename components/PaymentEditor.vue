@@ -27,7 +27,7 @@
         </div>
         <div>
           <button @click="editingPaymentMethodDataIndex = i" class="px-1"><i class="spr-edit"></i></button>
-          <button @click="remove(i)" class="px-1"><i class="spr-cancel"></i></button>
+          <button @click="deletePayment(i)" class="px-1"><i class="spr-cancel"></i></button>
         </div>
       </div>
 
@@ -58,6 +58,20 @@
       </transition>
     </Teleport>
 
+    <Teleport to="body">
+      <transition name="modal">
+        <LazyConfirmModal v-if="showDeleteConfirmation"
+                          cancelButtonTitle="取消"
+                          confirmButtonTitle="確定"
+                          @close="showDeleteConfirmation = false"
+                          @confirm="confirmDelete">
+          <template #body>
+            <div class="p-4">你是否確定刪除？</div>
+          </template>
+        </LazyConfirmModal>
+      </transition>
+    </Teleport>
+
   </div>
 </template>
 
@@ -73,8 +87,11 @@ import {
 import {paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {Ref} from "vue";
 
-const props = defineProps<{modelValue: IgPageCommerceData}>()
-const emit = defineEmits(["update:modelValue", "save"])
+const props = defineProps<{
+  modelValue: IgPageCommerceData,
+  deleteConfirmation: { type: Boolean, default: false }
+}>()
+const emit = defineEmits(["update:modelValue", "save", "delete"])
 const value = computed({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val)
@@ -100,9 +117,21 @@ function savePaymentMethodData(data) {
   emit("save")
 }
 
-function remove(i: number) {
-  value.value.paymentMethodData.splice(i, 1)
-  emit("save")
+// Deletion
+const showDeleteConfirmation = ref(false)
+const deletingIndex = ref(null)
+function deletePayment(index: number) {
+  deletingIndex.value = index
+  if (props.deleteConfirmation) {
+    showDeleteConfirmation.value = true
+    return
+  }
+  confirmDelete()
+}
+function confirmDelete() {
+  showDeleteConfirmation.value = false
+  value.value.paymentMethodData.splice(deletingIndex.value, 1)
+  emit("delete")
 }
 
 </script>
