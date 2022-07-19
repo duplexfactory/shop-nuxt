@@ -38,7 +38,7 @@
             免郵優惠（e.g. 滿3件免郵）將在稍後步驟填寫，此步驟只需填寫郵寄原價。
           </div>
 
-          <LazyMailingEditor class="mt-4" v-model="configCommerceData.mailing"></LazyMailingEditor>
+          <LazyMailingEditor class="mt-4" v-model="configCommerceData.mailing" :allowRemoveAll="true"></LazyMailingEditor>
 
           <button class="mt-4 btn-primary" :disabled="configCommerceData.mailing.length === 0" @click="incrementStep">下一步</button>
         </template>
@@ -50,7 +50,7 @@
             顧客將會直接付款給你，所有款項皆不會經過Shoperuse。
           </div>
 
-          <LazyPaymentEditor class="mt-4" v-model="configCommerceData"></LazyPaymentEditor>
+          <LazyPaymentEditor class="mt-4" v-model="configCommerceData" :allowRemoveAll="true"></LazyPaymentEditor>
 
           <div class="flex justify-between">
             <button class="mt-4 mr-4 btn-outline" @click="decrementStep">上一步</button>

@@ -68,7 +68,8 @@ import {mailingMethods, mailingTypeToText} from "~/data/commerce";
 
 const props = defineProps({
   modelValue: { type: Array as PropType<Mailing[]> },
-  deleteConfirmation: { type: Boolean, default: false }
+  deleteConfirmation: { type: Boolean, default: false },
+  allowRemoveAll: { type: Boolean, default: false }
 })
 const emit = defineEmits(["update:modelValue", "save", "delete"])
 const value = computed({
@@ -108,6 +109,11 @@ function saveMailing(data) {
 const showDeleteConfirmation = ref(false)
 const deletingIndex = ref(null)
 function deleteMailing(index: number) {
+  if (!props.allowRemoveAll && value.value.length === 1) {
+    nuxt.vueApp.$toast.error("必須保留最少一個郵寄方法！", {position: "top"});
+    return
+  }
+
   deletingIndex.value = index
   if (props.deleteConfirmation) {
     showDeleteConfirmation.value = true
