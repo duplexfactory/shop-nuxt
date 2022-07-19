@@ -2,8 +2,7 @@
   <div class="p-6 bg-gray-100 rounded-md text-center">
     <div v-for="(mailing, i) in value"
          :key="mailing.title"
-         :class="{'mt-2': i !== 0}"
-         class="flex items-center bg-white rounded-md p-2">
+         class="flex items-center bg-white rounded-md p-2 mb-2">
       <div class="flex-1 text-left">
         <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[mailing.type] }}</div>
         <div class="inline-block">{{ mailing.title }}</div>
@@ -17,7 +16,7 @@
       </div>
     </div>
 
-    <div @click="editingIndex = -1" class="mt-2 p-6 rounded-md text-center border-dashed border-2 cursor-pointer">
+    <div @click="editingIndex = -1" class="p-6 rounded-md text-center border-dashed border-2 cursor-pointer">
       <div class="text-6xl text-gray-500">+</div>
       <template v-if="value.length === 0">
         <div class="text-lg">沒有郵寄方法</div>
@@ -62,15 +61,15 @@
 <script setup lang="ts">
 
 // Mailing
-import {Ref} from "vue";
+import {PropType, Ref} from "vue";
 import {Mailing, MailingType} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import {mailingMethods, mailingTypeToText} from "~/data/commerce";
 
-const props = defineProps<{
-  modelValue: Mailing[],
+const props = defineProps({
+  modelValue: { type: Array as PropType<Mailing[]> },
   deleteConfirmation: { type: Boolean, default: false }
-}>()
+})
 const emit = defineEmits(["update:modelValue", "save", "delete"])
 const value = computed({
   get: () => props.modelValue,
