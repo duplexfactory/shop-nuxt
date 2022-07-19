@@ -1,11 +1,11 @@
 import {assert, getAuth, noCache} from "~/server/util";
 import {defineEventHandler} from "h3";
-import {initMongo} from "~/server/mongodb";
 
 import * as fs from "fs";
 import formidable from 'formidable';
 import {PaymentType} from "~/models/IgPageCommerceData";
-import {PutObjectCommand, S3} from "@aws-sdk/client-s3";
+import {PutObjectCommand} from "@aws-sdk/client-s3";
+import {s3, s3Region} from "~/server/s3";
 
 export default defineEventHandler(async (event) => {
 
@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
     assert([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(type))
 
     const auth = getAuth(event)
-    await initMongo()
 
     const form = new formidable.IncomingForm();
     const {
@@ -40,22 +39,13 @@ export default defineEventHandler(async (event) => {
     const imagePath = files['image'].filepath
     const blob = fs.readFileSync(imagePath)
 
-    const region = 'ap-east-1'
-    const s3 = new S3({
-        region,
-        credentials: {
-            accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-        },
-    })
-
     const dict = {
         [PaymentType.PAYME]: "PayMe",
         [PaymentType.WECHAT_PAY_HK]: "WeChat_Pay_HK",
         [PaymentType.ALIPAY_HK]: "AlipayHK",
     }
 
-    const key = `${auth.uid}/shop/payment/${dict[type]}`
+    const key = `${auth.uid}/shop/payment/${dict[type]}-${Date.now()}`
     const params = {
         Bucket: process.env.AWS_S3_BUCKET_NAME,
         Key: key,
@@ -64,6 +54,6 @@ export default defineEventHandler(async (event) => {
     await s3.send(new PutObjectCommand(params));
 
     return {
-        url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${region}.amazonaws.com/${key}`
+        url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${s3Region}.amazonaws.com/${key}`
     }
 })

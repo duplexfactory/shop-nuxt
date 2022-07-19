@@ -82,8 +82,8 @@
     <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType)">
       <div>QR Code照片</div>
       <div class="mt-2">
-        <img v-if="!!tempPaymentImageFileUrl"
-             :src="tempPaymentImageFileUrl"
+        <img v-if="!!tempPaymentImageFileUrl || !!tempPaymentMethodData.qrCodeUrl"
+             :src="tempPaymentImageFileUrl || tempPaymentMethodData.qrCodeUrl"
              class="mb-2"
              style="max-width: 150px; max-height: 150px;"/>
         <input ref="inputFile" type="file" @change="handleFileSelection( $event )"/>
@@ -228,7 +228,7 @@ async function addPayment() {
     }
   }
   else if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(tempPaymentType.value)) {
-
+    const d = tempPaymentMethodData.value as QRCodePaymentMethodData
     let errorText: string | undefined
     if (tempPaymentImageFile.value == null)
       errorText = errorText ?? "請上載QR Code照片！"
@@ -239,8 +239,18 @@ async function addPayment() {
 
     // Upload image first.
     let formData = new FormData();
-    // formData.append('name', paymentMethodsToText[tempPaymentType.value]);
     formData.append( 'image', tempPaymentImageFile.value);
+    if (!!d.qrCodeUrl) {
+      // Delete existing image.
+      const splitted = d.qrCodeUrl.split("/")
+      await useFetch(
+          `/api/file/payment/${splitted[splitted.length - 1]}`,
+          {
+            headers: headersToObject(await getAuthHeader()),
+            method: 'DELETE',
+          }
+      )
+    }
     const {
       url
     } = await $fetch(
@@ -254,9 +264,8 @@ async function addPayment() {
           body: formData
         }
     );
+    d.qrCodeUrl = url;
 
-    const d = tempPaymentMethodData.value as QRCodePaymentMethodData
-    d.qrCodeUrl = url
   }
 
   // Emit save
@@ -279,6 +288,5 @@ function cancel() {
   // Emit cancel
   emit('cancel')
 }
-
 
 </script>

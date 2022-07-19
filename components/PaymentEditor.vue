@@ -133,8 +133,19 @@ function deletePayment(index: number) {
   }
   confirmDelete()
 }
-function confirmDelete() {
+async function confirmDelete() {
   showDeleteConfirmation.value = false
+
+  // Delete image first.
+  const splitted = (value.value.paymentMethodData[deletingIndex.value] as QRCodePaymentMethodData).qrCodeUrl.split("/")
+  await useFetch(
+      `/api/file/payment/${splitted[splitted.length - 1]}`,
+      {
+        headers: headersToObject(await getAuthHeader()),
+        method: 'DELETE',
+      }
+  )
+
   value.value.paymentMethodData.splice(deletingIndex.value, 1)
   emit("delete")
 }
