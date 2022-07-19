@@ -81,7 +81,7 @@
                           @close="cancelToggleActive"
                           @confirm="confirmToggleActive">
           <template #body>
-            <div class="px-4 pb-4">
+            <div class="p-4">
               <div>你是否確定開啓接受訂單？</div>
               <div>開啓後，客戶可直接在Shoperuse向你下單購買產品。</div>
             </div>

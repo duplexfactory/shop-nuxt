@@ -26,8 +26,8 @@
           </template>
         </div>
         <div>
-          <button @click="editingPaymentMethodDataIndex = i">edit</button>
-          <button @click="remove(i)"><i class="spr-cancel"></i></button>
+          <button @click="editingPaymentMethodDataIndex = i" class="px-1"><i class="spr-edit"></i></button>
+          <button @click="remove(i)" class="px-1"><i class="spr-cancel"></i></button>
         </div>
       </div>
 

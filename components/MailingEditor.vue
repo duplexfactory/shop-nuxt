@@ -12,8 +12,8 @@
         <div class="inline-block mr-2">
           {{ formatMailingPrice(mailing) }}
         </div>
-        <button @click="editingIndex = i">edit</button>
-        <button @click="value.splice(i, 1)"><i class="spr-cancel"></i></button>
+        <button @click="editingIndex = i" class="px-1"><i class="spr-edit"></i></button>
+        <button @click="deleteMailing(i)" class="px-1"><i class="spr-cancel"></i></button>
       </div>
     </div>
 
@@ -42,6 +42,22 @@
       </transition>
     </Teleport>
 
+    <Teleport to="body">
+      <transition name="modal">
+        <LazyConfirmModal v-if="showDeleteConfirmation"
+                          cancelButtonTitle="取消"
+                          confirmButtonTitle="確定"
+                          @close="showDeleteConfirmation = false"
+                          @confirm="confirmDelete">
+          <template #body>
+            <div class="p-4">
+              <div>你是否確定刪除？</div>
+            </div>
+          </template>
+        </LazyConfirmModal>
+      </transition>
+    </Teleport>
+
   </div>
 </template>
 
@@ -53,8 +69,11 @@ import {Mailing, MailingType} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import {mailingMethods, mailingTypeToText} from "~/data/commerce";
 
-const props = defineProps<{modelValue: Mailing[]}>()
-const emit = defineEmits(["update:modelValue", "save"])
+const props = defineProps<{
+  modelValue: Mailing[],
+  deleteConfirmation: { type: Boolean, default: false }
+}>()
+const emit = defineEmits(["update:modelValue", "save", "delete"])
 const value = computed({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val)
@@ -86,6 +105,22 @@ function saveMailing(data) {
   }
   editingIndex.value = null
   emit("save")
+}
+
+const showDeleteConfirmation = ref(false)
+const deletingIndex = ref(null)
+function deleteMailing(index: number) {
+  deletingIndex.value = index
+  if (props.deleteConfirmation) {
+    showDeleteConfirmation.value = true
+    return
+  }
+  confirmDelete()
+}
+function confirmDelete() {
+  showDeleteConfirmation.value = false
+  value.value.splice(deletingIndex.value, 1)
+  emit("delete")
 }
 
 </script>

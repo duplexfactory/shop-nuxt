@@ -123,8 +123,7 @@
         <div class="text-2xl">
           郵寄方法
         </div>
-        <LazyMailingEditor class="mt-4" v-model="commerceData.mailing" @save="saveMailing"></LazyMailingEditor>
-<!--        <button class="mt-4 btn-primary" :disabled="savingMailing || commerceData.mailing.length === 0" @click="saveMailing">儲存</button>-->
+        <LazyMailingEditor class="mt-4" v-model="commerceData.mailing" :deleteConfirmation="true" @save="saveMailing" @delete="saveMailing"></LazyMailingEditor>
       </div>
       <div class="info-group">
         <div class="text-2xl">
