@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- First time set up -->
-    <div v-if="!commerceData" class="info-group">
+    <div v-if="!commerceData" class="info-group !pb-8">
 
       <!-- Stepper -->
       <div v-if="step !== Step.INIT && step !== Step.COMPLETE" class="flex items-center mb-4">
@@ -25,8 +25,11 @@
       <div v-else class="text-center w-full md:w-3/5 mx-auto">
 
         <template v-if="step == Step.INIT">
-          <div class="">
+          <div class="text-xl mt-4">
             設定你的網店後，顧客便可直接在Shoperuse上下單購買你的產品！
+          </div>
+          <div class="mt-2 text-gray-600">
+            首次設定時，我們將會一步一步引導你。在首次設定後，所有資料也可以隨時再次修改。
           </div>
           <button class="mt-4 btn-primary" @click="incrementStep">立即開始設定</button>
         </template>

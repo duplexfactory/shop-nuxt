@@ -13,7 +13,7 @@
           <template v-if="paymentMethodData.method === PaymentType.FPS">
             <div class="mt-1">{{ "電話號碼：" + paymentMethodData.phone }}</div>
             <div class="mt-1">{{ "收款賬戶：" + paymentMethodData.account }}</div>
-            <div class="mt-1">{{ "戶口名稱：" + paymentdMethodData.accountName }}</div>
+            <div class="mt-1">{{ "戶口名稱：" + paymentMethodData.accountName }}</div>
           </template>
           <template v-if="paymentMethodData.method === PaymentType.IN_PERSON">
             <div class="mt-1">{{ "描述：" + paymentMethodData.description }}</div>
@@ -136,15 +136,17 @@ function deletePayment(index: number) {
 async function confirmDelete() {
   showDeleteConfirmation.value = false
 
-  // Delete image first.
-  const splitted = (value.value.paymentMethodData[deletingIndex.value] as QRCodePaymentMethodData).qrCodeUrl.split("/")
-  await useFetch(
-      `/api/file/payment/${splitted[splitted.length - 1]}`,
-      {
-        headers: headersToObject(await getAuthHeader()),
-        method: 'DELETE',
-      }
-  )
+  if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(value.value.paymentMethodData[deletingIndex.value].method)) {
+    // Delete image first.
+    const splitted = (value.value.paymentMethodData[deletingIndex.value] as QRCodePaymentMethodData).qrCodeUrl.split("/")
+    await useFetch(
+        `/api/file/payment/${splitted[splitted.length - 1]}`,
+        {
+          headers: headersToObject(await getAuthHeader()),
+          method: 'DELETE',
+        }
+    )
+  }
 
   value.value.paymentMethodData.splice(deletingIndex.value, 1)
   emit("delete")
