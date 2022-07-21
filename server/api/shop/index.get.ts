@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
         ids
     } = await useQuery(event) as { ids: string }
 
-    console.log("get shop api")
     assert(!!ids, badRequest)
 
     await initMongo();

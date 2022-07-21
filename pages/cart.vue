@@ -1,12 +1,34 @@
 <template>
   <div class="container mx-auto">
-    <div v-for="pageId in pageIds" :key="pageId" class="p-4">
-      {{ pages[pageId].username }}
-      <div v-for="media in mediasGrouped[pageId]" :key="media.code">
-        {{ media }}
-      </div>
-<!--      {{ mediasGrouped[shop] }}-->
+
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-2">商品</div>
+      <div class="col-span-2">單件價格</div>
+      <div class="col-span-2">數量</div>
+      <div class="col-span-4">優惠</div>
+      <div class="col-span-2">小計</div>
     </div>
+    <hr/>
+
+    <div v-for="pageId in pageIds" :key="pageId">
+      <div v-if="pages[pageId]">{{ pages[pageId].username }}</div>
+      <hr/>
+      <template v-if="mediasGrouped[pageId]" v-for="media in mediasGrouped[pageId]" :key="media.code">
+        <div class="grid grid-cols-12 gap-8 py-2">
+          <div class="col-span-2">
+            <div class="image-container aspect-square rounded-md overflow-hidden"
+                 style="max-width: 90px"
+                 v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+          </div>
+          <div class="col-span-2">{{ formatMediaPrice(media) }}</div>
+          <div class="col-span-2">{{ cart.find((item) => item.code === media.code).quantity }}</div>
+          <div class="col-span-4">優惠</div>
+          <div class="col-span-2">小計</div>
+        </div>
+        <hr/>
+      </template>
+    </div>
+
   </div>
 </template>
 
@@ -18,6 +40,7 @@ import Dict = NodeJS.Dict
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import IgPage from "~/models/IgPage";
+import useMediaPrice from "~/composables/useMediaPrice";
 
 const cart: Ref<{code: string, quantity: number}[]> = ref([])
 const pageIds = computed(() => Array( ...new Set(mediaList.value.map((m) => m.pageId))))
@@ -88,6 +111,11 @@ async function fetchPageCommerceData() {
       pageCommerceData.value[s] = data.value["commerceData"]
     }
   }))
+}
+
+const { formatMediaPrice: _formatMediaPrice } = useMediaPrice();
+function formatMediaPrice(media: IgMedia) {
+  return _formatMediaPrice(media.patchPrice || media.price || 0)
 }
 
 if (!process.server) {
