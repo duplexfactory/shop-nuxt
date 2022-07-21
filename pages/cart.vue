@@ -21,7 +21,12 @@
                  v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
           </div>
           <div class="col-span-2">{{ formatMediaPrice(media) }}</div>
-          <div class="col-span-2">{{ cart.find((item) => item.code === media.code).quantity }}</div>
+          <div class="col-span-2">
+            <QuantityInput v-model.number="cart.find((item) => item.code === media.code).quantity" @change="saveCart"></QuantityInput>
+<!--            <QuantityInput :modelValue="cart.find((item) => item.code === media.code).quantity"-->
+<!--                           @update:modelValue="event => cart.find((item) => item.code === media.code).quantity = event"></QuantityInput>-->
+<!--            {{ cart.find((item) => item.code === media.code).quantity }}-->
+          </div>
           <div class="col-span-4">優惠</div>
           <div class="col-span-2">小計</div>
         </div>
@@ -132,6 +137,10 @@ onMounted(async () => {
     })
   }
 })
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart.value));
+}
 
 </script>
 

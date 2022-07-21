@@ -58,14 +58,7 @@
               <template v-if="!!mediaCommerceData && mediaCommerceData.active">
                 <div class="flex items-center">
                   <div class="mr-4 text-gray-600">數量</div>
-                  <button @click="minusQuantity" class="text-input-prefix-primary !py-1">-</button>
-                  <input size="1"
-                         v-model.number="quantity"
-                         @change="quantityChanged"
-                         type="number"
-                         style="width: 40px;"
-                         class="text-center text-input-primary text-input-primary--prefixed text-input-primary--suffixed !py-1"/>
-                  <button @click="addQuantity" class="text-input-suffix-primary !py-1">+</button>
+                  <QuantityInput v-model.number="quantity"></QuantityInput>
                 </div>
 
                 <button class="btn btn-primary w-full mt-2" @click="clickBuyNow">
@@ -389,17 +382,6 @@ function configureCountdown(secondsLeft: Ref<number>, deadline: number) {
 
 // Create order
 const quantity = ref(1)
-function addQuantity() {
-  quantity.value++
-}
-function minusQuantity() {
-  if (quantity.value > 1)
-    quantity.value--
-}
-function quantityChanged() {
-  if (!quantity.value)
-    quantity.value = 1
-}
 function clickBuyNow() {
   let cart:{code: string, quantity: number}[] = (JSON.parse(localStorage.getItem("cart")) as []) || [];
   const item = cart.find((i) => i.code === localMediaCode.value);
