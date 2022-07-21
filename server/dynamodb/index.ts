@@ -1,4 +1,5 @@
 import {
+    BatchGetItemCommand,
     BatchWriteItemCommand,
     DynamoDBClient,
     GetItemCommand,
@@ -79,11 +80,34 @@ async function queryMediaByCode(code: string) {
 
 export async function getMediaByCode(code: string): Promise<IgMedia | null> {
     const res = await queryMediaByCode(code)
-
     if (res?.Count) {
         const {pageId, takenAt} = unmarshall(res.Items[0])
         return getMedia(pageId, takenAt)
     } else return undefined
+}
+
+export async function getMediasByCodes(codes: string[]): Promise<IgMedia[]> {
+    const keys = (await Promise.all(codes.map(async (code) => {
+        const res = await queryMediaByCode(code)
+        if (res?.Count) {
+            const {
+                pageId,
+                takenAt
+            } = unmarshall(res.Items[0]) as {pageId: number, takenAt: number}
+            return {pageId, takenAt}
+        }
+        return null
+    }))).filter((k) => k !== null)
+
+    const res = await client.send(new BatchGetItemCommand({
+        RequestItems: {
+            "media": {
+                Keys: keys.map((k) => marshall({pageId: k.pageId, takenAt: k.takenAt}))
+            }
+        },
+    }))
+
+    return res.Responses && res.Responses["media"] ? res.Responses["media"].map((i) => unmarshall(i) as IgMedia) : []
 }
 
 export async function patchMediaByCode(code: string, patchItem): Promise<boolean> {

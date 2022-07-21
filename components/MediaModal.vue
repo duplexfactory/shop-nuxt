@@ -215,6 +215,7 @@ import { discountToText } from "~/utils/discountText";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
 const nuxt = useNuxtApp();
+const router = useRouter();
 
 // Media Modal
 const showMediaModal = useShowMediaModal();
@@ -276,7 +277,6 @@ function close() {
   showMediaModal.value = false;
 }
 
-const router = useRouter();
 function onUsernameClick() {
   router.push(`/shop/${localPage.value.username}`);
   close();
@@ -401,7 +401,20 @@ function quantityChanged() {
     quantity.value = 1
 }
 function clickBuyNow() {
-
+  let cart:{code: string, quantity: number}[] = (JSON.parse(localStorage.getItem("cart")) as []) || [];
+  const item = cart.find((i) => i.code === localMediaCode.value);
+  if (!!item) {
+    item.quantity += quantity.value;
+  }
+  else {
+    cart.push({
+      code: localMediaCode.value,
+      quantity: quantity.value
+    });
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  close();
+  router.push(`/cart`);
 }
 
 // Mounted
@@ -438,9 +451,11 @@ onMounted(async () => {
     data: pageCommerceDataRaw,
     error: pageCommerceDataError
   } = await useFetch(`/api/shop/id/${localPage.value._id}/commerce-data`)
-  pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
-  if (!!pageCommerceData.value && !!pageCommerceData.value.discount) {
-    configureCountdown(pageDiscountSecondsLeft, pageCommerceData.value.discount.deadline)
+  if (!!pageCommerceDataRaw.value) {
+    pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
+    if (!!pageCommerceData.value && !!pageCommerceData.value.discount) {
+      configureCountdown(pageDiscountSecondsLeft, pageCommerceData.value.discount.deadline)
+    }
   }
   pageCommerceDataLoaded.value = true
 
