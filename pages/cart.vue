@@ -10,7 +10,7 @@
     </div>
     <hr/>
 
-    <div v-for="pageId in pageIds" :key="pageId">
+    <div v-if="!loading" v-for="pageId in pageIds" :key="pageId">
       <div v-if="pages[pageId]">{{ pages[pageId].username }}</div>
       <hr/>
       <template v-if="mediasGrouped[pageId]" v-for="media in mediasGrouped[pageId]" :key="media.code">
@@ -20,18 +20,50 @@
                  style="max-width: 90px"
                  v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
           </div>
-          <div class="col-span-2">{{ formatMediaPrice(media) }}</div>
+          <div class="col-span-2">{{ formatMediaPrice(mediaPrice(media)) }}</div>
           <div class="col-span-2">
             <QuantityInput v-model.number="cart.find((item) => item.code === media.code).quantity" @change="saveCart"></QuantityInput>
 <!--            <QuantityInput :modelValue="cart.find((item) => item.code === media.code).quantity"-->
 <!--                           @update:modelValue="event => cart.find((item) => item.code === media.code).quantity = event"></QuantityInput>-->
 <!--            {{ cart.find((item) => item.code === media.code).quantity }}-->
           </div>
-          <div class="col-span-4">優惠</div>
-          <div class="col-span-2">小計</div>
+          <div class="col-span-4">
+            <DiscountCard v-if="media.discount && (mediaDiscountTotalValue(pageId) > pageDiscountValue(pageId)) && (mediaDiscountTotalValue(pageId) !== 0)"
+                          defaultTitle="產品優惠"
+                          discounTextPrefix="此產品買"
+                          :discount="media.discount"></DiscountCard>
+          </div>
+          <div class="col-span-2">
+            {{ formatMediaPrice(mediaPrice(media) * cart.find((item) => item.code === media.code).quantity - mediaDiscountValue(media.code)) }}
+          </div>
         </div>
         <hr/>
       </template>
+      <div v-if="pageCommerceData[pageId].discount && (pageDiscountValue(pageId) > mediaDiscountTotalValue(pageId)) && (pageDiscountValue(pageId) !== 0)"
+           class="grid grid-cols-12 gap-8">
+        <div class="col-span-6"></div>
+        <div class="col-span-4">
+          <DiscountCard defaultTitle="店鋪優惠"
+                        discounTextPrefix="全店買"
+                        :discount="pageCommerceData[pageId].discount"></DiscountCard>
+        </div>
+        <div class="col-span-2">
+          {{ "-" + formatMediaPrice(pageDiscountValue(pageId)) }}
+        </div>
+      </div>
+      <div class="grid grid-cols-12 gap-8 bg-gray-100">
+        <div class="p-4 col-span-10">
+          <div>給店鋪留言</div>
+          <textarea v-model="notes[pageId]"
+                    placeholder="e.g. 產品大小、顔色、訂製内容。提交訂單後，店鋪可以看到此内容，可先與店鋪查詢。（選填）"
+                    class="w-full border rounded-md p-2" rows="4">
+          </textarea>
+        </div>
+        <div class="col-span-2">
+
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -41,16 +73,19 @@
 
 import IgMedia from "~/models/IgMedia"
 import type {Ref} from "vue"
-import Dict = NodeJS.Dict
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import IgPage from "~/models/IgPage";
 import useMediaPrice from "~/composables/useMediaPrice";
+import {DiscountType, ThresholdType} from "~/models/Discount";
+import Dict = NodeJS.Dict;
+import {discountValue} from "~/utils/discountValue";
 
 const cart: Ref<{code: string, quantity: number}[]> = ref([])
 const pageIds = computed(() => Array( ...new Set(mediaList.value.map((m) => m.pageId))))
 
-const mediaList: Ref<IgMedia[]> = ref([])
+const mediaDict: Ref<Dict<IgMedia>> = ref({})
+const mediaList: Ref<IgMedia[]> = computed(() => cart.value.map((item) => mediaDict.value[item.code] || null).filter((item) => item !== null))
 const mediasGrouped = computed(() => {
   return mediaList.value.reduce((previous, current) => {
     if (!previous[current.pageId]) {
@@ -70,8 +105,7 @@ async function fetchMedias() {
     }
   })
   if (!!data.value) {
-    const mediasDict = data.value.medias
-    mediaList.value = cart.value.map((item) => mediasDict[item.code] || null).filter((item) => item !== null)
+    mediaDict.value = data.value.medias
   }
 }
 
@@ -118,22 +152,25 @@ async function fetchPageCommerceData() {
   }))
 }
 
-const { formatMediaPrice: _formatMediaPrice } = useMediaPrice();
-function formatMediaPrice(media: IgMedia) {
-  return _formatMediaPrice(media.patchPrice || media.price || 0)
-}
+const {
+  formatMediaPrice,
+  mediaPrice
+} = useMediaPrice();
 
 if (!process.server) {
   cart.value = JSON.parse(localStorage.getItem("cart")) || []
 }
 
+const loading = ref(false)
 onMounted(async () => {
   if (!!cart.value.length) {
     await nextTick(async () => {
+      loading.value = true
       await fetchMedias()
       await fetchMediaCommerceData()
       await fetchPages()
       await fetchPageCommerceData()
+      loading.value = false
     })
   }
 })
@@ -141,6 +178,30 @@ onMounted(async () => {
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart.value));
 }
+
+
+
+function mediaDiscountValue(code: string) {
+  const media = mediaDict.value[code]
+  const price = mediaPrice(media)
+  const quantity = cart.value.find((item) => item.code === code).quantity
+  return discountValue(mediaCommerceData.value[code].discount, price * quantity, quantity)
+}
+
+function mediaDiscountTotalValue(pageId: string) {
+  const medias = mediasGrouped.value[pageId]
+  return medias.map((m) => mediaDiscountValue(m.code)).reduce((previous, current) => previous += current, 0)
+}
+
+function pageDiscountValue(pageId: string) {
+  const medias = mediasGrouped.value[pageId]
+  const price = medias.map((m) => mediaPrice(m) * cart.value.find((item) => item.code === m.code).quantity)
+      .reduce((previous, current) => previous += current, 0)
+  const quantity = medias.map((m) => cart.value.find((item) => item.code === m.code).quantity).reduce((previous, current) => previous += current, 0)
+  return discountValue(pageCommerceData.value[pageId].discount, price, quantity)
+}
+
+const notes = ref({})
 
 </script>
 

@@ -230,10 +230,12 @@ async function incrementStep() {
         errorText = errorText ?? "請填寫店鋪折扣條件！"
       if (!tempDiscount.value.discount && (tempDiscount.value.discount !== 0))
         errorText = errorText ?? "請填寫店鋪折扣！"
+      configCommerceData.value.discount = tempDiscount.value
     }
     if (hasMailingDiscount.value) {
       if (!tempMailingDiscount.value.threshold && (tempMailingDiscount.value.threshold !== 0))
         errorText = errorText ?? "請填寫免郵優惠條件！"
+      configCommerceData.value.mailingDiscount = tempMailingDiscount.value
     }
 
     if (!!errorText) {

@@ -30,29 +30,16 @@
               </Popper>
             </div>
 
-            <div v-if="!!mediaCommerceData && !!(mediaCommerceData.discount) && (!mediaCommerceData.discount.deadline || mediaDiscountSecondsLeft > 0)"
-                 class="mt-2 bg-yellow-100 px-4 py-2 rounded-md">
-              <div class="text-gray-600">{{ mediaCommerceData.discount.title ?? "產品優惠" }}</div>
-              <div class="font-semibold">
-                {{ "此產品買" + discountToText(mediaCommerceData.discount) }}
-              </div>
-              <div v-if="!!mediaCommerceData.discount.deadline" class="flex items-baseline">
-                <div class="text-sm text-gray-500 mr-2">優惠尚餘</div>
-                <div>{{ countdownSecondsToText(mediaDiscountSecondsLeft) }}</div>
-              </div>
-            </div>
-
-            <div v-if="!!pageCommerceData && !!(pageCommerceData.discount) && (!pageCommerceData.discount.deadline || pageDiscountSecondsLeft > 0)"
-                 class="mt-2 bg-yellow-100 px-4 py-2 rounded-md">
-              <div class="text-gray-600">{{ pageCommerceData.discount.title ?? "店鋪優惠" }}</div>
-              <div class="font-semibold">
-                {{ "全店買" + discountToText(pageCommerceData.discount) }}
-              </div>
-              <div v-if="!!pageCommerceData.discount.deadline" class="flex items-baseline">
-                <div class="text-sm text-gray-500 mr-2">優惠尚餘</div>
-                <div>{{ countdownSecondsToText(pageDiscountSecondsLeft) }}</div>
-              </div>
-            </div>
+            <DiscountCard v-if="!!mediaCommerceData && !!(mediaCommerceData.discount)"
+                          class="mt-2"
+                          defaultTitle="產品優惠"
+                          discounTextPrefix="此產品買"
+                          :discount="mediaCommerceData.discount"></DiscountCard>
+            <DiscountCard v-if="!!pageCommerceData && !!(pageCommerceData.discount)"
+                          class="mt-2"
+                          defaultTitle="店鋪優惠"
+                          discounTextPrefix="全店買"
+                          :discount="pageCommerceData.discount"></DiscountCard>
 
             <div v-if="mediaCommerceDataLoaded" class="mt-2" >
               <template v-if="!!mediaCommerceData && mediaCommerceData.active">
@@ -204,9 +191,7 @@ import useMediaPrice from "~/composables/useMediaPrice";
 import IgPage from "~/models/IgPage";
 import IgPageExtraData from "~/models/IgPageExtraData";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
-import { discountToText } from "~/utils/discountText";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
-
 const nuxt = useNuxtApp();
 const router = useRouter();
 
@@ -355,30 +340,8 @@ function clickContactInfoRow(row: ContactInfoRow) {
 // Commerce
 const mediaCommerceData: Ref<IgMediaCommerceData | null> = ref(null)
 const mediaCommerceDataLoaded = ref(false)
-const mediaDiscountSecondsLeft = ref(0)
 const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
 const pageCommerceDataLoaded = ref(false)
-const pageDiscountSecondsLeft = ref(0)
-function countdownSecondsToText(secondsLeft: number) {
-  const days = Math.floor(secondsLeft / (60 * 60 * 24))
-
-  const secs = secondsLeft - days * (60 * 60 * 24)
-  const hhmmss = new Date(secs * 1000).toISOString().substring(11, 19).split(":")
-
-  return days.toString() + "日 " + hhmmss[0] + "時 " + hhmmss[1] + "分 " + hhmmss[2] + "秒 "
-}
-function configureCountdown(secondsLeft: Ref<number>, deadline: number) {
-  secondsLeft.value = (deadline - Date.now()) / 1000
-  if (secondsLeft.value > 0) {
-    const interval = setInterval(() => {
-      if (secondsLeft.value === 0) {
-        clearInterval(interval)
-      } else {
-        secondsLeft.value--
-      }
-    }, 1000)
-  }
-}
 
 // Create order
 const quantity = ref(1)
@@ -424,9 +387,6 @@ onMounted(async () => {
     }
   })
   mediaCommerceData.value = mediaCommerceDataRaw.value["data"][localMedia.value.code] || null
-  if (!!mediaCommerceData.value && !!mediaCommerceData.value.discount) {
-    configureCountdown(mediaDiscountSecondsLeft, mediaCommerceData.value.discount.deadline)
-  }
   mediaCommerceDataLoaded.value = true
 
   const {
@@ -435,9 +395,6 @@ onMounted(async () => {
   } = await useFetch(`/api/shop/id/${localPage.value._id}/commerce-data`)
   if (!!pageCommerceDataRaw.value) {
     pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
-    if (!!pageCommerceData.value && !!pageCommerceData.value.discount) {
-      configureCountdown(pageDiscountSecondsLeft, pageCommerceData.value.discount.deadline)
-    }
   }
   pageCommerceDataLoaded.value = true
 
