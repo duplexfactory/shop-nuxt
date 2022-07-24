@@ -28,13 +28,14 @@
 <!--            {{ cart.find((item) => item.code === media.code).quantity }}-->
           </div>
           <div class="col-span-4">
-            <DiscountCard v-if="media.discount && (mediaDiscountTotalValue(pageId) > pageDiscountValue(pageId)) && (mediaDiscountTotalValue(pageId) !== 0)"
+            <DiscountCard v-if="mediaCommerceData[media.code].discount && (mediaDiscountTotalValue(pageId) > pageDiscountValue(pageId))"
                           defaultTitle="產品優惠"
                           discounTextPrefix="此產品買"
-                          :discount="media.discount"></DiscountCard>
+                          :discount="mediaCommerceData[media.code].discount"></DiscountCard>
           </div>
           <div class="col-span-2">
-            {{ formatMediaPrice(mediaPrice(media) * cart.find((item) => item.code === media.code).quantity - mediaDiscountValue(media.code)) }}
+            {{ formatMediaPrice(mediaPrice(media) * cart.find((item) => item.code === media.code).quantity
+              - (mediaCommerceData[media.code].discount && mediaDiscountTotalValue(pageId) > pageDiscountValue(pageId) ? mediaDiscountValue(media.code) : 0)) }}
           </div>
         </div>
         <hr/>
