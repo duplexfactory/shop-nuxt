@@ -180,8 +180,10 @@ export default class PageInfoRow {
                 rows.push(new PageInfoRow("link", "spr-link", extraData.link, extraData.link));
             if (!!extraData.relatedPage)
                 rows.push(new PageInfoRow("relatedPage", "spr-instagram", `${extraData.relatedPage}`, `https://www.instagram.com/${extraData.relatedPage.replace("@", "")}/`));
-            if (!!extraData.facebook)
-                rows.push(new PageInfoRow("facebook", "spr-facebook-squared", extraData.facebook, extraData.facebook));
+            if (!!extraData.facebook) {
+                const link = extraData.facebook.startsWith("http") ? extraData.facebook : "https://facebook.com/" + extraData.facebook;
+                rows.push(new PageInfoRow("facebook", "spr-facebook-squared", extraData.facebook, link));
+            }
 
             // Other info
             if (!!extraData.shopSince)
