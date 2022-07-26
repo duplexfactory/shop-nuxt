@@ -33,12 +33,12 @@
             <DiscountCard v-if="!!mediaCommerceData && !!(mediaCommerceData.discount)"
                           class="mt-2"
                           defaultTitle="產品優惠"
-                          discounTextPrefix="此產品買"
+                          discountTextPrefix="此產品買"
                           :discount="mediaCommerceData.discount"></DiscountCard>
             <DiscountCard v-if="!!pageCommerceData && !!(pageCommerceData.discount)"
                           class="mt-2"
                           defaultTitle="店鋪優惠"
-                          discounTextPrefix="全店買"
+                          discountTextPrefix="全店買"
                           :discount="pageCommerceData.discount"></DiscountCard>
 
             <div v-if="mediaCommerceDataLoaded" class="mt-2" >
