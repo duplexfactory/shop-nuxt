@@ -1,6 +1,9 @@
 <template>
   <div class="container mx-auto">
-    <div v-if="!loading" v-for="pageId in pageIds" :key="pageId" class="my-4 border rounded-md">
+    <div class="text-2xl my-4 md:(text-4xl mb-8) font-semibold">
+      購物車
+    </div>
+    <div v-if="!loading" v-for="pageId in pageIds" :key="pageId" class="mb-4 border rounded-md">
       <div class="px-4 bg-gray-100">
         <div class="py-2">
           <nuxt-link v-if="pages[pageId]" class="hover:underline font-semibold" :to="`/shop/${pages[pageId].username}`">
@@ -8,36 +11,59 @@
           </nuxt-link>
         </div>
         <hr/>
-        <div class="grid grid-cols-12 gap-8 py-2">
-          <div class="col-span-6">商品</div>
+        <div class="hidden md:grid grid-cols-12 gap-4 lg:gap-8 py-2">
+          <div class="col-span-4 xl:col-span-5">商品</div>
           <div class="col-span-2">單件價格</div>
-          <div class="col-span-2">數量</div>
+          <div class="col-span-3 xl:col-span-2">數量</div>
           <div class="col-span-2">小計</div>
+          <div class="col-span-1"></div>
         </div>
         <hr/>
       </div>
       <div class="px-4">
         <template v-if="mediasGrouped[pageId]" v-for="media in mediasGrouped[pageId]" :key="media.code">
-          <div class="grid grid-cols-12 gap-4 lg:gap-8 pt-4">
-            <div class="col-span-4 lg:col-span-6">
-              <div class="image-container aspect-square rounded-md overflow-hidden"
-                   style="max-width: 90px"
-                   v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+
+          <div class="hidden md:grid grid-cols-12 gap-4 lg:gap-8 pt-4">
+            <div class="col-span-4 xl:col-span-5">
+              <div class="flex">
+                <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4"
+                     style="min-width:60px; max-width: 90px"
+                     v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+                <div class="flex-1">
+                  <div class="hidden lg:line-clamp-4 text-sm whitespace-pre-wrap break-words">
+                    {{ media.caption }}
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-span-2">{{ formatMediaPrice(mediaPrice(media)) }}</div>
-            <div class="col-span-3 lg:col-span-2">
+            <div class="col-span-3 xl:col-span-2">
               <QuantityInput v-model.number="cart.find((item) => item.code === media.code).quantity" @change="saveCart"></QuantityInput>
             </div>
-            <div class="col-span-3 lg:col-span-2">
+            <div class="col-span-2">
               {{ formatMediaPrice(mediaPrice(media) * cart.find((item) => item.code === media.code).quantity - mediaDiscountValue(media.code)) }}
+            </div>
+            <div class="col-span-1">
+              <button class="hover:underline text-red-500" @click="removeMedia(media.code)">移除</button>
+            </div>
+          </div>
+
+          <div class="flex md:hidden pt-4">
+            <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4"
+                 style="min-width:60px; max-width: 90px"
+                 v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+            <div class="flex-1">
+              <div class="line-clamp-4 text-sm whitespace-pre-wrap break-words">
+                {{ media.caption }}
+              </div>
             </div>
           </div>
 
           <div v-if="mediaCommerceData[media.code].discount"
                class="grid grid-cols-12 gap-4 lg:gap-8 pt-4">
-            <div class="col-span-9 lg:col-span-10">
-              <div class="flex w-full items-center">
-                <div class="mr-4 text-gray-600">
+            <div class="col-span-12 md:col-span-9">
+              <div class="md:flex w-full items-center">
+                <div class="mb-2 md:(mb-0 mr-4)" :class="mediaDiscountValue(media.code) === 0 ? 'text-red-500' : 'text-gray-600'">
                   <i :class="mediaDiscountValue(media.code) === 0 ? 'spr-cancel' : 'spr-ok'" class="pr-1"></i>
                   {{ mediaDiscountValue(media.code) === 0 ? "未符合" : "已符合" }}
                 </div>
@@ -49,25 +75,34 @@
             </div>
           </div>
 
+          <div class="flex md:hidden items-center justify-between pt-4">
+            <div class="flex">
+              <QuantityInput v-model.number="cart.find((item) => item.code === media.code).quantity" @change="saveCart" class="mr-2"></QuantityInput>
+              <button class="hover:underline text-red-500" @click="removeMedia(media.code)">移除</button>
+            </div>
+            {{ formatMediaPrice(mediaPrice(media) * cart.find((item) => item.code === media.code).quantity - mediaDiscountValue(media.code)) }}
+          </div>
+
           <hr class="mt-4"/>
+
         </template>
 
         <template v-if="pageCommerceData[pageId].discount">
           <div class="grid grid-cols-12 gap-4 lg:gap-8 py-4">
-            <div class="col-span-9 lg:col-span-10">
+            <div class="col-span-12 md:col-span-9">
               <div class="font-semibold">店鋪優惠</div>
-              <div class="flex w-full items-center">
-                <div class="mr-4 text-gray-600">
+              <div class="md:flex w-full items-center mt-4">
+                <div class="mb-2 md:(mb-0 mr-4)" :class="pageDiscountValue(pageId) === 0 ? 'text-red-500' : 'text-gray-600'">
                   <i :class="pageDiscountValue(pageId) === 0 ? 'spr-cancel' : 'spr-ok'" class="pr-1"></i>
                   {{ pageDiscountValue(pageId) === 0 ? "未符合" : "已符合" }}
                 </div>
                 <DiscountCard defaultTitle="店鋪優惠"
                               discountTextPrefix="全店買"
                               singleLine
-                              :discount="pageCommerceData[pageId].discount" class="mt-4 flex-1"></DiscountCard>
+                              :discount="pageCommerceData[pageId].discount" class="flex-1"></DiscountCard>
               </div>
             </div>
-            <div class="col-span-3 lg:col-span-2">
+            <div class="col-span-12 md:col-span-3 text-right md:text-left">
               {{ pageDiscountValue(pageId) === 0 ? "" : ("-" + formatMediaPrice(pageDiscountValue(pageId))) }}
             </div>
           </div>
@@ -76,7 +111,7 @@
 
         <template v-if="!!pageCommerceData && !!pageCommerceData[pageId]">
           <div class="grid grid-cols-12 gap-4 lg:gap-8 py-4">
-            <div class="col-span-9 lg:col-span-10">
+            <div class="col-span-12 md:col-span-9">
               <div class="font-semibold">郵寄方法及優惠</div>
               <div class="flex items-center mt-4">
                 <lazy-spr-select v-model="selectedMailingIndex[pageId]">
@@ -90,8 +125,8 @@
                 {{ selectedMailing(pageId).title }}
               </div>
 
-              <div v-if="pageCommerceData[pageId].mailingDiscount" class="flex w-full items-center mt-4">
-                <div class="mr-4 text-gray-600">
+              <div v-if="pageCommerceData[pageId].mailingDiscount" class="md:flex w-full items-center mt-4">
+                <div class="mb-2 md:(mb-0 mr-4)" :class="!isFreeMailing(pageId) ? 'text-red-500' : 'text-gray-600'">
                   <i :class="!isFreeMailing(pageId) ? 'spr-cancel' : 'spr-ok'" class="pr-1"></i>
                   {{ !isFreeMailing(pageId) ? "未符合" : "已符合" }}
                 </div>
@@ -105,7 +140,7 @@
               </div>
 
             </div>
-            <div class="col-span-3 lg:col-span-2">
+            <div class="col-span-12 md:col-span-3 text-right md:text-left">
               <template v-if="isFreeMailing(pageId)">
                 免郵
               </template>
@@ -117,7 +152,6 @@
                   {{ formatMediaPrice(selectedMailing(pageId).cost) }}
                 </div>
               </template>
-
             </div>
           </div>
           <hr/>
@@ -160,19 +194,8 @@
         </template>
       </div>
 
-
-
-
-
       <div class="grid grid-cols-12 gap-4 lg:gap-8 bg-gray-100 p-4">
-        <div class="col-span-9 lg:col-span-10">
-          <div>給店鋪留言</div>
-          <textarea v-model="notes[pageId]"
-                    placeholder="e.g. 產品大小、顔色、訂製内容。提交訂單後，店鋪可以看到此内容，可先與店鋪查詢。（選填）"
-                    class="w-full border rounded-md p-2 mt-2" rows="4">
-          </textarea>
-        </div>
-        <div class="col-span-3 lg:col-span-2">
+        <div class="col-span-12 text-right md:(col-span-3 order-1 text-left)">
           <div class="font-semibold">
             總計
           </div>
@@ -182,6 +205,13 @@
           <div v-if="!isFreeMailing(pageId) && !!selectedMailing(pageId) && selectedMailing(pageId).payOnArrive">
             （未含到付郵費）
           </div>
+        </div>
+        <div class="col-span-12 md:col-span-9">
+          <div>給店鋪留言</div>
+          <textarea v-model="notes[pageId]"
+                    placeholder="e.g. 產品大小、顔色、訂製内容。提交訂單後，店鋪可以看到此内容，可先與店鋪查詢。（選填）"
+                    class="w-full border rounded-md p-2 mt-2" rows="4">
+          </textarea>
         </div>
       </div>
 
@@ -304,6 +334,11 @@ onMounted(async () => {
   }
 })
 
+function removeMedia(code: string) {
+  cart.value = cart.value.filter((item) => item.code !== code)
+  saveCart()
+}
+
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart.value));
 }
@@ -340,7 +375,6 @@ function pageTotal(pageId: string) {
   const mailing = isFreeMailing(pageId) ? 0 : (selectedMailing(pageId)?.cost ?? 0)
   return Math.max(price - pageDiscountValue(pageId) + mailing, 0)
 }
-
 
 const notes = ref({})
 const selectedPaymentIndex = ref({})
