@@ -73,7 +73,7 @@
 
     <Teleport to="body">
       <transition name="modal">
-        <LazyConfirmModal v-if="togglingMediaCode"
+        <LazyConfirmModal v-if="showConfirmToggleActiveModal"
                           cancelButtonTitle="取消"
                           confirmButtonTitle="確定"
                           @close="cancelToggleActive"
@@ -82,6 +82,10 @@
             <div class="p-4">
               <div>你是否確定開啓接受訂單？</div>
               <div>開啓後，客戶可直接在Shoperuse向你下單購買產品。</div>
+              <div class="mt-2">
+                <input type="checkbox" id="no-more" name="no-more" v-model="noMoreToggleActiveReminder" class="mr-2">
+                <label for="no-more">下次不再顯示</label>
+              </div>
             </div>
           </template>
         </LazyConfirmModal>
@@ -130,10 +134,19 @@ async function clickNextPage() {
 }
 
 const showConfirmToggleActiveModal = ref(false)
+const noMoreToggleActiveReminder = ref(false)
 const togglingMediaCode = ref("")
-function showConfirmToggleActive(mediaCode: string) {
-  showConfirmToggleActiveModal.value = true
+async function showConfirmToggleActive(mediaCode: string) {
   togglingMediaCode.value = mediaCode
+
+  noMoreToggleActiveReminder.value = localStorage.getItem("no_more_toggle_active_reminder") === "true"
+  if (!commerceData.value[togglingMediaCode.value].active || noMoreToggleActiveReminder.value) {
+    // Turn to inactive or saved no more reminders.
+    await confirmToggleActive()
+    return
+  }
+
+  showConfirmToggleActiveModal.value = true
 }
 async function confirmToggleActive() {
   showConfirmToggleActiveModal.value = false
@@ -149,9 +162,10 @@ async function confirmToggleActive() {
         }
     );
 
-    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+    localStorage.setItem("no_more_toggle_active_reminder", noMoreToggleActiveReminder.value.toString())
     togglingMediaCode.value = ""
 
+    nuxt.vueApp.$toast.success("成功！", {position: "top"});
   }
   catch (e) {
     nuxt.vueApp.$toast.error("失敗！", {position: "top"});
