@@ -43,22 +43,26 @@
     </div>
     <div class="table-cell align-top whitespace-nowrap">
 
-      <div v-if="!editingDiscount">
-        <div v-if="hasDiscount">{{ mediaCommerceData.discount.title }}</div>
-        <div>{{ currentDiscount }}</div>
-        <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">修改</button>
-        <button v-if="hasDiscount" @click="removeDiscount" class="hover:underline text-red-500">刪除折扣</button>
-      </div>
+      <div v-if="hasDiscount">{{ mediaCommerceData.discount.title }}</div>
+      <div>{{ currentDiscount }}</div>
+      <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">修改</button>
+      <button v-if="hasDiscount" @click="removeDiscount" class="hover:underline text-red-500">刪除折扣</button>
 
-      <template v-else>
-
-        <LazyDiscountEditor v-model="localDiscount"></LazyDiscountEditor>
-        <div class="mt-4">
-          <button @click="createDiscount" class="btn-primary btn-sm mr-2">儲存</button>
-          <button @click="editingDiscount = false" class="btn-outline btn-sm">取消</button>
-        </div>
-
-      </template>
+      <Teleport to="body">
+        <transition name="modal">
+          <LazyModal v-if="editingDiscount" @close="editingDiscount = false">
+            <template #container>
+              <div class="bg-white p-4 rounded-md">
+                <LazyDiscountEditor v-model="localDiscount"></LazyDiscountEditor>
+                <div class="mt-4">
+                  <button @click="createDiscount" class="btn-primary btn-sm mr-2">儲存</button>
+                  <button @click="editingDiscount = false" class="btn-outline btn-sm">取消</button>
+                </div>
+              </div>
+            </template>
+          </LazyModal>
+        </transition>
+      </Teleport>
 
     </div>
   </div>
