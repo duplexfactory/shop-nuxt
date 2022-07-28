@@ -43,8 +43,17 @@
     </div>
     <div class="table-cell align-top whitespace-nowrap">
 
-      <div v-if="hasDiscount">{{ mediaCommerceData.discount.title }}</div>
-      <div>{{ currentDiscount }}</div>
+      <template v-if="hasDiscount">
+        <div>{{ mediaCommerceData.discount.title }}</div>
+        <div>{{ currentDiscount }}</div>
+        <div v-if="!!mediaCommerceData.discount.deadline">
+          折扣限期：{{ format(new Date(mediaCommerceData.discount.deadline), "dd-MM-yyyy HH:mm") }}
+        </div>
+      </template>
+      <div v-else>
+        沒有折扣
+      </div>
+
       <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">修改</button>
       <button v-if="hasDiscount" @click="removeDiscount" class="hover:underline text-red-500">刪除折扣</button>
 
@@ -77,6 +86,7 @@ import useMediaPrice from "~/composables/useMediaPrice";
 import {discountToText} from "~/utils/discountText";
 const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
+import {format} from "date-fns"
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
@@ -269,9 +279,7 @@ const currentDiscount = computed(() => {
   if (!hasDiscount.value) {
     return "沒有折扣"
   }
-
   return discountToText(mediaCommerceData.value.discount)
-
 })
 
 </script>
