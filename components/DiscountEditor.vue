@@ -54,11 +54,6 @@
           cancelText="取消"
           placeholder="選擇折扣期限"
       >
-        <template v-slot:clear="{ onClear }">
-          <button class="pr-2 right-0" @click="onClear">
-            <i class="spr-cancel"></i>
-          </button>
-        </template>
       </datepicker>
     </div>
   </div>
