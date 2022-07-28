@@ -21,6 +21,7 @@
     "@types/crypto-js": "^4.1.0",
     "@types/lodash.throttle": "^4.1.6",
     "@vueform/toggle": "^2.0.1",
+    "@vuepic/vue-datepicker": "^3.3.1",
     "@vueuse/nuxt": "^7.5.3",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.10.7",
@@ -35,7 +36,6 @@
     "node-fetch": "^3.1.0",
     "path": "^0.12.7",
     "swiper": "^7.4.1",
-    "vue3-datepicker": "^0.3.4",
     "vue3-popper": "^1.4.2"
   },
   "overrides": {

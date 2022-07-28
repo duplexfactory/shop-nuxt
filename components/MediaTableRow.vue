@@ -276,16 +276,6 @@ const currentDiscount = computed(() => {
 
 </script>
 
-<script lang="ts">
-
-import Datepicker from 'vue3-datepicker';
-
-export default {
-  components: { Datepicker }
-}
-
-</script>
-
 <style scoped>
 
 .table-cell {

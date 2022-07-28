@@ -45,13 +45,13 @@
     <div class="mt-4">
       <div class="mb-1">折扣限期（選填）</div>
       <!-- deadline?: number; -->
+<!--      class="text-input-primary"-->
       <datepicker
           v-model="localDiscountDeadline"
-          class="text-input-primary"
-          :lowerLimit="new Date()"
-          :clearable="true"
-          minimumView="time"
-          inputFormat="yyyy-MM-dd HH:mm"
+          format="dd/MM/yyyy HH:mm"
+          :minDate="new Date()"
+          selectText="選擇"
+          cancelText="取消"
       >
         <template v-slot:clear="{ onClear }">
           <button class="pr-2 right-0" @click="onClear">
@@ -94,7 +94,8 @@ const value = computed({
 
 <script lang="ts">
 
-import Datepicker from 'vue3-datepicker';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 export default {
   components: { Datepicker }

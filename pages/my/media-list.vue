@@ -46,15 +46,13 @@
         </div>
       </div>
 
-      <!--    <template v-if="!commerceDataPending">-->
-      <!--      {{ commerceData }}-->
       <LazyMediaTableRow v-for="media in medias"
                          :key="media.code"
                          :media="media"
                          @showConfirmToggleActive="showConfirmToggleActive"
                          v-model:mediaCommerceData="commerceData[media.code]">
       </LazyMediaTableRow>
-      <!--    </template>-->
+
     </div>
 
     <div class="flex justify-between mb-4">
@@ -109,7 +107,6 @@ const {
 const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
 
-// const commerceDataPending = ref(true)
 const commerceData = ref<Record<string, IgMediaCommerceData>>({})
 
 onMounted(async () => {
@@ -122,7 +119,6 @@ onMounted(async () => {
 
   for (const m of medias.value)
     commerceData.value[m.code] = data.value["data"][m.code]
-// commerceDataPending.value = false
 })
 
 async function clickPrevPage() {

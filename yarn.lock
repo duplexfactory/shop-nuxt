@@ -2999,6 +2999,13 @@
   "resolved" "https://registry.npmjs.org/@vueform/toggle/-/toggle-2.0.1.tgz"
   "version" "2.0.1"
 
+"@vuepic/vue-datepicker@^3.3.1":
+  "integrity" "sha512-tPCJ9KttSJugLDDaB+RMYibuJR9FHtN1L0FEmHvAC8lg5bLsXqzLppu1vp0I1kIU/F5BhBCyWq6Ho8NdYgfNcg=="
+  "resolved" "https://registry.npmjs.org/@vuepic/vue-datepicker/-/vue-datepicker-3.3.1.tgz"
+  "version" "3.3.1"
+  dependencies:
+    "date-fns" "^2.28.0"
+
 "@vueuse/core@7.7.1":
   "integrity" "sha512-PRRgbATMpoeUmkCEBtUeJgOwtew8s+4UsEd+Pm7MhkjL2ihCNrSqxNVtM6NFE4uP2sWnkGcZpCjPuNSxowJ1Ow=="
   "resolved" "https://registry.npmjs.org/@vueuse/core/-/core-7.7.1.tgz"
@@ -3861,7 +3868,7 @@
   "resolved" "https://registry.npmjs.org/date-and-time/-/date-and-time-2.3.0.tgz"
   "version" "2.3.0"
 
-"date-fns@^2.22.1":
+"date-fns@^2.28.0":
   "integrity" "sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw=="
   "resolved" "https://registry.npmjs.org/date-fns/-/date-fns-2.28.0.tgz"
   "version" "2.28.0"
@@ -8114,7 +8121,7 @@
   dependencies:
     "@vue/devtools-api" "^6.0.0"
 
-"vue@^2.6.0 || ^3.2.0", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.2.0", "vue@^3.2.20", "vue@^3.2.25", "vue@^3.2.33", "vue@>=3", "vue@3.2.33":
+"vue@^2.6.0 || ^3.2.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.2.0", "vue@^3.2.20", "vue@^3.2.25", "vue@^3.2.33", "vue@>=3", "vue@>=3.2.0", "vue@3.2.33":
   "integrity" "sha512-si1ExAlDUrLSIg/V7D/GgA4twJwfsfgG+t9w10z38HhL/HA07132pUQ2KuwAo8qbCyMJ9e6OqrmWrOCr+jW7ZQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-3.2.33.tgz"
   "version" "3.2.33"
@@ -8124,13 +8131,6 @@
     "@vue/runtime-dom" "3.2.33"
     "@vue/server-renderer" "3.2.33"
     "@vue/shared" "3.2.33"
-
-"vue3-datepicker@^0.3.4":
-  "integrity" "sha512-pD4Lixnqdr6KeIO/ZK/xdmhYDQUvMPHgTeWkNYeAx5sKY4eaNItOqbLuevwI51d3ubozhNS1y+Z8Enxi33pXiQ=="
-  "resolved" "https://registry.npmjs.org/vue3-datepicker/-/vue3-datepicker-0.3.4.tgz"
-  "version" "0.3.4"
-  dependencies:
-    "date-fns" "^2.22.1"
 
 "vue3-popper@^1.4.2":
   "integrity" "sha512-nc5vM//AJ8/DyNetjrrgkkLv7aKVdSsljvqlQ1tWhAV2lgA8tkn8xE6icDd0/kBt0Yo5Li8Pftf0H0C/hNmu1Q=="
