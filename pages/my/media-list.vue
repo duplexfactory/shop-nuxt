@@ -117,7 +117,7 @@ onMounted(async () => {
   await fetchOwnOfficialMedias()
   const {data, error} = await useFetch('/api/media/commerce-data', {
     params: {
-      ids: medias.value.map((m) => m.code).join(',')
+      codes: medias.value.map((m) => m.code).join(',')
     }
   })
 

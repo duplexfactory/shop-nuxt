@@ -274,7 +274,7 @@ async function fetchMediaCommerceData() {
     error
   } = await useFetch('/api/media/commerce-data', {
     params: {
-      ids: cart.value.map((item) => item.code).join(",")
+      codes: cart.value.map((item) => item.code).join(",")
     }
   })
   if (!!data.value) {
@@ -299,15 +299,13 @@ async function fetchPages() {
 
 const pageCommerceData: Ref<Dict<IgPageCommerceData>> = ref({})
 async function fetchPageCommerceData() {
-  await Promise.all(pageIds.value.map(async (s) => {
-    const {
-      data,
-      error
-    } = await useFetch(`/api/shop/id/${s}/commerce-data`)
-    if (!!data.value) {
-      pageCommerceData.value[s] = data.value["commerceData"]
-    }
-  }))
+  const {
+    data,
+    error
+  } = await useFetch("/api/shop/commerce-data", {params: {ids: pageIds.value.join(",")}})
+  for (const key of Object.keys(data.value["commerceData"])) {
+    pageCommerceData.value[key] = data.value["commerceData"][key]
+  }
 }
 
 const {
@@ -376,7 +374,7 @@ function pageTotal(pageId: string) {
   return Math.max(price - pageDiscountValue(pageId) + mailing, 0)
 }
 
-const notes = ref({})
+const notes = ref<Dict<string>>({})
 const selectedPaymentIndex = ref({})
 function selectedPaymentMethodData(pageId: string) {
   return pageCommerceData.value[pageId].paymentMethodData[selectedPaymentIndex.value[pageId]]
@@ -387,8 +385,18 @@ function selectedMailing(pageId: string) {
   return pageCommerceData.value[pageId].mailing[selectedMailingIndex.value[pageId]]
 }
 
-function clickCheckout() {
-
+async function clickCheckout() {
+  const {
+    data,
+    error
+  } = await useFetch('/api/order', {
+    method: 'POST',
+    body: {
+      items: cart.value,
+      mailingIndex: selectedMailingIndex.value,
+      notes: notes.value
+    },
+  });
 }
 
 </script>

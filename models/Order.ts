@@ -13,6 +13,7 @@ export interface Order {
         code: string,
         price: number,
         discount?: Discount;
+        quantity: number;
     }[]
     discount?: Discount;
     mailing: Mailing;

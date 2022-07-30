@@ -3,10 +3,10 @@ import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb"
 
 export default defineEventHandler(async (event) => {
     let {
-        ids
-    } = await useQuery(event) as { ids: string }
+        codes
+    } = await useQuery(event) as { codes: string }
 
-    const mediaCodeList = ids.split(",")
+    const mediaCodeList = codes.split(",")
     await initMongo()
     const mediaCommerceDataList = await mediaCommerceDataCollection.find({
         _id: { $in: mediaCodeList }

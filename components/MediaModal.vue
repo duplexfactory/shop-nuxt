@@ -383,7 +383,7 @@ onMounted(async () => {
     error: mediaCommerceDataError
   } = await useFetch('/api/media/commerce-data', {
     params: {
-      ids: localMedia.value.code
+      codes: localMedia.value.code
     }
   })
   mediaCommerceData.value = mediaCommerceDataRaw.value["data"][localMedia.value.code] || null

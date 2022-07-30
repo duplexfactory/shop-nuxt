@@ -12,6 +12,7 @@ export let pendingPageCollection: Collection<PendingPage>
 export let pageOverrideCollection: Collection<IgPageOverride>;
 export let mediaCommerceDataCollection: Collection<IgMediaCommerceData>;
 export let pageCommerceDataCollection: Collection<IgPageCommerceData>;
+export let orderCollection: Collection<Order>;
 
 const config = useRuntimeConfig()
 
@@ -30,7 +31,8 @@ export async function initMongo() {
         pendingPageCollection = db.collection("pendingPage");
         pageOverrideCollection = db.collection("pageOverride");
         mediaCommerceDataCollection = db.collection("mediaCommerceData");
-        pageCommerceDataCollection =  db.collection("pageCommerceData");
+        pageCommerceDataCollection = db.collection("pageCommerceData");
+        orderCollection = db.collection("order");
         init = true
     }
     return client
