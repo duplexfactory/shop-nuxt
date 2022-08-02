@@ -59,7 +59,7 @@
             </div>
           </div>
 
-          <div v-if="mediaCommerceData[media.code].discount"
+          <div v-if="mediaCommerceData[media.code].discount && !mediaDiscountDeadlinePassed[media.code]"
                class="grid grid-cols-12 gap-4 lg:gap-8 pt-4">
             <div class="col-span-12 md:col-span-9">
               <div class="md:flex w-full items-center">
@@ -70,6 +70,7 @@
                 <DiscountCard defaultTitle="產品優惠"
                               discountTextPrefix="此產品買"
                               singleLine
+                              @deadlinePassed="mediaDiscountDeadlinePassed[media.code] = true"
                               :discount="mediaCommerceData[media.code].discount" class="flex-1"></DiscountCard>
               </div>
             </div>
@@ -87,7 +88,7 @@
 
         </template>
 
-        <template v-if="pageCommerceData[pageId].discount">
+        <template v-if="pageCommerceData[pageId].discount && !pageDiscountDeadlinePassed[pageId]">
           <div class="grid grid-cols-12 gap-4 lg:gap-8 py-4">
             <div class="col-span-12 md:col-span-9">
               <div class="font-semibold">店鋪優惠</div>
@@ -99,6 +100,7 @@
                 <DiscountCard defaultTitle="店鋪優惠"
                               discountTextPrefix="全店買"
                               singleLine
+                              @deadlinePassed="pageDiscountDeadlinePassed[pageId] = true"
                               :discount="pageCommerceData[pageId].discount" class="flex-1"></DiscountCard>
               </div>
             </div>
@@ -242,6 +244,7 @@ import {mailingDiscountToText} from "~/utils/discountText";
 const cart: Ref<{code: string, quantity: number}[]> = ref([])
 const pageIds = computed(() => Array( ...new Set(mediaList.value.map((m) => m.pageId))))
 
+// Medias
 const mediaDict: Ref<Dict<IgMedia>> = ref({})
 const mediaList: Ref<IgMedia[]> = computed(() => cart.value.map((item) => mediaDict.value[item.code] || null).filter((item) => item !== null))
 const mediasGrouped = computed(() => {
@@ -282,6 +285,9 @@ async function fetchMediaCommerceData() {
   }
 }
 
+const mediaDiscountDeadlinePassed: Ref<Dict<boolean>> = ref({})
+
+// Pages
 const pages: Ref<Dict<IgPage>> = ref({})
 async function fetchPages() {
   const {
@@ -307,6 +313,7 @@ async function fetchPageCommerceData() {
     pageCommerceData.value[key] = data.value["commerceData"][key]
   }
 }
+const pageDiscountDeadlinePassed: Ref<Dict<boolean>> = ref({})
 
 const {
   formatMediaPrice,

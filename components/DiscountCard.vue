@@ -38,6 +38,8 @@ const {discount, defaultTitle, discountTextPrefix, singleLine} = defineProps({
   singleLine: { type: Boolean, default: false },
 });
 
+const emit = defineEmits(["deadlinePassed"])
+
 const discountSecondsLeft = ref(0)
 function countdownSecondsToText(secondsLeft: number) {
   const days = Math.floor(secondsLeft / (60 * 60 * 24))
@@ -54,10 +56,14 @@ function configureCountdown(secondsLeft: Ref<number>, deadline: number) {
     const interval = setInterval(() => {
       if (secondsLeft.value === 0) {
         clearInterval(interval)
+        emit("deadlinePassed")
       } else {
         secondsLeft.value--
       }
     }, 1000)
+  }
+  else {
+    emit("deadlinePassed")
   }
 }
 

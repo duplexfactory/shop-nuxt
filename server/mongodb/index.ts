@@ -5,6 +5,7 @@ import {PendingPage} from "~/models/PendingPage"
 import IgPageOverride from "~/models/IgPageOverride";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
+import {Order} from "~/models/Order";
 
 export let igAuthCollection: Collection<IgAuth>
 export let pageSearchCollection: Collection<PageSearch>
