@@ -1,6 +1,6 @@
 import IgMedia from "~/models/IgMedia";
 
-export function mediaPrice(media?: IgMedia): number {
+export function mediaPrice(media?: Pick<IgMedia, "price" | "patchPrice">): number {
     if (!media) {
         return 0;
     }

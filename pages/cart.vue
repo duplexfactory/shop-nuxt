@@ -349,7 +349,7 @@ function saveCart() {
 }
 
 
-
+// Price calculation
 function mediaDiscountValue(code: string) {
   const media = mediaDict.value[code]
   const price = mediaPrice(media)

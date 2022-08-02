@@ -2,8 +2,6 @@ import {defineEventHandler, JSONValue, useQuery} from "h3";
 import {assert} from "~/server/util";
 import {initMongo, pageCommerceDataCollection} from "~/server/mongodb";
 import {badRequest, notFound} from "~/utils/h3Error";
-import Dict = NodeJS.Dict;
-import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
 export default defineEventHandler(async (event) => {
     let {
@@ -21,6 +19,6 @@ export default defineEventHandler(async (event) => {
         commerceData: commerceData.reduce((previous, current) => {
             previous[current._id] = current
             return previous;
-        }, {} as Dict<IgPageCommerceData>) as any
+        }, {})
     };
 })

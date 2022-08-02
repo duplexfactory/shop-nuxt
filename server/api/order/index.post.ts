@@ -4,6 +4,9 @@ import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {mediaPrice} from "~/utils/mediaPrice";
 import {initMongo, orderCollection} from "~/server/mongodb";
+import {Discount, MailingDiscount} from "~/models/Discount";
+import {Mailing} from "~/models/Order";
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
 export default defineEventHandler(async (event) => {
 
@@ -36,8 +39,10 @@ export default defineEventHandler(async (event) => {
         params: {
             codes: items.map((item) => item.code).join(",")
         }
-    })
-    const mediasGrouped: Dict<IgMedia[]> = (Object.values(medias) as IgMedia[]).reduce((previous, current) => {
+    }) as {
+        medias: Dict<IgMedia>,
+    }
+    const mediasGrouped: Dict<IgMedia[]> = (Object.values(medias)).reduce((previous, current) => {
         if (!previous[current.pageId]) {
             previous[current.pageId] = []
         }
@@ -49,29 +54,29 @@ export default defineEventHandler(async (event) => {
         commerceData: shopCommerceData,
     } = await $fetch("/api/shop/commerce-data", {
         params: {ids: Object.keys(mediasGrouped).join(",")}
-    })
-
-    console.log(shopCommerceData)
+    }) as {
+        commerceData: Dict<IgPageCommerceData>
+    }
 
     await initMongo();
-    await orderCollection.insertMany(Object.keys(mediasGrouped).map((pageId) => {
-        return {
-            // _id: ,
-            created: Date.now(),
-            medias: mediasGrouped[pageId].map((m) => {
-                const item = items.find((item) => item.code === m.code)
-                return {
-                    ...item,
+    await orderCollection.insertOne({
+        created: Date.now(),
+        shops: Object.keys(mediasGrouped).reduce((previous, currentPageId) => {
+            previous[currentPageId] = {
+                medias: mediasGrouped[currentPageId].map((m) => ({
+                    code: m.code,
                     price: mediaPrice(m),
-                    discount: mediaCommerceData[item.code].discount
-                }
-            }),
-            discount: shopCommerceData[pageId].discount,
-            mailing: shopCommerceData[pageId].mailing[mailingIndex[pageId]],
-            mailingDiscount: shopCommerceData[pageId].discount,
-            note: notes[pageId]
-        }
-    }));
+                    discount: mediaCommerceData[m.code].discount,
+                    quantity: items.find((item) => item.code === m.code).quantity
+                })),
+                discount: shopCommerceData[currentPageId].discount,
+                mailing: shopCommerceData[currentPageId].mailing[mailingIndex[currentPageId]],
+                mailingDiscount: shopCommerceData[currentPageId].mailingDiscount,
+                note: notes[currentPageId]
+            }
+            return previous
+        }, {})
+    });
 
     return {
         success: true

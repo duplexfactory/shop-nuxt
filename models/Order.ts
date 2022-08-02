@@ -1,4 +1,6 @@
 import {Discount, MailingDiscount} from "~/models/Discount";
+import Dict = NodeJS.Dict;
+import {ObjectId} from "mongodb";
 
 export enum MailingType {
     SF_STATION,
@@ -7,18 +9,20 @@ export enum MailingType {
 }
 
 export interface Order {
-    _id: string;
+    _id?: ObjectId;
     created: number;
-    medias: {
-        code: string,
-        price: number,
+    shops: Dict<{
+        medias: {
+            code: string,
+            price: number,
+            discount?: Discount;
+            quantity: number;
+        }[]
         discount?: Discount;
-        quantity: number;
-    }[]
-    discount?: Discount;
-    mailing: Mailing;
-    mailingDiscount?: MailingDiscount;
-    note: string;
+        mailing: Mailing;
+        mailingDiscount?: MailingDiscount;
+        note: string;
+    }>
 }
 
 export interface Mailing {
