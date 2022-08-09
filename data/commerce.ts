@@ -1,5 +1,5 @@
 import {PaymentType} from "~/models/IgPageCommerceData";
-import {MailingType} from "~/models/Order";
+import {MailingType, OrderStatus} from "~/models/Order";
 
 export const mailingMethods = [
     MailingType.SF_STATION,
@@ -29,4 +29,18 @@ export const paymentMethodsToText = {
     [PaymentType.WECHAT_PAY_HK]: "WeChat Pay HK",
     [PaymentType.ALIPAY_HK]: "AlipayHK",
     [PaymentType.IN_PERSON]: "親身付款"
+}
+
+export const orderStatusToText = {
+    [OrderStatus.PENDING]: "待付款",
+    [OrderStatus.TB_VERIFIED]: "待確認",
+    [OrderStatus.VERIFIED]: "已付款",
+    [OrderStatus.MAILED]: "已發貨"
+}
+
+export const orderStatusColorClass = {
+    [OrderStatus.PENDING]: "text-yellow-500",
+    [OrderStatus.TB_VERIFIED]: "text-blue-500",
+    [OrderStatus.VERIFIED]: "text-green-500",
+    [OrderStatus.MAILED]: "text-green-500"
 }

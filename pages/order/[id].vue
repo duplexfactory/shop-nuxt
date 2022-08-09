@@ -33,39 +33,65 @@
           </nuxt-link>
         </div>
         <div class="p-4">
-          <div>
+          <div class="font-semibold">訂單狀態</div>
+          <div class="font-semibold mt-2" :class="orderStatusColorClass[order.shops[pageId].status]">{{ orderStatusToText[order.shops[pageId].status] }}</div>
+
+          <div class="mt-4">
             <div class="font-semibold">店鋪資訊</div>
-            <div>給店鋪留言：<span>{{ order.shops[pageId].note ?? "-" }}</span></div>
-            <div>店鋪總計：{{ formatMediaPrice(pageTotal(pageId)) }}<span>{{ !isFreeMailing(pageId) && order.shops[pageId].mailing.payOnArrive ? "（未含到付郵費）" : "" }}</span></div>
+            <div class="mt-2">給店鋪留言：<span>{{ order.shops[pageId].note ?? "-" }}</span></div>
+            <div class="mt-2">店鋪總計：{{ formatMediaPrice(pageTotal(pageId)) }}<span>{{ !isFreeMailing(pageId) && order.shops[pageId].mailing.payOnArrive ? "（未含到付郵費）" : "" }}</span></div>
           </div>
 
           <div class="mt-4">
             <div class="font-semibold">郵寄方法</div>
-            <div>
-              {{ order.shops[pageId].mailing }}
+            <div class="mt-2">
               <template v-if="isFreeMailing(pageId)">
                 免郵
               </template>
               <template v-else>
-                <div v-if="order.shops[pageId].mailing.payOnArrive">
-                  到付
+                <div class="flex-1 text-left">
+                  <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">
+                    {{ mailingTypeToText[order.shops[pageId].mailing.type] }}
+                  </div>
+                  <div class="inline-block">{{ order.shops[pageId].mailing.title }}</div>
                 </div>
-                <div v-if="!!order.shops[pageId].mailing.cost">
-                  {{ formatMediaPrice(order.shops[pageId].mailing.cost) }}
+
+                <div class="mt-2">
+                  <div v-if="order.shops[pageId].mailing.payOnArrive" class="inline-block mr-2">
+                    到付
+                  </div>
+                  <div v-if="!!order.shops[pageId].mailing.cost" class="inline-block">
+                    {{ formatMediaPrice(order.shops[pageId].mailing.cost) }}
+                  </div>
                 </div>
+
               </template>
             </div>
           </div>
 
-          <button class="btn-primary mt-4">付款並上傳證明</button>
+          <button class="btn-primary mt-4"
+                  @click="showingPaymentMethodsPageId = pageId">付款並上傳證明</button>
 
         </div>
-
 
         <hr/>
       </div>
 
     </div>
+
+
+    <Teleport to="body">
+      <transition name="modal">
+        <LazyPaymentModal v-if="!!showingPaymentMethodsPageId"
+                          :pageId="showingPaymentMethodsPageId"
+                          :amount="pageTotal(showingPaymentMethodsPageId)"
+                          :receiver="pages[showingPaymentMethodsPageId].username"
+                          @close="showingPaymentMethodsPageId = ''"></LazyPaymentModal>
+      </transition>
+    </Teleport>
+
+
+
   </div>
 </template>
 <script setup lang="ts">
@@ -77,6 +103,8 @@ import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";
 import {Ref} from "vue";
 import IgPage from "~/models/IgPage";
 import Dict = NodeJS.Dict;
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
+import {orderStatusToText, orderStatusColorClass, mailingTypeToText} from "~/data/commerce";
 
 const route = useRoute()
 
@@ -110,6 +138,8 @@ async function fetchPages() {
     pages.value = data.value["pages"]
   }
 }
+
+const showingPaymentMethodsPageId = ref("")
 
 // Price calculation
 function pageDiscountValue(pageId: string) {

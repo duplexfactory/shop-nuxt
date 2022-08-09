@@ -9,7 +9,7 @@
 
     <div v-else class="px-0 sm:container mx-auto flex items-center h-full">
 
-      <div class="modal-container" @click.stop="">
+      <div class="modal-container" :class="modalContainerClass" @click.stop="">
 
         <div class="modal-header">
           <slot name="header">
@@ -40,6 +40,18 @@
 
   </div>
 </template>
+
+<script setup lang="ts">
+
+import {PropType} from "vue";
+
+const {
+  modalContainerClass
+} = defineProps({
+  modalContainerClass: String as PropType<String>,
+});
+
+</script>
 
 <style scoped>
 .modal-mask {

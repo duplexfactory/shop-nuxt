@@ -8,6 +8,13 @@ export enum MailingType {
     OTHERS
 }
 
+export enum OrderStatus {
+    PENDING,
+    TB_VERIFIED,
+    VERIFIED,
+    MAILED
+}
+
 export interface Order {
     _id?: ObjectId;
     created: number;
@@ -22,6 +29,7 @@ export interface Order {
         mailing: Mailing;
         mailingDiscount?: MailingDiscount;
         note: string;
+        orderStatus: OrderStatus;
     }>
 }
 

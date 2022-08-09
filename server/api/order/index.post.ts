@@ -5,7 +5,7 @@ import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {mediaPrice} from "~/utils/mediaPrice";
 import {initMongo, orderCollection} from "~/server/mongodb";
 import {Discount, MailingDiscount} from "~/models/Discount";
-import {Mailing} from "~/models/Order";
+import {Mailing, Order, OrderStatus} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
 export default defineEventHandler(async (event) => {
@@ -72,7 +72,8 @@ export default defineEventHandler(async (event) => {
                 discount: shopCommerceData[currentPageId].discount,
                 mailing: shopCommerceData[currentPageId].mailing[mailingIndex[currentPageId]],
                 mailingDiscount: shopCommerceData[currentPageId].mailingDiscount,
-                note: notes[currentPageId]
+                note: notes[currentPageId],
+                status: OrderStatus.PENDING
             }
             return previous
         }, {})
