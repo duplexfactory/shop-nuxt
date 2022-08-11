@@ -58,23 +58,46 @@
                   </div>
                 </template>
               </div>
+<!--              <div v-if="selectedPaymentMethodData.method !== PaymentType.IN_PERSON" class="mt-4">-->
+<!--                <div class="p-6 rounded-md text-center border-dashed border-2">-->
+<!--                  <div class="text-6xl text-gray-500">+</div>-->
+<!--                  <img v-if="!!tempProofImageFileUrl"-->
+<!--                       :src="tempProofImageFileUrl"-->
+<!--                       class="mb-2"-->
+<!--                       style="max-width: 150px; max-height: 150px;"/>-->
+<!--                  <input ref="inputFile" type="file" @change="handleFileSelection( $event )"/>-->
+<!--                </div>-->
+<!--              </div>-->
+
               <div v-if="selectedPaymentMethodData.method !== PaymentType.IN_PERSON" class="mt-4">
-                <div class="p-6 rounded-md text-center border-dashed border-2">
-                  <div class="text-6xl text-gray-500">+</div>
-                  <img v-if="!!tempProofImageFileUrl"
-                       :src="tempProofImageFileUrl"
-                       class="mb-2"
-                       style="max-width: 150px; max-height: 150px;"/>
-                  <input ref="inputFile" type="file" @change="handleFileSelection( $event )"/>
-                  <div class="my-1 text-sm text-gray-500">
-                    付款後請上傳證明。
-                  </div>
-                </div>
+                <file-selector v-model="files"
+                               :allowMultiple="false">
+                  <dropzone v-slot="{ hovered }">
+                    <div class="block w-full rounded-lg border border-dashed border-gray-400 transition-colors duration-150 flex flex-col py-4 justify-center items-center"
+                        :class="{ 'border-blue-200': hovered }">
+
+                      <img v-for="preview in previews" :key="preview" :src="preview" style="max-width: 150px; max-height: 150px;"/>
+                      <ul v-if="files.length" class="mb-4">
+                        <li v-for="file in files" :key="file.name">
+                          {{ file.name }}
+                        </li>
+                      </ul>
+                      <dialog-button class="btn-primary">
+                        選擇證明照片
+                      </dialog-button>
+                      <div class="my-1 text-sm text-gray-500">
+                        付款後請上傳證明。
+                      </div>
+                    </div>
+                  </dropzone>
+                </file-selector>
               </div>
+
+
             </div>
 
             <button class="btn-primary mt-4"
-                    :disabled="!selectedPaymentMethodData || (selectedPaymentMethodData.method !== PaymentType.IN_PERSON && !tempProofImageFileUrl)"
+                    :disabled="!selectedPaymentMethodData || (selectedPaymentMethodData.method !== PaymentType.IN_PERSON && !files.length)"
                     @click="clickSubmit">完成付款</button>
           </div>
 
@@ -110,20 +133,37 @@ const emit = defineEmits(["close"])
 const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
 const selectedPaymentMethodData: Ref<PaymentMethodData | ""> = ref("")
 
-const tempPaymentImageFile = ref(null)
-const tempProofImageFileUrl = ref(null)
-function handleFileSelection( event ){
-  const uploadedFiles = event.target.files;
-  if (uploadedFiles.length != 0) {
-    tempPaymentImageFile.value = uploadedFiles[0]
-
-    const reader = new FileReader();
-    reader.onloadend = function() {
-      tempProofImageFileUrl.value = reader.result;
-    }
-    reader.readAsDataURL(tempPaymentImageFile.value);
-  }
+const files = ref([])
+const previews = ref([])
+async function toBlob(file) {
+  const buffer = await file.arrayBuffer()
+  const blob = new Blob([buffer])
+  const srcBlob = URL.createObjectURL(blob)
+  return srcBlob
 }
+watch(files, async () => {
+  if (files.value.length > 1) {
+    files.value.splice(0, files.value.length - 1)
+  }
+  previews.value = await Promise.all(
+      files.value.map(toBlob)
+  )
+})
+
+// const tempPaymentImageFile = ref(null)
+// const tempProofImageFileUrl = ref(null)
+// function handleFileSelection( event ){
+//   const uploadedFiles = event.target.files;
+//   if (uploadedFiles.length != 0) {
+//     tempPaymentImageFile.value = uploadedFiles[0]
+//
+//     const reader = new FileReader();
+//     reader.onloadend = function() {
+//       tempProofImageFileUrl.value = reader.result;
+//     }
+//     reader.readAsDataURL(tempPaymentImageFile.value);
+//   }
+// }
 
 
 onMounted(async () => {
@@ -138,6 +178,20 @@ onMounted(async () => {
 
 async function clickSubmit() {
 
+}
+
+</script>
+
+<script lang="ts">
+
+import { FileSelector, Dropzone, DialogButton } from 'vue3-file-selector'
+
+export default {
+  components: {
+    FileSelector,
+    Dropzone,
+    DialogButton
+  }
 }
 
 </script>

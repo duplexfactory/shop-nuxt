@@ -4213,6 +4213,11 @@
     "is-date-object" "^1.0.1"
     "is-symbol" "^1.0.2"
 
+"esbuild-windows-64@0.14.38":
+  "integrity" "sha512-Khy4wVmebnzue8aeSXLC+6clo/hRYeNIm0DyikoEqX+3w3rcvrhzpoix0S+MF9vzh6JFskkIGD7Zx47ODJNyCw=="
+  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.14.38.tgz"
+  "version" "0.14.38"
+
 "esbuild@^0.14.27", "esbuild@^0.14.38", "esbuild@>=0.13":
   "integrity" "sha512-12fzJ0fsm7gVZX1YQ1InkOE5f9Tl7cgf6JPYXRJtPIoE0zkWAbHdPHVPPaLi9tYAcEBqheGzqLn/3RdTOyBfcA=="
   "resolved" "https://registry.npmjs.org/esbuild/-/esbuild-0.14.38.tgz"
@@ -8126,6 +8131,11 @@
     "@vue/runtime-dom" "3.2.33"
     "@vue/server-renderer" "3.2.33"
     "@vue/shared" "3.2.33"
+
+"vue3-file-selector@^1.0.3":
+  "integrity" "sha512-BHlyhQtzKg5becKB8bEz370KrJOT5gG80flieZQRDPNrkPC37tbfyOF5OTa3N83BQhY0Snoc8NJNE2b1aW7Y2A=="
+  "resolved" "https://registry.npmjs.org/vue3-file-selector/-/vue3-file-selector-1.0.3.tgz"
+  "version" "1.0.3"
 
 "vue3-popper@^1.4.2":
   "integrity" "sha512-nc5vM//AJ8/DyNetjrrgkkLv7aKVdSsljvqlQ1tWhAV2lgA8tkn8xE6icDd0/kBt0Yo5Li8Pftf0H0C/hNmu1Q=="

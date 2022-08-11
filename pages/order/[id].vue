@@ -109,10 +109,14 @@ import IgPage from "~/models/IgPage";
 import Dict = NodeJS.Dict;
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import {orderStatusToText, orderStatusColorClass, mailingTypeToText} from "~/data/commerce";
+import {notFound} from "~/utils/h3Error";
 
 const route = useRoute()
 
 const {data, error} = await useLazyFetch(`/api/order/${route.params.id}`)
+if (!!error && !!error.value) {
+  throwError(notFound);
+}
 const order = computed(() => {
   if (!data.value)
     return undefined
