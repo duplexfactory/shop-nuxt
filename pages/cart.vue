@@ -241,6 +241,8 @@ import Dict = NodeJS.Dict;
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mailingDiscountToText} from "~/utils/discountText";
 
+const nuxt = useNuxtApp();
+const router = useRouter();
 const cart: Ref<{code: string, quantity: number}[]> = ref([])
 const pageIds = computed(() => Array( ...new Set(mediaList.value.map((m) => m.pageId))))
 
@@ -393,9 +395,25 @@ function selectedMailing(pageId: string) {
 }
 
 async function clickCheckout() {
+
+  let error = false
+  pageIds.value.forEach((pageId) => {
+    console.log(pageId)
+    console.log(selectedMailingIndex.value)
+
+    if (!selectedMailingIndex.value[pageId]) {
+      nuxt.vueApp.$toast.error(`請選擇${pages.value[pageId].username}的郵寄方法！`, {position: "top"});
+      error = true
+    }
+  })
+
+  if (error) {
+    return;
+  }
+
   const {
     data,
-    error
+    e
   } = await useFetch('/api/order', {
     method: 'POST',
     body: {
@@ -404,6 +422,15 @@ async function clickCheckout() {
       notes: notes.value
     },
   });
+
+  if (e.value) {
+    nuxt.vueApp.$toast.error("結賬時發生未知錯誤，請稍候重試！", {position: "top"});
+    return;
+  }
+
+  console.log(data.value.id)
+  router.push({path: `/order/${data.value.id}`});
+
 }
 
 </script>

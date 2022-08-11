@@ -34,7 +34,10 @@
         </div>
         <div class="p-4">
           <div class="font-semibold">訂單狀態</div>
-          <div class="font-semibold mt-2" :class="orderStatusColorClass[order.shops[pageId].status]">{{ orderStatusToText[order.shops[pageId].status] }}</div>
+          <div class="font-semibold mt-2" :class="orderStatusColorClass[order.shops[pageId].orderStatus]">{{ orderStatusToText[order.shops[pageId].orderStatus] }}</div>
+          <div v-if="OrderStatus.VERIFICATION_FAILED == order.shops[pageId].orderStatus">
+            此店鋪未能核實你上次提交的付款證明，請重新提交。如不清楚爲何未能核實，請聯絡店鋪。
+          </div>
 
           <div class="mt-4">
             <div class="font-semibold">店鋪資訊</div>
@@ -69,7 +72,8 @@
             </div>
           </div>
 
-          <button class="btn-primary mt-4"
+          <button v-if="[OrderStatus.VERIFICATION_FAILED, OrderStatus.PENDING].includes(order.shops[pageId].orderStatus)"
+                  class="btn-primary mt-4"
                   @click="showingPaymentMethodsPageId = pageId">付款並上傳證明</button>
 
         </div>
@@ -96,7 +100,7 @@
 </template>
 <script setup lang="ts">
 
-import {Order} from "~/models/Order";
+import {Order, OrderStatus} from "~/models/Order";
 import dayjs from "dayjs";
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";

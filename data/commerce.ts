@@ -32,13 +32,15 @@ export const paymentMethodsToText = {
 }
 
 export const orderStatusToText = {
+    [OrderStatus.VERIFICATION_FAILED]: "核實失敗",
     [OrderStatus.PENDING]: "待付款",
-    [OrderStatus.TB_VERIFIED]: "待確認",
+    [OrderStatus.TB_VERIFIED]: "待核實",
     [OrderStatus.VERIFIED]: "已付款",
     [OrderStatus.MAILED]: "已發貨"
 }
 
 export const orderStatusColorClass = {
+    [OrderStatus.VERIFICATION_FAILED]: "text-red-500",
     [OrderStatus.PENDING]: "text-yellow-500",
     [OrderStatus.TB_VERIFIED]: "text-blue-500",
     [OrderStatus.VERIFIED]: "text-green-500",

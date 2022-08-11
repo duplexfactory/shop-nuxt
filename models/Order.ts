@@ -9,6 +9,7 @@ export enum MailingType {
 }
 
 export enum OrderStatus {
+    VERIFICATION_FAILED,
     PENDING,
     TB_VERIFIED,
     VERIFIED,

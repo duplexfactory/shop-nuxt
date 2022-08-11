@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
     }
 
     await initMongo();
-    await orderCollection.insertOne({
+    const orderInsertOneResult = await orderCollection.insertOne({
         created: Date.now(),
         shops: Object.keys(mediasGrouped).reduce((previous, currentPageId) => {
             previous[currentPageId] = {
@@ -73,13 +73,14 @@ export default defineEventHandler(async (event) => {
                 mailing: shopCommerceData[currentPageId].mailing[mailingIndex[currentPageId]],
                 mailingDiscount: shopCommerceData[currentPageId].mailingDiscount,
                 note: notes[currentPageId],
-                status: OrderStatus.PENDING
+                orderStatus: OrderStatus.PENDING
             }
             return previous
         }, {})
     });
 
     return {
-        success: true
+        success: true,
+        id: orderInsertOneResult.insertedId
     }
 });

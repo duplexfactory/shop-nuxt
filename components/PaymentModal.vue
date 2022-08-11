@@ -12,7 +12,7 @@
               <div class="font-semibold">付款指示</div>
               <ol class="list-decimal list-inside">
                 <li>選擇付款方法。</li>
-                <li>根據「轉賬資料」，付款給賣家。</li>
+                <li>根據「轉賬資料」，付款給店鋪。</li>
                 <li>上傳付款證明（轉賬截圖/收據/入數紙）。</li>
                 <li>按「完成付款」提交。</li>
               </ol>
@@ -75,7 +75,7 @@
 
             <button class="btn-primary mt-4"
                     :disabled="!selectedPaymentMethodData || (selectedPaymentMethodData.method !== PaymentType.IN_PERSON && !tempProofImageFileUrl)"
-                    @click="">完成付款</button>
+                    @click="clickSubmit">完成付款</button>
           </div>
 
 
@@ -135,6 +135,10 @@ onMounted(async () => {
     pageCommerceData.value = data.value["commerceData"]
   }
 })
+
+async function clickSubmit() {
+
+}
 
 </script>
 
