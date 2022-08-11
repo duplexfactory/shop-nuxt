@@ -8,7 +8,7 @@
           <div class="font-semibold text-green-500">成功建立訂單！</div>
           <div class="mt-4">
             <div class="text-gray-500">如須離開此頁面，請先複製網址，以便重新瀏覽。</div>
-            <button class="btn-outline !text-gray-500 !border-gray-500 mt-2">按此複製</button>
+            <button @click="clickCopyLink" class="btn-outline !text-gray-500 !border-gray-500 mt-2">按此複製</button>
           </div>
         </div>
 
@@ -34,20 +34,26 @@
         </div>
         <div class="p-4">
           <div class="font-semibold">訂單狀態</div>
-          <div class="font-semibold mt-2" :class="orderStatusColorClass[order.shops[pageId].orderStatus]">{{ orderStatusToText[order.shops[pageId].orderStatus] }}</div>
-          <div v-if="OrderStatus.VERIFICATION_FAILED == order.shops[pageId].orderStatus">
-            此店鋪未能核實你上次提交的付款證明，請重新提交。如不清楚爲何未能核實，請聯絡店鋪。
+          <div class="flex">
+            <div class="font-semibold mr-2" :class="orderStatusColorClass[order.shops[pageId].orderStatus]">{{ orderStatusToText[order.shops[pageId].orderStatus] }}</div>
+            <Popper hover offsetDistance="0" placement="top">
+              <i class="spr-info-circled-alt text-gray-600"></i>
+              <template #content>
+                <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
+                  {{ orderStatusTipText[order.shops[pageId].orderStatus] }}
+                </div>
+              </template>
+            </Popper>
           </div>
 
           <div class="mt-4">
             <div class="font-semibold">店鋪資訊</div>
-            <div class="mt-2">給店鋪留言：<span>{{ order.shops[pageId].note ?? "-" }}</span></div>
-            <div class="mt-2">店鋪總計：{{ formatMediaPrice(pageTotal(pageId)) }}<span>{{ !isFreeMailing(pageId) && order.shops[pageId].mailing.payOnArrive ? "（未含到付郵費）" : "" }}</span></div>
+            <div class="">給店鋪留言：<span>{{ order.shops[pageId].note ?? "-" }}</span></div>
           </div>
 
           <div class="mt-4">
             <div class="font-semibold">郵寄方法</div>
-            <div class="mt-2">
+            <div class="">
               <template v-if="isFreeMailing(pageId)">
                 免郵
               </template>
@@ -59,7 +65,7 @@
                   <div class="inline-block">{{ order.shops[pageId].mailing.title }}</div>
                 </div>
 
-                <div class="mt-2">
+                <div class="">
                   <div v-if="order.shops[pageId].mailing.payOnArrive" class="inline-block mr-2">
                     到付
                   </div>
@@ -71,6 +77,10 @@
               </template>
             </div>
           </div>
+
+          <div class="mt-4 font-semibold">店鋪總計</div>
+          <div class="text-pink-700 text-xl font-semibold">{{ formatMediaPrice(pageTotal(pageId)) }}</div>
+          <div v-if="!isFreeMailing(pageId) && order.shops[pageId].mailing.payOnArrive ">（未含到付郵費）</div>
 
           <button v-if="[OrderStatus.VERIFICATION_FAILED, OrderStatus.PENDING].includes(order.shops[pageId].orderStatus)"
                   class="btn-primary mt-4"
@@ -88,6 +98,7 @@
       <transition name="modal">
         <LazyPaymentModal v-if="!!showingPaymentMethodsPageId"
                           :pageId="showingPaymentMethodsPageId"
+                          :orderId="order._id"
                           :amount="pageTotal(showingPaymentMethodsPageId)"
                           :receiver="pages[showingPaymentMethodsPageId].username"
                           @close="showingPaymentMethodsPageId = ''"></LazyPaymentModal>
@@ -108,10 +119,13 @@ import {Ref} from "vue";
 import IgPage from "~/models/IgPage";
 import Dict = NodeJS.Dict;
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
-import {orderStatusToText, orderStatusColorClass, mailingTypeToText} from "~/data/commerce";
+import {orderStatusToText, orderStatusColorClass, mailingTypeToText, orderStatusTipText} from "~/data/commerce";
 import {notFound} from "~/utils/h3Error";
+import Popper from "vue3-popper";
 
 const route = useRoute()
+const nuxt = useNuxtApp()
+const config = useRuntimeConfig()
 
 const {data, error} = await useLazyFetch(`/api/order/${route.params.id}`)
 if (!!error && !!error.value) {
@@ -148,6 +162,11 @@ async function fetchPages() {
 }
 
 const showingPaymentMethodsPageId = ref("")
+
+function clickCopyLink() {
+  navigator.clipboard.writeText(config.DOMAIN + route.fullPath)
+  nuxt.vueApp.$toast.success("已複製此頁面網址至剪貼板，請保存以重新瀏覽！", {position: "top"});
+}
 
 // Price calculation
 function pageDiscountValue(pageId: string) {

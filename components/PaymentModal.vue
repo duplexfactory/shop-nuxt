@@ -97,7 +97,7 @@
             </div>
 
             <button class="btn-primary mt-4"
-                    :disabled="!selectedPaymentMethodData || (selectedPaymentMethodData.method !== PaymentType.IN_PERSON && !files.length)"
+                    :disabled="isSubmitting || !selectedPaymentMethodData || (selectedPaymentMethodData.method !== PaymentType.IN_PERSON && !files.length)"
                     @click="clickSubmit">完成付款</button>
           </div>
 
@@ -114,6 +114,8 @@ import {IgPageCommerceData, PaymentType} from "~/models/IgPageCommerceData";
 import {paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import type {Ref} from "vue";
+
+const nuxt = useNuxtApp()
 
 const props = defineProps({
   pageId: { type: String, default: "" },
@@ -176,8 +178,41 @@ onMounted(async () => {
   }
 })
 
+const isSubmitting = ref(false)
 async function clickSubmit() {
+  isSubmitting.value = true
 
+  // Upload image first.
+  let formData = new FormData()
+  formData.append( 'image', files.value[0])
+  const {
+    url
+  } = await $fetch(
+      '/api/file/payment-proof',
+      {
+        method: 'POST',
+        params: {
+          orderId: orderId.value,
+          pageId: pageId.value
+        },
+        body: formData
+      }
+  )
+
+  await useFetch(
+    `/api/order/${orderId.value}/payment-proof`,
+    {
+      method: 'POST',
+      body: {
+        pageId: pageId.value,
+        url,
+        paymentMethodData: selectedPaymentMethodData.value
+      }
+  })
+
+  isSubmitting.value = false
+  nuxt.vueApp.$toast.success("成功提交！", {position: "top"})
+  emit("close")
 }
 
 </script>

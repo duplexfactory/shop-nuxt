@@ -1,6 +1,7 @@
 import {Discount, MailingDiscount} from "~/models/Discount";
 import Dict = NodeJS.Dict;
 import {ObjectId} from "mongodb";
+import {PaymentMethodData} from "~/models/IgPageCommerceData";
 
 export enum MailingType {
     SF_STATION,
@@ -31,6 +32,8 @@ export interface Order {
         mailingDiscount?: MailingDiscount;
         note: string;
         orderStatus: OrderStatus;
+        paymentMethodData?: PaymentMethodData;
+        paymentProofUrl?: string;
     }>
 }
 

@@ -39,6 +39,14 @@ export const orderStatusToText = {
     [OrderStatus.MAILED]: "已發貨"
 }
 
+export const orderStatusTipText = {
+    [OrderStatus.VERIFICATION_FAILED]: "此店鋪未能核實你上次提交的付款證明，請重新提交。如不清楚爲何未能核實，請聯絡店鋪。",
+    [OrderStatus.PENDING]: "請付款並上傳證明。",
+    [OrderStatus.TB_VERIFIED]: "你已經提交了付款證明，請等候店鋪核實。",
+    [OrderStatus.VERIFIED]: "店鋪已成功核實了你的付款證明，請等候店鋪發貨。",
+    [OrderStatus.MAILED]: "店鋪已發貨，請準備收貨。"
+}
+
 export const orderStatusColorClass = {
     [OrderStatus.VERIFICATION_FAILED]: "text-red-500",
     [OrderStatus.PENDING]: "text-yellow-500",

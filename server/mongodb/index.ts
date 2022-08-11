@@ -14,6 +14,8 @@ export let pageOverrideCollection: Collection<IgPageOverride>;
 export let mediaCommerceDataCollection: Collection<IgMediaCommerceData>;
 export let pageCommerceDataCollection: Collection<IgPageCommerceData>;
 export let orderCollection: Collection<Order>;
+export let sfLocationCollection: Collection<Location>;
+export let miscCollection: Collection;
 
 const config = useRuntimeConfig()
 
@@ -34,6 +36,8 @@ export async function initMongo() {
         mediaCommerceDataCollection = db.collection("mediaCommerceData");
         pageCommerceDataCollection = db.collection("pageCommerceData");
         orderCollection = db.collection("order");
+        sfLocationCollection = db.collection("sfLocation");
+        miscCollection = db.collection("misc");
         init = true
     }
     return client

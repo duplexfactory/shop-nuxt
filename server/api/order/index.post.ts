@@ -73,14 +73,14 @@ export default defineEventHandler(async (event) => {
                 mailing: shopCommerceData[currentPageId].mailing[mailingIndex[currentPageId]],
                 mailingDiscount: shopCommerceData[currentPageId].mailingDiscount,
                 note: notes[currentPageId],
-                orderStatus: OrderStatus.PENDING
+                orderStatus: OrderStatus.PENDING,
             }
             return previous
-        }, {})
+        }, {} as Order["shops"])
     });
 
     return {
         success: true,
-        id: orderInsertOneResult.insertedId
+        id: orderInsertOneResult.insertedId.toString()
     }
 });

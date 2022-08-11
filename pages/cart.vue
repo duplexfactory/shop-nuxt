@@ -122,6 +122,31 @@
                           :value="i">{{ m.type === MailingType.OTHERS ? m.title : mailingTypeToText[m.type] }}</option>
                 </lazy-spr-select>
               </div>
+              <div class="flex items-center mt-4">
+                <lazy-spr-select v-model="selectedSFDistrictId">
+                  <option value="-1" disabled>請選擇順豐站地區</option>
+                  <option v-for="(s, i) in sf.stations"
+                          :key="'district-' + s.id"
+                          :value="s.id">{{ s.name }}</option>
+                </lazy-spr-select>
+
+<!--                v-if="selectedMailingIndex[pageId] &&-->
+<!--                (pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_STATION ||-->
+<!--                pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_LOCKER)"-->
+              </div>
+              <div class="flex items-center mt-2">
+                <lazy-spr-select v-if="selectedSFDistrictId !== -1" v-model="selectedSFLocationId">
+                  <option value="" disabled>請選擇順豐站</option>
+                  <optgroup v-for="(d, i) in sf.stations.find((s) => s.id === selectedSFDistrictId).districts"
+                            :key="d.name"
+                            :label="d.name">
+                    <option v-for="(l, i) in d.locations"
+                            :key="'location-' + l.id"
+                            :value="l.id">{{ l.id + " - " + l.address }}</option>
+                  </optgroup>
+                </lazy-spr-select>
+              </div>
+
               <div v-if="selectedMailingIndex[pageId] !== '' && pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type !== MailingType.OTHERS"
                    class="mt-4">
                 {{ selectedMailing(pageId).title }}
@@ -218,6 +243,25 @@
       </div>
 
     </div>
+
+    <div class="mt-8 p-4 border rounded-md">
+      <div class="font-semibold">結賬須知</div>
+      <ol class="list-disc list-inside mt-4">
+        <li>
+          Shoperuse只是下單平台，並不會收取款項。結賬時，你將直接付款給各店鋪。
+        </li>
+        <li>
+          各店鋪接受的付款方式有機會不同，請在結賬前查看。
+        </li>
+        <li>
+          如貨品有損壞，乃店鋪責任，Shoperuse並不負責。如需退貨、更換貨品等，請直接聯絡店鋪。
+        </li>
+        <li>
+          感謝你使用Shoperuse，祝您有個愉快的購物經驗。
+        </li>
+      </ol>
+    </div>
+
     <div class="my-8 text-right">
       <button class="btn-primary btn-lg" @click="clickCheckout">
         立即結賬
@@ -240,6 +284,7 @@ import {MailingType} from "~/models/Order";
 import Dict = NodeJS.Dict;
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mailingDiscountToText} from "~/utils/discountText";
+import {District, SF} from "~/models/SF";
 
 const nuxt = useNuxtApp();
 const router = useRouter();
@@ -325,6 +370,16 @@ const {
 if (!process.server) {
   cart.value = JSON.parse(localStorage.getItem("cart")) || []
 }
+
+// Mailing SF locations.
+const selectedSFDistrictId = ref<number>(-1);
+const selectedSFLocationId = ref<string>("");
+watch(selectedSFDistrictId, () => selectedSFLocationId.value = "")
+const {
+  data: sfLocationsData,
+  error: sfLocationsError,
+} = await useFetch("/api/system/sf-locations")
+const sf = sfLocationsData.value as Pick<SF, "stations" | "removed_stations" | "lockers" | "removed_lockers">
 
 const loading = ref(false)
 onMounted(async () => {
@@ -413,7 +468,7 @@ async function clickCheckout() {
 
   const {
     data,
-    e
+    error: e
   } = await useFetch('/api/order', {
     method: 'POST',
     body: {
@@ -428,8 +483,7 @@ async function clickCheckout() {
     return;
   }
 
-  console.log(data.value.id)
-  router.push({path: `/order/${data.value.id}`});
+  router.push({path: `/order/${data.value["id"]}`});
 
 }
 
