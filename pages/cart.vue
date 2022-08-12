@@ -118,34 +118,39 @@
               <div class="flex items-center mt-4">
                 <lazy-spr-select v-model="selectedMailingIndex[pageId]">
                   <option value="" disabled>請選擇郵寄方法</option>
-                  <option v-for="(m, i) in pageCommerceData[pageId].mailing" :key="'mailing-method-' + m.type"
-                          :value="i">{{ m.type === MailingType.OTHERS ? m.title : mailingTypeToText[m.type] }}</option>
+                  <option v-for="(m, i) in pageCommerceData[pageId].mailing"
+                          :key="'mailing-method-' + m.type"
+                          :value="i">
+                    {{ m.type === MailingType.OTHERS ? m.title : mailingTypeToText[m.type] }}
+                  </option>
                 </lazy-spr-select>
               </div>
-              <div class="flex items-center mt-4">
-                <lazy-spr-select v-model="selectedSFDistrictId">
-                  <option value="-1" disabled>請選擇順豐站地區</option>
-                  <option v-for="(s, i) in sf.stations"
-                          :key="'district-' + s.id"
-                          :value="s.id">{{ s.name }}</option>
-                </lazy-spr-select>
+              <template v-if="selectedMailingIndex[pageId] !== '' &&
+                              pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]] &&
+                              (pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_STATION ||
+                              pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_LOCKER)">
 
-<!--                v-if="selectedMailingIndex[pageId] &&-->
-<!--                (pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_STATION ||-->
-<!--                pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_LOCKER)"-->
-              </div>
-              <div class="flex items-center mt-2">
-                <lazy-spr-select v-if="selectedSFDistrictId !== -1" v-model="selectedSFLocationId">
-                  <option value="" disabled>請選擇順豐站</option>
-                  <optgroup v-for="(d, i) in sf.stations.find((s) => s.id === selectedSFDistrictId).districts"
-                            :key="d.name"
-                            :label="d.name">
-                    <option v-for="(l, i) in d.locations"
-                            :key="'location-' + l.id"
-                            :value="l.id">{{ l.id + " - " + l.address }}</option>
-                  </optgroup>
-                </lazy-spr-select>
-              </div>
+                <div class="flex items-center mt-4">
+                  <lazy-spr-select v-model="selectedSFDistrictId">
+                    <option value="-1" disabled>請選擇順豐站地區</option>
+                    <option v-for="(s, i) in sf.stations"
+                            :key="'district-' + s.id"
+                            :value="s.id">{{ s.name }}</option>
+                  </lazy-spr-select>
+                </div>
+                <div class="flex items-center mt-2">
+                  <lazy-spr-select v-if="selectedSFDistrictId !== -1" v-model="selectedSFLocationId" class="flex-1">
+                    <option value="" disabled>請選擇順豐站</option>
+                    <optgroup v-for="(d, i) in sf.stations.find((s) => s.id === selectedSFDistrictId).districts"
+                              :key="d.name"
+                              :label="d.name">
+                      <option v-for="(l, i) in d.locations"
+                              :key="'location-' + l.id"
+                              :value="l.id">{{ l.id + " - " + l.address }}</option>
+                    </optgroup>
+                  </lazy-spr-select>
+                </div>
+              </template>
 
               <div v-if="selectedMailingIndex[pageId] !== '' && pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type !== MailingType.OTHERS"
                    class="mt-4">
@@ -453,10 +458,7 @@ async function clickCheckout() {
 
   let error = false
   pageIds.value.forEach((pageId) => {
-    console.log(pageId)
-    console.log(selectedMailingIndex.value)
-
-    if (!selectedMailingIndex.value[pageId]) {
+    if (selectedMailingIndex.value[pageId] === "") {
       nuxt.vueApp.$toast.error(`請選擇${pages.value[pageId].username}的郵寄方法！`, {position: "top"});
       error = true
     }

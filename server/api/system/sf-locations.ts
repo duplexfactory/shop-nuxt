@@ -191,7 +191,8 @@ function parseSFDistrict(rawHtml: string, island: boolean) {
 
         const rows = table.getElementsByTagName("tbody")[0].rows;
         trs = Array.from(rows);
-        const skip = trs[0].cells[2].textContent.trim() === "點碼簡稱";
+        const skip = ["點碼簡稱", "網點簡稱"].includes(trs[0].cells[2].textContent.trim());
+
         if (trs[0].cells.length < 5)
             trs.shift();
 
@@ -200,18 +201,17 @@ function parseSFDistrict(rawHtml: string, island: boolean) {
             const name: string = tr.cells[0].textContent.trim();
             if (name === "地區") continue;
 
-            let index = 0;
+            let index = !name.includes("852") ? 1 : 0;
+            if (!tr.cells[index + 1])
+                continue;
+
             if (!name.includes("852")) {
                 currentDl = new DistrictLocation();
                 currentDl.name = name;
                 d.districts.push(currentDl);
-                index = 1;
             }
 
             const l = new Location();
-            if (!tr.cells[index + 1])
-                continue;
-
             l.id = tr.cells[index++].textContent.trim();
 
             if (skip)
