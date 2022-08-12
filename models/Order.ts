@@ -9,6 +9,13 @@ export enum MailingType {
     OTHERS
 }
 
+export enum MailingInfoType {
+    NAME,
+    ADDRESS,
+    PHONE,
+    OTHERS
+}
+
 export enum OrderStatus {
     VERIFICATION_FAILED,
     PENDING,
@@ -21,6 +28,7 @@ export interface Order {
     _id?: ObjectId;
     created: number;
     shops: Dict<{
+        orderStatus: OrderStatus;
         medias: {
             code: string,
             price: number,
@@ -30,16 +38,20 @@ export interface Order {
         discount?: Discount;
         mailing: Mailing;
         mailingDiscount?: MailingDiscount;
-        note: string;
-        orderStatus: OrderStatus;
+        mailingInfo: {
+            [key:MailingInfoType]: string
+        };
         paymentMethodData?: PaymentMethodData;
         paymentProofUrl?: string;
+        note: string;
     }>
 }
 
 export interface Mailing {
     title: string;
+    description?: string;
     type: MailingType; // SF_STATION, SF_LOCKER, OTHERS
     cost?: number;
     payOnArrive: boolean;
+    info: MailingInfoType[];
 }
