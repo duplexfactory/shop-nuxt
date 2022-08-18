@@ -118,7 +118,7 @@
               <div class="font-semibold">郵寄方法</div>
               <div class="mt-2">
                 <div class="flex items-center mt-1">
-                  <lazy-spr-select v-model="selectedMailingIndex[pageId]">
+                  <lazy-spr-select @change="selectedMailingIndexChanged(pageId)" v-model="selectedMailingIndex[pageId]">
                     <option value="" disabled>請選擇郵寄方法</option>
                     <option v-for="(m, i) in pageCommerceData[pageId].mailing"
                             :key="'mailing-method-' + m.type"
@@ -146,18 +146,18 @@
                   <div class="text-sm mt-2">{{ mailingInfoTypeToText[mailingInfoType] }}</div>
                   <input v-if="mailingInfoType === MailingInfoType.PHONE || mailingInfoType === MailingInfoType.NAME"
                          class="w-full text-input-primary mt-1"
-                         v-model="mailingInfo[mailingInfoType]"
+                         v-model="mailingInfo[pageId][mailingInfoType]"
                          type="text"
-                         :name="mailingInfoTypeToText[MmailingInfoType]"
+                         :name="mailingInfoTypeToText[mailingInfoType]"
                          :placeholder="mailingInfoTypeToText[mailingInfoType]"/>
                   <textarea v-if="mailingInfoType === MailingInfoType.ADDRESS"
-                            v-model="mailingInfo[MailingInfoType.ADDRESS]"
-                            :placeholder="mailingInfoTypeToText[MailingInfoType.ADDRESS]"
+                            v-model="mailingInfo[pageId][mailingInfoType]"
+                            :placeholder="mailingInfoTypeToText[mailingInfoType]"
                             class="w-full border rounded-md p-2 mt-1" rows="4">
                   </textarea>
                   <template v-if="mailingInfoType === MailingInfoType.SF_STATION || mailingInfoType === MailingInfoType.SF_LOCKER">
                     <div class="flex items-center mt-1">
-                      <lazy-spr-select v-model="selectedSFDistrictId">
+                      <lazy-spr-select @change="selectedSFDistrictIdChanged(pageId)" v-model="selectedSFDistrictId[pageId]">
                         <option value="-1" disabled>
                           {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
                         </option>
@@ -166,12 +166,12 @@
                                 :value="s.id">{{ s.name }}</option>
                       </lazy-spr-select>
                     </div>
-                    <div v-if="selectedSFDistrictId !== -1" class="flex items-center mt-1">
-                      <lazy-spr-select v-model="selectedSFLocationId" class="flex-1">
+                    <div v-if="selectedSFDistrictId[pageId] !== -1" class="flex items-center mt-1">
+                      <lazy-spr-select v-model="mailingInfo[pageId][mailingInfoType]" class="flex-1">
                         <option value="" disabled>
                           {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
                         </option>
-                        <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId).districts"
+                        <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId[pageId]).districts"
                                   :key="d.name"
                                   :label="d.name">
                           <option v-for="(l, i) in d.locations"
@@ -408,10 +408,6 @@ if (!process.server) {
   cart.value = JSON.parse(localStorage.getItem("cart")) || []
 }
 
-// Mailing SF locations.
-const selectedSFDistrictId = ref<number>(-1);
-const selectedSFLocationId = ref<string>("");
-watch(selectedSFDistrictId, () => selectedSFLocationId.value = "")
 const {
   data: sfLocationsData,
   error: sfLocationsError,
@@ -427,7 +423,11 @@ onMounted(async () => {
       await fetchMediaCommerceData()
       await fetchPages()
       await fetchPageCommerceData()
-      pageIds.value.forEach((id) => selectedMailingIndex.value[id] = "")
+      pageIds.value.forEach((id) => {
+        selectedMailingIndex.value[id] = ""
+        mailingInfo.value[id] = {}
+        selectedSFDistrictId.value[id] = -1
+      })
       loading.value = false
     })
   }
@@ -487,12 +487,26 @@ function selectedPaymentMethodData(pageId: string) {
   return pageCommerceData.value[pageId].paymentMethodData[selectedPaymentIndex.value[pageId]]
 }
 
+// Mailing.
 const selectedMailingIndex = ref({})
+function selectedMailingIndexChanged(pageId: string) {
+  mailingInfo.value[pageId] = {}
+}
 function selectedMailing(pageId: string) {
   return pageCommerceData.value[pageId].mailing[selectedMailingIndex.value[pageId]]
 }
 
-const mailingInfo = ref({})
+const mailingInfo = ref<Dict<{[key:number]: string}>>({})
+
+const selectedSFDistrictId = ref<{[key:string]: number}>({});
+function selectedSFDistrictIdChanged(pageId: string) {
+  if (selectedMailing(pageId).type === MailingType.SF_STATION) {
+    mailingInfo.value[pageId][MailingInfoType.SF_STATION] = ""
+  }
+  else if (selectedMailing(pageId).type === MailingType.SF_LOCKER) {
+    mailingInfo.value[pageId][MailingInfoType.SF_LOCKER] = ""
+  }
+}
 
 async function clickCheckout() {
 

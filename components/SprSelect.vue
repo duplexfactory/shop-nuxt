@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex items-center bg-white">
     <i class="spr-angle-down absolute right-0 pr-2"></i>
-    <select class="select-primary w-full" v-model="value">
+    <select class="select-primary w-full" @change="emit('change')" v-model="value">
       <slot></slot>
     </select>
   </div>
@@ -10,7 +10,7 @@
 import {PropType} from "vue";
 const props = defineProps<{modelValue: any}>()
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue", "change"])
 const value = computed({
   get: () => props.modelValue,
   set: val => {
