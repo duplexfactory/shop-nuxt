@@ -114,55 +114,90 @@
         <template v-if="!!pageCommerceData && !!pageCommerceData[pageId]">
           <div class="grid grid-cols-12 gap-4 lg:gap-8 py-4">
             <div class="col-span-12 md:col-span-9">
+
               <div class="font-semibold">郵寄方法</div>
-              <div class="flex items-center mt-2">
-                <div>郵寄方法：</div>
-                <lazy-spr-select v-model="selectedMailingIndex[pageId]">
-                  <option value="" disabled>請選擇郵寄方法</option>
-                  <option v-for="(m, i) in pageCommerceData[pageId].mailing"
-                          :key="'mailing-method-' + m.type"
-                          :value="i">
-                    {{ m.type === MailingType.OTHERS ? m.title : mailingTypeToText[m.type] }}
-                  </option>
-                </lazy-spr-select>
+              <div class="mt-2">
+                <div class="text-sm">郵寄方法</div>
+                <div class="flex items-center mt-1">
+                  <lazy-spr-select v-model="selectedMailingIndex[pageId]">
+                    <option value="" disabled>請選擇郵寄方法</option>
+                    <option v-for="(m, i) in pageCommerceData[pageId].mailing"
+                            :key="'mailing-method-' + m.type"
+                            :value="i">
+                      {{ m.type === MailingType.OTHERS ? m.title : mailingTypeToText[m.type] }}
+                    </option>
+                  </lazy-spr-select>
+                </div>
               </div>
+
               <div v-if="selectedMailingIndex[pageId] !== '' && !!selectedMailing(pageId).description"
-                   class="mt-2">
-                {{ "郵寄説明：" + selectedMailing(pageId).description }}
+                   class="mt-4">
+                <div class="text-sm">郵寄説明</div>
+                <div class="mt-1">{{ selectedMailing(pageId).description }}</div>
               </div>
+
               <div v-if="selectedMailingIndex[pageId] !== '' && selectedMailing(pageId).info.length !== 0"
-                   class="mt-2">
-                {{ "郵寄資料：" }}
+                   class="text-sm mt-4">
+                {{ "郵寄資料" }}
               </div>
               <template v-if="selectedMailingIndex[pageId] !== '' &&
-                              selectedMailing(pageId) &&
-                              (selectedMailing(pageId).type === MailingType.SF_STATION ||
+                              selectedMailing(pageId)">
+                <template v-if="(selectedMailing(pageId).type === MailingType.SF_STATION ||
                               selectedMailing(pageId).type === MailingType.SF_LOCKER)">
-                <div class="flex items-center mt-2">
-                  <lazy-spr-select v-model="selectedSFDistrictId">
-                    <option value="-1" disabled>
-                      {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
-                    </option>
-                    <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
-                            :key="'district-' + s.id"
-                            :value="s.id">{{ s.name }}</option>
-                  </lazy-spr-select>
+                  <div class="flex items-center mt-1">
+                    <lazy-spr-select v-model="selectedSFDistrictId">
+                      <option value="-1" disabled>
+                        {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
+                      </option>
+                      <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
+                              :key="'district-' + s.id"
+                              :value="s.id">{{ s.name }}</option>
+                    </lazy-spr-select>
+                  </div>
+                  <div v-if="selectedSFDistrictId !== -1" class="flex items-center mt-1">
+                    <lazy-spr-select v-model="selectedSFLocationId" class="flex-1">
+                      <option value="" disabled>
+                        {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
+                      </option>
+                      <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId).districts"
+                                :key="d.name"
+                                :label="d.name">
+                        <option v-for="(l, i) in d.locations"
+                                :key="'location-' + l.id"
+                                :value="l.id">{{ l.id + " - " + l.address }}</option>
+                      </optgroup>
+                    </lazy-spr-select>
+                  </div>
+                </template>
+                <div v-if="selectedMailing(pageId).info.includes(MailingInfoType.NAME)">
+                  <input class="w-full text-input-primary mt-1"
+                         v-model="mailingInfo[MailingInfoType.NAME]"
+                         type="text"
+                         :name="mailingInfoTypeToText[MailingInfoType.NAME]"
+                         :placeholder="mailingInfoTypeToText[MailingInfoType.NAME]"/>
                 </div>
-                <div v-if="selectedSFDistrictId !== -1" class="flex items-center mt-2">
-                  <lazy-spr-select v-model="selectedSFLocationId" class="flex-1">
-                    <option value="" disabled>
-                      {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
-                    </option>
-                    <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId).districts"
-                              :key="d.name"
-                              :label="d.name">
-                      <option v-for="(l, i) in d.locations"
-                              :key="'location-' + l.id"
-                              :value="l.id">{{ l.id + " - " + l.address }}</option>
-                    </optgroup>
-                  </lazy-spr-select>
+                <div v-if="selectedMailing(pageId).info.includes(MailingInfoType.PHONE)">
+                  <input class="w-full text-input-primary mt-1"
+                         v-model="mailingInfo[MailingInfoType.PHONE]"
+                         type="text"
+                         :name="mailingInfoTypeToText[MailingInfoType.PHONE]"
+                         :placeholder="mailingInfoTypeToText[MailingInfoType.PHONE]"/>
                 </div>
+                <div v-if="selectedMailing(pageId).info.includes(MailingInfoType.ADDRESS)">
+                  <textarea v-model="mailingInfo[MailingInfoType.ADDRESS]"
+                            :placeholder="mailingInfoTypeToText[MailingInfoType.ADDRESS]"
+                            class="w-full border rounded-md p-2 mt-1" rows="4">
+                  </textarea>
+                </div>
+
+
+                <!--                  export enum MailingInfoType {-->
+                <!--                  SF_STATION,-->
+                <!--                  SF_LOCKER,-->
+                <!--                  OTHERS-->
+                <!--                  }-->
               </template>
+
 
               <div v-if="pageCommerceData[pageId].mailingDiscount" class="mt-4">
                 <div class="font-semibold">郵寄優惠</div>
@@ -294,8 +329,8 @@ import {IgPageCommerceData, PaymentType} from "~/models/IgPageCommerceData";
 import IgPage from "~/models/IgPage";
 import useMediaPrice from "~/composables/useMediaPrice";
 import {DiscountType, ThresholdType} from "~/models/Discount";
-import {paymentMethodsToText, mailingTypeToText} from "~/data/commerce";
-import {MailingType} from "~/models/Order";
+import {paymentMethodsToText, mailingTypeToText, mailingInfoTypeToText} from "~/data/commerce";
+import {MailingType, MailingInfoType} from "~/models/Order";
 import Dict = NodeJS.Dict;
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mailingDiscountToText} from "~/utils/discountText";
@@ -469,6 +504,8 @@ const selectedMailingIndex = ref({})
 function selectedMailing(pageId: string) {
   return pageCommerceData.value[pageId].mailing[selectedMailingIndex.value[pageId]]
 }
+
+const mailingInfo = ref({})
 
 async function clickCheckout() {
 

@@ -41,7 +41,7 @@ export interface Order {
         mailing: Mailing;
         mailingDiscount?: MailingDiscount;
         mailingInfo: {
-            [key:number]: string // key MailingType
+            [key:number]: string // key MailingInfoType
         };
         paymentMethodData?: PaymentMethodData;
         paymentProofUrl?: string;
