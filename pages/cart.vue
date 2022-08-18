@@ -117,7 +117,6 @@
 
               <div class="font-semibold">郵寄方法</div>
               <div class="mt-2">
-                <div class="text-sm">郵寄方法</div>
                 <div class="flex items-center mt-1">
                   <lazy-spr-select v-model="selectedMailingIndex[pageId]">
                     <option value="" disabled>請選擇郵寄方法</option>
@@ -137,65 +136,53 @@
               </div>
 
               <div v-if="selectedMailingIndex[pageId] !== '' && selectedMailing(pageId).info.length !== 0"
-                   class="text-sm mt-4">
-                {{ "郵寄資料" }}
+                   class="font-semibold mt-4">
+                郵寄資料
               </div>
               <template v-if="selectedMailingIndex[pageId] !== '' &&
                               selectedMailing(pageId)">
-                <template v-if="(selectedMailing(pageId).type === MailingType.SF_STATION ||
-                              selectedMailing(pageId).type === MailingType.SF_LOCKER)">
-                  <div class="flex items-center mt-1">
-                    <lazy-spr-select v-model="selectedSFDistrictId">
-                      <option value="-1" disabled>
-                        {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
-                      </option>
-                      <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
-                              :key="'district-' + s.id"
-                              :value="s.id">{{ s.name }}</option>
-                    </lazy-spr-select>
-                  </div>
-                  <div v-if="selectedSFDistrictId !== -1" class="flex items-center mt-1">
-                    <lazy-spr-select v-model="selectedSFLocationId" class="flex-1">
-                      <option value="" disabled>
-                        {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
-                      </option>
-                      <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId).districts"
-                                :key="d.name"
-                                :label="d.name">
-                        <option v-for="(l, i) in d.locations"
-                                :key="'location-' + l.id"
-                                :value="l.id">{{ l.id + " - " + l.address }}</option>
-                      </optgroup>
-                    </lazy-spr-select>
-                  </div>
-                </template>
-                <div v-if="selectedMailing(pageId).info.includes(MailingInfoType.NAME)">
-                  <input class="w-full text-input-primary mt-1"
-                         v-model="mailingInfo[MailingInfoType.NAME]"
+                <template v-for="mailingInfoType in mailingInfoTypes.filter((t) => selectedMailing(pageId).info.includes(t))"
+                          :key="'mailingInfoType-' + mailingInfoType">
+                  <div class="text-sm mt-2">{{ mailingInfoTypeToText[mailingInfoType] }}</div>
+                  <input v-if="mailingInfoType === MailingInfoType.PHONE || mailingInfoType === MailingInfoType.NAME"
+                         class="w-full text-input-primary mt-1"
+                         v-model="mailingInfo[mailingInfoType]"
                          type="text"
-                         :name="mailingInfoTypeToText[MailingInfoType.NAME]"
-                         :placeholder="mailingInfoTypeToText[MailingInfoType.NAME]"/>
-                </div>
-                <div v-if="selectedMailing(pageId).info.includes(MailingInfoType.PHONE)">
-                  <input class="w-full text-input-primary mt-1"
-                         v-model="mailingInfo[MailingInfoType.PHONE]"
-                         type="text"
-                         :name="mailingInfoTypeToText[MailingInfoType.PHONE]"
-                         :placeholder="mailingInfoTypeToText[MailingInfoType.PHONE]"/>
-                </div>
-                <div v-if="selectedMailing(pageId).info.includes(MailingInfoType.ADDRESS)">
-                  <textarea v-model="mailingInfo[MailingInfoType.ADDRESS]"
+                         :name="mailingInfoTypeToText[MmailingInfoType]"
+                         :placeholder="mailingInfoTypeToText[mailingInfoType]"/>
+                  <textarea v-if="mailingInfoType === MailingInfoType.ADDRESS"
+                            v-model="mailingInfo[MailingInfoType.ADDRESS]"
                             :placeholder="mailingInfoTypeToText[MailingInfoType.ADDRESS]"
                             class="w-full border rounded-md p-2 mt-1" rows="4">
                   </textarea>
-                </div>
-
-
-                <!--                  export enum MailingInfoType {-->
-                <!--                  SF_STATION,-->
-                <!--                  SF_LOCKER,-->
+                  <template v-if="mailingInfoType === MailingInfoType.SF_STATION || mailingInfoType === MailingInfoType.SF_LOCKER">
+                    <div class="flex items-center mt-1">
+                      <lazy-spr-select v-model="selectedSFDistrictId">
+                        <option value="-1" disabled>
+                          {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
+                        </option>
+                        <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
+                                :key="'district-' + s.id"
+                                :value="s.id">{{ s.name }}</option>
+                      </lazy-spr-select>
+                    </div>
+                    <div v-if="selectedSFDistrictId !== -1" class="flex items-center mt-1">
+                      <lazy-spr-select v-model="selectedSFLocationId" class="flex-1">
+                        <option value="" disabled>
+                          {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
+                        </option>
+                        <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId).districts"
+                                  :key="d.name"
+                                  :label="d.name">
+                          <option v-for="(l, i) in d.locations"
+                                  :key="'location-' + l.id"
+                                  :value="l.id">{{ l.id + " - " + l.address }}</option>
+                        </optgroup>
+                      </lazy-spr-select>
+                    </div>
+                  </template>
+                </template>
                 <!--                  OTHERS-->
-                <!--                  }-->
               </template>
 
 
@@ -329,7 +316,7 @@ import {IgPageCommerceData, PaymentType} from "~/models/IgPageCommerceData";
 import IgPage from "~/models/IgPage";
 import useMediaPrice from "~/composables/useMediaPrice";
 import {DiscountType, ThresholdType} from "~/models/Discount";
-import {paymentMethodsToText, mailingTypeToText, mailingInfoTypeToText} from "~/data/commerce";
+import {paymentMethodsToText, mailingTypeToText, mailingInfoTypes, mailingInfoTypeToText} from "~/data/commerce";
 import {MailingType, MailingInfoType} from "~/models/Order";
 import Dict = NodeJS.Dict;
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";

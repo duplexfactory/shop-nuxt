@@ -11,8 +11,8 @@ export const mailingInfoTypes = [
     MailingInfoType.SF_STATION,
     MailingInfoType.SF_LOCKER,
     MailingInfoType.NAME,
-    MailingInfoType.ADDRESS,
     MailingInfoType.PHONE,
+    MailingInfoType.ADDRESS,
     MailingInfoType.OTHERS
 ]
 
