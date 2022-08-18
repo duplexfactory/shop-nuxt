@@ -22,7 +22,7 @@ const tabs: {route: string, title: string}[] = [
   {route: "shop", title: "商店資料"},
   {route: "media-list", title: "我的貼文"},
   {route: "e-commerce", title: "網店設定"},
-
+  {route: "order-list", title: "我的訂單"},
 ]
 
 </script>
