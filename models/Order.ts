@@ -10,6 +10,8 @@ export enum MailingType {
 }
 
 export enum MailingInfoType {
+    SF_STATION,
+    SF_LOCKER,
     NAME,
     ADDRESS,
     PHONE,
@@ -39,7 +41,7 @@ export interface Order {
         mailing: Mailing;
         mailingDiscount?: MailingDiscount;
         mailingInfo: {
-            [key:MailingInfoType]: string
+            [key:number]: string // key MailingType
         };
         paymentMethodData?: PaymentMethodData;
         paymentProofUrl?: string;

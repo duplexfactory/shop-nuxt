@@ -2,18 +2,29 @@
   <div class="p-6 bg-gray-100 rounded-md text-center">
     <div v-for="(mailing, i) in value"
          :key="mailing.title"
-         class="flex items-center bg-white rounded-md p-2 mb-2">
-      <div class="flex-1 text-left">
-        <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[mailing.type] }}</div>
-        <div class="inline-block">{{ mailing.title }}</div>
-      </div>
-      <div>
-        <div class="inline-block mr-2">
-          {{ formatMailingPrice(mailing) }}
+         class="bg-white rounded-md p-2 mb-2">
+      <div class="flex items-center">
+        <div class="flex-1 text-left">
+          <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[mailing.type] }}</div>
+          <div class="inline-block" v-if="![MailingType.SF_STATION, MailingType.SF_LOCKER].includes(mailing.type)">{{ mailing.title }}</div>
         </div>
-        <button @click="editingIndex = i" class="px-1"><i class="spr-edit"></i></button>
-        <button @click="deleteMailing(i)" class="px-1"><i class="spr-cancel"></i></button>
+        <div>
+          <div class="inline-block mr-2">
+            {{ formatMailingPrice(mailing) }}
+          </div>
+          <button @click="editingIndex = i" class="px-1"><i class="spr-edit"></i></button>
+          <button @click="deleteMailing(i)" class="px-1"><i class="spr-cancel"></i></button>
+        </div>
       </div>
+
+      <template v-if="mailing.description">
+        <div class="text-left mt-2">{{ "郵寄説明：" + mailing.description }}</div>
+      </template>
+
+      <template v-if="mailing.info && mailing.info.length !== 0">
+        <div class="text-left mt-2">{{ "所需資料：" + mailing.info.map((t) => mailingInfoTypeToText[t]).join("、") }}</div>
+      </template>
+
     </div>
 
     <div @click="editingIndex = -1" class="p-6 rounded-md text-center border-dashed border-2 cursor-pointer">
@@ -64,7 +75,7 @@
 import {PropType, Ref} from "vue";
 import {Mailing, MailingType} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
-import {mailingMethods, mailingTypeToText} from "~/data/commerce";
+import {mailingMethods, mailingTypeToText, mailingInfoTypeToText} from "~/data/commerce";
 
 const props = defineProps({
   modelValue: { type: Array as PropType<Mailing[]> },

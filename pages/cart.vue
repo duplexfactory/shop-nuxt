@@ -114,8 +114,9 @@
         <template v-if="!!pageCommerceData && !!pageCommerceData[pageId]">
           <div class="grid grid-cols-12 gap-4 lg:gap-8 py-4">
             <div class="col-span-12 md:col-span-9">
-              <div class="font-semibold">郵寄方法及優惠</div>
-              <div class="flex items-center mt-4">
+              <div class="font-semibold">郵寄方法</div>
+              <div class="flex items-center mt-2">
+                <div>郵寄方法：</div>
                 <lazy-spr-select v-model="selectedMailingIndex[pageId]">
                   <option value="" disabled>請選擇郵寄方法</option>
                   <option v-for="(m, i) in pageCommerceData[pageId].mailing"
@@ -125,23 +126,34 @@
                   </option>
                 </lazy-spr-select>
               </div>
+              <div v-if="selectedMailingIndex[pageId] !== '' && !!selectedMailing(pageId).description"
+                   class="mt-2">
+                {{ "郵寄説明：" + selectedMailing(pageId).description }}
+              </div>
+              <div v-if="selectedMailingIndex[pageId] !== '' && selectedMailing(pageId).info.length !== 0"
+                   class="mt-2">
+                {{ "郵寄資料：" }}
+              </div>
               <template v-if="selectedMailingIndex[pageId] !== '' &&
-                              pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]] &&
-                              (pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_STATION ||
-                              pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type === MailingType.SF_LOCKER)">
-
-                <div class="flex items-center mt-4">
+                              selectedMailing(pageId) &&
+                              (selectedMailing(pageId).type === MailingType.SF_STATION ||
+                              selectedMailing(pageId).type === MailingType.SF_LOCKER)">
+                <div class="flex items-center mt-2">
                   <lazy-spr-select v-model="selectedSFDistrictId">
-                    <option value="-1" disabled>請選擇順豐站地區</option>
-                    <option v-for="(s, i) in sf.stations"
+                    <option value="-1" disabled>
+                      {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
+                    </option>
+                    <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
                             :key="'district-' + s.id"
                             :value="s.id">{{ s.name }}</option>
                   </lazy-spr-select>
                 </div>
-                <div class="flex items-center mt-2">
-                  <lazy-spr-select v-if="selectedSFDistrictId !== -1" v-model="selectedSFLocationId" class="flex-1">
-                    <option value="" disabled>請選擇順豐站</option>
-                    <optgroup v-for="(d, i) in sf.stations.find((s) => s.id === selectedSFDistrictId).districts"
+                <div v-if="selectedSFDistrictId !== -1" class="flex items-center mt-2">
+                  <lazy-spr-select v-model="selectedSFLocationId" class="flex-1">
+                    <option value="" disabled>
+                      {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
+                    </option>
+                    <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId).districts"
                               :key="d.name"
                               :label="d.name">
                       <option v-for="(l, i) in d.locations"
@@ -152,22 +164,20 @@
                 </div>
               </template>
 
-              <div v-if="selectedMailingIndex[pageId] !== '' && pageCommerceData[pageId].mailing[selectedMailingIndex[pageId]].type !== MailingType.OTHERS"
-                   class="mt-4">
-                {{ selectedMailing(pageId).title }}
-              </div>
-
-              <div v-if="pageCommerceData[pageId].mailingDiscount" class="md:flex w-full items-center mt-4">
-                <div class="mb-2 md:(mb-0 mr-4)" :class="!isFreeMailing(pageId) ? 'text-red-500' : 'text-gray-600'">
-                  <i :class="!isFreeMailing(pageId) ? 'spr-cancel' : 'spr-ok'" class="pr-1"></i>
-                  {{ !isFreeMailing(pageId) ? "未符合" : "已符合" }}
-                </div>
-                <div class="bg-yellow-100 px-4 py-2 rounded-md flex-1">
-                  <p>
-                    <span class="text-gray-600">{{ pageCommerceData[pageId].mailingDiscount.title ?? "免郵優惠" }}</span>
-                    <span class="text-gray-600 mx-2">-</span>
-                    <span class="font-semibold">{{ mailingDiscountToText(pageCommerceData[pageId].mailingDiscount) }}</span>
-                  </p>
+              <div v-if="pageCommerceData[pageId].mailingDiscount" class="mt-4">
+                <div class="font-semibold">郵寄優惠</div>
+                <div class="md:flex w-full items-center mt-2">
+                  <div class="mb-2 md:(mb-0 mr-4)" :class="!isFreeMailing(pageId) ? 'text-red-500' : 'text-gray-600'">
+                    <i :class="!isFreeMailing(pageId) ? 'spr-cancel' : 'spr-ok'" class="pr-1"></i>
+                    {{ !isFreeMailing(pageId) ? "未符合" : "已符合" }}
+                  </div>
+                  <div class="bg-yellow-100 px-4 py-2 rounded-md flex-1">
+                    <p>
+                      <span class="text-gray-600">{{ pageCommerceData[pageId].mailingDiscount.title ?? "免郵優惠" }}</span>
+                      <span class="text-gray-600 mx-2">-</span>
+                      <span class="font-semibold">{{ mailingDiscountToText(pageCommerceData[pageId].mailingDiscount) }}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -439,8 +449,14 @@ function pageTotal(pageId: string) {
   const medias = mediasGrouped.value[pageId]
   const price = medias.map((m) => mediaPrice(m) * cart.value.find((item) => item.code === m.code).quantity - mediaDiscountValue(m.code))
       .reduce((previous, current) => previous += current, 0)
-  const mailing = isFreeMailing(pageId) ? 0 : (selectedMailing(pageId)?.cost ?? 0)
-  return Math.max(price - pageDiscountValue(pageId) + mailing, 0)
+  let mailingCost = 0
+  if (!isFreeMailing(pageId)) {
+    const mailing = selectedMailing(pageId)
+    if (!!mailing && !mailing.payOnArrive) {
+      mailingCost = mailing.cost
+    }
+  }
+  return Math.max(price - pageDiscountValue(pageId) + mailingCost, 0)
 }
 
 const notes = ref<Dict<string>>({})

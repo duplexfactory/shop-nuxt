@@ -12,17 +12,42 @@
       </div>
     </div>
 
-    <input class="w-full text-input-primary mt-2"
-           v-model="tempMailing.title"
-           type="text"
-           name="mailing"
-           :placeholder="tempMailingTitlePlaceholder"/>
-    <div class="flex flex-1 mt-2">
+    <template v-if="![MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.type)">
+      <div class="mt-4 text-left font-semibold">郵寄方法</div>
+      <input class="w-full text-input-primary mt-2"
+             v-model="tempMailing.title"
+             type="text"
+             name="mailing"
+             :placeholder="tempMailingTitlePlaceholder"/>
+    </template>
+
+    <div class="mt-4 text-left font-semibold">郵寄説明（選填）</div>
+    <textarea v-model="tempMailing.description"
+              :placeholder="tempMailingDescriptionPlaceholder"
+              class="w-full border rounded-md p-2 mt-2" rows="4">
+    </textarea>
+    <div class="flex flex-1 mt-4">
       <div class="flex-0 text-input-prefix-primary">HK$</div>
       <input size="1" class="flex-1 w-full text-input-primary text-input-primary--prefixed" v-model.number="tempMailing.cost" type="number" name="mailing-cost" placeholder="郵寄費用（免費請填0）"/>
     </div>
-    <div class="mt-1 text-sm text-gray-700 w-full text-left">
+    <div class="mt-2 text-sm text-gray-700 w-full text-left">
       *到付而且不知道運費請留空。
+    </div>
+
+    <div class="mt-4 text-left font-semibold">
+      所需資料
+    </div>
+    <div class="mt-2 text-left">
+      <template v-for="method in mailingInfoTypes" :key="'mailing-info-' + method" >
+        <input type="checkbox"
+               :disabled="[MailingInfoType.SF_STATION, MailingInfoType.SF_LOCKER].includes(method)"
+               :id="'checkbox-' + method"
+               v-model="tempMailing.info"
+               :value="method">
+        <label :for="'checkbox-' + method" class="py-2 mr-2 text-md">
+          {{ mailingInfoTypeToText[method] }}
+        </label>
+      </template>
     </div>
 
     <div class="mt-8 flex justify-center w-full">
@@ -35,10 +60,12 @@
 
 <script setup lang="ts">
 
-import {Mailing, MailingType} from "~/models/Order";
+import {Mailing, MailingInfoType, MailingType} from "~/models/Order";
 import {Ref} from "vue";
-import {mailingMethods, mailingTypeToText} from "~/data/commerce";
+import {mailingMethods, mailingTypeToText, mailingInfoTypes as _mailingInfoTypes, mailingInfoTypeToText} from "~/data/commerce";
 import {PaymentMethodData} from "~/models/IgPageCommerceData";
+
+const test = ref(true)
 
 const props = defineProps<{mailing: Mailing}>()
 const emit = defineEmits(["save", "cancel"])
@@ -50,11 +77,22 @@ const {
   headersToObject
 } = useAuth()
 
+const mailingInfoTypes = computed(() => {
+  if (tempMailing.value.type === MailingType.SF_STATION) {
+    return _mailingInfoTypes.filter((t) => t !== MailingInfoType.SF_LOCKER && t !== MailingInfoType.ADDRESS)
+  }
+  if (tempMailing.value.type === MailingType.SF_LOCKER) {
+    return _mailingInfoTypes.filter((t) => t !== MailingInfoType.SF_STATION && t !== MailingInfoType.ADDRESS)
+  }
+  return _mailingInfoTypes.filter((t) => t !== MailingInfoType.SF_LOCKER && t !== MailingInfoType.SF_STATION)
+})
+
 const tempMailing: Ref<Mailing> = ref(null)
-const tempMailingTitlePlaceholder = computed(() =>
+const tempMailingTitlePlaceholder = computed(() => "e.g. 面交、平郵")
+const tempMailingDescriptionPlaceholder = computed(() =>
     [MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type) ?
-        "郵寄説明（e.g. 參考運費 $16/kg）" :
-        "郵寄方法（e.g. 面交、平郵）"
+        "e.g. 參考運費 $16/kg" :
+        "e.g. 只限觀塘線"
 )
 // function payOnArriveChanged() {
 //   tempMailing.value.cost = tempMailing.value.payOnArrive ? 0 : null
@@ -71,23 +109,24 @@ function resetTempMailing() {
     title: "",
     type: MailingType.SF_STATION,
     cost: null,
-    payOnArrive: false
+    payOnArrive: false,
+    info: [MailingInfoType.SF_STATION]
   }
 }
 
 resetTempMailing()
 
 function addMailing() {
-  if (tempMailing.value.title == "") {
+  if (tempMailing.value.title == ""  && ![MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type)) {
     nuxt.vueApp.$toast.error(
-        `請填寫${[MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type) ? "郵寄説明" : "郵寄方法"}！`,
+        `請填寫郵寄方法！`,
         {position: "top"}
     );
     return
   }
   if (!tempMailing.value.cost && (tempMailing.value.cost !== 0) && !tempMailing.value.payOnArrive) {
     // Not pay on arrive but unknown cost.
-    nuxt.vueApp.$toast.error("請填寫郵寄費用！", {position: "top"});
+    nuxt.vueApp.$toast.error("請填寫郵寄費用或設定為到付！", {position: "top"});
     return
   }
 
@@ -102,6 +141,17 @@ function cancel() {
   emit('cancel')
 }
 
-
+watch(() => tempMailing.value.type, () => {
+  if (MailingType.SF_STATION === tempMailing.value.type) {
+    tempMailing.value.info = [MailingInfoType.SF_STATION]
+    return
+  }
+  if (MailingType.SF_LOCKER === tempMailing.value.type) {
+    tempMailing.value.info = [MailingInfoType.SF_LOCKER]
+    return
+  }
+  tempMailing.value.info = []
+  return
+})
 
 </script>

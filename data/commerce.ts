@@ -1,5 +1,5 @@
 import {PaymentType} from "~/models/IgPageCommerceData";
-import {MailingType, OrderStatus} from "~/models/Order";
+import {MailingInfoType, MailingType, OrderStatus} from "~/models/Order";
 
 export const mailingMethods = [
     MailingType.SF_STATION,
@@ -7,10 +7,28 @@ export const mailingMethods = [
     MailingType.OTHERS
 ]
 
+export const mailingInfoTypes = [
+    MailingInfoType.SF_STATION,
+    MailingInfoType.SF_LOCKER,
+    MailingInfoType.NAME,
+    MailingInfoType.ADDRESS,
+    MailingInfoType.PHONE,
+    MailingInfoType.OTHERS
+]
+
 export const mailingTypeToText = {
     [MailingType.SF_STATION]: "順豐站",
     [MailingType.SF_LOCKER]: "順便智能櫃",
     [MailingType.OTHERS]: "其他"
+}
+
+export const mailingInfoTypeToText = {
+    [MailingInfoType.SF_STATION]: "順豐站",
+    [MailingInfoType.SF_LOCKER]: "順便智能櫃",
+    [MailingInfoType.NAME]: "名稱",
+    [MailingInfoType.ADDRESS]: "地址",
+    [MailingInfoType.PHONE]: "電話",
+    [MailingInfoType.OTHERS]: "其他"
 }
 
 export const paymentMethods = [
