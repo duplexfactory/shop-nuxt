@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
     const {
         items,
         mailingIndex,
+        mailingInfo,
         notes,
     } = await useBody<{
         items: {
@@ -20,6 +21,9 @@ export default defineEventHandler(async (event) => {
             quantity: number
         }[],
         mailingIndex: Dict<string>,
+        mailingInfo: Dict<{
+            [key:number]: string
+        }>,
         notes: Dict<string>
     }>(event);
 
@@ -71,6 +75,7 @@ export default defineEventHandler(async (event) => {
                 })),
                 discount: shopCommerceData[currentPageId].discount,
                 mailing: shopCommerceData[currentPageId].mailing[mailingIndex[currentPageId]],
+                mailingInfo: mailingInfo[currentPageId],
                 mailingDiscount: shopCommerceData[currentPageId].mailingDiscount,
                 note: notes[currentPageId],
                 orderStatus: OrderStatus.PENDING,

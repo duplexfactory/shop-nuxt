@@ -2,7 +2,7 @@ import {defineEventHandler, JSONValue, useBody} from "h3";
 import {assert} from "~/server/util";
 import {initMongo, orderCollection} from "~/server/mongodb";
 import {ObjectId} from "mongodb";
-import {PaymentMethodData} from "~/models/IgPageCommerceData";
+import {PaymentMethodData, PaymentType} from "~/models/IgPageCommerceData";
 import {OrderStatus} from "~/models/Order";
 
 export default defineEventHandler(async (event) => {
@@ -17,18 +17,24 @@ export default defineEventHandler(async (event) => {
         url,
         paymentMethodData
     } = await useBody<{ pageId: string, url: string, paymentMethodData: PaymentMethodData }>(event)
-    assert(url)
+
     assert(paymentMethodData)
+    if (paymentMethodData.method !== PaymentType.IN_PERSON) {
+        assert(url)
+    }
 
     await initMongo();
+    const set: any = {
+        [`shops.${pageId}.orderStatus`]: OrderStatus.TB_VERIFIED,
+        [`shops.${pageId}.paymentMethodData`]: paymentMethodData,
+    }
+    if (paymentMethodData.method !== PaymentType.IN_PERSON) {
+        set[`shops.${pageId}.paymentProofUrl`] = url
+    }
     await orderCollection.findOneAndUpdate({
         _id: new ObjectId(id)
     }, {
-        $set: {
-            [`shops.${pageId}.orderStatus`]: OrderStatus.TB_VERIFIED,
-            [`shops.${pageId}.paymentProofUrl`]: url,
-            [`shops.${pageId}.paymentMethodData`]: paymentMethodData,
-        }
+        $set: set
     })
 
     return {

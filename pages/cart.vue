@@ -530,6 +530,7 @@ async function clickCheckout() {
     body: {
       items: cart.value,
       mailingIndex: selectedMailingIndex.value,
+      mailingInfo: mailingInfo.value,
       notes: notes.value
     },
   });

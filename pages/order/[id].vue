@@ -54,27 +54,29 @@
           <div class="mt-4">
             <div class="font-semibold">郵寄方法</div>
             <div class="">
-              <template v-if="isFreeMailing(pageId)">
-                免郵
-              </template>
-              <template v-else>
-                <div class="flex-1 text-left">
-                  <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">
-                    {{ mailingTypeToText[order.shops[pageId].mailing.type] }}
-                  </div>
-                  <div class="inline-block">{{ order.shops[pageId].mailing.title }}</div>
-                </div>
+              <div class="flex-1 text-left">
+                <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[order.shops[pageId].mailing.type] }}</div>
+                <div class="inline-block" v-if="![MailingType.SF_STATION, MailingType.SF_LOCKER].includes(order.shops[pageId].mailing.type)">{{ order.shops[pageId].mailing.title }}</div>
+              </div>
 
-                <div class="">
+              <template v-if="order.shops[pageId].mailing.description">
+                <div class="text-left">{{ "郵寄説明：" + order.shops[pageId].mailing.description }}</div>
+              </template>
+
+              <div class="">
+                <template v-if="isFreeMailing(pageId)">
+                  免郵
+                </template>
+                <template v-else>
                   <div v-if="order.shops[pageId].mailing.payOnArrive" class="inline-block mr-2">
                     到付
                   </div>
                   <div v-if="!!order.shops[pageId].mailing.cost" class="inline-block">
                     {{ formatMediaPrice(order.shops[pageId].mailing.cost) }}
                   </div>
-                </div>
+                </template>
+              </div>
 
-              </template>
             </div>
           </div>
 
@@ -105,13 +107,11 @@
       </transition>
     </Teleport>
 
-
-
   </div>
 </template>
 <script setup lang="ts">
 
-import {Order, OrderStatus} from "~/models/Order";
+import {Order, OrderStatus, MailingType} from "~/models/Order";
 import dayjs from "dayjs";
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";

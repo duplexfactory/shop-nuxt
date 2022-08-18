@@ -18,7 +18,7 @@
               </ol>
 
               <div class="mt-4 text-sm">
-                <div>{{ "*如選擇" + paymentMethodsToText[PaymentType.IN_PERSON] + "請跳過第3步。按「完成付款」即可。" }}</div>
+                <div>{{ "*如選擇" + paymentMethodsToText[PaymentType.IN_PERSON] + "請跳過第3步。按「完成付款」後等店鋪聯絡即可。" }}</div>
                 <div>*按「完成付款」後，付款狀態會變爲「待確認」。</div>
                 <div>*如忘記取回入數紙，請到銀行補回，否則有機會被視為付款失敗。</div>
               </div>
@@ -29,7 +29,7 @@
           <div v-if="pageCommerceData" class="col-span-12 md:col-span-6">
             <div class="flex">
               <lazy-spr-select v-model="selectedPaymentMethodData">
-                <option value="" disabled>請選擇付款方法</option>
+                <option :value="null" disabled>請選擇付款方法</option>
                 <option v-for="paymentMethodData in pageCommerceData.paymentMethodData"
                         :key="'payment-method-' + paymentMethodData.method"
                         :value="paymentMethodData">{{ paymentMethodsToText[paymentMethodData.method] }}</option>
@@ -133,7 +133,7 @@ const {
 const emit = defineEmits(["close"])
 
 const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
-const selectedPaymentMethodData: Ref<PaymentMethodData | ""> = ref("")
+const selectedPaymentMethodData: Ref<PaymentMethodData> = ref(null)
 
 const files = ref([])
 const previews = ref([])
@@ -182,32 +182,35 @@ const isSubmitting = ref(false)
 async function clickSubmit() {
   isSubmitting.value = true
 
-  // Upload image first.
-  let formData = new FormData()
-  formData.append( 'image', files.value[0])
-  const {
-    url
-  } = await $fetch(
-      '/api/file/payment-proof',
-      {
-        method: 'POST',
-        params: {
-          orderId: orderId.value,
-          pageId: pageId.value
-        },
-        body: formData
-      }
-  )
+  const body = {
+    pageId: pageId.value,
+    paymentMethodData: selectedPaymentMethodData.value
+  }
+  if (selectedPaymentMethodData.value.method !== PaymentType.IN_PERSON) {
+    // Upload image first.
+    let formData = new FormData()
+    formData.append( 'image', files.value[0])
+    const {
+      url
+    } = await $fetch(
+        '/api/file/payment-proof',
+        {
+          method: 'POST',
+          params: {
+            orderId: orderId.value,
+            pageId: pageId.value
+          },
+          body: formData
+        }
+    )
+    body["url"] = url
+  }
 
   await useFetch(
     `/api/order/${orderId.value}/payment-proof`,
     {
       method: 'POST',
-      body: {
-        pageId: pageId.value,
-        url,
-        paymentMethodData: selectedPaymentMethodData.value
-      }
+      body
   })
 
   isSubmitting.value = false
