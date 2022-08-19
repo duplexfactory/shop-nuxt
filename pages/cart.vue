@@ -25,7 +25,7 @@
 
           <div class="hidden md:grid grid-cols-12 gap-4 lg:gap-8 pt-4">
             <div class="col-span-4 xl:col-span-5">
-              <div class="flex">
+              <div class="flex" @click="openMedia(media.code, pageId)">
                 <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4"
                      style="min-width:60px; max-width: 90px"
                      v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
@@ -304,6 +304,7 @@
         立即結賬
       </button>
     </div>
+
   </div>
 </template>
 
@@ -322,6 +323,8 @@ import Dict = NodeJS.Dict;
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mailingDiscountToText} from "~/utils/discountText";
 import {District, SF} from "~/models/SF";
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+import {SimpleIgPage} from "~/models/SimpleIgPage";
 
 const nuxt = useNuxtApp();
 const router = useRouter();
@@ -442,8 +445,18 @@ function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart.value));
 }
 
+// Media interaction.
+const showMediaModal = useShowMediaModal()
+const showingMediaModalData = useShowingMediaModalData()
+function openMedia(mediaCode: string, pageId: string) {
+  showMediaModal.value = true;
+  showingMediaModalData.value = {
+    media: mediaDict.value[mediaCode],
+    simplePage: pages.value[pageId]
+  };
+}
 
-// Price calculation
+// Price calculation.
 function mediaDiscountValue(code: string) {
   const media = mediaDict.value[code]
   const price = mediaPrice(media)

@@ -1,11 +1,11 @@
 import {Discount, DiscountType, MailingDiscount, ThresholdType} from "~/models/Discount";
 
-export function discountValue(discount?: Discount, value: number, quantity: number) {
+export function discountValue(discount: Discount | undefined, value: number, quantity: number) {
     if (!discount || (!!discount.deadline && discount.deadline < Date.now())) {
         return 0
     }
     let thresholdPassed = false
-    if (discount.thresholdcType === ThresholdType.VALUE) {
+    if (discount.thresholdType === ThresholdType.VALUE) {
         thresholdPassed = value >= discount.threshold
     }
     else if (discount.thresholdType === ThresholdType.COUNT){
@@ -17,12 +17,12 @@ export function discountValue(discount?: Discount, value: number, quantity: numb
     return discount.discountType === DiscountType.FLAT ? discount.discount : value * discount.discount / 100
 }
 
-export function isFreeMailing(discount?: MailingDiscount, value: number, quantity: number) {
+export function isFreeMailing(discount: MailingDiscount | undefined, value: number, quantity: number) {
     if (!discount) {
         return false
     }
     let thresholdPassed = false
-    if (discount.thresholdcType === ThresholdType.VALUE) {
+    if (discount.thresholdType === ThresholdType.VALUE) {
         thresholdPassed = value >= discount.threshold
     }
     else if (discount.thresholdType === ThresholdType.COUNT){

@@ -4,10 +4,10 @@ import {igAuthCollection, initMongo, orderCollection, pageSearchCollection} from
 import {notFound} from "~/utils/h3Error";
 import {PaginationQuery} from "~/models/PaginationQuery";
 import {QueryObject} from "ufo";
+import {ObjectId} from "mongodb";
 
 export default defineEventHandler(async (event) => {
 
-    noCache(event)
     const auth = getAuth(event)
     await initMongo()
 
@@ -17,7 +17,6 @@ export default defineEventHandler(async (event) => {
 
     assert(igAuth, notFound)
 
-
     const {
         skip,
         limit
@@ -25,7 +24,11 @@ export default defineEventHandler(async (event) => {
     const filter = {
         [`shops.${igAuth.pageId}`]: {$exists: true}
     }
-    const orders = await orderCollection.find(filter).sort({
+    const orders = await orderCollection.find(filter).project({
+        _id: true,
+        created: true,
+        [`shops.${igAuth.pageId}`]: true
+    }).sort({
         created: -1
     }).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray()
 

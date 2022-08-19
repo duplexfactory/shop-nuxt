@@ -39,22 +39,10 @@
             <div v-if="!!selectedPaymentMethodData">
               <div class="flex-1 text-left mt-4">
                 <div class="font-semibold">轉賬資料</div>
-                <template v-if="selectedPaymentMethodData.method === PaymentType.BANK_TRANSFER">
-                  <div class="mt-1">{{ "銀行名稱：" + selectedPaymentMethodData.bank }}</div>
-                  <div class="mt-1">{{ "戶口號碼：" + selectedPaymentMethodData.accountNumber }}</div>
-                  <div class="mt-1">{{ "戶口名稱：" + selectedPaymentMethodData.accountName }}</div>
-                </template>
-                <template v-if="selectedPaymentMethodData.method === PaymentType.FPS">
-                  <div class="mt-1">{{ "電話號碼：" + selectedPaymentMethodData.phone }}</div>
-                  <div class="mt-1">{{ "收款賬戶：" + selectedPaymentMethodData.account }}</div>
-                  <div class="mt-1">{{ "戶口名稱：" + selectedPaymentMethodData.accountName }}</div>
-                </template>
-                <template v-if="selectedPaymentMethodData.method === PaymentType.IN_PERSON">
-                  <div class="mt-1">{{ "描述：" + selectedPaymentMethodData.description }}</div>
-                </template>
-                <template v-if="[PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(selectedPaymentMethodData.method)">
-                  <div class="mt-2">
-                    <img :src="selectedPaymentMethodData.qrCodeUrl" style="max-width: 150px; max-height: 150px;"/>
+                <template v-for="d in paymentInfos" :key="'payment-info-' + d.title">
+                  <div v-if="!!d.value" class="mt-1">{{ `${d.title}：${d.value}` }}</div>
+                  <div v-if="!!d.imageUrl" class="mt-2">
+                    <img :src="d.imageUrl" style="max-width: 150px; max-height: 150px;"/>
                   </div>
                 </template>
               </div>
@@ -92,8 +80,6 @@
                   </dropzone>
                 </file-selector>
               </div>
-
-
             </div>
 
             <button class="btn-primary mt-4"
@@ -114,6 +100,7 @@ import {IgPageCommerceData, PaymentType} from "~/models/IgPageCommerceData";
 import {paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import type {Ref} from "vue";
+import {structurePaymentMethodData} from "~/utils/paymentMethodData";
 
 const nuxt = useNuxtApp()
 
@@ -134,6 +121,11 @@ const emit = defineEmits(["close"])
 
 const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
 const selectedPaymentMethodData: Ref<PaymentMethodData> = ref(null)
+const paymentInfos = computed(() => {
+  if (!selectedPaymentMethodData.value)
+    return []
+  return structurePaymentMethodData(selectedPaymentMethodData.value);
+})
 
 const files = ref([])
 const previews = ref([])
