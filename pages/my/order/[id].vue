@@ -1,18 +1,48 @@
 <template>
-  <div class="container mx-auto">
+  <div>
     <div v-if="order">
-      <div class="mb-4 border rounded-md p-4">
-        <div class="font-semibold mt-4">訂單資訊</div>
-        <div>訂單號碼：{{ order._id }}</div>
-        <div>訂單日期：{{ createdDateText }}</div>
-        <div>訂單狀態：{{ orderDetail.orderStatus }}</div>
-        <div>買家留言：{{ orderDetail.note }}</div>
+      <div class="mb-4 border rounded-md p-8 md:grid grid-cols-2">
 
-        <div class="font-semibold mt-4">郵寄資料</div>
-        <div>郵寄方法：{{ mailingTitle }}</div>
-        <div v-for="d in mailingInfos" :key="'mailing-info-' + d.type">
-          {{ d.title + '：' + d.value }}
+        <div class="col-span-1">
+          <div class="font-semibold">訂單資訊</div>
+          <div>訂單號碼：{{ order._id }}</div>
+          <div>訂單日期：{{ createdDateText }}</div>
+          <div>訂單狀態：<span :class="orderStatusColorClass[orderDetail.orderStatus]">{{ orderStatusToText[orderDetail.orderStatus] }}</span></div>
+          <div>買家留言：{{ orderDetail.note || "-" }}</div>
+
+          <div class="font-semibold mt-4">郵寄資料</div>
+          <div>郵寄方法：{{ mailingTitle }}</div>
+          <div v-for="d in mailingInfos" :key="'mailing-info-' + d.type">
+            {{ d.title + '：' + d.value }}
+          </div>
         </div>
+
+        <div class="col-span-1 mt-4 md:mt-0">
+          <div class="font-semibold">付款資訊</div>
+          <template v-if="!!orderDetail.paymentMethodData">
+            <div>{{ '付款方法：' + paymentMethodsToText[orderDetail.paymentMethodData.method] }}</div>
+            <div v-for="d in paymentInfos" :key="'payment-info-' + d.title">
+              <div v-if="!!d.value">{{ `${d.title}：${d.value}` }}</div>
+              <div v-if="!!d.imageUrl">
+                <img :src="d.imageUrl" style="max-width: 150px; max-height: 150px;"/>
+              </div>
+            </div>
+          </template>
+          <div v-else>請等待買家付款</div>
+
+          <template v-if="!!orderDetail.paymentMethodData && (orderDetail.paymentMethodData.method !== PaymentType.IN_PERSON)">
+            <div class="font-semibold mt-4">付款證明</div>
+            <template v-if="!!orderDetail.paymentProofUrl">
+              <img :src="orderDetail.paymentProofUrl" style="max-width: 150px; max-height: 150px;"/>
+              <div>
+                <button class="btn-primary">核實證明</button>
+              </div>
+            </template>
+            <div v-else>請等待買家付款</div>
+          </template>
+
+        </div>
+
 
         <div class="font-semibold mt-4">訂單內容</div>
         <div v-for="media in orderDetail.medias" :key="media.code">
@@ -21,27 +51,6 @@
           <!--          discount?: Discount;-->
           <!--          quantity: number;-->
         </div>
-
-        <div class="font-semibold mt-4">付款資訊</div>
-        <template v-if="!!orderDetail.value.paymentMethodData">
-          <div>{{ '付款方法：' + paymentMethodsToText[orderDetail.value.paymentMethodData.method] }}</div>
-          <div v-for="d in paymentInfos" :key="'payment-info-' + d.title">
-            <div v-if="!!d.value">{{ `${d.title}：${d.value}` }}</div>
-            <div v-if="!!d.imageUrl">
-              <img :src="d.imageUrl" style="max-width: 150px; max-height: 150px;"/>
-            </div>
-          </div>
-        </template>
-        <div v-else>請等待買家付款</div>
-
-        <div class="font-semibold mt-4">付款證明</div>
-        <template v-if="!!orderDetail.value.paymentProofUrl">
-          <img :src="orderDetail.value.paymentProofUrl" style="max-width: 150px; max-height: 150px;"/>
-          <div>
-            <button class="btn-primary">核實證明</button>
-          </div>
-        </template>
-        <div v-else>請等待買家付款</div>
 
       </div>
     </div>
@@ -52,8 +61,9 @@
 import {notFound} from "~/utils/h3Error";
 import {MailingInfoType, MailingType, Order} from "~/models/Order";
 import dayjs from "dayjs";
-import {mailingInfoTypeToText, mailingTypeToText, paymentMethodsToText} from "~/data/commerce";
+import {mailingInfoTypeToText, mailingTypeToText, paymentMethodsToText, orderStatusToText, orderStatusColorClass} from "~/data/commerce";
 import {structurePaymentMethodData} from "~/utils/paymentMethodData";
+import {PaymentType} from "~/models/IgPageCommerceData";
 
 // Composables.
 const route = useRoute()
