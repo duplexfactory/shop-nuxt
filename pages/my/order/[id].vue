@@ -1,6 +1,10 @@
 <template>
   <div>
     <div v-if="order">
+      <div class="mb-4 border rounded-md px-8 py-4">
+        {{ tipText }}
+      </div>
+
       <div class="mb-4 border rounded-md p-8 md:grid grid-cols-2">
 
         <div class="col-span-1">
@@ -59,7 +63,7 @@
 <script lang="ts" setup>
 
 import {notFound} from "~/utils/h3Error";
-import {MailingInfoType, MailingType, Order} from "~/models/Order";
+import {MailingInfoType, MailingType, Order, OrderStatus} from "~/models/Order";
 import dayjs from "dayjs";
 import {mailingInfoTypeToText, mailingTypeToText, paymentMethodsToText, orderStatusToText, orderStatusColorClass} from "~/data/commerce";
 import {structurePaymentMethodData} from "~/utils/paymentMethodData";
@@ -118,6 +122,36 @@ if (process.client) {
 }
 
 const createdDateText = dayjs((order.value?.created ?? 0)).format('DD/MM/YYYY');
+
+const tipText = computed(() => {
+  if (!orderDetail.value)
+    return ""
+  let text = "提示："
+  switch (orderDetail.value.orderStatus) {
+    case OrderStatus.PENDING:
+      text += "請等待買家付款及上傳付款證明。"
+      break;
+    case OrderStatus.TB_VERIFIED:
+      text += "請驗證買家上傳的付款證明。確認收到款項後，請按「核實證明」。"
+      break;
+    case OrderStatus.VERIFIED:
+      text += "請發貨。確認收到款項後，請按「已發貨」。"
+      break;
+    case OrderStatus.MAILED:
+      text += "已完成交易。"
+      break;
+  }
+  return text
+})
+
+
+// export enum OrderStatus {
+//   VERIFICATION_FAILED,
+//   PENDING,
+//   TB_VERIFIED,
+//   VERIFIED,
+//   MAILED
+// }
 
 </script>
 <style scoped>
