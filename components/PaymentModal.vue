@@ -96,7 +96,7 @@
 
 <script setup lang="ts">
 
-import {IgPageCommerceData, PaymentType} from "~/models/IgPageCommerceData";
+import {IgPageCommerceData, PaymentType, PaymentMethodData} from "~/models/IgPageCommerceData";
 import {paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import type {Ref} from "vue";
@@ -173,41 +173,48 @@ onMounted(async () => {
 const isSubmitting = ref(false)
 async function clickSubmit() {
   isSubmitting.value = true
-
   const body = {
     pageId: pageId.value,
     paymentMethodData: selectedPaymentMethodData.value
   }
-  if (selectedPaymentMethodData.value.method !== PaymentType.IN_PERSON) {
-    // Upload image first.
-    let formData = new FormData()
-    formData.append( 'image', files.value[0])
-    const {
-      url
-    } = await $fetch(
-        '/api/file/payment-proof',
+
+  try {
+    if (selectedPaymentMethodData.value.method !== PaymentType.IN_PERSON) {
+      // Upload image first.
+      let formData = new FormData()
+      formData.append( 'image', files.value[0])
+      const {
+        url
+      } = await $fetch(
+          '/api/file/payment-proof',
+          {
+            method: 'POST',
+            params: {
+              orderId: orderId.value,
+              pageId: pageId.value
+            },
+            body: formData
+          }
+      )
+      body["url"] = url
+    }
+
+    await useFetch(
+        `/api/order/${orderId.value}/payment-proof`,
         {
           method: 'POST',
-          params: {
-            orderId: orderId.value,
-            pageId: pageId.value
-          },
-          body: formData
-        }
-    )
-    body["url"] = url
+          body
+        })
+
+    isSubmitting.value = false
+    nuxt.vueApp.$toast.success("成功提交！", {position: "top"})
+    emit("close")
+  }
+  catch (e) {
+    isSubmitting.value = false
+    nuxt.vueApp.$toast.error("提交失敗！", {position: "top"})
   }
 
-  await useFetch(
-    `/api/order/${orderId.value}/payment-proof`,
-    {
-      method: 'POST',
-      body
-  })
-
-  isSubmitting.value = false
-  nuxt.vueApp.$toast.success("成功提交！", {position: "top"})
-  emit("close")
 }
 
 </script>

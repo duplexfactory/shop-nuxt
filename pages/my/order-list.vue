@@ -5,7 +5,7 @@
         <div class="table-row">
           <div class="table-cell">訂單ID</div>
           <div class="table-cell">訂單日期</div>
-          <div class="table-cell">貨品</div>
+          <div class="table-cell" style="width: 400px">貨品</div>
           <div class="table-cell">訂單狀態</div>
           <div class="table-cell">動作</div>
 
@@ -59,24 +59,29 @@
 <!--                         @showConfirmToggleActive="showConfirmToggleActive"-->
 <!--                         v-model:mediaCommerceData="commerceData[media.code]">-->
 <!--      </LazyMediaTableRow>-->
-      <div class="table-row" v-for="order in orders" :key="order._id">
+      <div class="table-row"
+           v-for="order in orders"
+           :key="order._id">
         <div class="table-cell">
           {{ order._id }}
         </div>
         <div class="table-cell">
           {{ dayjs(order.created).format('DD/MM/YYYY') }}
         </div>
-        <div class="table-cell">
-          <div v-for="media in order.shops[igPageId].medias"
-               class="image-container aspect-square rounded-md overflow-hidden"
-               style="width: 60px"
-               v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+        <div class="table-cell" style="width: 400px">
+          <div class="flex">
+            <div v-for="media in order.shops[igPageId].medias"
+                 class="image-container aspect-square rounded-md overflow-hidden mr-4"
+                 style="width: 80px"
+                 v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+          </div>
         </div>
         <div class="table-cell">
-          {{ order.shops[igPageId].orderStatus }}
+          <span :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</span>
         </div>
         <div class="table-cell">
-          <button @click="" class="hover:underline text-pink-600 mr-2">查看詳情</button>
+          <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600 mr-2">查看詳情</nuxt-link>
+<!--          <button @click="" class="hover:underline text-pink-600 mr-2">查看詳情</button>-->
         </div>
       </div>
     </div>
@@ -89,6 +94,7 @@
 import dayjs from "dayjs";
 import {Order} from "~/models/Order";
 import {useIgPageId} from "~/composables/states";
+import {orderStatusToText, orderStatusColorClass} from "~/data/commerce";
 
 const {
   getAuthHeader,
@@ -127,6 +133,10 @@ if (process.client) {
 .wrapper .table {
   width: auto;
   min-width: 100%;
+}
+
+.table-cell {
+  @apply align-middle py-2;
 }
 
 </style>

@@ -11,5 +11,9 @@ export function mediaPrice(media?: Pick<IgMedia, "price" | "patchPrice">): numbe
 }
 
 export function formatMediaPrice(price: number): string {
-    return "HK$ " + (price ? price : "-")
+    const prefix = "HK$ "
+    if (price === 0) {
+        return "免費"
+    }
+    return prefix + (price ? price : "-")
 }

@@ -3,6 +3,9 @@ import {igAuthCollection, initMongo, orderCollection} from "~/server/mongodb";
 import {assert, getAuth} from "~/server/util";
 import {ObjectId} from "mongodb";
 import {notFound} from "~/utils/h3Error";
+import {s3, s3Region} from "~/server/s3";
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
+import {DeleteObjectCommand, GetObjectCommand} from "@aws-sdk/client-s3";
 
 export default defineEventHandler(async (event) => {
 
@@ -27,6 +30,17 @@ export default defineEventHandler(async (event) => {
         }
     })
     assert(order, notFound)
+
+    if (!!order.shops[igAuth.pageId].paymentProofUrl) {
+        const key = `${order._id}/${igAuth.pageId}`
+        const command = new GetObjectCommand({
+            Bucket: process.env.AWS_S3_ORDER_PROOFS_BUCKET_NAME,
+            Key: key,
+        });
+        order.shops[igAuth.pageId].paymentProofUrl = await getSignedUrl(s3, command, {
+            // Expires: signedUrlExpireSeconds
+        })
+    }
 
     return {
         order

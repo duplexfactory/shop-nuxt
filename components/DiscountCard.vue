@@ -67,6 +67,8 @@ function configureCountdown(secondsLeft: Ref<number>, deadline: number) {
   }
 }
 
-configureCountdown(discountSecondsLeft, discount.deadline)
+if (!!discount.deadline) {
+  configureCountdown(discountSecondsLeft, discount.deadline)
+}
 
 </script>

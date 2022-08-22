@@ -25,7 +25,7 @@
 
           <div class="hidden md:grid grid-cols-12 gap-4 lg:gap-8 pt-4">
             <div class="col-span-4 xl:col-span-5">
-              <div class="flex" @click="openMedia(media.code, pageId)">
+              <div class="flex cursor-pointer" @click="openMedia(media.code, pageId)">
                 <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4"
                      style="min-width:60px; max-width: 90px"
                      v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
@@ -325,6 +325,7 @@ import {mailingDiscountToText} from "~/utils/discountText";
 import {District, SF} from "~/models/SF";
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 import {SimpleIgPage} from "~/models/SimpleIgPage";
+import {formatMediaPrice} from "~/utils/mediaPrice";
 
 const nuxt = useNuxtApp();
 const router = useRouter();
@@ -403,7 +404,6 @@ async function fetchPageCommerceData() {
 const pageDiscountDeadlinePassed: Ref<Dict<boolean>> = ref({})
 
 const {
-  formatMediaPrice,
   mediaPrice
 } = useMediaPrice();
 
@@ -504,6 +504,7 @@ function selectedPaymentMethodData(pageId: string) {
 const selectedMailingIndex = ref({})
 function selectedMailingIndexChanged(pageId: string) {
   mailingInfo.value[pageId] = {}
+  selectedSFDistrictId.value[pageId] = -1
 }
 function selectedMailing(pageId: string) {
   return pageCommerceData.value[pageId].mailing[selectedMailingIndex.value[pageId]]
