@@ -71,7 +71,7 @@
             <template v-for="media in orderDetail.medias" :key="media.code">
               <div class="col-span-2 hidden md:grid grid-cols-12 gap-4 lg:gap-8 pt-4">
                 <div class="col-span-4 xl:col-span-5">
-                  <div class="flex cursor-pointer" @click="openMedia(media.code, pageId)">
+                  <div class="flex cursor-pointer" @click="openMedia(media.code)">
                     <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4"
                          style="min-width:60px; max-width: 90px"
                          v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
@@ -215,6 +215,7 @@ import {PaymentType} from "~/models/IgPageCommerceData";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {mailingDiscountToText} from "~/utils/discountText";
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
 // Composables.
 const route = useRoute()
@@ -399,6 +400,16 @@ async function patchStatus(status: OrderStatus) {
   return useFetch(`/api/order/${order.value._id}/status`, { headers: headersToObject(await getAuthHeader()), method: 'PUT', body: {status}})
 }
 
+// Media interaction.
+const showMediaModal = useShowMediaModal()
+const showingMediaModalData = useShowingMediaModalData()
+function openMedia(mediaCode: string) {
+  showMediaModal.value = true;
+  showingMediaModalData.value = {
+    code: mediaCode,
+    pageId: igPageId.value
+  };
+}
 
 </script>
 <style scoped>
