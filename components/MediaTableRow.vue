@@ -29,18 +29,10 @@
     </div>
     <div class="table-cell align-top">
       <lazy-basic-toggle v-model="active" @change="activeChanged"></lazy-basic-toggle>
-<!--      <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="active">-->
-<!--        <option :value="true">是</option>-->
-<!--        <option :value="false">否</option>-->
-<!--      </lazy-spr-select>-->
     </div>
-    <div class="table-cell align-top">
-      <lazy-basic-toggle v-model="customPrice"></lazy-basic-toggle>
-<!--      <lazy-spr-select class="mr-4" style="min-width: 80px" v-model="customPrice">-->
-<!--        <option :value="true">是</option>-->
-<!--        <option :value="false">否</option>-->
-<!--      </lazy-spr-select>-->
-    </div>
+<!--    <div class="table-cell align-top">-->
+<!--      <lazy-basic-toggle v-model="customPrice"></lazy-basic-toggle>-->
+<!--    </div>-->
     <div class="table-cell align-top whitespace-nowrap">
 
       <template v-if="hasDiscount">
@@ -87,6 +79,7 @@ import {discountToText} from "~/utils/discountText";
 const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
 import {format} from "date-fns"
+import {mediaPrice} from  "~/utils/mediaPrice"
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
@@ -112,7 +105,7 @@ const { formatMediaPrice } = useMediaPrice();
 //     media.value.patchPrice = val
 //   }
 // })
-const price = computed(() => media.value.patchPrice || media.value.price || 0)
+const price = computed(() => mediaPrice(media.value))
 const localPrice = ref(0)
 async function savePrice() {
   editPriceLoading.value = true

@@ -32,17 +32,17 @@
                 </template>
               </Popper>
             </div>
-            <div class="table-cell whitespace-nowrap">
-              自訂價錢
-              <Popper hover offsetDistance="0" placement="top">
-                <i class="spr-info-circled-alt text-gray-600"></i>
-                <template #content>
-                  <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
-                    開啓後，客戶下單購買時可以自由輸入價格。客戶下單後需待你確認價格才付款。適用於訂製產品。
-                  </div>
-                </template>
-              </Popper>
-            </div>
+<!--            <div class="table-cell whitespace-nowrap">-->
+<!--              自訂價錢-->
+<!--              <Popper hover offsetDistance="0" placement="top">-->
+<!--                <i class="spr-info-circled-alt text-gray-600"></i>-->
+<!--                <template #content>-->
+<!--                  <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">-->
+<!--                    開啓後，客戶下單購買時可以自由輸入價格。客戶下單後需待你確認價格才付款。適用於訂製產品。-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--              </Popper>-->
+<!--            </div>-->
             <div class="table-cell">折扣</div>
           </div>
         </div>
@@ -100,7 +100,7 @@
 <script lang="ts" setup>
 
 import Popper from "vue3-popper";
-
+import {mediaPrice} from  "~/utils/mediaPrice"
 import useMediaList from "~/composables/useMediaList";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 
@@ -151,6 +151,14 @@ async function showConfirmToggleActive(mediaCode: string) {
   showConfirmToggleActiveModal.value = true
 }
 async function confirmToggleActive() {
+
+  const media = medias.value.find((m) => m.code === togglingMediaCode.value)
+  if (mediaPrice(media) === 0) {
+    await cancelToggleActive()
+    nuxt.vueApp.$toast.error("請先設定價錢！", {position: "top"});
+    return
+  }
+
   showConfirmToggleActiveModal.value = false
   try {
     await useFetch(
