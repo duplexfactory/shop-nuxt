@@ -29,12 +29,11 @@ const tabs: {route: string, title: string}[] = [
 
 <template>
     <div class="container mx-auto mt-4 md:mt-0">
-
-      <div class="mb-4 text-lg flex">
+      <div class="mb-4 flex">
         <nuxt-link v-for="tab in tabs"
                    :key="tab.route"
                    :to="`/my/${tab.route}`"
-                   class="px-5 py-2"
+                   class="px-2 lg:px-4 py-2"
                    :class="{'tab-selected': route.path.includes(`/my/${tab.route}`)}">{{ tab.title }}</nuxt-link>
       </div>
 

@@ -136,7 +136,7 @@ if (process.client) {
 }
 
 .table-cell {
-  @apply align-middle py-2;
+  @apply align-middle p-2;
 }
 
 </style>

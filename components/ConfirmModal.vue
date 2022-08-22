@@ -28,8 +28,8 @@ const {
   cancelButtonTitle,
   confirmButtonTitle
 } = defineProps({
-  cancelButtonTitle: { type: String, default: "" },
-  confirmButtonTitle: { type: String, default: "" },
+  cancelButtonTitle: { type: String, default: "取消" },
+  confirmButtonTitle: { type: String, default: "確定" },
 })
 
 </script>
