@@ -525,15 +525,18 @@ function selectedSFDistrictIdChanged(pageId: string) {
 async function clickCheckout() {
 
   let error = false
-  pageIds.value.forEach((pageId) => {
+  for (const pageId of pageIds.value) {
     if (selectedMailingIndex.value[pageId] === "") {
       nuxt.vueApp.$toast.error(`請選擇${pages.value[pageId].username}的郵寄方法！`, {position: "top"});
-      error = true
+      return
     }
-  })
 
-  if (error) {
-    return;
+    for (const i of selectedMailing(pageId).info) {
+      if (mailingInfo.value[pageId][i] === undefined || mailingInfo.value[pageId][i] === null) {
+        nuxt.vueApp.$toast.error(`請填寫${pages.value[pageId].username}的郵寄資料！`, {position: "top"});
+        return
+      }
+    }
   }
 
   const {
