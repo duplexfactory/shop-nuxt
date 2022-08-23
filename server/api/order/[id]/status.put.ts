@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     } = await useBody<{
         status: OrderStatus
     }>(event);
-    assert(status)
+    assert(status !== undefined && status !== null)
 
     const auth = getAuth(event)
     await initMongo();

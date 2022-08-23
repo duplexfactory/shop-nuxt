@@ -36,7 +36,7 @@
 
           <template v-if="!!orderDetail.paymentMethodData && (orderDetail.paymentMethodData.method !== PaymentType.IN_PERSON)">
             <div class="font-semibold mt-4">付款證明</div>
-            <template v-if="!!orderDetail.paymentProofUrl">
+            <template v-if="!!orderDetail.paymentProofUrl && orderDetail.orderStatus !== OrderStatus.VERIFICATION_FAILED">
               <img :src="orderDetail.paymentProofUrl" style="max-width: 150px; max-height: 150px;"/>
               <div class="mt-2">
                 <button class="btn-primary"
@@ -47,12 +47,12 @@
                 <button class="btn-outline ml-2"
                         :disabled="isVerifyLoading"
                         @click="clickDeny">
-                  不接受證明
+                  拒絕接受證明
                 </button>
               </div>
 
             </template>
-            <div v-else>請等待買家付款</div>
+            <div v-else>請等待買家上傳付款證明</div>
           </template>
 
         </div>
@@ -316,6 +316,7 @@ const tipText = computed(() => {
   let text = "提示："
   switch (orderDetail.value.orderStatus) {
     case OrderStatus.VERIFICATION_FAILED:
+      text += "已拒絕接受買家之前上傳的付款證明。請等待買家重新上傳付款證明。"
       break;
     case OrderStatus.PENDING:
       text += "請等待買家付款及上傳付款證明。"
@@ -388,11 +389,23 @@ async function confirmVerify() {
   nuxt.vueApp.$toast.success("已成功接受證明。", {position: "top"})
 }
 async function clickDeny() {
+  showConfirmModal.value = true
+  confirmModalTitle.value = "你是否確定拒絕接受證明？"
+  confirmModalContent.value = "拒絕接受證明即代表買家需要重新上傳證明。"
+  onConfirm.value = confirmDeny
+}
+async function confirmDeny() {
+  showConfirmModal.value = false
   if (!order.value)
     return
   isVerifyLoading.value = true
-  await patchStatus(OrderStatus.VERIFICATION_FAILED)
+  const { error } = await patchStatus(OrderStatus.VERIFICATION_FAILED)
   isVerifyLoading.value = false
+  if (!!error.value) {
+    nuxt.vueApp.$toast.error("拒絕接受證明失敗，請稍後再試", {position: "top"})
+    return
+  }
+  nuxt.vueApp.$toast.success("已成功拒絕接受證明。", {position: "top"})
 }
 
 // Helper.
