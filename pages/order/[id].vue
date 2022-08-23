@@ -68,7 +68,7 @@
         <LazyPaymentModal v-if="!!showingPaymentMethodsPageId"
                           :pageId="showingPaymentMethodsPageId"
                           :orderId="order._id"
-                          :amount="pageTotal(showingPaymentMethodsPageId)"
+                          :amount="pageTotal(order.shops[showingPaymentMethodsPageId])"
                           :receiver="pages[showingPaymentMethodsPageId].username"
                           @close="showingPaymentMethodsPageId = ''"></LazyPaymentModal>
       </transition>
@@ -80,7 +80,7 @@
 
 import {Order, OrderStatus, MailingType} from "~/models/Order";
 import dayjs from "dayjs";
-import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
+import {discountValue, pageDiscountValue, pageTotal} from "~/utils/discountValue";
 import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";
 import {Ref} from "vue";
 import IgPage from "~/models/IgPage";
@@ -133,31 +133,6 @@ const showingPaymentMethodsPageId = ref("")
 function clickCopyLink() {
   navigator.clipboard.writeText(config.DOMAIN + route.fullPath)
   nuxt.vueApp.$toast.success("已複製此頁面網址至剪貼板，請保存以重新瀏覽！", {position: "top"});
-}
-
-// Price calculation
-function pageDiscountValue(pageId: string) {
-  const medias = order.value.shops[pageId].medias
-  const price = medias.map((m) => mediaPrice(m) * m.quantity - discountValue(m.discount, m.price * m.quantity, m.quantity))
-      .reduce((previous, current) => previous += current, 0)
-  const quantity = medias.map((m) => m.quantity).reduce((previous, current) => previous += current, 0)
-  return discountValue(order.value.shops[pageId].discount, price, quantity)
-}
-
-function isFreeMailing(pageId: string) {
-  const medias = order.value.shops[pageId].medias
-  const price = medias.map((m) => mediaPrice(m) * m.quantity - discountValue(m.discount, m.price * m.quantity, m.quantity))
-      .reduce((previous, current) => previous += current, 0) - pageDiscountValue(pageId)
-  const quantity = medias.map((m) => m.quantity).reduce((previous, current) => previous += current, 0)
-  return _isFreeMailing(order.value.shops[pageId].mailingDiscount, price, quantity)
-}
-
-function pageTotal(pageId: string) {
-  const medias = order.value.shops[pageId].medias
-  const price = medias.map((m) => mediaPrice(m) * m.quantity - discountValue(m.discount, m.price * m.quantity, m.quantity))
-      .reduce((previous, current) => previous += current, 0)
-  const mailing = isFreeMailing(pageId) ? 0 : (order.value.shops[pageId].mailing.cost ?? 0)
-  return Math.max(price - pageDiscountValue(pageId) + mailing, 0)
 }
 
 </script>

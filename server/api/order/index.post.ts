@@ -1,12 +1,12 @@
 import {defineEventHandler, useBody} from "h3";
-import Dict = NodeJS.Dict;
 import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {mediaPrice} from "~/utils/mediaPrice";
 import {initMongo, orderCollection} from "~/server/mongodb";
-import {Discount, MailingDiscount} from "~/models/Discount";
-import {Mailing, Order, OrderStatus} from "~/models/Order";
+import {Order, OrderStatus} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
+import {pageTotal} from "~/utils/discountValue";
+import Dict = NodeJS.Dict;
 
 export default defineEventHandler(async (event) => {
 
@@ -80,6 +80,12 @@ export default defineEventHandler(async (event) => {
                 note: notes[currentPageId],
                 orderStatus: OrderStatus.PENDING,
             }
+
+            // Free orders.
+            if (pageTotal(previous[currentPageId]) === 0) {
+                previous[currentPageId].orderStatus = OrderStatus.VERIFIED
+            }
+
             return previous
         }, {} as Order["shops"])
     });

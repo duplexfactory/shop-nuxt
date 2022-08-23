@@ -147,7 +147,12 @@
 
 import {PropType, Ref} from "vue";
 import {MailingInfoType, MailingType, OrderShopDetails} from "~/models/Order";
-import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
+import {
+  discountValue,
+  pageTotal as _pageTotal,
+  pageDiscountValue as _pageDiscountValue,
+  pageFreeMailing
+} from "~/utils/discountValue";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import {mailingDiscountToText} from "~/utils/discountText";
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
@@ -204,27 +209,13 @@ const mailingInfos = computed(() => {
 })
 
 function pageDiscountValue() {
-  const price = orderDetail.value.medias.map((m) => m.price * m.quantity - discountValue(m.discount, m.price * m.quantity, m.quantity))
-      .reduce((previous, current) => previous += current, 0)
-  const quantity = orderDetail.value.medias.map((m) => m.quantity).reduce((previous, current) => previous += current, 0)
-  return discountValue(orderDetail.value.discount, price, quantity)
+  return _pageDiscountValue(orderDetail.value)
 }
 function isFreeMailing() {
-  const price = orderDetail.value.medias.map((m) => m.price * m.quantity - discountValue(m.discount, m.price * m.quantity, m.quantity))
-      .reduce((previous, current) => previous += current, 0) - pageDiscountValue()
-  const quantity = orderDetail.value.medias.map((m) => m.quantity).reduce((previous, current) => previous += current, 0)
-  return _isFreeMailing(orderDetail.value.mailingDiscount, price, quantity)
+  return pageFreeMailing(orderDetail.value)
 }
 function pageTotal() {
-  const price = orderDetail.value.medias.map((m) => m.price * m.quantity - discountValue(m.discount, m.price * m.quantity, m.quantity))
-      .reduce((previous, current) => previous += current, 0)
-  let mailingCost = 0
-  if (!isFreeMailing()) {
-    if (!orderDetail.value.mailing.payOnArrive) {
-      mailingCost = orderDetail.value.mailing.cost
-    }
-  }
-  return Math.max(price - pageDiscountValue() + mailingCost, 0)
+  return _pageTotal(orderDetail.value)
 }
 
 // Media interaction.
