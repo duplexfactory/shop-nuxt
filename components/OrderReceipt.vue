@@ -8,18 +8,26 @@
       <div class="col-span-1"></div>
     </div>
 
-    <div class="px-4">
+    <div class="md:px-4">
       <template v-for="media in orderDetail.medias" :key="media.code">
+
+        <div class="flex md:hidden pt-4" @click="openMedia(media.code)">
+          <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4" style="min-width:60px; max-width: 90px">
+            <img v-lazy="media.mediaUrl || $imageUrl(media.code)" class="w-full h-full"/>
+          </div>
+          <div v-if="!!mediaDict[media.code]" class="line-clamp-4 text-sm whitespace-pre-wrap break-words">
+            {{ mediaDict[media.code].caption }}
+          </div>
+        </div>
+
         <div class="col-span-2 hidden md:grid grid-cols-12 gap-4 lg:gap-8 pt-4">
           <div class="col-span-4 xl:col-span-5">
             <div class="flex cursor-pointer" @click="openMedia(media.code)">
-              <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4"
-                   style="min-width:60px; max-width: 90px"
-                   v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
-              <div class="flex-1">
-                <div class="hidden lg:line-clamp-4 text-sm whitespace-pre-wrap break-words">
-                  <!--                    {{ media.caption }}-->
-                </div>
+              <div class="image-container aspect-square rounded-md overflow-hidden flex-grow flex-shrink-0 mr-4" style="min-width:60px; max-width: 90px">
+                <img v-lazy="media.mediaUrl || $imageUrl(media.code)" class="w-full h-full"/>
+              </div>
+              <div v-if="!!mediaDict[media.code]" class="line-clamp-4 text-sm whitespace-pre-wrap break-words">
+                {{ mediaDict[media.code].caption }}
               </div>
             </div>
           </div>
@@ -34,7 +42,17 @@
             <!--              <button class="hover:underline text-red-500" @click="removeMedia(media.code)">移除</button>-->
           </div>
         </div>
+
+        <div class="flex md:hidden items-center justify-between pt-4">
+          <div class="flex">
+            {{ "x" + media.quantity }}
+<!--            <button class="hover:underline text-red-500" @click="removeMedia(media.code)">移除</button>-->
+          </div>
+          {{ formatMediaPrice(media.price * media.quantity - discountValue(media.discount, media.price * media.quantity, media.quantity)) }}
+        </div>
+
         <hr class="mt-4"/>
+
       </template>
 
       <template v-if="!!orderDetail.discount && pageDiscountValue() !== 0">
@@ -127,13 +145,15 @@
 
 <script setup lang="ts">
 
-import {PropType} from "vue";
+import {PropType, Ref} from "vue";
 import {MailingInfoType, MailingType, OrderShopDetails} from "~/models/Order";
 import {discountValue, isFreeMailing as _isFreeMailing} from "~/utils/discountValue";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import {mailingDiscountToText} from "~/utils/discountText";
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 import {mailingInfoTypeToText, mailingTypeToText} from "~/data/commerce";
+import IgMedia from "~/models/IgMedia";
+import Dict = NodeJS.Dict;
 
 const props = defineProps({
   orderDetail: Object as PropType<OrderShopDetails>,
@@ -145,6 +165,24 @@ const {
 
 // Composables.
 const igPageId = useIgPageId()
+
+const mediaDict: Ref<Dict<IgMedia>> = ref({})
+onMounted(async () => {
+  if (!orderDetail.value) {
+    return
+  }
+  const {
+    data,
+    error
+  } = await useFetch("/api/media", {
+    params: {
+      codes: orderDetail.value.medias.map((m) => m.code).join(",")
+    }
+  })
+  if (!!data.value) {
+    mediaDict.value = data.value.medias
+  }
+})
 
 const mailingTitle = computed(() => {
   if (!orderDetail.value)
@@ -195,9 +233,11 @@ const showingMediaModalData = useShowingMediaModalData()
 function openMedia(mediaCode: string) {
   showMediaModal.value = true;
   showingMediaModalData.value = {
-    code: mediaCode,
+    // code: mediaCode,
+    media: mediaDict.value[mediaCode],
     pageId: igPageId.value
   };
+  mediaDict.value
 }
 
 </script>

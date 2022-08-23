@@ -5,7 +5,7 @@
         <i class="spr-info-circled-alt text-gray-600 mr-2"></i>{{ tipText }}
       </div>
 
-      <div class="mb-4 border rounded-md p-8 md:grid grid-cols-2">
+      <div class="mb-4 border rounded-md p-4 md:(p-8 grid grid-cols-2)">
 
         <div class="col-span-1">
           <div class="font-semibold">訂單資訊</div>

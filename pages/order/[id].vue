@@ -51,7 +51,9 @@
 
           <button v-if="[OrderStatus.VERIFICATION_FAILED, OrderStatus.PENDING].includes(order.shops[pageId].orderStatus)"
                   class="btn-primary mt-4"
-                  @click="showingPaymentMethodsPageId = pageId">付款並上傳證明</button>
+                  @click="showingPaymentMethodsPageId = pageId">
+            {{ order.shops[pageId].orderStatus === OrderStatus.PENDING ? "付款並上傳證明" : "重新上傳證明" }}
+          </button>
 
         </div>
 
