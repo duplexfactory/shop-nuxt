@@ -29,24 +29,26 @@ export enum OrderStatus {
 export interface Order {
     _id?: ObjectId;
     created: number;
-    shops: Dict<{
-        orderStatus: OrderStatus;
-        medias: {
-            code: string,
-            price: number,
-            discount?: Discount;
-            quantity: number;
-        }[]
+    shops: Dict<OrderShopDetails>
+}
+
+export interface OrderShopDetails {
+    orderStatus: OrderStatus;
+    medias: {
+        code: string,
+        price: number,
         discount?: Discount;
-        mailing: Mailing;
-        mailingDiscount?: MailingDiscount;
-        mailingInfo: {
-            [key:number]: string // key MailingInfoType
-        };
-        paymentMethodData?: PaymentMethodData;
-        paymentProofUrl?: string;
-        note: string;
-    }>
+        quantity: number;
+    }[]
+    discount?: Discount;
+    mailing: Mailing;
+    mailingDiscount?: MailingDiscount;
+    mailingInfo: {
+        [key:number]: string // key MailingInfoType
+    };
+    paymentMethodData?: PaymentMethodData;
+    paymentProofUrl?: string;
+    note: string;
 }
 
 export interface Mailing {

@@ -46,43 +46,8 @@
             </Popper>
           </div>
 
-          <div class="mt-4">
-            <div class="font-semibold">店鋪資訊</div>
-            <div class="">給店鋪留言：<span>{{ order.shops[pageId].note ?? "-" }}</span></div>
-          </div>
-
-          <div class="mt-4">
-            <div class="font-semibold">郵寄方法</div>
-            <div class="">
-              <div class="flex-1 text-left">
-                <div class="inline-block border text-sm bg-white rounded-md py-1 px-2 mr-2">{{ mailingTypeToText[order.shops[pageId].mailing.type] }}</div>
-                <div class="inline-block" v-if="![MailingType.SF_STATION, MailingType.SF_LOCKER].includes(order.shops[pageId].mailing.type)">{{ order.shops[pageId].mailing.title }}</div>
-              </div>
-
-              <template v-if="order.shops[pageId].mailing.description">
-                <div class="text-left">{{ "郵寄説明：" + order.shops[pageId].mailing.description }}</div>
-              </template>
-
-              <div class="">
-                <template v-if="isFreeMailing(pageId)">
-                  免郵
-                </template>
-                <template v-else>
-                  <div v-if="order.shops[pageId].mailing.payOnArrive" class="inline-block mr-2">
-                    到付
-                  </div>
-                  <div v-if="!!order.shops[pageId].mailing.cost" class="inline-block">
-                    {{ formatMediaPrice(order.shops[pageId].mailing.cost) }}
-                  </div>
-                </template>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="mt-4 font-semibold">店鋪總計</div>
-          <div class="text-pink-700 text-xl font-semibold">{{ formatMediaPrice(pageTotal(pageId)) }}</div>
-          <div v-if="!isFreeMailing(pageId) && order.shops[pageId].mailing.payOnArrive ">（未含到付郵費）</div>
+          <div class="font-semibold mt-4">訂單内容</div>
+          <OrderReceipt v-if="!!order.shops[pageId]" class="col-span-2 mt-2" :orderDetail="order.shops[pageId]"></OrderReceipt>
 
           <button v-if="[OrderStatus.VERIFICATION_FAILED, OrderStatus.PENDING].includes(order.shops[pageId].orderStatus)"
                   class="btn-primary mt-4"
@@ -134,7 +99,7 @@ if (!!error && !!error.value) {
 const order = computed(() => {
   if (!data.value)
     return undefined
-  return (data.value as {order: Order}).order
+  return (data.value as any as {order: Order}).order
 })
 
 const pageIds = computed(() => !order.value ? [] : Object.keys(order.value.shops))
