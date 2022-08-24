@@ -58,6 +58,9 @@
         <template v-if="!isLoggedIn">
           <AgeRestrictionToggle class="hidden lg:inline-block mr-4"/>
           <nuxt-link to="/login/shop" class="text-sm md:text-base text-gray-500 font-semibold">商戶登入</nuxt-link>
+          <nuxt-link to="/cart" class="btn-sm md:btn">
+            <i class="spr-basket md:text-xl text-gray-500 font-semibold"></i>
+          </nuxt-link>
 <!--          <nuxt-link to="/verify" class="hidden lg:inline-block btn btn-outline">認證我的商店</nuxt-link>-->
         </template>
 

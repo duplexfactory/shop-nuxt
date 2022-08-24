@@ -205,6 +205,12 @@
       "css": "help-circled-alt",
       "code": 59407,
       "src": "mfglabs"
+    },
+    {
+      "uid": "9affc98d652b86628d650ee58dbf0357",
+      "css": "basket",
+      "code": 59408,
+      "src": "fontawesome"
     }
   ]
 }
