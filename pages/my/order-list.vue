@@ -22,14 +22,18 @@
       </div>
     </div>
 
-    <Pagination v-if="orders.length !== 0"
-                v-model:currentPage="currentPage"
-                class="flex"
-                :records="orderCount"
-                :per-page="pagination.limit"
-                @pageChanged="pageChanged"/>
+    <div class="flex items-center justify-between">
+      <h1 class="text-sm text-gray-500">共 {{ orderCount }} 訂單</h1>
 
-    <div class="wrapper">
+      <Pagination v-if="orders.length !== 0"
+                  v-model:currentPage="currentPage"
+                  class="flex"
+                  :records="orderCount"
+                  :per-page="pagination.limit"
+                  @pageChanged="pageChanged"/>
+    </div>
+
+    <div class="my-2 md:my-4 wrapper">
       <div class="table">
         <div class="table-header-group">
           <div class="table-row">
@@ -66,6 +70,18 @@
         </div>
       </div>
     </div>
+
+    <div class="flex items-center justify-between">
+      <h1 class="text-sm text-gray-500">共 {{ orderCount }} 訂單</h1>
+
+      <Pagination v-if="orders.length !== 0"
+                  v-model:currentPage="currentPage"
+                  class="flex"
+                  :records="orderCount"
+                  :per-page="pagination.limit"
+                  @pageChanged="pageChanged"/>
+    </div>
+
   </div>
 </template>
 
