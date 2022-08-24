@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'shoperuse';
-  src: url('../font/shoperuse.eot?43321412');
-  src: url('../font/shoperuse.eot?43321412#iefix') format('embedded-opentype'),
-       url('../font/shoperuse.woff2?43321412') format('woff2'),
-       url('../font/shoperuse.woff?43321412') format('woff'),
-       url('../font/shoperuse.ttf?43321412') format('truetype'),
-       url('../font/shoperuse.svg?43321412#shoperuse') format('svg');
+  src: url('../font/shoperuse.eot?17000784');
+  src: url('../font/shoperuse.eot?17000784#iefix') format('embedded-opentype'),
+       url('../font/shoperuse.woff2?17000784') format('woff2'),
+       url('../font/shoperuse.woff?17000784') format('woff'),
+       url('../font/shoperuse.ttf?17000784') format('truetype'),
+       url('../font/shoperuse.svg?17000784#shoperuse') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'shoperuse';
-    src: url('../font/shoperuse.svg?43321412#shoperuse') format('svg');
+    src: url('../font/shoperuse.svg?17000784#shoperuse') format('svg');
   }
 }
 */
@@ -85,5 +85,6 @@
 .spr-wechat:before { content: '\f1d7'; } /* '' */
 .spr-paper-plane:before { content: '\f1d8'; } /* '' */
 .spr-whatsapp:before { content: '\f232'; } /* '' */
+.spr-user-circle:before { content: '\f2bd'; } /* '' */
 .spr-id-card:before { content: '\f2c2'; } /* '' */
 .spr-facebook-squared:before { content: '\f308'; } /* '' */

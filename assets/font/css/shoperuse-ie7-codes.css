@@ -30,5 +30,6 @@
 .spr-wechat { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf1d7;&nbsp;'); }
 .spr-paper-plane { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf1d8;&nbsp;'); }
 .spr-whatsapp { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf232;&nbsp;'); }
+.spr-user-circle { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf2bd;&nbsp;'); }
 .spr-id-card { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf2c2;&nbsp;'); }
 .spr-facebook-squared { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf308;&nbsp;'); }

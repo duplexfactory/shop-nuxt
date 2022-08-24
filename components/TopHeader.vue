@@ -53,7 +53,7 @@
       </div>
 
       <!-- right -->
-      <div :class="{'sqr-menu': isLoggedIn}" class="flex items-center">
+      <div :class="{'hidden md:inline-block': isLoggedIn}" class="flex items-center">
 
         <template v-if="!isLoggedIn">
           <AgeRestrictionToggle class="hidden lg:inline-block mr-4"/>
@@ -66,8 +66,8 @@
 
         <div class="hidden md:inline-block">
           <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
-            <button class="text-sm text-gray-500">
-              <img src="~assets/icons/user.png"/>
+            <button class="btn-sm md:btn">
+              <i class="spr-user-circle md:text-xl text-gray-500 font-semibold"></i>
             </button>
             <template #content>
               <div class="text-sm p-2 bg-white rounded-md shadow-md">
@@ -87,7 +87,6 @@
             </template>
           </Popper>
         </div>
-
 
       </div>
 
