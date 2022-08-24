@@ -1,68 +1,73 @@
 <template>
-  <div class="wrapper">
-    <div class="table">
-      <div class="table-header-group">
-        <div class="table-row">
-          <div class="table-cell">訂單ID</div>
-          <div class="table-cell">訂單日期</div>
-          <div class="table-cell" style="width: 400px">貨品</div>
-          <div class="table-cell">訂單狀態</div>
-          <div class="table-cell">動作</div>
-
-<!--          orderStatus: OrderStatus;-->
-<!--          medias: {-->
-<!--          code: string,-->
-<!--          price: number,-->
-<!--          discount?: Discount;-->
-<!--          quantity: number;-->
-<!--          }[]-->
-<!--          discount?: Discount;-->
-<!--          mailing: Mailing;-->
-<!--          mailingDiscount?: MailingDiscount;-->
-<!--          mailingInfo: {-->
-<!--          [key:number]: string // key MailingInfoType-->
-<!--          };-->
-<!--          paymentMethodData?: PaymentMethodData;-->
-<!--          paymentProofUrl?: string;-->
-<!--          note: string;-->
+  <div class="mb-8">
+    <div class="border rounded-md p-4 mb-8">
+      <div class="mb-2">篩選</div>
+      <div class="flex">
+        <div class="flex-1 mr-4">
+          <div>訂單ID</div>
+          <input v-model="keywordFilter"
+                 class="text-input-primary w-full"
+                 placeholder="訂單ID"/>
         </div>
-      </div>
-
-      <div class="table-row"
-           v-for="order in orders"
-           :key="order._id">
-        <div class="table-cell">
-          {{ order._id }}
-        </div>
-        <div class="table-cell">
-          {{ dayjs(order.created).format('DD/MM/YYYY') }}
-        </div>
-        <div class="table-cell" style="width: 400px">
-          <div class="flex">
-            <div v-for="media in order.shops[igPageId].medias"
-                 class="image-container aspect-square rounded-md overflow-hidden mr-4"
-                 style="width: 80px"
-                 v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
-          </div>
-        </div>
-        <div class="table-cell">
-          <span :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</span>
-        </div>
-        <div class="table-cell">
-          <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600 mr-2">查看詳情</nuxt-link>
+        <div>
+          <div>訂單狀態</div>
+          <lazy-spr-select class="mr-2" v-model="orderStatusFilter" @change="fetchOrderList">
+            <option disabled :value="null">請選擇</option>
+            <option v-for="key in Object.keys(orderStatusToText)"
+                    :key="'order-status-filter' + key"
+                    :value="key">{{ orderStatusToText[key] }}</option>
+          </lazy-spr-select>
         </div>
       </div>
     </div>
 
+    <div class="wrapper">
+      <div class="table">
+        <div class="table-header-group">
+          <div class="table-row">
+            <div class="table-cell">訂單ID</div>
+            <div class="table-cell">訂單日期</div>
+            <div class="table-cell" style="width: 400px">貨品</div>
+            <div class="table-cell">訂單狀態</div>
+            <div class="table-cell">動作</div>
+          </div>
+        </div>
+        <div class="table-row"
+             v-for="order in orders"
+             :key="order._id">
+          <div class="table-cell">
+            {{ order._id }}
+          </div>
+          <div class="table-cell">
+            {{ dayjs(order.created).format('DD/MM/YYYY') }}
+          </div>
+          <div class="table-cell" style="width: 400px">
+            <div class="flex">
+              <div v-for="media in order.shops[igPageId].medias"
+                   class="image-container aspect-square rounded-md overflow-hidden mr-4"
+                   style="width: 80px"
+                   v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+            </div>
+          </div>
+          <div class="table-cell">
+            <span :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</span>
+          </div>
+          <div class="table-cell">
+            <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600 mr-2">查看詳情</nuxt-link>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 
 import dayjs from "dayjs";
-import {Order} from "~/models/Order";
+import {Order, OrderStatus} from "~/models/Order";
 import {useIgPageId} from "~/composables/states";
 import {orderStatusToText, orderStatusColorClass} from "~/data/commerce";
+import {PaginationQuery} from "~/models/PaginationQuery";
 
 const {
   getAuthHeader,
@@ -70,14 +75,28 @@ const {
 } = useAuth()
 const igPageId = useIgPageId()
 
+const keywordFilter = ref("")
+const orderStatusFilter = ref<OrderStatus | null>(null)
+const pagination = ref(new PaginationQuery())
 const orders = ref<Order[]>([])
 
-if (process.client) {
+async function fetchOrderList() {
+  const params: PaginationQuery & {keyword?: string, status?: OrderStatus} =  {
+    keyword: keywordFilter.value,
+    ...pagination.value
+  }
+  if (orderStatusFilter.value !== null) {
+    params.status = orderStatusFilter.value
+  }
   const {
     data,
     pending,
     error
-  } = await useLazyFetch("/api/order/list/shop", { headers: headersToObject(await getAuthHeader())})
+  } = await useLazyFetch("/api/order/list/shop", {
+    params,
+    headers: headersToObject(await getAuthHeader()),
+    initialCache: false
+  })
   if (pending.value) {
     watch(data, () => {
       orders.value = data.value["orders"]
@@ -88,6 +107,9 @@ if (process.client) {
   }
 }
 
+if (process.client) {
+  await fetchOrderList()
+}
 
 </script>
 
@@ -104,7 +126,7 @@ if (process.client) {
 }
 
 .table-cell {
-  @apply align-middle p-2;
+  @apply align-middle p-2 border-b;
 }
 
 </style>

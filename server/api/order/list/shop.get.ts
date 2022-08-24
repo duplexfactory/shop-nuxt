@@ -4,7 +4,13 @@ import {igAuthCollection, initMongo, orderCollection, pageSearchCollection} from
 import {notFound} from "~/utils/h3Error";
 import {PaginationQuery} from "~/models/PaginationQuery";
 import {QueryObject} from "ufo";
-import {ObjectId} from "mongodb";
+import {Filter, ObjectId} from "mongodb";
+import {Order, OrderStatus} from "~/models/Order";
+import {isEmpty} from "~/utils/isEmpty";
+
+function escapeRegExp(string: string): string {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // $& means the whole matched string
+}
 
 export default defineEventHandler(async (event) => {
 
@@ -19,11 +25,20 @@ export default defineEventHandler(async (event) => {
 
     const {
         skip,
-        limit
-    } = await useQuery(event) as (QueryObject & PaginationQuery)
-    const filter = {
+        limit,
+        keyword,
+        status
+    } = await useQuery(event) as (QueryObject & PaginationQuery & {keyword?: string, status?: string})
+    const filter : Filter<Order> = {
         [`shops.${igAuth.pageId}`]: {$exists: true}
     }
+    if (!!keyword) {
+        filter._id = {$regex: escapeRegExp(keyword), $options: "i"}
+    }
+    if (!isEmpty(status) && !isNaN(status)) {
+        filter[`shops.${igAuth.pageId}.orderStatus`] = Number(status)
+    }
+    
     const orders = await orderCollection.find(filter).project({
         _id: true,
         created: true,
