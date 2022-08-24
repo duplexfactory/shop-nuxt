@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container mx-auto mt-4 md:mt-0">
     <div v-if="order">
       <div class="mb-4 border rounded-md p-4">
 
@@ -61,8 +61,6 @@
       </div>
 
     </div>
-
-
     <transition name="modal">
       <LazyPaymentModal v-if="!!showingPaymentMethodsPageId"
                         :pageId="showingPaymentMethodsPageId"
