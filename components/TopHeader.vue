@@ -74,8 +74,7 @@
                 <div v-for="tab in accountTabs"
                      :key="tab.route"
                      class="p-2">
-                  <nuxt-link :to="`/my/${tab.route}`"
-                             @click="hideSidebar">{{ tab.title }}</nuxt-link>
+                  <nuxt-link :to="`/my/${tab.route}`">{{ tab.title }}</nuxt-link>
                 </div>
                 <div class="p-2">
                   <AgeRestrictionToggle/>
