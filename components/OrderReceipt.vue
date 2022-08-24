@@ -43,6 +43,19 @@
           </div>
         </div>
 
+        <div v-if="!!media.discount && (discountValue(media.discount, media.price, media.quantity) !== 0)"
+             class="grid grid-cols-12 gap-4 lg:gap-8 pt-4">
+          <div class="col-span-12 md:col-span-9">
+            <div class="md:flex w-full items-center">
+              <DiscountCard defaultTitle="產品優惠"
+                            discountTextPrefix="此產品買"
+                            singleLine
+                            :discount="media.discount"
+                            class="flex-1"></DiscountCard>
+            </div>
+          </div>
+        </div>
+
         <div class="flex md:hidden items-center justify-between pt-4">
           <div class="flex">
             {{ "x" + media.quantity }}
