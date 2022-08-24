@@ -7,7 +7,8 @@
           <div>訂單ID</div>
           <input v-model="keywordFilter"
                  class="text-input-primary w-full"
-                 placeholder="訂單ID"/>
+                 placeholder="訂單ID"
+                 @keyup.enter="fetchOrderList"/>
         </div>
         <div>
           <div>訂單狀態</div>
@@ -20,6 +21,13 @@
         </div>
       </div>
     </div>
+
+    <Pagination v-if="orders.length !== 0"
+                v-model:currentPage="currentPage"
+                class="flex"
+                :records="orderCount"
+                :per-page="pagination.limit"
+                @pageChanged="pageChanged"/>
 
     <div class="wrapper">
       <div class="table">
@@ -78,6 +86,8 @@ const igPageId = useIgPageId()
 const keywordFilter = ref("")
 const orderStatusFilter = ref<OrderStatus | null>(null)
 const pagination = ref(new PaginationQuery())
+const orderCount = ref(0)
+const currentPage = ref(1)
 const orders = ref<Order[]>([])
 
 async function fetchOrderList() {
@@ -100,14 +110,21 @@ async function fetchOrderList() {
   if (pending.value) {
     watch(data, () => {
       orders.value = data.value["orders"]
+      orderCount.value = data.value["count"]
     })
   }
   else {
     orders.value = data.value["orders"]
+    orderCount.value = data.value["count"]
   }
 }
 
 if (process.client) {
+  await fetchOrderList()
+}
+
+async function pageChanged() {
+  pagination.value.skip = (currentPage.value - 1) * pagination.value.limit
   await fetchOrderList()
 }
 

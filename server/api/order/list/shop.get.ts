@@ -33,12 +33,12 @@ export default defineEventHandler(async (event) => {
         [`shops.${igAuth.pageId}`]: {$exists: true}
     }
     if (!!keyword) {
-        filter._id = {$regex: escapeRegExp(keyword), $options: "i"}
+        filter._id = ObjectId(keyword)
     }
     if (!isEmpty(status) && !isNaN(status)) {
         filter[`shops.${igAuth.pageId}.orderStatus`] = Number(status)
     }
-    
+
     const orders = await orderCollection.find(filter).project({
         _id: true,
         created: true,
