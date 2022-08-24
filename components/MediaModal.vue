@@ -48,8 +48,11 @@
                   <QuantityInput v-model.number="quantity"></QuantityInput>
                 </div>
 
-                <button class="btn btn-primary w-full mt-2" @click="clickBuyNow">
+                <button class="btn-primary w-full mt-2" @click="clickBuyNow">
                   立即購買
+                </button>
+                <button class="btn-outline w-full mt-2" @click="clickAddToCart">
+                  加到購物車
                 </button>
               </template>
               <button v-else class="btn btn-primary w-full" @click="clickContactShop">
@@ -346,6 +349,17 @@ const pageCommerceDataLoaded = ref(false)
 // Create order
 const quantity = ref(1)
 function clickBuyNow() {
+  addToCart()
+  close()
+  router.push(`/cart`)
+}
+
+function clickAddToCart() {
+  addToCart()
+  nuxt.vueApp.$toast.success("已成功加至購物車。", {position: "top"});
+}
+
+function addToCart() {
   let cart:{code: string, quantity: number}[] = (JSON.parse(localStorage.getItem("cart")) as []) || [];
   const item = cart.find((i) => i.code === localMediaCode.value);
   if (!!item) {
@@ -358,8 +372,6 @@ function clickBuyNow() {
     });
   }
   localStorage.setItem("cart", JSON.stringify(cart));
-  close();
-  router.push(`/cart`);
 }
 
 // Mounted
