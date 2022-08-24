@@ -10,7 +10,7 @@
     </div>
 
     <!--    <div class="mt-2 text-sm text-gray-500">{{ storeName }}</div>-->
-    <!--    <button class="mt-4 text-white text-md bg-pink-400 px-6 py-2 rounded-md">探索</button>-->
+    <!--    <button class="mt-4 text-white text-base bg-pink-400 px-6 py-2 rounded-md">探索</button>-->
   </div>
 </template>
 

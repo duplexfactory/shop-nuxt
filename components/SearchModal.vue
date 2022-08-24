@@ -124,7 +124,7 @@ export default  {
 <style scoped>
 
 .search-input {
-  @apply border py-2 px-4 text-md flex-1;
+  @apply border py-2 px-4 text-base flex-1;
 }
 
 

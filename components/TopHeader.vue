@@ -55,10 +55,11 @@
       <!-- right -->
       <div :class="{'sqr-menu': isLoggedIn}" class="flex items-center">
 
-        <AgeRestrictionToggle v-if="!isLoggedIn" class="hidden lg:inline-block mr-6"/>
-        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="lg:mr-6 text-gray-500 font-semibold">商戶登入</nuxt-link>
-        <nuxt-link v-if="!isLoggedIn" to="/verify" class="hidden lg:inline-block btn btn-outline">認證我的商店</nuxt-link>
-
+        <template v-if="!isLoggedIn">
+          <AgeRestrictionToggle class="hidden lg:inline-block mr-4"/>
+          <nuxt-link to="/login/shop" class="text-sm md:text-base text-gray-500 font-semibold">商戶登入</nuxt-link>
+<!--          <nuxt-link to="/verify" class="hidden lg:inline-block btn btn-outline">認證我的商店</nuxt-link>-->
+        </template>
 
         <div class="hidden md:inline-block">
           <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
@@ -192,7 +193,7 @@
 <style scoped>
 
   .search-input {
-    @apply border py-2 px-4 text-md w-full;
+    @apply border py-2 px-4 text-base w-full;
   }
 
   .dropdown {

@@ -21,7 +21,7 @@ const value = computed({
 <style scoped>
 
 .select-primary {
-  @apply rounded-md border py-2 pl-4 pr-8 appearance-none text-md bg-transparent z-1;
+  @apply rounded-md border py-2 pl-4 pr-8 appearance-none text-base bg-transparent z-1;
 }
 
 </style>

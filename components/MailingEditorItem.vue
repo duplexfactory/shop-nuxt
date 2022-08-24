@@ -44,7 +44,7 @@
                :id="'checkbox-' + method"
                v-model="tempMailing.info"
                :value="method">
-        <label :for="'checkbox-' + method" class="py-2 mr-2 text-md">
+        <label :for="'checkbox-' + method" class="py-2 mr-2 text-base">
           {{ mailingInfoTypeToText[method] }}
         </label>
       </template>
