@@ -22,65 +22,96 @@
       </div>
     </div>
 
-    <div class="flex items-center justify-between">
-      <h1 class="text-sm text-gray-500">共 {{ orderCount }} 訂單</h1>
+    <client-only>
+      <div class="flex items-center justify-between">
+        <h1 class="text-sm text-gray-500">共 {{ orderCount }} 訂單</h1>
 
-      <Pagination v-if="orders.length !== 0"
-                  v-model:currentPage="currentPage"
-                  class="flex"
-                  :records="orderCount"
-                  :per-page="pagination.limit"
-                  @pageChanged="pageChanged"/>
-    </div>
+        <Pagination v-if="orders.length !== 0"
+                    v-model:currentPage="currentPage"
+                    class="flex"
+                    :records="orderCount"
+                    :per-page="pagination.limit"
+                    @pageChanged="pageChanged"/>
+      </div>
 
-    <div class="my-2 md:my-4 wrapper">
-      <div class="table">
-        <div class="table-header-group">
-          <div class="table-row">
-            <div class="table-cell">訂單ID</div>
-            <div class="table-cell">訂單日期</div>
-            <div class="table-cell" style="width: 400px">貨品</div>
-            <div class="table-cell">訂單狀態</div>
-            <div class="table-cell">動作</div>
-          </div>
-        </div>
-        <div class="table-row"
-             v-for="order in orders"
-             :key="order._id">
-          <div class="table-cell">
-            {{ order._id }}
-          </div>
-          <div class="table-cell">
-            {{ dayjs(order.created).format('DD/MM/YYYY') }}
-          </div>
-          <div class="table-cell" style="width: 400px">
-            <div class="flex">
-              <div v-for="media in order.shops[igPageId].medias"
-                   class="image-container aspect-square rounded-md overflow-hidden mr-4"
-                   style="width: 80px"
-                   v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+      <div class="hidden md:block my-4 wrapper">
+        <div class="table">
+          <div class="table-header-group">
+            <div class="table-row">
+              <div class="table-cell">訂單ID</div>
+              <div class="table-cell">訂單日期</div>
+              <div class="table-cell" style="width: 400px">貨品</div>
+              <div class="table-cell">訂單狀態</div>
+              <div class="table-cell">動作</div>
             </div>
           </div>
-          <div class="table-cell">
-            <span :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</span>
-          </div>
-          <div class="table-cell">
-            <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600 mr-2">查看詳情</nuxt-link>
+          <div class="table-row"
+               v-for="order in orders"
+               :key="order._id">
+            <div class="table-cell">
+              {{ order._id }}
+            </div>
+            <div class="table-cell">
+              {{ dayjs(order.created).format('DD/MM/YYYY') }}
+            </div>
+            <div class="table-cell" style="width: 400px">
+              <div class="flex">
+                <div v-for="media in order.shops[igPageId].medias"
+                     class="image-container aspect-square rounded-md overflow-hidden mr-4"
+                     style="width: 80px"
+                     v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+              </div>
+            </div>
+            <div class="table-cell">
+              <span :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</span>
+            </div>
+            <div class="table-cell">
+              <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600 mr-2">查看詳情</nuxt-link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div class="md:hidden my-2">
+        <template v-for="order in orders"
+                  :key="order._id + '-mobile'">
+          <div class="py-4">
+            <div class="flex justify-between">
+              <div>
+                <div class="text-sm">訂單ID</div>
+                <div>{{ order._id }}</div>
 
-    <div class="flex items-center justify-between">
-      <h1 class="text-sm text-gray-500">共 {{ orderCount }} 訂單</h1>
+                <div class="text-sm mt-2">訂單日期</div>
+                <div>{{ dayjs(order.created).format('DD/MM/YYYY') }}</div>
+              </div>
 
-      <Pagination v-if="orders.length !== 0"
-                  v-model:currentPage="currentPage"
-                  class="flex"
-                  :records="orderCount"
-                  :per-page="pagination.limit"
-                  @pageChanged="pageChanged"/>
-    </div>
+              <div class="text-right">
+                <div :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</div>
+                <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600">查看詳情</nuxt-link>
+              </div>
+            </div>
+            <div class="flex mt-2">
+              <div v-for="media in order.shops[igPageId].medias"
+                   class="image-container aspect-square rounded-md overflow-hidden mr-4"
+                   style="width: 60px"
+                   v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+            </div>
+          </div>
+          <hr/>
+        </template>
+
+      </div>
+
+      <div class="flex items-center justify-between">
+        <h1 class="text-sm text-gray-500">共 {{ orderCount }} 訂單</h1>
+
+        <Pagination v-if="orders.length !== 0"
+                    v-model:currentPage="currentPage"
+                    class="flex"
+                    :records="orderCount"
+                    :per-page="pagination.limit"
+                    @pageChanged="pageChanged"/>
+      </div>
+    </client-only>
 
   </div>
 </template>
