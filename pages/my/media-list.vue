@@ -133,6 +133,14 @@ async function clickPrevPage() {
 
 async function clickNextPage() {
   await fetchOwnOfficialMedias()
+
+  const {data, error} = await useFetch('/api/media/commerce-data', {
+    params: {
+      codes: medias.value.filter((m) => !Object.keys(commerceData.value).includes(m.code)).map((m) => m.code).join(',')
+    }
+  })
+  for (const code of Object.keys(data.value["data"]))
+    commerceData.value[code] = data.value["data"][code]
 }
 
 const showConfirmToggleActiveModal = ref(false)
