@@ -374,6 +374,14 @@ async function fetchMediaCommerceData() {
 }
 
 const mediaDiscountDeadlinePassed: Ref<Dict<boolean>> = ref({})
+watch(mediaDiscountDeadlinePassed, () => {
+  for (const key in Object.keys(mediaDiscountDeadlinePassed.value)) {
+    if (!!mediaCommerceData.value[key] && !!mediaCommerceData.value[key].discount) {
+      // Delete passed discounts to force reload ui.
+      delete mediaCommerceData.value[key]
+    }
+  }
+}, {deep: true})
 
 // Pages
 const pages: Ref<Dict<IgPage>> = ref({})
@@ -402,6 +410,14 @@ async function fetchPageCommerceData() {
   }
 }
 const pageDiscountDeadlinePassed: Ref<Dict<boolean>> = ref({})
+watch(pageDiscountDeadlinePassed, () => {
+  for (const key in Object.keys(pageDiscountDeadlinePassed.value)) {
+    if (!!pageCommerceData.value[key] && !!pageCommerceData.value[key].discount) {
+      // Delete passed discounts to force reload ui.
+      delete pageCommerceData.value[key]
+    }
+  }
+}, {deep: true})
 
 const {
   mediaPrice

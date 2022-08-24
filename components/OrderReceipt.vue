@@ -175,10 +175,12 @@ import Dict = NodeJS.Dict;
 
 const props = defineProps({
   orderDetail: Object as PropType<OrderShopDetails>,
+  orderCreated: Number as PropType<Number>,
 })
 
 const {
-  orderDetail
+  orderDetail,
+  orderCreated
 } = toRefs(props)
 
 // Composables.
@@ -189,6 +191,30 @@ onMounted(async () => {
   if (!orderDetail.value) {
     return
   }
+
+  if (!!orderDetail.value.discount) {
+    if (orderDetail.value.discount.deadline < orderCreated.value) {
+      // Strip expired discount.
+      orderDetail.value.discount = undefined
+    }
+    else {
+      // Strip discount deadlines for UI.
+      orderDetail.value.discount.deadline = undefined
+    }
+  }
+  orderDetail.value.medias.forEach((m) => {
+    if (!!m.discount) {
+      if (m.discount.deadline < orderCreated.value) {
+        // Strip expired discount.
+        m.discount = undefined
+      }
+      else {
+        // Strip discount deadlines for UI.
+        m.discount.deadline = undefined
+      }
+    }
+  })
+
   const {
     data,
     error

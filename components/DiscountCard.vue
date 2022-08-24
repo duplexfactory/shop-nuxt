@@ -54,7 +54,7 @@ function configureCountdown(secondsLeft: Ref<number>, deadline: number) {
   secondsLeft.value = (deadline - Date.now()) / 1000
   if (secondsLeft.value > 0) {
     const interval = setInterval(() => {
-      if (secondsLeft.value === 0) {
+      if (secondsLeft.value <= 0) {
         clearInterval(interval)
         emit("deadlinePassed")
       } else {

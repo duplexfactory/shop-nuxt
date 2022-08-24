@@ -47,7 +47,7 @@
           </div>
 
           <div class="font-semibold mt-4">訂單内容</div>
-          <OrderReceipt v-if="!!order.shops[pageId]" class="col-span-2 mt-2" :orderDetail="order.shops[pageId]"></OrderReceipt>
+          <OrderReceipt v-if="!!order.shops[pageId]" class="col-span-2 mt-2" :orderDetail="order.shops[pageId]" :orderCreated="order.created"></OrderReceipt>
 
           <button v-if="[OrderStatus.VERIFICATION_FAILED, OrderStatus.PENDING].includes(order.shops[pageId].orderStatus)"
                   class="btn-primary mt-4"

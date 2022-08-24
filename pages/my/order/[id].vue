@@ -58,7 +58,7 @@
         </div>
 
         <div class="col-span-2 font-semibold mt-4">訂單內容</div>
-        <OrderReceipt v-if="!!orderDetail" class="col-span-2 mt-2" :orderDetail="orderDetail"></OrderReceipt>
+        <OrderReceipt v-if="!!orderDetail" class="col-span-2 mt-2" :orderDetail="orderDetail" :orderCreated="order.created"></OrderReceipt>
 
       </div>
     </div>
@@ -102,19 +102,7 @@ const order = ref<Order | null>(null)
 const orderDetail = computed(() => {
   if (!order.value)
     return null
-
-  // Strip discount deadlines for UI.
-  const details = order.value.shops[igPageId.value]
-  if (!!details.discount) {
-    details.discount.deadline = undefined
-  }
-  details.medias.forEach((m) => {
-    if (!!m.discount) {
-      m.discount.deadline = undefined
-    }
-  })
-
-  return details
+  return order.value.shops[igPageId.value]
 })
 
 const paymentInfos = computed(() => {
@@ -124,7 +112,7 @@ const paymentInfos = computed(() => {
 })
 
 onMounted(async () => {
-  const {data, pending, error} = await useLazyFetch(`/api/order/${route.params.id}/shop/`, {headers: headersToObject(await getAuthHeader())})
+  const {data, pending, error} = await useLazyFetch(`/api/order/${route.params.id}/shop`, {headers: headersToObject(await getAuthHeader())})
   if (!!error && !!error.value) {
     throwError(notFound);
   }
