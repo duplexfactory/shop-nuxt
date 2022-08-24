@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import {accountTabs} from "~/data/ui";
+
 const route = useRoute();
 const router = useRouter();
 const isLoggedIn = useIsLoggedIn();
@@ -17,20 +19,12 @@ watch(
     }
 )
 
-const tabs: {route: string, title: string}[] = [
-  {route: "account", title: "我的帳戶"},
-  {route: "shop", title: "商店資料"},
-  {route: "media-list", title: "我的貼文"},
-  {route: "e-commerce", title: "網店設定"},
-  {route: "order-list", title: "我的訂單"},
-]
-
 </script>
 
 <template>
     <div class="container mx-auto mt-4 md:mt-0">
-      <div class="mb-4 flex">
-        <nuxt-link v-for="tab in tabs"
+      <div class="hidden md:flex mb-4">
+        <nuxt-link v-for="tab in accountTabs"
                    :key="tab.route"
                    :to="`/my/${tab.route}`"
                    class="px-2 lg:px-4 py-2"

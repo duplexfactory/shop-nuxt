@@ -71,11 +71,11 @@
             </button>
             <template #content>
               <div class="text-sm p-2 bg-white rounded-md shadow-md">
-                <div class="p-2">
-                  <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
-                </div>
-                <div class="p-2">
-                  <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
+                <div v-for="tab in accountTabs"
+                     :key="tab.route"
+                     class="p-2">
+                  <nuxt-link :to="`/my/${tab.route}`"
+                             @click="hideSidebar">{{ tab.title }}</nuxt-link>
                 </div>
                 <div class="p-2">
                   <AgeRestrictionToggle/>
@@ -101,6 +101,7 @@
   import Popper from "vue3-popper";
   import useSearch from "~/composables/useSearch"
   import {useShowSearchModal} from "~/composables/states"
+  import {accountTabs} from "~/data/ui";
 
   const {ageRestrictedCategories} = useTags()
   const {
