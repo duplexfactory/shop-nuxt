@@ -300,7 +300,7 @@
     </div>
 
     <div class="my-8 text-right">
-      <button class="btn-primary btn-lg" @click="clickCheckout">
+      <button :disabled="loading || pageIds.length == 0" class="btn-primary btn-lg" @click="clickCheckout">
         立即結賬
       </button>
     </div>
