@@ -63,17 +63,14 @@
     </div>
 
 
-    <Teleport to="body">
-      <transition name="modal">
-        <LazyPaymentModal v-if="!!showingPaymentMethodsPageId"
-                          :pageId="showingPaymentMethodsPageId"
-                          :orderId="order._id"
-                          :amount="pageTotal(order.shops[showingPaymentMethodsPageId])"
-                          :receiver="pages[showingPaymentMethodsPageId].username"
-                          @close="showingPaymentMethodsPageId = ''"></LazyPaymentModal>
-      </transition>
-    </Teleport>
-
+    <transition name="modal">
+      <LazyPaymentModal v-if="!!showingPaymentMethodsPageId"
+                        :pageId="showingPaymentMethodsPageId"
+                        :orderId="order._id"
+                        :amount="pageTotal(order.shops[showingPaymentMethodsPageId])"
+                        :receiver="pages[showingPaymentMethodsPageId].username"
+                        @close="showingPaymentMethodsPageId = ''"></LazyPaymentModal>
+    </transition>
   </div>
 </template>
 <script setup lang="ts">
