@@ -1,14 +1,19 @@
 <template>
-  <div v-if="!mediaPending">
-    <div class="flex justify-between mb-4">
-      <button v-if="cursors && cursors.before"
+  <div class="mb-8">
+    <div class="mb-4">
+      <input type="checkbox" id="only-active" name="onlyActive" v-model="onlyActiveFilter">
+      <label for="only-active" class="pl-2">只顯示接受訂單的貼文</label>
+    </div>
+
+    <div class="flex justify-between">
+      <button v-if="prevPageAvailable"
               @click="clickPrevPage"
               class="hover:underline text-pink-600">
         上一頁
       </button>
       <span v-else></span>
 
-      <button v-if="cursors && cursors.after"
+      <button v-if="nextPageAvailable"
               @click="clickNextPage"
               class="hover:underline text-pink-600">
         下一頁
@@ -16,7 +21,7 @@
       <span v-else></span>
     </div>
 
-    <div class="wrapper mb-8">
+    <div v-if="!mediaPending" class="wrapper my-4">
       <div class="table">
         <div class="table-header-group">
           <div class="table-row">
@@ -47,7 +52,7 @@
           </div>
         </div>
 
-        <LazyMediaTableRow v-for="media in medias"
+        <LazyMediaTableRow v-for="media in currentMedias"
                            :key="media.code"
                            :media="media"
                            @showConfirmToggleActive="showConfirmToggleActive"
@@ -57,15 +62,15 @@
       </div>
     </div>
 
-    <div class="flex justify-between mb-4">
-      <button v-if="cursors && cursors.before"
+    <div class="flex justify-between">
+      <button v-if="prevPageAvailable"
               @click="clickPrevPage"
               class="hover:underline text-pink-600">
         上一頁
       </button>
       <span v-else></span>
 
-      <button v-if="cursors && cursors.after"
+      <button v-if="nextPageAvailable"
               @click="clickNextPage"
               class="hover:underline text-pink-600">
         下一頁
@@ -73,26 +78,24 @@
       <span v-else></span>
     </div>
 
-    <Teleport to="body">
-      <transition name="modal">
-        <LazyConfirmModal v-if="showConfirmToggleActiveModal"
-                          cancelButtonTitle="取消"
-                          confirmButtonTitle="確定"
-                          @close="cancelToggleActive"
-                          @confirm="confirmToggleActive">
-          <template #body>
-            <div class="p-4">
-              <div>你是否確定開啓接受訂單？</div>
-              <div>開啓後，客戶可直接在Shoperuse向你下單購買產品。</div>
-              <div class="mt-2">
-                <input type="checkbox" id="no-more" name="no-more" v-model="noMoreToggleActiveReminder" class="mr-2">
-                <label for="no-more">下次不再顯示</label>
-              </div>
+    <transition name="modal">
+      <LazyConfirmModal v-if="showConfirmToggleActiveModal"
+                        cancelButtonTitle="取消"
+                        confirmButtonTitle="確定"
+                        @close="cancelToggleActive"
+                        @confirm="confirmToggleActive">
+        <template #body>
+          <div class="p-4">
+            <div>你是否確定開啓接受訂單？</div>
+            <div>開啓後，客戶可直接在Shoperuse向你下單購買產品。</div>
+            <div class="mt-2">
+              <input type="checkbox" id="no-more" name="no-more" v-model="noMoreToggleActiveReminder" class="mr-2">
+              <label for="no-more">下次不再顯示</label>
             </div>
-          </template>
-        </LazyConfirmModal>
-      </transition>
-    </Teleport>
+          </div>
+        </template>
+      </LazyConfirmModal>
+    </transition>
 
   </div>
 </template>
@@ -103,37 +106,79 @@ import Popper from "vue3-popper";
 import {mediaPrice} from  "~/utils/mediaPrice"
 import useMediaList from "~/composables/useMediaList";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
+import Dict = NodeJS.Dict;
+import IgMedia from "~/models/IgMedia";
+
+const nuxt = useNuxtApp()
+const {getAuthHeader, headersToObject} = useAuth()
 
 const {
   mediaPending,
   medias,
+  limit,
   cursors,
   fetchOwnOfficialMedias
 } = useMediaList()
-const nuxt = useNuxtApp()
-const {getAuthHeader, headersToObject} = useAuth()
 
+// Only active filter.
+const onlyActiveFilter = ref(false)
+const allOnlyActiveMedias = ref<IgMedia[]>([])
+const currentPage = ref(1)
 const commerceData = ref<Record<string, IgMediaCommerceData>>({})
 
-onMounted(async () => {
-  await fetchOwnOfficialMedias()
-  const {data, error} = await useFetch('/api/media/commerce-data', {
-    params: {
-      codes: medias.value.map((m) => m.code).join(',')
-    }
-  })
-
-  for (const m of medias.value)
-    commerceData.value[m.code] = data.value["data"][m.code]
+const currentMedias = computed(() => {
+  if (onlyActiveFilter.value) {
+    // Fake pagination.
+    const startIndex = (currentPage.value - 1) * limit.value
+    return allOnlyActiveMedias.value.slice(startIndex, startIndex + limit.value)
+  }
+  else {
+    return medias.value
+  }
 })
 
-async function clickPrevPage() {
-  await fetchOwnOfficialMedias(true)
-}
+watch(onlyActiveFilter, async () => {
+  if (onlyActiveFilter.value) {
+    // Reset pages.
+    currentPage.value = 1
 
-async function clickNextPage() {
-  await fetchOwnOfficialMedias()
+    if (allOnlyActiveMedias.value.length !== 0) {
+      // Have the data already, no need to get again.
+      return
+    }
 
+    // Get all commerce data of medias that are active.
+    const {data, error} = await useFetch('/api/media/commerce-data', {
+      params: {
+        active: true
+      }
+    })
+    const newCommerceData: Dict<IgMediaCommerceData> = data.value["data"]
+    for (const code of Object.keys(newCommerceData))
+      commerceData.value[code] = newCommerceData[code]
+
+    // Get the medias of these commerce data.
+    const {
+      data: mediaData,
+      error: mediaError
+    } = await useFetch("/api/media", {
+      params: {
+        codes: Object.keys(newCommerceData).join(",")
+      }
+    })
+    if (!!mediaData.value) {
+      const medias: IgMedia[] = Object.values(mediaData.value.medias)
+      allOnlyActiveMedias.value = medias.sort((a, b) => b.takenAt - a.takenAt)
+    }
+  }
+  else {
+    // Reset pages.
+    cursors.value = null
+    await clickNextPage()
+  }
+})
+
+async function fetchMediaCommerceData() {
   const {data, error} = await useFetch('/api/media/commerce-data', {
     params: {
       codes: medias.value.filter((m) => !Object.keys(commerceData.value).includes(m.code)).map((m) => m.code).join(',')
@@ -141,6 +186,48 @@ async function clickNextPage() {
   })
   for (const code of Object.keys(data.value["data"]))
     commerceData.value[code] = data.value["data"][code]
+}
+
+onMounted(async () => {
+  await clickNextPage()
+})
+
+// Prev and next page.
+const prevPageAvailable = computed(() => {
+  if (onlyActiveFilter.value) {
+    return currentPage.value !== 1
+  }
+  else {
+    return cursors.value && cursors.value.before
+  }
+})
+
+const nextPageAvailable = computed(() => {
+  if (onlyActiveFilter.value) {
+    return currentPage.value * limit.value < allOnlyActiveMedias.value.length
+  }
+  else {
+    return cursors.value && cursors.value.after
+  }
+})
+
+async function clickPrevPage() {
+  if (onlyActiveFilter.value) {
+    currentPage.value --
+  }
+  else {
+    await fetchOwnOfficialMedias(true)
+  }
+}
+
+async function clickNextPage() {
+  if (onlyActiveFilter.value) {
+    currentPage.value ++
+  }
+  else {
+    await fetchOwnOfficialMedias()
+    await fetchMediaCommerceData()
+  }
 }
 
 const showConfirmToggleActiveModal = ref(false)

@@ -1,16 +1,27 @@
 import {defineEventHandler, JSONValue, useQuery} from "h3"
 import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb"
+import {isEmpty} from "~/utils/isEmpty";
+import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
+import {Filter} from "mongodb";
 
 export default defineEventHandler(async (event) => {
     let {
-        codes
-    } = await useQuery(event) as { codes: string }
+        codes,
+        active
+    } = await useQuery(event) as {
+        codes?: string,
+        active?: string
+    }
 
-    const mediaCodeList = codes.split(",")
     await initMongo()
-    const mediaCommerceDataList = await mediaCommerceDataCollection.find({
-        _id: { $in: mediaCodeList }
-    }).toArray()
+    const filter: Filter<IgMediaCommerceData> = {}
+    if (!!codes) {
+        filter._id = { $in: codes.split(",") }
+    }
+    if (!isEmpty(active)) {
+        filter.active = Boolean(active)
+    }
+    const mediaCommerceDataList = await mediaCommerceDataCollection.find(filter).toArray()
 
     return {
         data: mediaCommerceDataList.reduce((prev, curr) => {

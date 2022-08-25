@@ -91,6 +91,7 @@ export default function useMediaList() {
     return {
         mediaPending,
         medias,
+        limit,
         cursors,
         fetchOwnOfficialMedias,
         fetchOfficialMedias,
