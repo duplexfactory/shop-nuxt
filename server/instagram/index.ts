@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import IgMedia from "~/models/IgMedia"
 import fetch from "node-fetch"
+import {igAuthCollection, initMongo} from "~/server/mongodb";
 
 export interface IgOfficialMedia {
     caption: string,
@@ -21,8 +22,14 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
         data: IgOfficialMedia[]
         paging: any
     }
-    if (!data)
+    if (!data) {
+        if (mediaRes.status == 400) {
+            // Page connection problem.
+            await initMongo()
+            await igAuthCollection.updateOne({pageId}, {$set: {invalid: true}});
+        }
         return []
+    }
     const medias = data.map(m => ({
         code: m.permalink.split("/").filter(t => !!t).pop(),
         pageId,
