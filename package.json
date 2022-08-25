@@ -37,6 +37,7 @@
     "mongodb": "^4.3.1",
     "nanoid": "^3.3.4",
     "node-fetch": "^3.1.0",
+    "nodemailer": "^6.7.8",
     "path": "^0.12.7",
     "swiper": "^7.4.1",
     "vue3-file-selector": "^1.0.3",

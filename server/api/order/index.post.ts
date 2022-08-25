@@ -2,11 +2,13 @@ import {defineEventHandler, useBody} from "h3";
 import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {mediaPrice} from "~/utils/mediaPrice";
-import {initMongo, orderCollection} from "~/server/mongodb";
+import {igAuthCollection, initMongo, orderCollection} from "~/server/mongodb";
 import {Order, OrderStatus} from "~/models/Order";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 import {pageTotal} from "~/utils/discountValue";
 import Dict = NodeJS.Dict;
+import {sendOrderNotificationEmail} from "~/server/util";
+import {getAuth} from "firebase-admin/auth";
 
 export default defineEventHandler(async (event) => {
 
@@ -26,6 +28,8 @@ export default defineEventHandler(async (event) => {
         }>,
         notes: Dict<string>
     }>(event);
+
+    const created = Date.now()
 
     const {
         data: mediaCommerceData,
@@ -54,17 +58,18 @@ export default defineEventHandler(async (event) => {
         return previous
     }, {})
 
+    const pageIds = Object.keys(mediasGrouped)
     const {
         commerceData: shopCommerceData,
     } = await $fetch("/api/shop/commerce-data", {
-        params: {ids: Object.keys(mediasGrouped).join(",")}
+        params: {ids: pageIds.join(",")}
     }) as {
         commerceData: Dict<IgPageCommerceData>
     }
 
     await initMongo();
-    const orderInsertOneResult = await orderCollection.insertOne({
-        created: Date.now(),
+    const order = {
+        created,
         shops: Object.keys(mediasGrouped).reduce((previous, currentPageId) => {
             previous[currentPageId] = {
                 medias: mediasGrouped[currentPageId].map((m) => ({
@@ -88,7 +93,31 @@ export default defineEventHandler(async (event) => {
 
             return previous
         }, {} as Order["shops"])
-    });
+    }
+    const orderInsertOneResult = await orderCollection.insertOne(order);
+
+    if (!!pageIds.length) {
+        // Send email notification to shop owners.
+        const igAuths = await igAuthCollection.find({
+            pageId: {$in: pageIds}
+        }).toArray()
+        const getUsersRes = await getAuth().getUsers(igAuths.map((auth) => ({uid: auth.userId})))
+        const uidMap = igAuths.reduce((prev, current) => {
+            prev[current.pageId] = current.userId
+            return prev
+        }, {})
+        const emailMap = getUsersRes.users.reduce((prev, current) => {
+            prev[current.uid] = current.email
+            return prev
+        }, {})
+
+        for (const pageId of pageIds) {
+            if (!!uidMap[pageId] && !!emailMap[uidMap[pageId]]) {
+                const email = emailMap[uidMap[pageId]]
+                await sendOrderNotificationEmail(email, orderInsertOneResult.insertedId.toString(), created, order.shops[pageId].orderStatus, pageTotal(order.shops[pageId]))
+            }
+        }
+    }
 
     return {
         success: true,
