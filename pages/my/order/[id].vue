@@ -1,84 +1,83 @@
 <template>
   <div>
-    <div v-if="order">
-      <div class="mb-4 border rounded-md px-8 py-4 bg-blue-100 border-blue-500">
-        <i class="spr-info-circled-alt text-gray-600 mr-2"></i>{{ tipText }}
-      </div>
-
-      <div class="mb-4 border rounded-md p-4 md:(p-8 grid grid-cols-2)">
-
-        <div class="col-span-1">
-          <div class="font-semibold">訂單資訊</div>
-          <div>訂單號碼：{{ order._id }}</div>
-          <div>訂單日期：{{ createdDateText }}</div>
-          <div>訂單狀態：<span :class="orderStatusColorClass[orderDetail.orderStatus]">{{ orderStatusToText[orderDetail.orderStatus] }}</span></div>
+    <client-only>
+      <div v-if="order">
+        <div class="mb-4 border rounded-md px-8 py-4 bg-blue-100 border-blue-500">
+          <i class="spr-info-circled-alt text-gray-600 mr-2"></i>{{ tipText }}
         </div>
 
-        <div class="col-span-1 mt-4 md:mt-0">
-          <div class="font-semibold">付款資訊</div>
-          <template v-if="!!orderDetail.paymentMethodData">
-            <div>{{ '付款方法：' + paymentMethodsToText[orderDetail.paymentMethodData.method] }}</div>
-            <div v-for="d in paymentInfos" :key="'payment-info-' + d.title">
-              <div v-if="!!d.value">{{ `${d.title}：${d.value}` }}</div>
-              <div v-if="!!d.imageUrl">
-                <img :src="d.imageUrl" style="max-width: 150px; max-height: 150px;"/>
-              </div>
-            </div>
+        <div class="mb-4 border rounded-md p-4 md:(p-8 grid grid-cols-2)">
 
-            <button v-if="orderDetail.paymentMethodData.method === PaymentType.IN_PERSON && orderDetail.orderStatus !== OrderStatus.MAILED"
-                    class="btn-primary mt-2"
-                    :disabled="isSettleLoading"
-                    @click="clickSettle">
-              完成交易
-            </button>
-          </template>
-          <div v-else>請等待買家付款</div>
+          <div class="col-span-1">
+            <div class="font-semibold">訂單資訊</div>
+            <div>訂單號碼：{{ order._id }}</div>
+            <div>訂單日期：{{ createdDateText }}</div>
+            <div>訂單狀態：<span :class="orderStatusColorClass[orderDetail.orderStatus]">{{ orderStatusToText[orderDetail.orderStatus] }}</span></div>
+          </div>
 
-          <template v-if="!!orderDetail.paymentMethodData && (orderDetail.paymentMethodData.method !== PaymentType.IN_PERSON)">
-            <div class="font-semibold mt-4">付款證明</div>
-            <template v-if="!!orderDetail.paymentProofUrl && orderDetail.orderStatus !== OrderStatus.VERIFICATION_FAILED">
-              <img :src="orderDetail.paymentProofUrl" style="max-width: 150px; max-height: 150px;"/>
-              <div class="mt-2">
-                <button class="btn-primary"
-                        :disabled="isVerifyLoading"
-                        @click="clickVerify">
-                  接受證明
-                </button>
-                <button class="btn-outline ml-2"
-                        :disabled="isVerifyLoading"
-                        @click="clickDeny">
-                  拒絕接受證明
-                </button>
+          <div class="col-span-1 mt-4 md:mt-0">
+            <div class="font-semibold">付款資訊</div>
+            <template v-if="!!orderDetail.paymentMethodData">
+              <div>{{ '付款方法：' + paymentMethodsToText[orderDetail.paymentMethodData.method] }}</div>
+              <div v-for="d in paymentInfos" :key="'payment-info-' + d.title">
+                <div v-if="!!d.value">{{ `${d.title}：${d.value}` }}</div>
+                <div v-if="!!d.imageUrl">
+                  <img :src="d.imageUrl" style="max-width: 150px; max-height: 150px;"/>
+                </div>
               </div>
 
+              <button v-if="orderDetail.paymentMethodData.method === PaymentType.IN_PERSON && orderDetail.orderStatus !== OrderStatus.MAILED"
+                      class="btn-primary mt-2"
+                      :disabled="isSettleLoading"
+                      @click="clickSettle">
+                完成交易
+              </button>
             </template>
-            <div v-else>請等待買家上傳付款證明</div>
-          </template>
+            <div v-else>請等待買家付款</div>
+
+            <template v-if="!!orderDetail.paymentMethodData && (orderDetail.paymentMethodData.method !== PaymentType.IN_PERSON)">
+              <div class="font-semibold mt-4">付款證明</div>
+              <template v-if="!!orderDetail.paymentProofUrl && orderDetail.orderStatus !== OrderStatus.VERIFICATION_FAILED">
+                <img :src="orderDetail.paymentProofUrl" style="max-width: 150px; max-height: 150px;"/>
+                <div class="mt-2">
+                  <button class="btn-primary"
+                          :disabled="isVerifyLoading"
+                          @click="clickVerify">
+                    接受證明
+                  </button>
+                  <button class="btn-outline ml-2"
+                          :disabled="isVerifyLoading"
+                          @click="clickDeny">
+                    拒絕接受證明
+                  </button>
+                </div>
+
+              </template>
+              <div v-else>請等待買家上傳付款證明</div>
+            </template>
+
+          </div>
+
+          <div class="col-span-2 font-semibold mt-4">訂單內容</div>
+          <OrderReceipt v-if="!!orderDetail" class="col-span-2 mt-2" :orderDetail="orderDetail" :orderCreated="order.created"></OrderReceipt>
 
         </div>
-
-        <div class="col-span-2 font-semibold mt-4">訂單內容</div>
-        <OrderReceipt v-if="!!orderDetail" class="col-span-2 mt-2" :orderDetail="orderDetail" :orderCreated="order.created"></OrderReceipt>
-
       </div>
-    </div>
+    </client-only>
 
     <!-- Confirm settle -->
-    <Teleport to="body">
-      <transition name="modal">
-        <LazyConfirmModal v-if="showConfirmModal"
-                          @confirm="onConfirm"
-                          @close="showConfirmModal = false">
-          <template #body>
-            <div class="p-4">
-              <div v-if="!!confirmModalTitle">{{ confirmModalTitle }}</div>
-              <div v-if="!!confirmModalContent" class="mt-2">{{ confirmModalContent }}</div>
-            </div>
-          </template>
-        </LazyConfirmModal>
-      </transition>
-    </Teleport>
-
+    <transition name="modal">
+      <LazyConfirmModal v-if="showConfirmModal"
+                        @confirm="onConfirm"
+                        @close="showConfirmModal = false">
+        <template #body>
+          <div class="p-4">
+            <div v-if="!!confirmModalTitle">{{ confirmModalTitle }}</div>
+            <div v-if="!!confirmModalContent" class="mt-2">{{ confirmModalContent }}</div>
+          </div>
+        </template>
+      </LazyConfirmModal>
+    </transition>
   </div>
 </template>
 <script lang="ts" setup>
@@ -89,6 +88,7 @@ import dayjs from "dayjs";
 import {mailingInfoTypeToText, mailingTypeToText, paymentMethodsToText, orderStatusToText, orderStatusColorClass} from "~/data/commerce";
 import {structurePaymentMethodData} from "~/utils/paymentMethodData";
 import {PaymentType} from "~/models/IgPageCommerceData";
+import {RefreshOptions} from "nuxt3/dist/app/composables/asyncData";
 
 
 // Composables.
@@ -98,7 +98,20 @@ const config = useRuntimeConfig()
 const {getAuthHeader, headersToObject} = useAuth()
 const igPageId = useIgPageId()
 
-const order = ref<Order | null>(null)
+let headers;
+if (process.client) {
+  headers = headersToObject(await getAuthHeader())
+}
+const {data, pending, refresh, error} = await useLazyFetch(`/api/order/${route.params.id}/shop`, {headers, server: false})
+if (!!error && !!error.value) {
+  throwError(notFound);
+}
+const order = computed(() => {
+  if (!data.value)
+    return null
+  return (data.value as any as {order: Order}).order
+})
+
 const orderDetail = computed(() => {
   if (!order.value)
     return null
@@ -109,21 +122,6 @@ const paymentInfos = computed(() => {
   if (!orderDetail.value)
     return []
   return structurePaymentMethodData(orderDetail.value.paymentMethodData);
-})
-
-onMounted(async () => {
-  const {data, pending, error} = await useLazyFetch(`/api/order/${route.params.id}/shop`, {headers: headersToObject(await getAuthHeader())})
-  if (!!error && !!error.value) {
-    throwError(notFound);
-  }
-  if (pending.value) {
-    watch(data, () => {
-      order.value = (data.value as any as {order: Order}).order
-    })
-  }
-  else {
-    order.value = (data.value as any as {order: Order}).order
-  }
 })
 
 const createdDateText = computed(() => {
@@ -187,6 +185,7 @@ async function confirmSettle() {
     return
   }
   nuxt.vueApp.$toast.success("已成功完成交易。", {position: "top"})
+  await refresh()
 }
 
 // Verify payment proof.
@@ -209,6 +208,7 @@ async function confirmVerify() {
     return
   }
   nuxt.vueApp.$toast.success("已成功接受證明。", {position: "top"})
+  await refresh()
 }
 async function clickDeny() {
   showConfirmModal.value = true
@@ -228,6 +228,7 @@ async function confirmDeny() {
     return
   }
   nuxt.vueApp.$toast.success("已成功拒絕接受證明。", {position: "top"})
+  await refresh()
 }
 
 // Helper.
