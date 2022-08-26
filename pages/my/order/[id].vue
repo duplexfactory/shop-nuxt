@@ -40,15 +40,23 @@
               <template v-if="!!orderDetail.paymentProofUrl && orderDetail.orderStatus !== OrderStatus.VERIFICATION_FAILED">
                 <img :src="orderDetail.paymentProofUrl" style="max-width: 150px; max-height: 150px;"/>
                 <div class="mt-2">
-                  <button class="btn-primary"
-                          :disabled="isVerifyLoading"
-                          @click="clickVerify">
-                    接受證明
-                  </button>
-                  <button class="btn-outline ml-2"
-                          :disabled="isVerifyLoading"
-                          @click="clickDeny">
-                    拒絕接受證明
+                  <template v-if="orderDetail.orderStatus === OrderStatus.TB_VERIFIED">
+                    <button class="btn-primary"
+                            :disabled="isVerifyLoading"
+                            @click="clickVerify">
+                      接受證明
+                    </button>
+                    <button class="btn-outline ml-2"
+                            :disabled="isVerifyLoading"
+                            @click="clickDeny">
+                      拒絕接受證明
+                    </button>
+                  </template>
+                  <button v-if="orderDetail.orderStatus === OrderStatus.VERIFIED"
+                          class="btn-primary"
+                          :disabled="isSettleLoading"
+                          @click="clickSettle">
+                    完成交易
                   </button>
                 </div>
 
