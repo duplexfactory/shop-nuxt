@@ -26,6 +26,8 @@ const props = withDefaults(defineProps<{
   emptyValue: any,
   clearable: boolean,
 }>(), {
+  modelValue: null,
+  emptyValue: null,
   clearable: false
 });
 
