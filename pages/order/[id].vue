@@ -99,7 +99,9 @@ const order = computed(() => {
 })
 
 const pageIds = computed(() => !order.value ? [] : Object.keys(order.value.shops))
-const createdDateText = dayjs((order.value?.created ?? 0)).format('DD/MM/YYYY');
+const createdDateText = computed(() => {
+  return dayjs((order.value?.created ?? 0)).format('DD/MM/YYYY');
+})
 
 const pages: Ref<Dict<IgPage>> = ref({})
 if (!!pageIds.value.length) {
