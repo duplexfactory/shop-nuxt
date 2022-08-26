@@ -13,7 +13,7 @@ export const mailingInfoTypes = [
     MailingInfoType.NAME,
     MailingInfoType.PHONE,
     MailingInfoType.ADDRESS,
-    MailingInfoType.OTHERS
+    // MailingInfoType.OTHERS
 ]
 
 export const mailingTypeToText = {
@@ -28,7 +28,7 @@ export const mailingInfoTypeToText = {
     [MailingInfoType.NAME]: "名稱",
     [MailingInfoType.ADDRESS]: "地址",
     [MailingInfoType.PHONE]: "電話",
-    [MailingInfoType.OTHERS]: "其他"
+    // [MailingInfoType.OTHERS]: "其他"
 }
 
 export const paymentMethods = [
