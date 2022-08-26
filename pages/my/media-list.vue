@@ -111,6 +111,7 @@ import IgMedia from "~/models/IgMedia";
 
 const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
+const igPageId = useIgPageId()
 
 const {
   mediaPending,
@@ -150,7 +151,8 @@ watch(onlyActiveFilter, async () => {
     // Get all commerce data of medias that are active.
     const {data, error} = await useFetch('/api/media/commerce-data', {
       params: {
-        active: true
+        active: true,
+        pageId: igPageId.value
       }
     })
     const newCommerceData: Dict<IgMediaCommerceData> = data.value["data"]

@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
     noCache(event);
     const {code} = event.context.params
     assert(code)
-    assert(await isOwnMedia(event, code))
+    const media = await isOwnMedia(event, code)
+    assert(media)
     const {
         active,
         customPrice,
@@ -26,7 +27,8 @@ export default defineEventHandler(async (event) => {
         active,
         customPrice,
         stock,
-        discount
+        discount,
+        pageId: media.pageId
     }
     let defaults = {
         active: false,

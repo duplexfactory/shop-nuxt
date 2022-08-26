@@ -7,10 +7,12 @@ import {Filter} from "mongodb";
 export default defineEventHandler(async (event) => {
     let {
         codes,
-        active
+        active,
+        pageId,
     } = await useQuery(event) as {
         codes?: string,
-        active?: string
+        active?: string,
+        pageId?: string
     }
 
     await initMongo()
@@ -20,6 +22,9 @@ export default defineEventHandler(async (event) => {
     }
     if (!isEmpty(active)) {
         filter.active = Boolean(active)
+    }
+    if (!!pageId) {
+        filter.pageId = pageId
     }
     const mediaCommerceDataList = await mediaCommerceDataCollection.find(filter).toArray()
 

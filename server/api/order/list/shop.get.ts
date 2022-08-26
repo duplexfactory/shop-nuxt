@@ -33,9 +33,9 @@ export default defineEventHandler(async (event) => {
         [`shops.${igAuth.pageId}`]: {$exists: true}
     }
     if (!!keyword) {
-        filter._id = ObjectId(keyword)
+        filter._id = new ObjectId(keyword)
     }
-    if (!isEmpty(status) && !isNaN(status)) {
+    if (!isEmpty(status) && !isNaN(Number(status))) {
         filter[`shops.${igAuth.pageId}.orderStatus`] = Number(status)
     }
 
