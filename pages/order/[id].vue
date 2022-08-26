@@ -65,6 +65,7 @@
                         :orderId="order._id"
                         :amount="pageTotal(order.shops[showingPaymentMethodsPageId])"
                         :receiver="pages[showingPaymentMethodsPageId].username"
+                        @submit="submitPayment"
                         @close="showingPaymentMethodsPageId = ''"></LazyPaymentModal>
     </transition>
   </div>
@@ -87,7 +88,7 @@ const route = useRoute()
 const nuxt = useNuxtApp()
 const config = useRuntimeConfig()
 
-const {data, error} = await useLazyFetch(`/api/order/${route.params.id}`)
+const {data, refresh, error} = await useLazyFetch(`/api/order/${route.params.id}`)
 if (!!error && !!error.value) {
   throwError(notFound);
 }
@@ -126,6 +127,11 @@ const showingPaymentMethodsPageId = ref("")
 function clickCopyLink() {
   navigator.clipboard.writeText(config.DOMAIN + route.fullPath)
   nuxt.vueApp.$toast.success("已複製此頁面網址至剪貼板，請保存以重新瀏覽！", {position: "top"});
+}
+
+function submitPayment() {
+  // Refresh after submitting.
+  refresh()
 }
 
 </script>

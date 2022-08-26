@@ -117,7 +117,7 @@ const {
   receiver
 } = toRefs(props)
 
-const emit = defineEmits(["close"])
+const emit = defineEmits(["close", "submit"])
 
 const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
 const selectedPaymentMethodData: Ref<PaymentMethodData> = ref(null)
@@ -208,6 +208,7 @@ async function clickSubmit() {
 
     isSubmitting.value = false
     nuxt.vueApp.$toast.success("成功提交！", {position: "top"})
+    emit("submit")
     emit("close")
   }
   catch (e) {
