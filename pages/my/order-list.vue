@@ -12,7 +12,7 @@
         </div>
         <div>
           <div>訂單狀態</div>
-          <lazy-spr-select class="mr-2" v-model="orderStatusFilter" @change="fetchOrderList">
+          <lazy-spr-select class="mr-2" v-model="orderStatusFilter" @change="fetchOrderList" :clearable="true" :emptyValue="null">
             <option disabled :value="null">請選擇</option>
             <option v-for="key in Object.keys(orderStatusToText)"
                     :key="'order-status-filter' + key"
