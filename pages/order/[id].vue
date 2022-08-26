@@ -56,8 +56,6 @@
           </button>
 
         </div>
-
-        <hr/>
       </div>
 
     </div>

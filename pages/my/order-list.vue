@@ -98,7 +98,9 @@
           </div>
           <hr/>
         </template>
-
+      </div>
+      <div v-if="orders.length === 0" class="mb-4 p-8 border rounded-md text-center">
+        <div class="text-xl">尚未有任何訂單</div>
       </div>
 
       <div class="flex items-center justify-between">
