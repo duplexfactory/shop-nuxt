@@ -3,7 +3,7 @@
     <div v-if="order">
       <div class="mb-4 border rounded-md p-4">
 
-        <div class="text-center">
+        <div v-if="route.query.checkout" class="text-center mb-4">
           <i class="spr-ok text-6xl text-green-500"></i>
           <div class="font-semibold text-green-500">成功建立訂單！</div>
           <div class="mt-4">
@@ -12,7 +12,7 @@
           </div>
         </div>
 
-        <div class="font-semibold mt-4">訂單資訊</div>
+        <div class="font-semibold">訂單資訊</div>
         <div>訂單號碼: {{ order._id }}</div>
         <div>訂單日期: {{ createdDateText }}</div>
 
@@ -127,7 +127,7 @@ async function fetchPages() {
 const showingPaymentMethodsPageId = ref("")
 
 function clickCopyLink() {
-  navigator.clipboard.writeText(config.DOMAIN + route.fullPath)
+  navigator.clipboard.writeText(config.DOMAIN + route.path)
   nuxt.vueApp.$toast.success("已複製此頁面網址至剪貼板，請保存以重新瀏覽！", {position: "top"});
 }
 

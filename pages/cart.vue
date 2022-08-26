@@ -589,7 +589,7 @@ async function clickCheckout() {
   // Clear cart items.
   localStorage.removeItem("cart");
 
-  router.push({path: `/order/${data.value["id"]}`});
+  router.push({path: `/order/${data.value["id"]}`, query: {checkout: "true"}});
 
 }
 
