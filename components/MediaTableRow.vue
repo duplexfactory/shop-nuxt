@@ -1,7 +1,8 @@
 <template>
   <div class="table-row">
     <div class="table-cell">
-      <div class="image-container aspect-square rounded-md overflow-hidden"
+      <div class="image-container aspect-square rounded-md overflow-hidden cursor-pointer"
+           @click="clickMedia"
            style="width: 90px"
            v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
     </div>
@@ -80,6 +81,7 @@ const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
 import {format} from "date-fns"
 import {mediaPrice} from  "~/utils/mediaPrice"
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
@@ -91,6 +93,9 @@ const {
 } = toRefs(props)
 
 const emit = defineEmits(["update:mediaCommerceData", "showConfirmToggleActive"])
+
+// Composables.
+const igPageId = useIgPageId()
 
 const editingDiscount = ref(false)
 const localDiscount = ref(null)
@@ -274,6 +279,17 @@ const currentDiscount = computed(() => {
   }
   return discountToText(mediaCommerceData.value.discount)
 })
+
+// Media interaction.
+const showMediaModal = useShowMediaModal()
+const showingMediaModalData = useShowingMediaModalData()
+function clickMedia() {
+  showMediaModal.value = true;
+  showingMediaModalData.value = {
+    media: media.value,
+    pageId: igPageId.value
+  };
+}
 
 </script>
 
