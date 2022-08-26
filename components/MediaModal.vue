@@ -55,7 +55,7 @@
                   加到購物車
                 </button>
               </template>
-              <button v-else-if="!mediaCommerceData" class="btn btn-primary w-full" @click="clickContactShop">
+              <button v-else-if="!pageCommerceData" class="btn btn-primary w-full" @click="clickContactShop">
                 聯絡店主下單
               </button>
             </div>

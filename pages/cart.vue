@@ -340,6 +340,25 @@ const router = useRouter();
 const cart: Ref<{code: string, quantity: number}[]> = ref([])
 const pageIds = computed(() => Array( ...new Set(mediaList.value.map((m) => m.pageId))))
 
+const loading = ref(false)
+onMounted(async () => {
+  if (!!cart.value.length) {
+    await nextTick(async () => {
+      loading.value = true
+      await fetchMedias()
+      await fetchMediaCommerceData()
+      await fetchPages()
+      await fetchPageCommerceData()
+      pageIds.value.forEach((id) => {
+        selectedMailingIndex.value[id] = ""
+        mailingInfo.value[id] = {}
+        selectedSFDistrictId.value[id] = -1
+      })
+      loading.value = false
+    })
+  }
+})
+
 // Medias
 const mediaDict: Ref<Dict<IgMedia>> = ref({})
 const mediaList: Ref<IgMedia[]> = computed(() => cart.value.map((item) => mediaDict.value[item.code] || null).filter((item) => item !== null))
@@ -440,25 +459,6 @@ const {
   error: sfLocationsError,
 } = await useFetch("/api/system/sf-locations")
 const sf = sfLocationsData.value as Pick<SF, "stations" | "removed_stations" | "lockers" | "removed_lockers">
-
-const loading = ref(false)
-onMounted(async () => {
-  if (!!cart.value.length) {
-    await nextTick(async () => {
-      loading.value = true
-      await fetchMedias()
-      await fetchMediaCommerceData()
-      await fetchPages()
-      await fetchPageCommerceData()
-      pageIds.value.forEach((id) => {
-        selectedMailingIndex.value[id] = ""
-        mailingInfo.value[id] = {}
-        selectedSFDistrictId.value[id] = -1
-      })
-      loading.value = false
-    })
-  }
-})
 
 function removeMedia(code: string) {
   cart.value = cart.value.filter((item) => item.code !== code)

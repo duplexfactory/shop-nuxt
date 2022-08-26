@@ -23,8 +23,8 @@ import {Discount} from "~/models/Discount";
 
 const props = withDefaults(defineProps<{
   modelValue: any,
-  emptyValue: any,
-  clearable: boolean,
+  emptyValue?: any,
+  clearable?: boolean,
 }>(), {
   modelValue: null,
   emptyValue: null,
