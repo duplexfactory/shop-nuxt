@@ -41,6 +41,7 @@
               <div class="table-cell">訂單ID</div>
               <div class="table-cell">訂單日期</div>
               <div class="table-cell" style="width: 400px">貨品</div>
+              <div class="table-cell">訂單總計</div>
               <div class="table-cell">訂單狀態</div>
               <div class="table-cell">動作</div>
             </div>
@@ -56,11 +57,16 @@
             </div>
             <div class="table-cell" style="width: 400px">
               <div class="flex">
-                <div v-for="media in order.shops[igPageId].medias"
-                     class="image-container aspect-square rounded-md overflow-hidden mr-4"
-                     style="width: 80px"
-                     v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+                <div v-for="media in order.shops[igPageId].medias" :key="order._id + '-' + media.code" class="mr-4">
+                  <div class="image-container aspect-square rounded-md overflow-hidden"
+                       style="width: 80px"
+                       v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+                  <div class="text-center mt-2">{{ "x" + media.quantity }}</div>
+                </div>
               </div>
+            </div>
+            <div class="table-cell">
+              {{ formatMediaPrice(pageTotal(order.shops[igPageId])) }}
             </div>
             <div class="table-cell">
               <span :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</span>
@@ -87,13 +93,18 @@
               <div class="text-right">
                 <div :class="orderStatusColorClass[order.shops[igPageId].orderStatus]">{{ orderStatusToText[order.shops[igPageId].orderStatus] }}</div>
                 <nuxt-link :to="'/my/order/' + order._id" class="hover:underline text-pink-600">查看詳情</nuxt-link>
+
+                <div class="text-sm mt-2">訂單總計</div>
+                <div>{{ formatMediaPrice(pageTotal(order.shops[igPageId])) }}</div>
               </div>
             </div>
             <div class="flex mt-2">
-              <div v-for="media in order.shops[igPageId].medias"
-                   class="image-container aspect-square rounded-md overflow-hidden mr-4"
-                   style="width: 60px"
-                   v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+              <div v-for="media in order.shops[igPageId].medias" :key="order._id + '-' + media.code" class="mr-4">
+                <div class="image-container aspect-square rounded-md overflow-hidden"
+                     style="width: 60px"
+                     v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
+                <div class="text-center mt-2">{{ "x" + media.quantity }}</div>
+              </div>
             </div>
           </div>
           <hr/>
@@ -125,6 +136,10 @@ import {Order, OrderStatus} from "~/models/Order";
 import {useIgPageId} from "~/composables/states";
 import {orderStatusToText, orderStatusColorClass} from "~/data/commerce";
 import {PaginationQuery} from "~/models/PaginationQuery";
+import {
+  pageTotal
+} from "~/utils/discountValue";
+import {formatMediaPrice} from "~/utils/mediaPrice";
 
 const {
   getAuthHeader,
