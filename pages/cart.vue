@@ -307,6 +307,7 @@
     </div>
 
     <div class="my-8 text-right">
+      <div class="mb-4 text-gray-400 text-sm">結賬即代表你已同意Shoperuse的<nuxt-link class="hover:underline" to="/privacy-policy">《私隱條款》</nuxt-link></div>
       <button :disabled="loading || pageIds.length == 0 || isSubmittingCheckout" class="btn-primary btn-lg" @click="clickCheckout">
         立即結賬
       </button>
