@@ -117,6 +117,22 @@ export default defineNuxtConfig({
   ignore: [
     "pages/hidden/*"
   ],
+  robots: () => {
+    if (!process.env.DEV) {
+      return {
+        UserAgent: '*',
+        Disallow: [
+          '/my'
+        ],
+        Sitemap: 'https://shoperuse.com/sitemap.xml'
+      }
+    } else {
+      return {
+        UserAgent: '*',
+        Disallow: '/'
+      }
+    }
+  },
   sitemap: function() {
     if (process.env.DEV) {
       return false;
