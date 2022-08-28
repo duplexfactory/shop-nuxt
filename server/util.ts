@@ -49,17 +49,17 @@ export async function isOwnMedia(event: CompatibilityEvent, code: string): Promi
     return media
 }
 
-
+const config = useRuntimeConfig()
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
+        user: config.GMAIL_USER,
+        pass: config.GMAIL_PASS
     }
 });
 
-export async function sendMail(config: SendMailOptions) {
-    return transporter.sendMail(config);
+export async function sendMail(sendMailOptions: SendMailOptions) {
+    return transporter.sendMail(sendMailOptions);
 }
 
 export async function sendOrderNotificationEmail(email: string, orderId: string, orderCreated: number, orderStatus: OrderStatus, orderTotal: number, paymentMethod?: PaymentType) {
@@ -71,7 +71,7 @@ export async function sendOrderNotificationEmail(email: string, orderId: string,
 
     let subject = `[訂單${orderStatusToText[orderStatus]}] 訂單ID: ${orderId}`
     await sendMail({
-        from: process.env.NO_REPLY_EMAIL,
+        from: config.NO_REPLY_EMAIL,
         to: email,
         subject,
         html: orderNotificationEmailTemplate(orderId, orderCreated, orderStatus, orderTotal, paymentMethod)
@@ -83,7 +83,7 @@ function orderNotificationEmailTemplate(orderId: string, orderCreated: number, o
         .replace("__order_id__", orderId)
         .replace("__order_date__", dayjs(orderCreated).format('DD/MM/YYYY'))
         .replace("__order_status__", orderStatusToText[orderStatus])
-        .replace("__link__", `${process.env.DOMAIN}/my/order/${orderId}`)
+        .replace("__link__", `${config.DOMAIN}/my/order/${orderId}`)
         .replace("__order_total__", orderTotal.toString())
 
     if (orderStatus === OrderStatus.VERIFIED) {
