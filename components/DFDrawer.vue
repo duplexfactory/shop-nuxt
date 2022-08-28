@@ -27,7 +27,7 @@
 
       <div class="font-semibold py-2">設定</div>
       <div>
-        <div v-for="tab in accountTabs"
+        <div v-for="tab in tabs"
              v-if="isLoggedIn"
              :key="tab.route"
              class="py-2">
@@ -65,6 +65,19 @@ const isLoggedIn = useIsLoggedIn();
 const {
   logout
 } = useLogout();
+
+const {
+  isSubscribed
+} = useIsSubscribed()
+const tabs = computed(() => {
+  if (isSubscribed.value) {
+    return accountTabs
+  }
+  return accountTabs.filter((t) => [
+    "account",
+    "shop"
+  ].includes(t.route))
+})
 
 </script>
 

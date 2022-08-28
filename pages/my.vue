@@ -23,12 +23,25 @@ const selectedTab = computed(() => {
   return accountTabs.find((t) => route.path.includes(`/my/${t.route}`))
 })
 
+const {
+  isSubscribed
+} = useIsSubscribed()
+const tabs = computed(() => {
+  if (isSubscribed.value) {
+    return accountTabs
+  }
+  return accountTabs.filter((t) => [
+    "account",
+    "shop"
+  ].includes(t.route))
+})
+
 </script>
 
 <template>
     <div class="container mx-auto mt-4 md:mt-0">
       <div class="hidden md:flex mb-4">
-        <nuxt-link v-for="tab in accountTabs"
+        <nuxt-link v-for="tab in tabs"
                    :key="tab.route"
                    :to="`/my/${tab.route}`"
                    class="px-2 lg:px-4 py-2"

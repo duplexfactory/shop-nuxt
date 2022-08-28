@@ -71,7 +71,7 @@
             </button>
             <template #content>
               <div class="text-sm p-2 bg-white rounded-md shadow-md">
-                <div v-for="tab in accountTabs"
+                <div v-for="tab in tabs"
                      :key="tab.route"
                      class="p-2">
                   <nuxt-link :to="`/my/${tab.route}`">{{ tab.title }}</nuxt-link>
@@ -116,6 +116,19 @@
   const {
     logout
   } = useLogout();
+
+  const {
+    isSubscribed
+  } = useIsSubscribed()
+  const tabs = computed(() => {
+    if (isSubscribed.value) {
+      return accountTabs
+    }
+    return accountTabs.filter((t) => [
+      "account",
+      "shop"
+    ].includes(t.route))
+  })
 
 </script>
 
