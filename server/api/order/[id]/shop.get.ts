@@ -3,7 +3,7 @@ import {igAuthCollection, initMongo, orderCollection} from "~/server/mongodb";
 import {assert, getAuth} from "~/server/util";
 import {ObjectId} from "mongodb";
 import {notFound} from "~/utils/h3Error";
-import {initS3, s3, s3Region} from "~/server/s3";
+import {s3, s3Region} from "~/server/s3";
 import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
 import {DeleteObjectCommand, GetObjectCommand} from "@aws-sdk/client-s3";
 
@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
     })
     assert(order, notFound)
 
-    await initS3()
     if (!!order.shops[igAuth.pageId].paymentProofUrl) {
         const key = `${order._id}/${igAuth.pageId}`
         const command = new GetObjectCommand({

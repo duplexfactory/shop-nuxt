@@ -5,7 +5,7 @@ import * as fs from "fs";
 import formidable from 'formidable';
 import {PaymentType} from "~/models/IgPageCommerceData";
 import {PutObjectCommand} from "@aws-sdk/client-s3";
-import {initS3, s3, s3Region} from "~/server/s3";
+import { s3, s3Region} from "~/server/s3";
 
 export default defineEventHandler(async (event) => {
 
@@ -46,7 +46,6 @@ export default defineEventHandler(async (event) => {
         [PaymentType.ALIPAY_HK]: "AlipayHK",
     }
 
-    await initS3()
     const key = `${auth.uid}/shop/payment/${dict[type]}-${Date.now()}`
     const params = {
         Bucket: config.AWS_S3_BUCKET_NAME,
