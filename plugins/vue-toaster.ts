@@ -1,8 +1,23 @@
 import {defineNuxtPlugin} from "nuxt/app";
-import Toaster from "@meforma/vue-toaster";
+import Notifications, {notify} from '@kyvg/vue3-notification'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(Toaster, {
-        position: "top-right",
-    });
+    nuxtApp.vueApp.use(Notifications);
+    return {
+        provide: {
+            toast: {
+                success: (message: string, dummy) => {
+                    notify({
+                        title: message,
+                    });
+                },
+                error: (message: string, dummy) => {
+                    notify({
+                        title: message,
+                        type: 'error',
+                    });
+                }
+            }
+        }
+    }
 });

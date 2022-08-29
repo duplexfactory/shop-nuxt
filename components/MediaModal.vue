@@ -288,7 +288,7 @@ const suggestedPrice = ref(null)
 
 async function submitPrice() {
   if (suggestedPrice.value === null) {
-    nuxt.vueApp.$toast.error("請輸入價格！", {position: "top"})
+    nuxt.$toast.error("請輸入價格！", {position: "top"})
     return
   }
 

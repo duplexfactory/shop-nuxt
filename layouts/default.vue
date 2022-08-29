@@ -1,6 +1,8 @@
 <template>
   <div class="min-h-screen flex flex-col" :class="showLoginLoading ? 'h-screen overflow-hidden' : ''">
 
+    <notifications position="top"/>
+
     <div v-if="isIgConnected && !isIgAuthTokenValid" class="container bg-red-100 text-gray-800 text-xs py-2">
       由於你更改了Instagram帳戶密碼或基於安全理由，Facebook已經暫停了你的帳戶連結。為確保你的專頁在Shoperuse上正常運作，請儘快至 "我的帳戶" 解除連結後重新連結。
       <nuxt-link class="hover:underline font-semibold" to="/my/account">立即前往</nuxt-link>
@@ -197,5 +199,15 @@
 <style scoped>
   .spr-dot-3:before {
     @apply transform rotate-90;
+  }
+
+  .vue-notification {
+    z-index: 9999999 !important;
+  }
+</style>
+
+<style>
+  .vue-notification {
+    z-index: 9999999 !important;
   }
 </style>
