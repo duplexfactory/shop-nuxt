@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {defineEventHandler, useQuery} from "h3"
 import {initMongo, pageSearchCollection} from "~/server/mongodb"
 import {Filter} from "mongodb"
 import {PageSearch} from "~/models/PageSearch"
@@ -66,6 +66,6 @@ export default defineEventHandler(async (event) => {
         active,
         // physical,
         featured
-    } as any as JSONValue
+    }
 })
 
