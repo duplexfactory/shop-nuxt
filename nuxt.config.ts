@@ -1,4 +1,4 @@
-import {defineNuxtConfig, NuxtConfig} from "nuxt3";
+import {defineNuxtConfig, NuxtConfig} from "nuxt";
 import {ModuleContainer} from "@nuxt/schema";
 
 // Sitemap
@@ -179,7 +179,7 @@ export default defineNuxtConfig({
           const db = client.db(process.env.DEV_DB ? "ig-dev" : "ig")
           const pageSearchCollection = db.collection("page")
           const pages: { username: string }[] = await pageSearchCollection.find().project<{username: string}>({username: 1}).toArray();
-          
+
           // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
           return [
               ...searchPaths,

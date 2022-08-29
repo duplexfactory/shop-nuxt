@@ -52,15 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ScreenSize, useIgPageId,
-  useScreenSize,
-  useShowAgeRestrictedModal,
-  useShowingMediaModalData,
-  useShowMediaModal
-} from "~/composables/states"
+  import {
+    ScreenSize
+  } from "~/composables/states"
   import throttle from "lodash.throttle"
-  import {getAuth, onAuthStateChanged, User} from "firebase/auth"
+  import {onAuthStateChanged, User} from "firebase/auth"
 
   // Meta
   const config = useRuntimeConfig()

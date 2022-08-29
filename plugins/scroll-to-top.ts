@@ -1,4 +1,4 @@
-import {defineNuxtPlugin} from "nuxt3/app";
+import {defineNuxtPlugin} from "nuxt/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.$router.options.scrollBehavior = (to, from, savedPosition) => {

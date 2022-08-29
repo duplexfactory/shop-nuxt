@@ -43,8 +43,6 @@
   import "swiper/css/pagination"
   import {PropType} from "vue"
   import loadIGEmbeds from "~/utils/loadIGEmbeds"
-  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
-  import useMediaPrice from "~/composables/useMediaPrice"
   import {PageSearch} from "~/models/PageSearch";
 
   const {lastMediaPage} = defineProps({lastMediaPage: Array as PropType<Pick<PageSearch, "lastMediaData" | "fullName" | "_id" | "username">[]>})

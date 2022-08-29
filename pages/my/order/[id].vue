@@ -96,7 +96,6 @@ import dayjs from "dayjs";
 import {mailingInfoTypeToText, mailingTypeToText, paymentMethodsToText, orderStatusToText, orderStatusColorClass} from "~/data/commerce";
 import {structurePaymentMethodData} from "~/utils/paymentMethodData";
 import {PaymentType} from "~/models/IgPageCommerceData";
-import {RefreshOptions} from "nuxt3/dist/app/composables/asyncData";
 
 
 // Composables.

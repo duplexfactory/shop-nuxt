@@ -2,14 +2,15 @@
   "private": true,
   "scripts": {
     "deploy": "yarn build && cp package.deploy.json .output/ && wrangler publish",
-    "dev": "nuxi dev",
-    "build": "yarn patch && nuxi build",
+    "dev": "nuxt dev",
+    "build": "yarn patch && nuxt build",
     "start": "node .output/server/index.mjs",
     "patch": "yarn add -D patch-vue-directive-ssr"
   },
   "devDependencies": {
+    "@nuxt/kit": "npm:@nuxt/kit@3.0.0-rc.4",
+    "nuxt": "npm:nuxt3@3.0.0-rc.4",
     "nuxt-windicss": "^2.0.0",
-    "nuxt3": "^3.0.0-27468803.23e7afb",
     "patch-vue-directive-ssr": "^0.0.1"
   },
   "dependencies": {

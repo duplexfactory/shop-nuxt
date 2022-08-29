@@ -1,4 +1,4 @@
-import {defineNuxtPlugin, useRuntimeConfig} from "nuxt3/app";
+import {defineNuxtPlugin, useRuntimeConfig} from "nuxt/app";
 import AES from 'crypto-js/aes.js';
 
 export default defineNuxtPlugin((nuxtApp) => {

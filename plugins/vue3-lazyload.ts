@@ -1,5 +1,5 @@
 import VueLazyload from './lazy';
-import {defineNuxtPlugin} from "nuxt3/app";
+import {defineNuxtPlugin} from "nuxt/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(VueLazyload, {

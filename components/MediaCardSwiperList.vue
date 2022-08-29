@@ -9,7 +9,7 @@
       <div class="swiper-wrapper pb-8">
         <!-- Slides -->
         <MediaCard v-for="page in lastMediaPage"
-                   @click="showMediaModal = true; showingMediaModalData = {media: page.lastMediaData, pageId: page._id}"
+                   @click="showMediaForPage(page)"
                    class="cursor-pointer swiper-slide"
                    :media="page.lastMediaData"
                    :shop="page"
@@ -21,12 +21,8 @@
       <!-- If we need navigation buttons -->
       <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
       <div ref="swiperButtonNext" class="swiper-button-next"></div>
-
-      <!--        &lt;!&ndash; If we need scrollbar &ndash;&gt;-->
-      <!--        <div class="swiper-scrollbar"></div>-->
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -35,7 +31,6 @@
   import "swiper/css/navigation"
   import "swiper/css/pagination"
   import {PropType} from "vue"
-  import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
   import {PageSearch} from "~/models/PageSearch";
 
   const {lastMediaPage} = defineProps({lastMediaPage: Array as PropType<Pick<PageSearch, "lastMediaData" | "fullName" | "_id" | "username">[]>})
@@ -93,6 +88,14 @@
     //   el: '.swiper-scrollbar',
     // },
   })
+
+  function showMediaForPage(page: Pick<PageSearch, "lastMediaData" | "fullName" | "_id" | "username">) {
+    showMediaModal.value = true;
+    showingMediaModalData.value = {
+      media: page.lastMediaData,
+      pageId: page._id
+    }
+  }
 
   onMounted(loadSwiper)
 </script>
