@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import "dayjs/locale/zh-hk";
+import "dayjs/locale/zh-hk.js";
 import relativeTime from "dayjs/plugin/relativeTime.js";
 import {defineNuxtPlugin} from "nuxt/app";
 
