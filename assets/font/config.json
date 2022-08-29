@@ -193,6 +193,30 @@
       "css": "spin4",
       "code": 59444,
       "src": "fontelico"
+    },
+    {
+      "uid": "15ba51cbb4d05e6fb88f03a31a7c711c",
+      "css": "info-circled-alt",
+      "code": 61574,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "3e02a8849305ac80a0e36302f461f265",
+      "css": "help-circled-alt",
+      "code": 59407,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "9affc98d652b86628d650ee58dbf0357",
+      "css": "basket",
+      "code": 59408,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "818981e2ad316f18ae61cfa805d41309",
+      "css": "user-circle",
+      "code": 62141,
+      "src": "fontawesome"
     }
   ]
 }

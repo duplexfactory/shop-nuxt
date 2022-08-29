@@ -1,4 +1,5 @@
 import {
+    BatchGetItemCommand,
     BatchWriteItemCommand,
     DynamoDBClient,
     GetItemCommand,
@@ -28,15 +29,27 @@ export async function initDynamo() {
     return client
 }
 
-export async function getPageMedias(pageId: string, limit?: number, before = dayjs().unix()) {
+export async function getPageMedias(pageId: string, limit?: number, until?: number, since?: number, before?: string, after?: string) {
+
+    if (!!since) {
+        const res = await client.send(new QueryCommand({
+            TableName: "media",
+            KeyConditionExpression: "pageId = :pageId AND takenAt > :since",
+            ExpressionAttributeValues: marshall({":pageId": pageId, ":since": since}),
+            ScanIndexForward: false,
+            Limit: limit
+        }))
+        return res.Items?.map(m => unmarshall(m)) as IgMedia[]
+    }
+
+    const b = until || dayjs().unix();
     const res = await client.send(new QueryCommand({
         TableName: "media",
         KeyConditionExpression: "pageId = :pageId AND takenAt < :before",
-        ExpressionAttributeValues: marshall({":pageId": pageId, ":before": before}),
+        ExpressionAttributeValues: marshall({":pageId": pageId, ":before": b}),
         ScanIndexForward: false,
         Limit: limit
     }))
-
     return res.Items?.map(m => unmarshall(m)) as IgMedia[]
 }
 
@@ -46,6 +59,12 @@ export async function getMedia(pageId: number, takenAt: number): Promise<IgMedia
         Key: marshall({pageId, takenAt})
     }))
     return res.Item ? unmarshall(res.Item) as IgMedia : null
+}
+
+export async function patchMedia(pageId: string, takenAt: number, patchItem): Promise<void> {
+    await update("media", {
+        pageId, takenAt
+    }, patchItem)
 }
 
 async function queryMediaByCode(code: string) {
@@ -61,20 +80,41 @@ async function queryMediaByCode(code: string) {
 
 export async function getMediaByCode(code: string): Promise<IgMedia | null> {
     const res = await queryMediaByCode(code)
-
     if (res?.Count) {
         const {pageId, takenAt} = unmarshall(res.Items[0])
         return getMedia(pageId, takenAt)
     } else return undefined
 }
 
+export async function getMediasByCodes(codes: string[]): Promise<IgMedia[]> {
+    const keys = (await Promise.all(codes.map(async (code) => {
+        const res = await queryMediaByCode(code)
+        if (res?.Count) {
+            const {
+                pageId,
+                takenAt
+            } = unmarshall(res.Items[0]) as {pageId: number, takenAt: number}
+            return {pageId, takenAt}
+        }
+        return null
+    }))).filter((k) => k !== null)
+
+    const res = await client.send(new BatchGetItemCommand({
+        RequestItems: {
+            "media": {
+                Keys: keys.map((k) => marshall({pageId: k.pageId, takenAt: k.takenAt}))
+            }
+        },
+    }))
+
+    return res.Responses && res.Responses["media"] ? res.Responses["media"].map((i) => unmarshall(i) as IgMedia) : []
+}
+
 export async function patchMediaByCode(code: string, patchItem): Promise<boolean> {
     const res = await queryMediaByCode(code)
     if (res?.Count) {
         const {pageId, takenAt} = unmarshall(res.Items[0])
-        await update("media", {
-            pageId, takenAt
-        }, patchItem)
+        await patchMedia(pageId, takenAt, patchItem)
         return true
     } else {
         return false

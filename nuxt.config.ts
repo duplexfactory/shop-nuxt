@@ -112,12 +112,35 @@ export default defineNuxtConfig({
     DYNAMODB_SECRET_ACCESS_KEY: process.env.DYNAMODB_SECRET_ACCESS_KEY,
     DYNAMODB_REGION: process.env.DYNAMODB_REGION,
     IG_APP_SECRET: process.env.IG_APP_SECRET,
+    GMAIL_USER: process.env.GMAIL_USER,
+    GMAIL_PASS: process.env.GMAIL_PASS,
+    NO_REPLY_EMAIL: process.env.NO_REPLY_EMAIL,
+    AWS_S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
+    AWS_S3_SECRET_ACCESS_KEY: process.env.AWS_S3_SECRET_ACCESS_KEY,
+    AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
+    AWS_S3_ORDER_PROOFS_BUCKET_NAME: process.env.AWS_S3_ORDER_PROOFS_BUCKET_NAME,
   },
   ssr: true,
   plugins: [],
   ignore: [
     "pages/hidden/*"
   ],
+  robots: () => {
+    if (!process.env.DEV) {
+      return {
+        UserAgent: '*',
+        Disallow: [
+          '/my'
+        ],
+        Sitemap: 'https://shoperuse.com/sitemap.xml'
+      }
+    } else {
+      return {
+        UserAgent: '*',
+        Disallow: '/'
+      }
+    }
+  },
   sitemap: function() {
     if (process.env.DEV) {
       return false;

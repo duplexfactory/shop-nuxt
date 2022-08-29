@@ -9,7 +9,7 @@
 
     <div v-else class="px-0 sm:container mx-auto flex items-center h-full">
 
-      <div class="modal-container" @click.stop="">
+      <div class="modal-container" :class="modalContainerClass" @click.stop="">
 
         <div class="modal-header">
           <slot name="header">
@@ -41,6 +41,18 @@
   </div>
 </template>
 
+<script setup lang="ts">
+
+import {PropType} from "vue";
+
+const {
+  modalContainerClass
+} = defineProps({
+  modalContainerClass: String as PropType<String>,
+});
+
+</script>
+
 <style scoped>
 .modal-mask {
   position: fixed;
@@ -66,23 +78,22 @@
 }
 
 .modal-container {
-  /*width: 80%;*/
-  height: 100%;
-  max-height: 100%;
   overflow: auto;
-  /*margin: 0px auto;*/
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   font-family: Helvetica, Arial, sans-serif;
-  /*@apply mx-auto;*/
-  @apply flex-1;
+
+  max-height: 100%;
+  @apply h-full w-full;
 }
 
 @screen sm {
   .modal-container {
     max-height: 80%;
     height: auto;
+    width: auto;
+    @apply mx-auto;
   }
 }
 

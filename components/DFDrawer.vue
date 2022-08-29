@@ -27,12 +27,14 @@
 
       <div class="font-semibold py-2">設定</div>
       <div>
-        <div v-if="isLoggedIn" class="py-2">
-          <nuxt-link to="/my/account" @click="hideSidebar">我的帳戶</nuxt-link>
+        <div v-for="tab in tabs"
+             v-if="isLoggedIn"
+             :key="tab.route"
+             class="py-2">
+          <nuxt-link :to="`/my/${tab.route}`"
+                     @click="hideSidebar">{{ tab.title }}</nuxt-link>
         </div>
-        <div v-if="isLoggedIn" class="py-2">
-          <nuxt-link to="/my/shop" @click="hideSidebar">我的商店</nuxt-link>
-        </div>
+
         <div class="py-2">
           <AgeRestrictionToggle/>
         </div>
@@ -52,6 +54,7 @@
 <script setup lang="ts">
 
 import {useShowAgeRestrictedModal} from "~/composables/states";
+import {accountTabs} from "~/data/ui";
 
 const {ageRestrictedCategories} = useTags();
 
@@ -62,6 +65,19 @@ const isLoggedIn = useIsLoggedIn();
 const {
   logout
 } = useLogout();
+
+const {
+  isSubscribed
+} = useIsSubscribed()
+const tabs = computed(() => {
+  if (isSubscribed.value) {
+    return accountTabs
+  }
+  return accountTabs.filter((t) => [
+    "account",
+    "shop"
+  ].includes(t.route))
+})
 
 </script>
 

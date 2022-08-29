@@ -1,5 +1,5 @@
 <template>
-  <LazyModal @close="close">
+  <LazyModal class="text-gray-800" @close="close">
     <template #body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
@@ -8,10 +8,6 @@
               <div class="image-container aspect-square rounded-md overflow-hidden"
                    v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
               <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ stripTrailingHashtags(localMedia.caption) }}</div>
-              <div v-if="!!mediaPrice(localMedia.media)"
-                   class="mt-2 text-pink-700">
-                {{ formatMediaPrice(mediaPrice(localMedia.media)) }}
-              </div>
             </template>
             <MediaCardIGEmbed v-if="!localPage.igConnected && localMediaCode"
                               captioned
@@ -24,8 +20,7 @@
           <div class="mt-4 md:mt-0">
 
             <div class="flex items-baseline">
-              <!-- Do not use ?? because price 0 should show - as well -->
-              <div class="text-xl md:text-2xl text-pink-700">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
+              <div class="text-xl md:text-2xl text-pink-700 font-semibold">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
 
               <Popper hover offsetDistance="0" placement="top">
                 <button @click="showPriceSuggestionModal = true" class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
@@ -35,15 +30,63 @@
               </Popper>
             </div>
 
-            <nuxt-link v-if="localPage" class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
-              {{ localPage.username }}
-            </nuxt-link>
+            <DiscountCard v-if="!!mediaCommerceData && !!(mediaCommerceData.discount)"
+                          class="mt-2"
+                          defaultTitle="產品優惠"
+                          discountTextPrefix="此產品買"
+                          :discount="mediaCommerceData.discount"></DiscountCard>
+            <DiscountCard v-if="!!pageCommerceData && !!(pageCommerceData.discount)"
+                          class="mt-2"
+                          defaultTitle="店鋪優惠"
+                          discountTextPrefix="全店買"
+                          :discount="pageCommerceData.discount"></DiscountCard>
 
-            <div class="mt-2">
-              <button class="btn btn-primary w-full" @click="clickContactShop">
+            <div v-if="mediaCommerceDataLoaded" class="mt-2" >
+              <template v-if="!!mediaCommerceData && mediaCommerceData.active">
+                <div class="flex items-center">
+                  <div class="mr-4 text-gray-600">數量</div>
+                  <QuantityInput v-model.number="quantity"></QuantityInput>
+                </div>
+
+                <button class="btn-primary w-full mt-2" @click="clickBuyNow">
+                  立即購買
+                </button>
+                <button class="btn-outline w-full mt-2" @click="clickAddToCart">
+                  加到購物車
+                </button>
+              </template>
+              <button v-else-if="!pageCommerceData" class="btn btn-primary w-full" @click="clickContactShop">
                 聯絡店主下單
               </button>
             </div>
+
+            <hr class="my-4"/>
+
+            <div v-if="localPage" class="flex items-center">
+              <template v-if="localPage.igConnected">
+                <div class="rounded-full overflow-hidden image-container aspect-square mr-2"
+                     style="height: 50px;">
+                  <img class="h-full w-full"
+                       :alt="localPage.username"
+                       v-lazy="localPage.profilePicUrl"/>
+                </div>
+                <div>
+                  <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                    {{ localPage.username }}
+                  </nuxt-link>
+                  <div class="text-gray-500 text-sm">
+                    {{ localPage.fullName }}
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                  {{ localPage.username }}
+                </nuxt-link>
+              </template>
+            </div>
+
+            <hr class="my-4"/>
 
 <!--            <div v-if="contactInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
 <!--              <div v-for="(pageInfoRow, i) in contactInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
@@ -61,8 +104,11 @@
               {{ stripTrailingHashtags(localMedia.caption) }}
             </div>
 
-            <div v-if="localPage" class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
-            <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
+            <template v-if="localPage && !(localPage.igConnected)">
+              <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
+              <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
+            </template>
+
 
             <div class="flex items-center mt-4">
               <div class="text-xl md:text-2xl">評論</div>
@@ -147,8 +193,10 @@ import IgMedia from "~/models/IgMedia";
 import useMediaPrice from "~/composables/useMediaPrice";
 import IgPage from "~/models/IgPage";
 import IgPageExtraData from "~/models/IgPageExtraData";
-
+import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 const nuxt = useNuxtApp();
+const router = useRouter();
 
 // Media Modal
 const showMediaModal = useShowMediaModal();
@@ -210,7 +258,6 @@ function close() {
   showMediaModal.value = false;
 }
 
-const router = useRouter();
 function onUsernameClick() {
   router.push(`/shop/${localPage.value.username}`);
   close();
@@ -293,6 +340,40 @@ function clickContactInfoRow(row: ContactInfoRow) {
   }
 }
 
+// Commerce
+const mediaCommerceData: Ref<IgMediaCommerceData | null> = ref(null)
+const mediaCommerceDataLoaded = ref(false)
+const pageCommerceData: Ref<IgPageCommerceData | null> = ref(null)
+const pageCommerceDataLoaded = ref(false)
+
+// Create order
+const quantity = ref(1)
+function clickBuyNow() {
+  addToCart()
+  close()
+  router.push(`/cart`)
+}
+
+function clickAddToCart() {
+  addToCart()
+  nuxt.vueApp.$toast.success("已成功加至購物車。", {position: "top"});
+}
+
+function addToCart() {
+  let cart:{code: string, quantity: number}[] = (JSON.parse(localStorage.getItem("cart")) as []) || [];
+  const item = cart.find((i) => i.code === localMediaCode.value);
+  if (!!item) {
+    item.quantity += quantity.value;
+  }
+  else {
+    cart.push({
+      code: localMediaCode.value,
+      quantity: quantity.value
+    });
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
 // Mounted
 onMounted(async () => {
 
@@ -306,7 +387,29 @@ onMounted(async () => {
     const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`);
     fetchedPage.value = data.value.page;
   }
+
   await fetchReviews();
+
+  const {
+    data: mediaCommerceDataRaw,
+    error: mediaCommerceDataError
+  } = await useFetch('/api/media/commerce-data', {
+    params: {
+      codes: localMedia.value.code
+    }
+  })
+  mediaCommerceData.value = mediaCommerceDataRaw.value["data"][localMedia.value.code] || null
+  mediaCommerceDataLoaded.value = true
+
+  const {
+    data: pageCommerceDataRaw,
+    error: pageCommerceDataError
+  } = await useFetch(`/api/shop/id/${localPage.value._id}/commerce-data`)
+  if (!!pageCommerceDataRaw.value) {
+    pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
+  }
+  pageCommerceDataLoaded.value = true
+
 });
 
 </script>

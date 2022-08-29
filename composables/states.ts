@@ -32,6 +32,7 @@ export const useShowAgeRestrictedContent = () => useState<boolean>('showAgeRestr
 export const useIsLoggedIn = () => useState<boolean | null>('isLoggedIn', () => null)
 export const useIsIgConnected = () => useState<boolean>('isIgConnected', () => false)
 export const useIgUsername = () => useState<string>('igUsername', () => "")
+export const useIgPageId = () => useState<string>('igPageId', () => "")
 export const useCurrentUser = () => useState<User | null>('currentUser', () => null)
 
 export enum ScreenSize {

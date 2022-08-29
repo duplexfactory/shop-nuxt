@@ -1,3 +1,7 @@
+body {
+    @apply text-gray-800;
+}
+
 .btn {
     @apply text-md px-6 py-2 rounded-md font-semibold;
 }
@@ -20,6 +24,10 @@
 
 .btn-sm {
     @apply text-sm px-3 py-1;
+}
+
+.btn-lg {
+    @apply text-xl px-12 py-3;
 }
 
 @screen sm {
@@ -52,6 +60,22 @@
 
 .text-input-primary:focus {
     @apply outline-none border-pink-400;
+}
+
+.text-input-primary--prefixed {
+    @apply rounded-l-none pl-2 !important;
+}
+
+.text-input-primary--suffixed {
+    @apply rounded-r-none pr-2 !important;
+}
+
+.text-input-prefix-primary {
+    @apply rounded-l-md border-b border-t border-l text-md py-2 pl-4 pr-2;
+}
+
+.text-input-suffix-primary {
+    @apply rounded-r-md border-b border-t border-r text-md py-2 pr-4 pl-2;
 }
 
 textarea {
@@ -111,13 +135,25 @@ textarea {
 /* Toast custom CSS. */
 
 .c-toast {
-    @apply !py-2 !px-4 !rounded-md;
+    @apply py-2 px-4 rounded-md !important;
 }
 
 .c-toast.c-toast--error {
-    @apply !bg-red-100 !text-red-500;
+    @apply bg-red-100 text-red-500 !important;
 }
 
 .c-toast.c-toast--success {
-    @apply !bg-green-100 !text-green-700;
+    @apply bg-green-100 text-green-700 !important;
+}
+
+/* Input number no arrows */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }

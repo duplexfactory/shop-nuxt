@@ -39,7 +39,7 @@
       </transition>
 
       <transition name="modal">
-        <AgeRestrictedModal></AgeRestrictedModal>
+        <LazyAgeRestrictedModal v-if="showAgeRestrictedModal"></LazyAgeRestrictedModal>
       </transition>
 
     </div>
@@ -52,12 +52,13 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    ScreenSize,
-    useScreenSize,
-    useShowingMediaModalData,
-    useShowMediaModal
-  } from "~/composables/states"
+import {
+  ScreenSize, useIgPageId,
+  useScreenSize,
+  useShowAgeRestrictedModal,
+  useShowingMediaModalData,
+  useShowMediaModal
+} from "~/composables/states"
   import throttle from "lodash.throttle"
   import {getAuth, onAuthStateChanged, User} from "firebase/auth"
 
@@ -90,6 +91,9 @@
   const showSearchModal = useShowSearchModal()
   watch(showSearchModal, (show, prevShow) => toggleOverflow(show))
 
+  // Age Restricted Modal
+  const showAgeRestrictedModal = useShowAgeRestrictedModal()
+
   // Drawer
   const drawerOpen = ref<boolean>(false)
 
@@ -114,6 +118,7 @@
   const isIgConnected = useIsIgConnected();
   const isIgAuthTokenValid = ref(true);
   const igUsername = useIgUsername();
+  const igPageId = useIgPageId();
   const currentUser = useCurrentUser()
   const isLoginLoadingRoute = computed(() => {
     return [
@@ -145,6 +150,11 @@
   }
 
   // Mounted
+  const {
+    auth,
+    getAuthHeader,
+    headersToObject
+  } = useAuth()
   onMounted(() => {
     if (navigator.userAgent.includes("Instagram")) {
       isIGBrowser.value = true
@@ -160,24 +170,27 @@
       }
     }, 500))
 
-    const auth = getAuth()
-    onAuthStateChanged(auth, async (user?: User) => {
+    onAuthStateChanged(auth.value, async (user?: User) => {
       // console.log("onAuthStateChanged");
       currentUser.value = user
       isLoggedIn.value = !!user
 
       if (isLoggedIn.value) {
-        const {getAuthHeader} = useAuth()
-        const res = await $fetch("/api/auth/check-ig-connect", {
-          headers: await getAuthHeader()
+        const {
+          data,
+          error
+        } = await useFetch("/api/auth/check-ig-connect", {
+          headers: headersToObject(await getAuthHeader()),
         })
-        isIgConnected.value = res.connected;
-        isIgAuthTokenValid.value = !res.invalid;
-        igUsername.value = res.username ?? "";
+        isIgConnected.value = data.value.connected;
+        isIgAuthTokenValid.value = !data.value.invalid;
+        igUsername.value = data.value.username ?? "";
+        igPageId.value = data.value.pageId ?? "";
       }
       else {
         isIgConnected.value = false;
         igUsername.value = "";
+        igPageId.value = "";
       }
 
     })

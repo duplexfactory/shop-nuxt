@@ -10,17 +10,19 @@ export interface IgOfficialMedia {
     media_url?: string
 }
 
-export async function fetchIgMedias(pageId: string, token: string, returnMediaUrl: boolean, pg?: { limit: number, until?: number, since?: number }) {
+export async function fetchIgMedias(pageId: string, token: string, returnMediaUrl: boolean, pg?: { limit: number, until?: number, since?: number, before?: string, after?: string }) {
     const mediaUrl = new URL("https://graph.instagram.com/me/media")
     mediaUrl.searchParams.set("fields", "caption,permalink,timestamp" + (returnMediaUrl ? ",media_url" : ""))
     mediaUrl.searchParams.set("access_token", token)
     if (pg?.limit) mediaUrl.searchParams.set("limit", pg.limit.toString())
     if (pg?.until) mediaUrl.searchParams.set("until", pg.until.toString())
     if (pg?.since) mediaUrl.searchParams.set("since", pg.since.toString())
+    if (pg?.before) mediaUrl.searchParams.set("before", pg.before.toString())
+    if (pg?.after) mediaUrl.searchParams.set("after", pg.after.toString())
     const mediaRes = await fetch(mediaUrl.href)
     const {data, paging} = await mediaRes.json() as {
         data: IgOfficialMedia[]
-        paging: any
+        paging: { cursors: {before: string, after: string} }
     }
     if (!data) {
         if (mediaRes.status == 400) {
@@ -28,7 +30,10 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
             await initMongo()
             await igAuthCollection.updateOne({pageId}, {$set: {invalid: true}});
         }
-        return []
+        return {
+            medias: [],
+            paging: undefined
+        }
     }
     const medias = data.map(m => ({
         code: m.permalink.split("/").filter(t => !!t).pop(),
@@ -40,7 +45,10 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
     medias.forEach(m => {
         if (!m.mediaUrl) delete m.mediaUrl
     })
-    return medias
+    return {
+        medias,
+        paging
+    }
 }
 
 export async function fetchIgProfile(accessToken: string) {

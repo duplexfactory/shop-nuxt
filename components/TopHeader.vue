@@ -53,25 +53,28 @@
       </div>
 
       <!-- right -->
-      <div :class="{'sqr-menu': isLoggedIn}" class="flex items-center">
+      <div :class="{'hidden md:inline-block': isLoggedIn}" class="flex items-center">
 
-        <AgeRestrictionToggle v-if="!isLoggedIn" class="hidden lg:inline-block mr-6"/>
-        <nuxt-link v-if="!isLoggedIn" to="/login/shop" class="lg:mr-6 text-gray-500 font-semibold">商戶登入</nuxt-link>
-        <nuxt-link v-if="!isLoggedIn" to="/verify" class="hidden lg:inline-block btn btn-outline">認證我的商店</nuxt-link>
-
+        <template v-if="!isLoggedIn">
+          <AgeRestrictionToggle class="hidden lg:inline-block mr-4"/>
+          <nuxt-link to="/login/shop" class="text-sm md:text-base text-gray-500 font-semibold">商戶登入</nuxt-link>
+          <nuxt-link to="/cart" class="btn-sm md:btn">
+            <i class="spr-basket md:text-xl text-gray-500 font-semibold"></i>
+          </nuxt-link>
+<!--          <nuxt-link to="/verify" class="hidden lg:inline-block btn btn-outline">認證我的商店</nuxt-link>-->
+        </template>
 
         <div class="hidden md:inline-block">
           <Popper v-if="isLoggedIn" hover offsetDistance="0" placement="top">
-            <button class="text-sm text-gray-500">
-              <img src="~assets/icons/user.png"/>
+            <button class="btn-sm md:btn">
+              <i class="spr-user-circle md:text-xl text-gray-500 font-semibold"></i>
             </button>
             <template #content>
               <div class="text-sm p-2 bg-white rounded-md shadow-md">
-                <div class="p-2">
-                  <nuxt-link to="/my/account" class="">我的帳戶</nuxt-link>
-                </div>
-                <div class="p-2">
-                  <nuxt-link to="/my/shop" class="">我的商店</nuxt-link>
+                <div v-for="tab in tabs"
+                     :key="tab.route"
+                     class="p-2">
+                  <nuxt-link :to="`/my/${tab.route}`">{{ tab.title }}</nuxt-link>
                 </div>
                 <div class="p-2">
                   <AgeRestrictionToggle/>
@@ -83,7 +86,6 @@
             </template>
           </Popper>
         </div>
-
 
       </div>
 
@@ -98,6 +100,7 @@
   import Popper from "vue3-popper";
   import useSearch from "~/composables/useSearch"
   import {useShowSearchModal} from "~/composables/states"
+  import {accountTabs} from "~/data/ui";
 
   const {ageRestrictedCategories} = useTags()
   const {
@@ -113,6 +116,19 @@
   const {
     logout
   } = useLogout();
+
+  const {
+    isSubscribed
+  } = useIsSubscribed()
+  const tabs = computed(() => {
+    if (isSubscribed.value) {
+      return accountTabs
+    }
+    return accountTabs.filter((t) => [
+      "account",
+      "shop"
+    ].includes(t.route))
+  })
 
 </script>
 
@@ -192,7 +208,7 @@
 <style scoped>
 
   .search-input {
-    @apply border py-2 px-4 text-md w-full;
+    @apply border py-2 px-4 text-base w-full;
   }
 
   .dropdown {

@@ -3,11 +3,19 @@ import {PageSearch} from "~/models/PageSearch"
 import IgAuth from "~/models/IgAuth"
 import {PendingPage} from "~/models/PendingPage"
 import IgPageOverride from "~/models/IgPageOverride";
+import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
+import {Order} from "~/models/Order";
 
 export let igAuthCollection: Collection<IgAuth>
 export let pageSearchCollection: Collection<PageSearch>
 export let pendingPageCollection: Collection<PendingPage>
 export let pageOverrideCollection: Collection<IgPageOverride>;
+export let mediaCommerceDataCollection: Collection<IgMediaCommerceData>;
+export let pageCommerceDataCollection: Collection<IgPageCommerceData>;
+export let orderCollection: Collection<Order>;
+export let sfLocationCollection: Collection<Location>;
+export let miscCollection: Collection;
 
 const config = useRuntimeConfig()
 
@@ -25,6 +33,11 @@ export async function initMongo() {
         pageSearchCollection = db.collection("page")
         pendingPageCollection = db.collection("pendingPage");
         pageOverrideCollection = db.collection("pageOverride");
+        mediaCommerceDataCollection = db.collection("mediaCommerceData");
+        pageCommerceDataCollection = db.collection("pageCommerceData");
+        orderCollection = db.collection("order");
+        sfLocationCollection = db.collection("sfLocation");
+        miscCollection = db.collection("misc");
         init = true
     }
     return client

@@ -121,6 +121,7 @@
   import useCreateReview from "~/composables/useCreateReview"
   import IgMedia from "~/models/IgMedia"
   import useMediaPrice from "~/composables/useMediaPrice"
+  import useMediaList from "~/composables/useMediaList";
 
   const {tagsLookup, categories} = useTags()
 
@@ -185,55 +186,16 @@
   })
 
   // Medias
-  let mediaPending = ref(false)
-  const medias = ref<IgMedia[]>([])
 
-  async function fetchOfficialMedias() {
-    const params = {
-      id: page.value._id,
-      limit: 12
-    }
-
-    const ms = medias.value
-    if (ms.length) params["until"] = ms[ms.length - 1].takenAt
-
-    const {data: mediaData, pending} = await useLazyFetch(`/api/media/list/official`, {params})
-    if (mediaData.value != null) {
-      medias.value = [...medias.value, ...mediaData.value.medias]
-      mediaPending.value = false
-    } else {
-      // Client navigation.
-      watch(mediaData, (newData) => {
-        medias.value = [...medias.value, ...newData.medias]
-        mediaPending.value = false
-      })
-    }
-  }
-
-  async function fetchDynamoMedias() {
-    const params = {
-      username: route.params.username,
-      limit: 12
-    }
-    if (medias.value.length != 0) {
-      params["before"] = medias.value[medias.value.length - 1].takenAt
-    }
-
-    const {data: mediaData, pending} = await useLazyFetch(`/api/media/list`, {params})
-    if (mediaData.value != null) {
-      medias.value = [...medias.value, ...mediaData.value.medias]
-      mediaPending.value = false
-    } else {
-      // Client navigation.
-      watch(mediaData, (newData) => {
-        medias.value = [...medias.value, ...newData.medias]
-        mediaPending.value = false
-      })
-    }
-  }
+  const {
+    mediaPending,
+    medias,
+    fetchOfficialMedias,
+    fetchDynamoMedias
+  } = useMediaList();
 
   async function fetchMedias() {
-    return (page.value.igConnected) ? fetchOfficialMedias() : fetchDynamoMedias()
+    return (page.value.igConnected) ? fetchOfficialMedias(page.value._id) : fetchDynamoMedias(route.params.username)
   }
 
   if (page.value) await fetchMedias()

@@ -191,7 +191,7 @@
 
     <template v-else>
       <div class="flex mb-4">
-        <nuxt-link class="btn-outline" :to="`/shop/${igUsername}`">查看商店頁面</nuxt-link>
+        <nuxt-link target="_blank" class="btn-outline" :to="`/shop/${igUsername}`">查看商店頁面</nuxt-link>
       </div>
 
       <div class="info-group">
@@ -300,7 +300,7 @@
                 </div>
                 <div class="table-cell pb-4">
                   <div class="w-full flex justify-between items-center">
-                    <label for="checkbox-licence" class="py-2 text-md">
+                    <label for="checkbox-licence" class="py-2 text-base">
                       {{ extraDataLookup['licence'].title }}
                     </label>
                     <input type="checkbox" id="checkbox-licence" v-model="licenceChecked">
@@ -316,7 +316,7 @@
                 </div>
                 <div class="table-cell pb-4">
                   <div class="w-full flex justify-between items-center">
-                    <label :for="'checkbox-' + extraDataBooleanFieldKey" class="py-2 text-md">
+                    <label :for="'checkbox-' + extraDataBooleanFieldKey" class="py-2 text-base">
                       {{ extraDataLookup[extraDataBooleanFieldKey].title }}
                     </label>
                     <input type="checkbox" :id="'checkbox-' + extraDataBooleanFieldKey"
@@ -348,7 +348,7 @@
   }
 
   .chip {
-    @apply inline-block text-pink-600 text-md border rounded-md p-2 mt-1 mr-2;
+    @apply inline-block text-pink-600 text-base border rounded-md p-2 mt-1 mr-2;
   }
 
 </style>
