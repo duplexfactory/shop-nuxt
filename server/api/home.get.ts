@@ -42,11 +42,11 @@ export default defineEventHandler(async (event) => {
         featured
     ] = await Promise.all([
         pageSearchCollection.find(f).sort({followerCount: -1}).limit(21).project(extraProj).toArray(),
-        pageSearchCollection.find({...f, lastMedia: {$gt: 0}}).sort({lastMedia: -1}).limit(12).project({
+        pageSearchCollection.find({...f, lastMedia: {$gt: 0}, igConnected: true}).sort({lastMedia: -1}).limit(12).project({
             _id: 1,
             username: 1,
             fullName: 1,
-            lastMediaData: 1
+            lastMediaData: 1,
         }).toArray(),
         pageSearchCollection.find(f).sort({activeScore: -1}).limit(30).project(cardProj).toArray(),
         // pageSearchCollection.find({
