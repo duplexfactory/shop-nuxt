@@ -45,7 +45,7 @@
     <div class="p-4">
       <nuxt-link v-if="!isLoggedIn" to="/login/shop" @click="hideSidebar" class="block btn btn-primary text-center w-full mb-4">商戶登入</nuxt-link>
       <nuxt-link v-if="!isLoggedIn" to="/verify" @click="hideSidebar" class="block btn btn-outline text-center w-full">認證我的商店</nuxt-link>
-      <button v-if="isLoggedIn" @click="hideSidebar(); logout();" class="block btn btn-outline text-center w-full">登出</button>
+      <button v-if="isLoggedIn" @click="clickLogout" class="block btn btn-outline text-center w-full">登出</button>
     </div>
 
   </div>
@@ -53,18 +53,36 @@
 
 <script setup lang="ts">
 
-import {useShowAgeRestrictedModal} from "~/composables/states";
-import {accountTabs} from "~/data/ui";
+import {accountTabs} from "~/data/ui"
 
-const {ageRestrictedCategories} = useTags();
+const {ageRestrictedCategories} = useTags()
+const router = useRouter()
 
-const showAgeRestrictedModal = useShowAgeRestrictedModal();
+const props = defineProps({
+  open: {type: Boolean, default: false}
+})
+const {
+  open
+} = toRefs(props)
+
+const emit = defineEmits(["toggleDrawer"])
+
+const showAgeRestrictedModal = useShowAgeRestrictedModal()
+watch(showAgeRestrictedModal, () => {
+  if (showAgeRestrictedModal.value && open.value) {
+    hideSidebar()
+  }
+})
 
 // Login
-const isLoggedIn = useIsLoggedIn();
+const isLoggedIn = useIsLoggedIn()
 const {
   logout
-} = useLogout();
+} = useLogout()
+function clickLogout() {
+  hideSidebar()
+  logout()
+}
 
 const {
   isSubscribed
@@ -79,47 +97,21 @@ const tabs = computed(() => {
   ].includes(t.route))
 })
 
-</script>
-
-<script lang="ts">
-
-export default {
-  components: {  },
-  data() : {
-    selectedCategory: string,
-  } {
-    return {
-      selectedCategory: "",
-    }
-  },
-  props: {
-    open: Boolean
-  },
-  methods: {
-    hideSidebar() {
-      this.$emit('toggleDrawer')
-    },
-    toggleCategory(categoryId: string) {
-      this.selectedCategory = this.selectedCategory == categoryId ? '' : categoryId;
-    },
-    tagPressed(tagId: string) {
-      this.$router.push({path: '/search', query: { tag: tagId }});
-      this.hideSidebar();
-    }
-  },
-  computed: {
-
-  },
-  watch: {
-    showAgeRestrictedModal: function () {
-      if (this.showAgeRestrictedModal && this.open) {
-        this.hideSidebar()
-      }
-    }
-  }
+function hideSidebar() {
+  emit('toggleDrawer')
 }
-</script>
 
+function tagPressed(tagId: string) {
+  router.push({path: '/search', query: { tag: tagId }})
+  hideSidebar()
+}
+
+const selectedCategory = ref("")
+function toggleCategory(categoryId: string) {
+  selectedCategory.value = selectedCategory.value == categoryId ? '' : categoryId;
+}
+
+</script>
 
 <style scoped>
 
