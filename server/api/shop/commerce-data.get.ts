@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3";
+import {defineEventHandler, useQuery} from "h3";
 import {assert} from "~/server/util";
 import {initMongo, pageCommerceDataCollection} from "~/server/mongodb";
 import {badRequest, notFound} from "~/utils/h3Error";

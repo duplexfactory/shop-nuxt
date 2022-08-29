@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useBody} from "h3";
+import {defineEventHandler, useBody} from "h3";
 import {assert, getAuth, sendOrderNotificationEmail} from "~/server/util";
 import {igAuthCollection, initMongo, orderCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";

@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue} from "h3";
+import {defineEventHandler} from "h3";
 import {assert} from "~/server/util";
 import {initMongo, pageCommerceDataCollection, pageSearchCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";
@@ -15,6 +15,6 @@ export default defineEventHandler(async (event) => {
 
     return {
         commerceData
-    } as unknown as JSONValue
+    }
     // { page: IgPage }
 })

@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {defineEventHandler, useQuery} from "h3"
 import {getPageMedias, initDynamo} from "~/server/dynamodb"
 import {initMongo, pageSearchCollection} from "~/server/mongodb"
 import dayjs from "dayjs"
@@ -26,6 +26,6 @@ export default defineEventHandler(async (event) => {
     initDynamo()
     return {
         medias: await getPageMedias(queryId, limit ? Number(limit) : undefined, before ? Number(before) : dayjs().unix())
-    } as unknown as JSONValue
+    }
     // { medias: IgMedia[] }
 })

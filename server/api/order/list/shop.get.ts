@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3";
+import {defineEventHandler, useQuery} from "h3";
 import {assert, getAuth, noCache} from "~/server/util";
 import {igAuthCollection, initMongo, orderCollection, pageSearchCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";
@@ -50,5 +50,5 @@ export default defineEventHandler(async (event) => {
     return {
         orders,
         count: await orderCollection.countDocuments(filter)
-    } as unknown as JSONValue
+    }
 })

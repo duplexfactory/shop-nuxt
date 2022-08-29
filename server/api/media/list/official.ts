@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {defineEventHandler, useQuery} from "h3"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {badRequest, notFound} from "~/utils/h3Error"
 import {assert, getAuth} from "~/server/util"
@@ -115,6 +115,6 @@ export default defineEventHandler(async (event) => {
     return {
         medias,
         paging
-    } as unknown as JSONValue
+    }
     // { medias: IgMedia[] }
 })

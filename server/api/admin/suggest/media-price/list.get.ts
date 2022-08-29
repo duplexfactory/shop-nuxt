@@ -1,5 +1,5 @@
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
-import {defineEventHandler, JSONValue} from "h3";
+import {defineEventHandler} from "h3";
 import {noCache} from "~/server/util";
 
 export default defineEventHandler(async (event) => {
@@ -18,5 +18,5 @@ export default defineEventHandler(async (event) => {
             ...d.data(),
             id: d.id
         }))
-    } as unknown as JSONValue;
+    };
 })

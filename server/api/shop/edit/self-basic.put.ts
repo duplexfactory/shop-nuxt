@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, sendError, useBody} from "h3"
+import {defineEventHandler, sendError, useBody} from "h3"
 import {assert, getAuth, noCache} from "~/server/util"
 import {igAuthCollection, initMongo, pageOverrideCollection, pageSearchCollection} from "~/server/mongodb"
 import {notFound} from "~/utils/h3Error"

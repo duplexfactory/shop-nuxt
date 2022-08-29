@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {defineEventHandler, useQuery} from "h3"
 import {initMongo, pageSearchCollection} from "~/server/mongodb"
 import {PageSearch} from "~/models/PageSearch"
 import {Filter, RootFilterOperators} from "mongodb"
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
             lastActivity: -1
         }).skip(Number(skip) || 0).limit(Number(limit) || 0).toArray(),
         count: await pageSearchCollection.countDocuments(f)
-    } as unknown as JSONValue
+    }
 
     // { pages: PageSearch[], count: number }
 })

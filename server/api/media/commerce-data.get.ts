@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue, useQuery} from "h3"
+import {defineEventHandler, useQuery} from "h3"
 import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb"
 import {isEmpty} from "~/utils/isEmpty";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
@@ -33,6 +33,6 @@ export default defineEventHandler(async (event) => {
             prev[curr._id] = curr
             return prev
         }, {})
-    } as unknown as JSONValue
+    }
     // { medias: IgMedia[] }
 })

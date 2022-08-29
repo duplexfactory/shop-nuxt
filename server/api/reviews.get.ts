@@ -1,6 +1,6 @@
 import {reviewCollection} from "~/server/firebase/collections";
 import IgPageReview from "~/models/IgPageReview";
-import {defineEventHandler, JSONValue, sendError, useQuery} from 'h3';
+import {defineEventHandler, sendError, useQuery} from 'h3';
 import {QuerySnapshot} from "firebase-admin/firestore";
 import {badRequest} from "~/utils/h3Error";
 
@@ -36,6 +36,6 @@ export default defineEventHandler(async (event) => {
 
     return {
         reviews
-    } as unknown as JSONValue
+    }
     // (IgPageReview & {id: string}) []
 })

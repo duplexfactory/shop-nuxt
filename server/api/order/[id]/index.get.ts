@@ -1,4 +1,4 @@
-import {defineEventHandler, JSONValue} from "h3";
+import {defineEventHandler} from "h3";
 import {initMongo, orderCollection} from "~/server/mongodb";
 import {assert} from "~/server/util";
 import {ObjectId} from "mongodb";
@@ -15,5 +15,5 @@ export default defineEventHandler(async (event) => {
 
     return {
         order
-    } as unknown as JSONValue
+    }
 })
