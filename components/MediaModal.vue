@@ -7,7 +7,9 @@
             <template v-if="localPage.igConnected && localMedia">
               <div class="image-container aspect-square rounded-md overflow-hidden"
                    v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
-              <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">{{ stripTrailingHashtags(localMedia.caption) }}</div>
+              <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
+                {{ stripTrailingHashtags(localMedia.caption) }}
+              </div>
             </template>
             <MediaCardIGEmbed v-if="!localPage.igConnected && localMediaCode"
                               captioned
@@ -20,10 +22,15 @@
           <div class="mt-4 md:mt-0">
 
             <div class="flex items-baseline">
-              <div class="text-xl md:text-2xl text-pink-700 font-semibold">{{ formatMediaPrice(mediaPrice(localMedia)) }}</div>
+              <div class="text-xl md:text-2xl text-pink-700 font-semibold">{{
+                  formatMediaPrice(mediaPrice(localMedia))
+                }}
+              </div>
 
               <Popper hover offsetDistance="0" placement="top">
-                <button @click="showPriceSuggestionModal = true" class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改</button>
+                <button @click="showPriceSuggestionModal = true"
+                        class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改
+                </button>
                 <template #content>
                   <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">此價格由電腦偵查或用戶提出。如有錯漏，歡迎提出修改。</div>
                 </template>
@@ -41,7 +48,7 @@
                           discountTextPrefix="全店買"
                           :discount="pageCommerceData.discount"></DiscountCard>
 
-            <div v-if="mediaCommerceDataLoaded" class="mt-2" >
+            <div v-if="mediaCommerceDataLoaded" class="mt-2">
               <template v-if="!!mediaCommerceData && mediaCommerceData.active">
                 <div class="flex items-center">
                   <div class="mr-4 text-gray-600">數量</div>
@@ -71,7 +78,7 @@
                        v-lazy="localPage.profilePicUrl"/>
                 </div>
                 <div>
-                  <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                  <nuxt-link class="hover:underline" :to="`/shop/${localPage.username}`" @click="close">
                     {{ localPage.username }}
                   </nuxt-link>
                   <div class="text-gray-500 text-sm">
@@ -80,7 +87,7 @@
                 </div>
               </template>
               <template v-else>
-                <nuxt-link class="hover:underline"  :to="`/shop/${localPage.username}`" @click="close">
+                <nuxt-link class="hover:underline" :to="`/shop/${localPage.username}`" @click="close">
                   {{ localPage.username }}
                 </nuxt-link>
               </template>
@@ -88,16 +95,16 @@
 
             <hr class="my-4"/>
 
-<!--            <div v-if="contactInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
-<!--              <div v-for="(pageInfoRow, i) in contactInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
-<!--                <i class="mr-2" :class="pageInfoRow.iconClass"></i>-->
-<!--                <component :is="pageInfoRow.link ? 'a' : 'span'"-->
-<!--                           class="break-words"-->
-<!--                           :class="{'hover:underline': pageInfoRow.link}"-->
-<!--                           target="_blank"-->
-<!--                           :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>-->
-<!--              </div>-->
-<!--            </div>-->
+            <!--            <div v-if="contactInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
+            <!--              <div v-for="(pageInfoRow, i) in contactInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
+            <!--                <i class="mr-2" :class="pageInfoRow.iconClass"></i>-->
+            <!--                <component :is="pageInfoRow.link ? 'a' : 'span'"-->
+            <!--                           class="break-words"-->
+            <!--                           :class="{'hover:underline': pageInfoRow.link}"-->
+            <!--                           target="_blank"-->
+            <!--                           :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>-->
+            <!--              </div>-->
+            <!--            </div>-->
 
             <div v-if="localMediaCode && localPage && localPage.igConnected"
                  class="mt-4 md:hidden text-sm whitespace-pre-wrap break-words">
@@ -105,7 +112,11 @@
             </div>
 
             <template v-if="localPage && !(localPage.igConnected)">
-              <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline" :href="`https://www.instagram.com/${localPage.username}/`" target="_blank">{{ localPage.username }}</a></i></div>
+              <div class="text-gray-400 mt-4 text-xs"><i>圖片、文字、資料來源: IG @ <a class="hover:underline"
+                                                                             :href="`https://www.instagram.com/${localPage.username}/`"
+                                                                             target="_blank">{{
+                  localPage.username
+                }}</a></i></div>
               <div class="text-gray-400 text-xs"><i>資料並沒有核實，或有錯漏，僅供參考。</i></div>
             </template>
 
@@ -116,7 +127,9 @@
             </div>
 
             <!-- Create Review -->
-            <ReviewCreateCard v-model:show="isShowingCreateReview" isCollapsible v-model:rating="rating" v-model:content="content" :isCreatingReview="isCreatingReview" @create-review="sendReview()"></ReviewCreateCard>
+            <ReviewCreateCard v-model:show="isShowingCreateReview" isCollapsible v-model:rating="rating"
+                              v-model:content="content" :isCreatingReview="isCreatingReview"
+                              @create-review="sendReview()"></ReviewCreateCard>
 
             <!-- Reviews -->
             <template v-for="review in reviews">
@@ -138,7 +151,8 @@
           <LazyModal v-if="showPriceSuggestionModal" @close="showPriceSuggestionModal = false">
             <template #container>
               <div class="bg-white p-4 rounded-md">
-                <input v-model="suggestedPrice" class="block text-input-primary" type="number" name="price" placeholder="輸入價格">
+                <input v-model="suggestedPrice" class="block text-input-primary" type="number" name="price"
+                       placeholder="輸入價格">
                 <div class="flex justify-end mt-2">
                   <button @click="submitPrice" class="btn-primary btn-sm mr-2">提交</button>
                   <button @click="showPriceSuggestionModal = false" class="btn-outline btn-sm">取消</button>
@@ -180,47 +194,48 @@
 
 <script setup lang="ts">
 
-import IgPageReview from "~/models/IgPageReview";
-import useCreateReview from "~/composables/useCreateReview";
+import IgPageReview from "~/models/IgPageReview"
+import useCreateReview from "~/composables/useCreateReview"
 
-import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
-import {computed} from "@vue/reactivity";
-import PageInfoRow from "~/models/PageInfoRow";
+import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
+import {computed} from "@vue/reactivity"
+import PageInfoRow from "~/models/PageInfoRow"
 
-import Popper from "vue3-popper";
-import type {Ref} from "vue";
-import IgMedia from "~/models/IgMedia";
-import useMediaPrice from "~/composables/useMediaPrice";
-import IgPage from "~/models/IgPage";
-import IgPageExtraData from "~/models/IgPageExtraData";
-import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
-import {IgPageCommerceData} from "~/models/IgPageCommerceData";
-const nuxt = useNuxtApp();
-const router = useRouter();
+import Popper from "vue3-popper"
+import type {Ref} from "vue"
+import IgMedia from "~/models/IgMedia"
+import useMediaPrice from "~/composables/useMediaPrice"
+import IgPage from "~/models/IgPage"
+import IgPageExtraData from "~/models/IgPageExtraData"
+import {IgMediaCommerceData} from "~/models/IgMediaCommerceData"
+import {IgPageCommerceData} from "~/models/IgPageCommerceData"
+
+const nuxt = useNuxtApp()
+const router = useRouter()
 
 // Media Modal
-const showMediaModal = useShowMediaModal();
-const showingMediaModalData = useShowingMediaModalData();
+const showMediaModal = useShowMediaModal()
+const showingMediaModalData = useShowingMediaModalData()
 
-const fetchedPage = ref(null);
+const fetchedPage = ref(null)
 const localPage = computed<IgPage>(() => {
-  return showingMediaModalData.value.simplePage || fetchedPage.value;
-});
+  return showingMediaModalData.value.simplePage || fetchedPage.value
+})
 
 const localMediaCode = computed(() => {
-  return showingMediaModalData.value.media?.code || showingMediaModalData.value.code;
-});
-const fetchedMedia: Ref<IgMedia | null> = ref(null);
+  return showingMediaModalData.value.media?.code || showingMediaModalData.value.code
+})
+const fetchedMedia: Ref<IgMedia | null> = ref(null)
 const localMedia = computed(() => {
-  return showingMediaModalData.value.media || fetchedMedia.value;
-});
+  return showingMediaModalData.value.media || fetchedMedia.value
+})
 
 function stripTrailingHashtags(s: string): string {
-  return s.replace(/(?:[\n\r\s]*[#][^\n\r\s]+)+[\n\r\s]*$/i, "");
+  return s.replace(/(?:[\n\r\s]*[#][^\n\r\s]+)+[\n\r\s]*$/i, "")
 }
 
 // Media Price
-const { mediaPrice, formatMediaPrice } = useMediaPrice();
+const {mediaPrice, formatMediaPrice} = useMediaPrice()
 
 // Create Review
 const {
@@ -231,72 +246,74 @@ const {
   content,
   createReview,
   resetCreateReview
-} = useCreateReview();
-const isShowingCreateReview = ref<boolean>(false);
-reviewingCode.value = localMediaCode.value;
-reviewingPageId.value = showingMediaModalData.value.simplePage?._id || showingMediaModalData.value.pageId;
+} = useCreateReview()
+const isShowingCreateReview = ref<boolean>(false)
+reviewingCode.value = localMediaCode.value
+reviewingPageId.value = showingMediaModalData.value.simplePage?._id || showingMediaModalData.value.pageId
 
-const reviews = ref<IgPageReview[]>([]);
+const reviews = ref<IgPageReview[]>([])
 
 async function fetchReviews() {
-  reviews.value = (await $fetch('/api/reviews', { method: 'GET', params: {
+  reviews.value = (await $fetch('/api/reviews', {
+    method: 'GET', params: {
       mediaCode: localMediaCode.value,
-    }}))['reviews'];
+    }
+  }))['reviews']
 }
 
 async function sendReview() {
-  await createReview();
-  isShowingCreateReview.value = false;
-  await fetchReviews();
+  await createReview()
+  isShowingCreateReview.value = false
+  await fetchReviews()
 }
 
 function close() {
-  resetCreateReview();
-  isShowingCreateReview.value = false;
-  reviews.value = [];
+  resetCreateReview()
+  isShowingCreateReview.value = false
+  reviews.value = []
 
-  showMediaModal.value = false;
+  showMediaModal.value = false
 }
 
 function onUsernameClick() {
-  router.push(`/shop/${localPage.value.username}`);
-  close();
+  router.push(`/shop/${localPage.value.username}`)
+  close()
 }
 
-const screenSize = useScreenSize();
+const screenSize = useScreenSize()
 
 // Suggest price
-const showPriceSuggestionModal = ref(false);
-const suggestedPrice = ref(null);
+const showPriceSuggestionModal = ref(false)
+const suggestedPrice = ref(null)
+
 async function submitPrice() {
   if (suggestedPrice.value === null) {
-    nuxt.vueApp.$toast.error("請輸入價格！", {position: "top"});
-    return;
+    nuxt.vueApp.$toast.error("請輸入價格！", {position: "top"})
+    return
   }
 
   const body: any = {
     code: localMediaCode.value,
     price: suggestedPrice.value
-  };
-  await useFetch('/api/suggest/media-price', { method: 'POST', body})
+  }
+  await useFetch('/api/suggest/media-price', {method: 'POST', body})
 
   // Reset
-  suggestedPrice.value = null;
+  suggestedPrice.value = null
 
-  nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"});
-  showPriceSuggestionModal.value = false;
+  nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"})
+  showPriceSuggestionModal.value = false
 }
 
 // Contact
-const showContactModal = ref(false);
+const showContactModal = ref(false)
 
 function clickContactShop() {
   if (contactInfoRows.value.length === 0) {
     // Force open IG page if no contact info available.
-    window.open(`https://www.instagram.com/${localPage.value.username}/`, '_blank').focus();
-  }
-  else {
-    showContactModal.value = true;
+    window.open(`https://www.instagram.com/${localPage.value.username}/`, '_blank').focus()
+  } else {
+    showContactModal.value = true
   }
 }
 
@@ -312,31 +329,29 @@ const contactInfoRows = computed(() => {
 
   const fields: (keyof IgPageExtraData)[] = ["whatsapp", "wechat", "signal"]
   if (!localPage.value.extraData || !localPage.value.extraData.noPhoneCall) {
-    fields.unshift("phone");
+    fields.unshift("phone")
   }
 
-  const rows: ContactInfoRow[] = PageInfoRow.rowsFromExtraData(localPage.value.extraData, fields);
+  const rows: ContactInfoRow[] = PageInfoRow.rowsFromExtraData(localPage.value.extraData, fields)
   if (!localPage.value.extraData || !localPage.value.extraData.noIgDM) {
     rows.unshift({
       key: "igPage",
       iconClass: "spr-instagram",
       value: localPage.value.username,
       link: `https://www.instagram.com/${localPage.value.username}/`
-    });
+    })
   }
-  return rows;
-});
+  return rows
+})
 
 function clickContactInfoRow(row: ContactInfoRow) {
   if (!!row.link) {
-    window.open(row.link, '_blank').focus();
-  }
-  else if (row.key === "phone") {
-    window.open(`tel:${row.value}`, '_self');
-  }
-  else {
-    navigator.clipboard.writeText(row.value);
-    nuxt.vueApp.$toast.success("已複製至剪貼簿！", {position: "top"});
+    window.open(row.link, '_blank').focus()
+  } else if (row.key === "phone") {
+    window.open(`tel:${row.value}`, '_self')
+  } else {
+    navigator.clipboard.writeText(row.value)
+    nuxt.vueApp.$toast.success("已複製至剪貼簿！", {position: "top"})
   }
 }
 
@@ -348,6 +363,7 @@ const pageCommerceDataLoaded = ref(false)
 
 // Create order
 const quantity = ref(1)
+
 function clickBuyNow() {
   addToCart()
   close()
@@ -356,22 +372,21 @@ function clickBuyNow() {
 
 function clickAddToCart() {
   addToCart()
-  nuxt.vueApp.$toast.success("已成功加至購物車。", {position: "top"});
+  nuxt.vueApp.$toast.success("已成功加至購物車。", {position: "top"})
 }
 
 function addToCart() {
-  let cart:{code: string, quantity: number}[] = (JSON.parse(localStorage.getItem("cart")) as []) || [];
-  const item = cart.find((i) => i.code === localMediaCode.value);
+  let cart: { code: string, quantity: number }[] = (JSON.parse(localStorage.getItem("cart")) as []) || []
+  const item = cart.find((i) => i.code === localMediaCode.value)
   if (!!item) {
-    item.quantity += quantity.value;
-  }
-  else {
+    item.quantity += quantity.value
+  } else {
     cart.push({
       code: localMediaCode.value,
       quantity: quantity.value
-    });
+    })
   }
-  localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart))
 }
 
 // Mounted
@@ -379,16 +394,16 @@ onMounted(async () => {
 
   // Init data on modal open
   if (!localMedia.value) {
-    const {data, pending} = await useFetch(`/api/media/${localMediaCode.value}`);
-    fetchedMedia.value = data.value.media;
+    const {data, pending} = await useFetch(`/api/media/${localMediaCode.value}`)
+    fetchedMedia.value = data.value.media
   }
 
   if (!localPage.value) {
-    const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`);
-    fetchedPage.value = data.value.page;
+    const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`)
+    fetchedPage.value = data.value.page
   }
 
-  await fetchReviews();
+  await fetchReviews()
 
   const {
     data: mediaCommerceDataRaw,
@@ -410,7 +425,7 @@ onMounted(async () => {
   }
   pageCommerceDataLoaded.value = true
 
-});
+})
 
 </script>
 
