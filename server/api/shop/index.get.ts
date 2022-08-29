@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3";
+import {defineEventHandler, getQuery} from "h3";
 import {assert} from "~/server/util";
 import {badRequest, notFound} from "~/utils/h3Error";
 import {initMongo, pageSearchCollection} from "~/server/mongodb";
@@ -6,7 +6,7 @@ import {initMongo, pageSearchCollection} from "~/server/mongodb";
 export default defineEventHandler(async (event) => {
     let {
         ids
-    } = await useQuery(event) as { ids: string }
+    } = await getQuery(event) as { ids: string }
 
     assert(!!ids, badRequest)
 

@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3"
+import {defineEventHandler, getQuery} from "h3"
 import {getPageMedias, initDynamo} from "~/server/dynamodb"
 import {initMongo, pageSearchCollection} from "~/server/mongodb"
 import dayjs from "dayjs"
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         username,
         limit,
         before
-    } = await useQuery(event) as { id: string, username: string, limit: string, before: string }
+    } = await getQuery(event) as { id: string, username: string, limit: string, before: string }
 
     let queryId: string
     if (id) {

@@ -1,11 +1,11 @@
 import {reviewCollection} from "~/server/firebase/collections";
 import IgPageReview from "~/models/IgPageReview";
-import {defineEventHandler, sendError, useQuery} from 'h3';
+import {defineEventHandler, sendError, getQuery} from 'h3';
 import {QuerySnapshot} from "firebase-admin/firestore";
 import {badRequest} from "~/utils/h3Error";
 
 export default defineEventHandler(async (event) => {
-    const {pageId, mediaCode} = await useQuery(event) as { pageId: string | undefined, mediaCode: string | undefined };
+    const {pageId, mediaCode} = await getQuery(event) as { pageId: string | undefined, mediaCode: string | undefined };
 
     let reviewSS: QuerySnapshot<IgPageReview>;
     if (mediaCode != undefined) {

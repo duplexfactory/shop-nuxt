@@ -1,4 +1,4 @@
-import {defineEventHandler, sendError, useQuery} from "h3"
+import {defineEventHandler, sendError, getQuery} from "h3"
 import {shopSuggestionCollection} from "~/server/firebase/collections"
 import {initMongo, pendingPageCollection} from "~/server/mongodb"
 import {notFound} from "~/utils/h3Error"
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
     const {
         id
-    } = useQuery(event) as { id: string }
+    } = getQuery(event) as { id: string }
 
     const ss = await shopSuggestionCollection().doc(id).get()
     assert(ss.exists, notFound)

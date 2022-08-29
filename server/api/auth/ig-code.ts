@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import {createError, defineEventHandler, useQuery} from "h3"
+import {createError, defineEventHandler, getQuery} from "h3"
 import dayjs from "dayjs"
 import {nanoid} from "nanoid"
 
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     const auth = getAuth(event)
     await initMongo()
 
-    const {code} = useQuery(event)
+    const {code} = getQuery(event)
 
     // exchange code for short lived access token
     const form = new URLSearchParams()

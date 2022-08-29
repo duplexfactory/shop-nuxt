@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
     const {
         type: typeString
-    } = useQuery(event)
+    } = getQuery(event)
     const type: PaymentType = Number(typeString)
     assert([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(type))
 

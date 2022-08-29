@@ -1,7 +1,7 @@
 import stream from "stream";
 import util from "util";
 import fetch from "node-fetch";
-import {defineEventHandler, useQuery} from "h3";
+import {defineEventHandler, getQuery} from "h3";
 
 const pipe = util.promisify(stream.pipeline);
 
@@ -15,7 +15,7 @@ export function decryptImageUrl(code: string) {
 }
 
 export default defineEventHandler(async (event) => {
-    const {i} = await useQuery(event) as { i: string }
+    const {i} = await getQuery(event) as { i: string }
 
     // const url = new URL(decryptImageUrl(i))
     const url = new URL('https://www.instagram.com/p/' + i + '/media/?size=m')

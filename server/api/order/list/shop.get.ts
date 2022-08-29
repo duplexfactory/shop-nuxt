@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3";
+import {defineEventHandler, getQuery} from "h3";
 import {assert, getAuth, noCache} from "~/server/util";
 import {igAuthCollection, initMongo, orderCollection, pageSearchCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
         limit,
         keyword,
         status
-    } = await useQuery(event) as (QueryObject & PaginationQuery & {keyword?: string, status?: string})
+    } = await getQuery(event) as (QueryObject & PaginationQuery & {keyword?: string, status?: string})
     const filter : Filter<Order> = {
         [`shops.${igAuth.pageId}`]: {$exists: true}
     }

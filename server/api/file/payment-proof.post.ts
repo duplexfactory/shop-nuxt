@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     const {
         orderId,
         pageId
-    } = useQuery(event)
+    } = getQuery(event)
 
     const form = new formidable.IncomingForm();
     const {

@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3"
+import {defineEventHandler, getQuery} from "h3"
 import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb"
 import {isEmpty} from "~/utils/isEmpty";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
         codes,
         active,
         pageId,
-    } = await useQuery(event) as {
+    } = await getQuery(event) as {
         codes?: string,
         active?: string,
         pageId?: string

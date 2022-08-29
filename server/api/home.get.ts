@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3"
+import {defineEventHandler, getQuery} from "h3"
 import {initMongo, pageSearchCollection} from "~/server/mongodb"
 import {Filter} from "mongodb"
 import {PageSearch} from "~/models/PageSearch"
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     const {
         adult
-    } = await useQuery(event) as { adult: string }
+    } = await getQuery(event) as { adult: string }
 
     const f: Filter<PageSearch> = {}
     if (adult !== "true") {

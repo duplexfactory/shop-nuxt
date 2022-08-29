@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3"
+import {defineEventHandler, getQuery} from "h3"
 import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongodb"
 import {badRequest, notFound} from "~/utils/h3Error"
 import {assert, getAuth} from "~/server/util"
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         until,
         before,
         after
-    } = await useQuery(event) as { id: string, limit: string, since?: string, until?: string, before?: string, after?: string }
+    } = await getQuery(event) as { id: string, limit: string, since?: string, until?: string, before?: string, after?: string }
 
     await initMongo()
 

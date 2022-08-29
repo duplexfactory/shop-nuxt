@@ -1,4 +1,4 @@
-import {defineEventHandler, useQuery} from "h3"
+import {defineEventHandler, getQuery} from "h3"
 import {initMongo, pageSearchCollection} from "~/server/mongodb"
 import {PageSearch} from "~/models/PageSearch"
 import {Filter, RootFilterOperators} from "mongodb"
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
         skip,
         limit,
         adult
-    } = await useQuery(event) as { q?: string, tag?: string, br?: string, phy?: string, skip: string, limit: string, adult: string }
+    } = await getQuery(event) as { q?: string, tag?: string, br?: string, phy?: string, skip: string, limit: string, adult: string }
 
     let f: Filter<PageSearch> = {}
 
