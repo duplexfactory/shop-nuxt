@@ -30,12 +30,14 @@
             <div class="table-cell">價錢</div>
             <div class="table-cell whitespace-nowrap">
               接受訂單
-              <Popper hover offsetDistance="0" placement="top">
-                <i class="spr-info-circled-alt text-gray-600"></i>
-                <template #content>
-                  <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">開啓接受訂單後，客戶可以直接下單購買產品。</div>
-                </template>
-              </Popper>
+              <client-only>
+                <Popper hover offsetDistance="0" placement="top">
+                  <i class="spr-info-circled-alt text-gray-600"></i>
+                  <template #content>
+                    <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">開啓接受訂單後，客戶可以直接下單購買產品。</div>
+                  </template>
+                </Popper>
+              </client-only>
             </div>
 <!--            <div class="table-cell whitespace-nowrap">-->
 <!--              自訂價錢-->

@@ -36,14 +36,16 @@
           <div class="font-semibold">訂單狀態</div>
           <div class="flex">
             <div class="font-semibold mr-2" :class="orderStatusColorClass[order.shops[pageId].orderStatus]">{{ orderStatusToText[order.shops[pageId].orderStatus] }}</div>
-            <Popper hover offsetDistance="0" placement="top">
-              <i class="spr-info-circled-alt text-gray-600"></i>
-              <template #content>
-                <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
-                  {{ orderStatusTipText[order.shops[pageId].orderStatus] }}
-                </div>
-              </template>
-            </Popper>
+            <client-only>
+              <Popper hover offsetDistance="0" placement="top">
+                <i class="spr-info-circled-alt text-gray-600"></i>
+                <template #content>
+                  <div class="bg-gray-900/80 text-white text-sm p-2 rounded-md">
+                    {{ orderStatusTipText[order.shops[pageId].orderStatus] }}
+                  </div>
+                </template>
+              </Popper>
+            </client-only>
           </div>
 
           <div class="font-semibold mt-4">訂單内容</div>
