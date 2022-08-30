@@ -109,7 +109,7 @@ let headers;
 if (process.client) {
   headers = headersToObject(await getAuthHeader())
 }
-const {data, pending, refresh, error} = await useLazyFetch(`/api/order/${route.params.id}/shop`, {headers, server: false})
+const {data, pending, refresh, error} = await useContentKeyedLazyFetch(`/api/order/${route.params.id}/shop`, {headers, server: false})
 if (!!error && !!error.value) {
   throwError(notFound);
 }
@@ -240,7 +240,7 @@ async function confirmDeny() {
 
 // Helper.
 async function patchStatus(status: OrderStatus) {
-  return useFetch(`/api/order/${order.value._id}/status`, { headers: headersToObject(await getAuthHeader()), method: 'PUT', body: {status}})
+  return useContentKeyedFetch(`/api/order/${order.value._id}/status`, { headers: headersToObject(await getAuthHeader()), method: 'PUT', body: {status}})
 }
 
 </script>

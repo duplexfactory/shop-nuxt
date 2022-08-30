@@ -149,7 +149,7 @@ watch(onlyActiveFilter, async () => {
     }
 
     // Get all commerce data of medias that are active.
-    const {data, error} = await useFetch('/api/media/commerce-data', {
+    const {data, error} = await useContentKeyedFetch('/api/media/commerce-data', {
       params: {
         active: true,
         pageId: igPageId.value
@@ -163,7 +163,7 @@ watch(onlyActiveFilter, async () => {
     const {
       data: mediaData,
       error: mediaError
-    } = await useFetch("/api/media", {
+    } = await useContentKeyedFetch("/api/media", {
       params: {
         codes: Object.keys(newCommerceData).join(",")
       }
@@ -181,7 +181,7 @@ watch(onlyActiveFilter, async () => {
 })
 
 async function fetchMediaCommerceData() {
-  const {data, error} = await useFetch('/api/media/commerce-data', {
+  const {data, error} = await useContentKeyedFetch('/api/media/commerce-data', {
     params: {
       codes: medias.value.filter((m) => !Object.keys(commerceData.value).includes(m.code)).map((m) => m.code).join(',')
     }
@@ -258,7 +258,7 @@ async function confirmToggleActive() {
 
   showConfirmToggleActiveModal.value = false
   try {
-    await useFetch(
+    await useContentKeyedFetch(
         `/api/media/${togglingMediaCode.value}/commerce-data/edit`,
         {
           method: 'PUT',

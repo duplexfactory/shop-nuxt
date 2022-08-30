@@ -139,7 +139,7 @@ async function confirmDelete() {
   if ([PaymentType.PAYME, PaymentType.WECHAT_PAY_HK, PaymentType.ALIPAY_HK].includes(value.value.paymentMethodData[deletingIndex.value].method)) {
     // Delete image first.
     const splitted = (value.value.paymentMethodData[deletingIndex.value] as QRCodePaymentMethodData).qrCodeUrl.split("/")
-    await useFetch(
+    await useContentKeyedFetch(
         `/api/file/payment/${splitted[splitted.length - 1]}`,
         {
           headers: headersToObject(await getAuthHeader()),

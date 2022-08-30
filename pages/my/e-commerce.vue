@@ -295,7 +295,7 @@ async function initCommerceData() {
     data,
     refresh,
     error
-  } = await useFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+  } = await useContentKeyedFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
   commerceRawData = data
   commerceDataRefresh = refresh
   commerceDataRefreshError = error
@@ -380,7 +380,7 @@ async function saveDiscount() {
 }
 
 async function patchCommerce(patch: Partial<Omit<IgPageCommerceData, "_id">>) {
-  return useFetch(
+  return useContentKeyedFetch(
       '/api/shop/edit/self-commerce',
       {
         headers: headersToObject(await getAuthHeader()),

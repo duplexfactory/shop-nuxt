@@ -114,7 +114,7 @@ async function fetchPages() {
   const {
     data,
     error
-  } = await useFetch('/api/shop', {
+  } = await useContentKeyedFetch('/api/shop', {
     params: {
       ids: pageIds.value.join(",")
     }

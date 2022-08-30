@@ -78,7 +78,7 @@ async function fetchHomeData() {
   if (showAgeRestrictedContent.value) {
     params["adult"] = true
   }
-  const {data} = await useLazyFetch(`/api/home`, {params});
+  const {data} = await useContentKeyedLazyFetch(`/api/home`, {params});
   if (data.value) {
     const {hot: _hot, active: _active, latest: _latest, featured: _featured} = data.value;
     hot.value = _hot;

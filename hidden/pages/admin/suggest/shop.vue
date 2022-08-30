@@ -48,7 +48,7 @@ import type {Ref} from "vue";
 import ShopSuggestion from "~/models/ShopSuggestion";
 
 const nuxt = useNuxtApp();
-const { data } = await useFetch('/api/admin/suggest/shop/list', {server: false});
+const { data } = await useContentKeyedFetch('/api/admin/suggest/shop/list', {server: false});
 const suggestions: Ref<ShopSuggestion[]> = ref<ShopSuggestion[]>([]);
 watch(data, (newData) => suggestions.value = newData.suggestions);
 
@@ -57,7 +57,7 @@ function tsToDateString(ts) {
 }
 
 async function approveRecord(id: string) {
-  const { data, error } = await useFetch('/api/admin/suggest/shop/approve', { method: 'POST', params: {id}});
+  const { data, error } = await useContentKeyedFetch('/api/admin/suggest/shop/approve', { method: 'POST', params: {id}});
   if (error.value !== null) {
     nuxt.$toast.error("失敗！");
     return;
@@ -67,7 +67,7 @@ async function approveRecord(id: string) {
 }
 
 async function deleteRecord(id: string) {
-  const { data, error } = await useFetch('/api/admin/suggest/shop', { method: 'DELETE', params: {id}});
+  const { data, error } = await useContentKeyedFetch('/api/admin/suggest/shop', { method: 'DELETE', params: {id}});
   if (error.value !== null) {
     nuxt.$toast.error("失敗！");
     return;

@@ -178,7 +178,7 @@ const customPrice = computed({
 
 
     try {
-      await useFetch(
+      await useContentKeyedFetch(
           `/api/media/${media.value.code}/commerce-data/edit`,
           {
             method: 'PUT',

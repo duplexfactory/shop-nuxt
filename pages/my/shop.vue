@@ -94,7 +94,7 @@
   const igUsername = useIgUsername()
 
   async function init(username: string) {
-    const {data} = await useFetch(`/api/shop/username/${username}`)
+    const {data} = await useContentKeyedFetch(`/api/shop/username/${username}`)
     shop.value = data.value.page
 
     if (!shop.value.extraData) {

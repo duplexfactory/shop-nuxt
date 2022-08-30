@@ -218,7 +218,7 @@ onMounted(async () => {
   const {
     data,
     error
-  } = await useFetch("/api/media", {
+  } = await useContentKeyedFetch("/api/media", {
     params: {
       codes: orderDetail.value.medias.map((m) => m.code).join(",")
     }

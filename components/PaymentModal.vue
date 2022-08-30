@@ -164,7 +164,7 @@ onMounted(async () => {
   const {
     data,
     error
-  } = await useFetch(`/api/shop/id/${pageId.value}/commerce-data`)
+  } = await useContentKeyedFetch(`/api/shop/id/${pageId.value}/commerce-data`)
   if (!!data.value) {
     pageCommerceData.value = data.value["commerceData"]
   }
@@ -199,7 +199,7 @@ async function clickSubmit() {
       body["url"] = url
     }
 
-    await useFetch(
+    await useContentKeyedFetch(
         `/api/order/${orderId.value}/payment-proof`,
         {
           method: 'POST',

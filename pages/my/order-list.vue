@@ -166,7 +166,7 @@ async function fetchOrderList() {
     data,
     pending,
     error
-  } = await useLazyFetch("/api/order/list/shop", {
+  } = await useContentKeyedLazyFetch("/api/order/list/shop", {
     params,
     headers: headersToObject(await getAuthHeader()),
     initialCache: false

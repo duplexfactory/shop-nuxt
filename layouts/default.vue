@@ -177,7 +177,7 @@
         const {
           data,
           error
-        } = await useFetch("/api/auth/check-ig-connect", {
+        } = await useContentKeyedFetch("/api/auth/check-ig-connect", {
           headers: headersToObject(await getAuthHeader()),
         })
         isIgConnected.value = data.value.connected;

@@ -54,7 +54,7 @@ import MediaPriceSuggestion from "~/models/MediaPriceSuggestion";
 import type {Ref} from "vue";
 
 const nuxt = useNuxtApp();
-const { data } = await useFetch('/api/admin/suggest/media-price/list', {server: false});
+const { data } = await useContentKeyedFetch('/api/admin/suggest/media-price/list', {server: false});
 const suggestions: Ref<MediaPriceSuggestion[]> = ref<MediaPriceSuggestion[]>([]);
 watch(data, (newData) => suggestions.value = newData.suggestions);
 
@@ -63,7 +63,7 @@ function tsToDateString(ts) {
 }
 
 async function approveRecord(id: string) {
-  const { data, error } = await useFetch('/api/admin/suggest/media-price/approve', {method: 'POST', params: {id}});
+  const { data, error } = await useContentKeyedFetch('/api/admin/suggest/media-price/approve', {method: 'POST', params: {id}});
   if (error.value !== null) {
     nuxt.$toast.error("失敗！");
     return;
@@ -73,7 +73,7 @@ async function approveRecord(id: string) {
 }
 
 async function deleteRecord(id: string) {
-  const { data, error } = await useFetch('/api/admin/suggest/media-price', {method: 'DELETE', params: {id}});
+  const { data, error } = await useContentKeyedFetch('/api/admin/suggest/media-price', {method: 'DELETE', params: {id}});
   if (error.value !== null) {
     nuxt.$toast.error("失敗！");
     return;

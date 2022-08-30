@@ -375,7 +375,7 @@ async function fetchMedias() {
   const {
     data,
     error
-  } = await useFetch("/api/media", {
+  } = await useContentKeyedFetch("/api/media", {
     params: {
       codes: cart.value.map((item) => item.code).join(",")
     }
@@ -390,7 +390,7 @@ async function fetchMediaCommerceData() {
   const {
     data,
     error
-  } = await useFetch('/api/media/commerce-data', {
+  } = await useContentKeyedFetch('/api/media/commerce-data', {
     params: {
       codes: cart.value.map((item) => item.code).join(",")
     }
@@ -416,7 +416,7 @@ async function fetchPages() {
   const {
     data,
     error
-  } = await useFetch('/api/shop', {
+  } = await useContentKeyedFetch('/api/shop', {
     params: {
       ids: pageIds.value.join(",")
     }
@@ -431,7 +431,7 @@ async function fetchPageCommerceData() {
   const {
     data,
     error
-  } = await useFetch("/api/shop/commerce-data", {params: {ids: pageIds.value.join(",")}})
+  } = await useContentKeyedFetch("/api/shop/commerce-data", {params: {ids: pageIds.value.join(",")}})
   for (const key of Object.keys(data.value["commerceData"])) {
     pageCommerceData.value[key] = data.value["commerceData"][key]
   }
@@ -457,7 +457,7 @@ if (!process.server) {
 const {
   data: sfLocationsData,
   error: sfLocationsError,
-} = await useFetch("/api/system/sf-locations")
+} = await useContentKeyedFetch("/api/system/sf-locations")
 const sf = sfLocationsData.value as Pick<SF, "stations" | "removed_stations" | "lockers" | "removed_lockers">
 
 function removeMedia(code: string) {
@@ -569,7 +569,7 @@ async function clickCheckout() {
   const {
     data,
     error: e
-  } = await useFetch('/api/order', {
+  } = await useContentKeyedFetch('/api/order', {
     method: 'POST',
     body: {
       items: cart.value,
