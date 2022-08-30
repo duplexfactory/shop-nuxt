@@ -252,7 +252,7 @@ async function confirmToggleActive() {
   const media = medias.value.find((m) => m.code === togglingMediaCode.value)
   if (mediaPrice(media) === 0) {
     await cancelToggleActive()
-    nuxt.vueApp.$toast.error("請先設定價錢！", {position: "top"});
+    nuxt.$toast.error("請先設定價錢！");
     return
   }
 
@@ -272,10 +272,10 @@ async function confirmToggleActive() {
     localStorage.setItem("no_more_toggle_active_reminder", noMoreToggleActiveReminder.value.toString())
     togglingMediaCode.value = ""
 
-    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+    nuxt.$toast.success("成功！");
   }
   catch (e) {
-    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    nuxt.$toast.error("失敗！");
   }
 }
 async function cancelToggleActive() {

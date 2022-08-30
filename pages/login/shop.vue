@@ -74,10 +74,10 @@
         } catch (firebaseSignInError) {
             const errorCode = firebaseSignInError.code;
             if ([AuthErrorCodes.INVALID_EMAIL, AuthErrorCodes.INVALID_PASSWORD].includes(errorCode)) {
-              nuxt.vueApp.$toast.error("電郵或密碼錯誤", {position: "top"});
+              nuxt.$toast.error("電郵或密碼錯誤");
             }
             else {
-              nuxt.vueApp.$toast.error("登入失敗", {position: "top"});
+              nuxt.$toast.error("登入失敗");
             }
             loginLoading.value = false;
         }

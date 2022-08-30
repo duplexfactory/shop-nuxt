@@ -128,7 +128,7 @@ const showingPaymentMethodsPageId = ref("")
 
 function clickCopyLink() {
   navigator.clipboard.writeText(config.DOMAIN + route.path)
-  nuxt.vueApp.$toast.success("已複製此頁面網址至剪貼板，請保存以重新瀏覽！", {position: "top"});
+  nuxt.$toast.success("已複製此頁面網址至剪貼板，請保存以重新瀏覽！");
 }
 
 function submitPayment() {

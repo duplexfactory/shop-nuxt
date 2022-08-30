@@ -188,10 +188,10 @@ async function confirmSettle() {
   const { error } = await patchStatus(OrderStatus.MAILED)
   isSettleLoading.value = false
   if (!!error.value) {
-    nuxt.vueApp.$toast.error("完成交易失敗，請稍後再試", {position: "top"})
+    nuxt.$toast.error("完成交易失敗，請稍後再試")
     return
   }
-  nuxt.vueApp.$toast.success("已成功完成交易。", {position: "top"})
+  nuxt.$toast.success("已成功完成交易。")
   await refresh()
 }
 
@@ -211,10 +211,10 @@ async function confirmVerify() {
   const { error } = await patchStatus(OrderStatus.VERIFIED)
   isVerifyLoading.value = false
   if (!!error.value) {
-    nuxt.vueApp.$toast.error("接受證明失敗，請稍後再試", {position: "top"})
+    nuxt.$toast.error("接受證明失敗，請稍後再試")
     return
   }
-  nuxt.vueApp.$toast.success("已成功接受證明。", {position: "top"})
+  nuxt.$toast.success("已成功接受證明。")
   await refresh()
 }
 async function clickDeny() {
@@ -231,10 +231,10 @@ async function confirmDeny() {
   const { error } = await patchStatus(OrderStatus.VERIFICATION_FAILED)
   isVerifyLoading.value = false
   if (!!error.value) {
-    nuxt.vueApp.$toast.error("拒絕接受證明失敗，請稍後再試", {position: "top"})
+    nuxt.$toast.error("拒絕接受證明失敗，請稍後再試")
     return
   }
-  nuxt.vueApp.$toast.success("已成功拒絕接受證明。", {position: "top"})
+  nuxt.$toast.success("已成功拒絕接受證明。")
   await refresh()
 }
 

@@ -207,13 +207,13 @@ async function clickSubmit() {
         })
 
     isSubmitting.value = false
-    nuxt.vueApp.$toast.success("成功提交！", {position: "top"})
+    nuxt.$toast.success("成功提交！")
     emit("submit")
     emit("close")
   }
   catch (e) {
     isSubmitting.value = false
-    nuxt.vueApp.$toast.error("提交失敗！", {position: "top"})
+    nuxt.$toast.error("提交失敗！")
   }
 
 }

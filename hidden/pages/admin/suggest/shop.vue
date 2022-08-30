@@ -59,21 +59,21 @@ function tsToDateString(ts) {
 async function approveRecord(id: string) {
   const { data, error } = await useFetch('/api/admin/suggest/shop/approve', { method: 'POST', params: {id}});
   if (error.value !== null) {
-    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    nuxt.$toast.error("失敗！");
     return;
   }
   suggestions.value = suggestions.value.filter((s) => s.id !== id);
-  nuxt.vueApp.$toast.success("成功！", {position: "top"});
+  nuxt.$toast.success("成功！");
 }
 
 async function deleteRecord(id: string) {
   const { data, error } = await useFetch('/api/admin/suggest/shop', { method: 'DELETE', params: {id}});
   if (error.value !== null) {
-    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    nuxt.$toast.error("失敗！");
     return;
   }
   suggestions.value = suggestions.value.filter((s) => s.id !== id);
-  nuxt.vueApp.$toast.success("成功！", {position: "top"});
+  nuxt.$toast.success("成功！");
 }
 
 </script>

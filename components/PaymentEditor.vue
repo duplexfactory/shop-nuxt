@@ -122,7 +122,7 @@ const showDeleteConfirmation = ref(false)
 const deletingIndex = ref(null)
 function deletePayment(index: number) {
   if (!props.allowRemoveAll && value.value.paymentMethodData.length === 1) {
-    nuxt.vueApp.$toast.error("必須保留最少一個付款方法！", {position: "top"});
+    nuxt.$toast.error("必須保留最少一個付款方法！");
     return
   }
 

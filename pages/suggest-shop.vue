@@ -6,7 +6,7 @@ const isSubmitting = ref(false);
 
 async function submit() {
   if (username.value === "") {
-    nuxt.vueApp.$toast.error("請輸入IG Shop的名稱！", {position: "top"});
+    nuxt.$toast.error("請輸入IG Shop的名稱！");
     return;
   }
 
@@ -17,7 +17,7 @@ async function submit() {
   // Reset
   username.value = "";
 
-  nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"});
+  nuxt.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。");
 
 }
 

@@ -118,7 +118,7 @@ resetTempMailing()
 
 function addMailing() {
   if (tempMailing.value.title == ""  && ![MailingType.SF_STATION, MailingType.SF_LOCKER].includes(tempMailing.value.type)) {
-    nuxt.vueApp.$toast.error(
+    nuxt.$toast.error(
         `請填寫郵寄方法！`,
         {position: "top"}
     );
@@ -126,7 +126,7 @@ function addMailing() {
   }
   if (!tempMailing.value.cost && (tempMailing.value.cost !== 0) && !tempMailing.value.payOnArrive) {
     // Not pay on arrive but unknown cost.
-    nuxt.vueApp.$toast.error("請填寫郵寄費用或設定為到付！", {position: "top"});
+    nuxt.$toast.error("請填寫郵寄費用或設定為到付！");
     return
   }
 

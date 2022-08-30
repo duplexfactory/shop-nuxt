@@ -552,13 +552,13 @@ async function clickCheckout() {
   let error = false
   for (const pageId of pageIds.value) {
     if (selectedMailingIndex.value[pageId] === "") {
-      nuxt.vueApp.$toast.error(`請選擇${pages.value[pageId].username}的郵寄方法！`, {position: "top"});
+      nuxt.$toast.error(`請選擇${pages.value[pageId].username}的郵寄方法！`);
       return
     }
 
     for (const i of selectedMailing(pageId).info) {
       if (mailingInfo.value[pageId][i] === undefined || mailingInfo.value[pageId][i] === null) {
-        nuxt.vueApp.$toast.error(`請填寫${pages.value[pageId].username}的郵寄資料！`, {position: "top"});
+        nuxt.$toast.error(`請填寫${pages.value[pageId].username}的郵寄資料！`);
         return
       }
     }
@@ -582,7 +582,7 @@ async function clickCheckout() {
   isSubmittingCheckout.value = false
 
   if (e.value) {
-    nuxt.vueApp.$toast.error("結賬時發生未知錯誤，請稍候重試！", {position: "top"});
+    nuxt.$toast.error("結賬時發生未知錯誤，請稍候重試！");
     return;
   }
 

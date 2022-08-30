@@ -288,7 +288,7 @@ const suggestedPrice = ref(null)
 
 async function submitPrice() {
   if (suggestedPrice.value === null) {
-    nuxt.$toast.error("請輸入價格！", {position: "top"})
+    nuxt.$toast.error("請輸入價格！")
     return
   }
 
@@ -301,7 +301,7 @@ async function submitPrice() {
   // Reset
   suggestedPrice.value = null
 
-  nuxt.vueApp.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。", {position: "top"})
+  nuxt.$toast.success("已成功提交，感謝你的建議，我們將儘快處理。")
   showPriceSuggestionModal.value = false
 }
 
@@ -351,7 +351,7 @@ function clickContactInfoRow(row: ContactInfoRow) {
     window.open(`tel:${row.value}`, '_self')
   } else {
     navigator.clipboard.writeText(row.value)
-    nuxt.vueApp.$toast.success("已複製至剪貼簿！", {position: "top"})
+    nuxt.$toast.success("已複製至剪貼簿！")
   }
 }
 
@@ -372,7 +372,7 @@ function clickBuyNow() {
 
 function clickAddToCart() {
   addToCart()
-  nuxt.vueApp.$toast.success("已成功加至購物車。", {position: "top"})
+  nuxt.$toast.success("已成功加至購物車。")
 }
 
 function addToCart() {

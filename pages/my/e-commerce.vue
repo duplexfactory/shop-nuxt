@@ -239,7 +239,7 @@ async function incrementStep() {
     }
 
     if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
+      nuxt.$toast.error(errorText)
       return
     }
 
@@ -251,7 +251,7 @@ async function incrementStep() {
     savingConfig.value = false
 
     if (error.value) {
-      nuxt.vueApp.$toast.error("設定失敗，請重新嘗試！", {position: "top"})
+      nuxt.$toast.error("設定失敗，請重新嘗試！")
       return
     }
   }
@@ -340,10 +340,10 @@ async function saveMailing() {
   });
   savingMailing.value = false
   if (error.value) {
-    nuxt.vueApp.$toast.error("儲存失敗，請重新嘗試！", {position: "top"})
+    nuxt.$toast.error("儲存失敗，請重新嘗試！")
     return
   }
-  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"})
+  nuxt.$toast.success("儲存成功！")
 }
 const savingPayment = ref(false)
 async function savePayment() {
@@ -356,10 +356,10 @@ async function savePayment() {
   });
   savingPayment.value = false
   if (error.value) {
-    nuxt.vueApp.$toast.error("儲存失敗，請重新嘗試！", {position: "top"})
+    nuxt.$toast.error("儲存失敗，請重新嘗試！")
     return
   }
-  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"})
+  nuxt.$toast.success("儲存成功！")
 }
 const savingDiscount = ref(false)
 async function saveDiscount() {
@@ -373,10 +373,10 @@ async function saveDiscount() {
   });
   savingDiscount.value = false
   if (error.value) {
-    nuxt.vueApp.$toast.error("儲存失敗，請重新嘗試！", {position: "top"})
+    nuxt.$toast.error("儲存失敗，請重新嘗試！")
     return
   }
-  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"})
+  nuxt.$toast.success("儲存成功！")
 }
 
 async function patchCommerce(patch: Partial<Omit<IgPageCommerceData, "_id">>) {

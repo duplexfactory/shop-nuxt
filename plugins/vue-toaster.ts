@@ -6,15 +6,18 @@ export default defineNuxtPlugin((nuxtApp) => {
     return {
         provide: {
             toast: {
-                success: (message: string, dummy) => {
+                success: (message: string) => {
                     notify({
                         title: message,
+                        type: 'success',
+                        duration: 4000
                     });
                 },
-                error: (message: string, dummy) => {
+                error: (message: string) => {
                     notify({
                         title: message,
                         type: 'error',
+                        duration: 4000
                     });
                 }
             }

@@ -112,7 +112,7 @@ onMounted(async () => {
       isIgConnected.value = true
     } catch(e) {
       if (e.data.statusCode === 401 && e.data.statusMessage === "Instagram Permission Needed") {
-        nuxt.vueApp.$toast.error("連結失敗！請確保Instagram登入時批准所有存取權！", {position: "top"})
+        nuxt.$toast.error("連結失敗！請確保Instagram登入時批准所有存取權！")
       }
     }
     authLoading.value = false
@@ -158,7 +158,7 @@ async function changePw() {
 
   [currentPw, password, rePassword, pwErr].forEach(r => r.value = "")
   const nuxt = useNuxtApp()
-  nuxt.vueApp.$toast.success("成功更改密碼", {position: "top"})
+  nuxt.$toast.success("成功更改密碼")
 }
 
 async function disconnect() {
@@ -167,7 +167,7 @@ async function disconnect() {
     headers: await getAuthHeader()
   })
   const nuxt = useNuxtApp()
-  nuxt.vueApp.$toast.success("已解除連結", {position: "top"})
+  nuxt.$toast.success("已解除連結")
   isIgConnected.value = false
 }
 </script>

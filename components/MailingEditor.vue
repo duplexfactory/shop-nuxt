@@ -121,7 +121,7 @@ const showDeleteConfirmation = ref(false)
 const deletingIndex = ref(null)
 function deleteMailing(index: number) {
   if (!props.allowRemoveAll && value.value.length === 1) {
-    nuxt.vueApp.$toast.error("必須保留最少一個郵寄方法！", {position: "top"});
+    nuxt.$toast.error("必須保留最少一個郵寄方法！");
     return
   }
 

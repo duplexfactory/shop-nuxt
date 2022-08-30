@@ -199,7 +199,7 @@ async function addPayment() {
     if (d.accountName == "")
       errorText = errorText ?? "請填寫戶口名稱！"
     if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
+      nuxt.$toast.error(errorText)
       return
     }
   }
@@ -213,7 +213,7 @@ async function addPayment() {
     if (d.accountName == "")
       errorText = errorText ?? "請填寫戶口名稱！"
     if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
+      nuxt.$toast.error(errorText)
       return
     }
   }
@@ -223,7 +223,7 @@ async function addPayment() {
     if (d.description == "")
       errorText = errorText ?? "請填寫描述！"
     if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
+      nuxt.$toast.error(errorText)
       return
     }
   }
@@ -233,7 +233,7 @@ async function addPayment() {
     if (tempPaymentImageFile.value == null)
       errorText = errorText ?? "請上載QR Code照片！"
     if (!!errorText) {
-      nuxt.vueApp.$toast.error(errorText, {position: "top"})
+      nuxt.$toast.error(errorText)
       return
     }
 

@@ -189,17 +189,17 @@ const password = ref("");
 const confirmPassword = ref("");
 async function register() {
   if (email.value == "" || password.value == "" || confirmPassword.value == "") {
-    nuxt.vueApp.$toast.error("請填寫所有欄位！", {position: "top"});
+    nuxt.$toast.error("請填寫所有欄位！");
     return;
   }
 
   if (password.value.length < 6) {
-    nuxt.vueApp.$toast.error("密碼長度最少為6！", {position: "top"});
+    nuxt.$toast.error("密碼長度最少為6！");
     return;
   }
 
   if (password.value !== confirmPassword.value) {
-    nuxt.vueApp.$toast.error("請確保兩次輸入的密碼一致！", {position: "top"});
+    nuxt.$toast.error("請確保兩次輸入的密碼一致！");
     return;
   }
 
@@ -208,7 +208,7 @@ async function register() {
 
     (await $fetch('/api/auth/register', { method: 'POST', body: { email: email.value, password: password.value }}));
 
-    nuxt.vueApp.$toast.success("成功註冊！");
+    nuxt.$toast.success("成功註冊！");
 
     try {
       const auth = getAuth();
@@ -223,13 +223,13 @@ async function register() {
     catch (firebaseSignInError) {
       const errorCode = firebaseSignInError.code;
       const errorMessage = firebaseSignInError.message;
-      nuxt.vueApp.$toast.error("登入失敗", {position: "top"});
+      nuxt.$toast.error("登入失敗");
 
       isRegisterLoading.value = false;
     }
   }
   catch(e) {
-    nuxt.vueApp.$toast.error("電郵已被使用！");
+    nuxt.$toast.error("電郵已被使用！");
 
     isRegisterLoading.value = false;
   }

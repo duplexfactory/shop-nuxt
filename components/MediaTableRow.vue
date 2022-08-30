@@ -127,13 +127,13 @@ async function savePrice() {
         }
     );
 
-    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+    nuxt.$toast.success("成功！");
 
     media.value.patchPrice = localPrice.value
     editingPrice.value = false
   }
   catch (e) {
-    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    nuxt.$toast.error("失敗！");
   }
 
   editPriceLoading.value = false
@@ -188,10 +188,10 @@ const customPrice = computed({
             } as Partial<IgMediaCommerceData>
           }
       );
-      nuxt.vueApp.$toast.success("成功！", {position: "top"});
+      nuxt.$toast.success("成功！");
     }
     catch (e) {
-      nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+      nuxt.$toast.error("失敗！");
     }
 
 
@@ -223,14 +223,14 @@ async function removeDiscount() {
             headers: await getAuthHeader(),
           }
       );
-      nuxt.vueApp.$toast.success("成功！", {position: "top"});
+      nuxt.$toast.success("成功！");
 
       const data = Object.assign({}, mediaCommerceData.value)
       delete data.discount
       emit("update:mediaCommerceData", data)
     }
     catch (e) {
-      nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+      nuxt.$toast.error("失敗！");
     }
   }
 }
@@ -248,7 +248,7 @@ async function createDiscount() {
       }
     )
 
-    nuxt.vueApp.$toast.success("成功！", {position: "top"});
+    nuxt.$toast.success("成功！");
 
     let data: IgMediaCommerceData
     if (!mediaCommerceData.value) {
@@ -267,7 +267,7 @@ async function createDiscount() {
     editingDiscount.value = false
   }
   catch (e) {
-    nuxt.vueApp.$toast.error("失敗！", {position: "top"});
+    nuxt.$toast.error("失敗！");
   }
 }
 

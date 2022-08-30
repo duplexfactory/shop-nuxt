@@ -69,7 +69,7 @@
       extraDataMultiStringFieldsTemp.value[key] = ''
     }
     else {
-      nuxt.vueApp.$toast.error("不能增加空白！", {position: "top"});
+      nuxt.$toast.error("不能增加空白！");
     }
   }
 
@@ -135,7 +135,7 @@
     await $fetch('/api/shop/edit/self-basic', { headers: await getAuthHeader(), method: 'PUT', body})
     basicDataSaving.value = false;
 
-    nuxt.vueApp.$toast.success("成功儲存基本資料！", {position: "top"});
+    nuxt.$toast.success("成功儲存基本資料！");
   }
 
   // Edit extra data.
@@ -157,7 +157,7 @@
     await $fetch('/api/shop/edit/self-extra', { headers: await getAuthHeader(), method: 'PUT', body})
     extraDataSaving.value = false;
 
-    nuxt.vueApp.$toast.success("成功儲存詳細資料！", {position: "top"});
+    nuxt.$toast.success("成功儲存詳細資料！");
   }
 
   // Placeholder.
