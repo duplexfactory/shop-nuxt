@@ -89,7 +89,9 @@
 
         <template v-if="searchPending">
           <div v-for="_ in Array(10).fill(0)">
-            <div class="mb-4 bg-loading" style="height: 240px;"></div>
+            <div class="placeholder mb-4" style="background-color: #ddd;">
+              <div class="h-full w-full bg-loading" style="height: 240px;"></div>
+            </div>
             <hr class="sm:hidden mb-4"/>
           </div>
         </template>
@@ -336,6 +338,10 @@ input {
 
 label {
   cursor: pointer;
+}
+
+.placeholder {
+  @apply h-full w-full overflow-hidden rounded-md;
 }
 
 </style>
