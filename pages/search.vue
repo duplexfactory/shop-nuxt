@@ -310,29 +310,23 @@ watch(
   }
 )
 
-</script>
+function selectTag(tag: string) {
+  selectedTag.value = tag
+}
 
-<script lang="ts">
-  export default {
-    computed: {
-      isMobileFilterActive() {
-        return (this.selectedTag !== '') || this.brickAndMortar || this.businessRegistration;
-      }
-    },
-    methods: {
-      toggleCategory(categoryId: string) {
-        if (this.selectedCategories.includes(categoryId)) {
-          this.selectedCategories = this.selectedCategories.filter((c) => c != categoryId);
-        }
-        else {
-          this.selectedCategories.push(categoryId);
-        }
-      },
-      selectTag(tag: string) {
-        this.selectedTag = tag;
-      }
-    }
+function toggleCategory(categoryId: string) {
+  if (selectedCategories.value.includes(categoryId)) {
+    selectedCategories.value = selectedCategories.value.filter((c) => c != categoryId)
   }
+  else {
+    selectedCategories.value.push(categoryId)
+  }
+}
+
+const isMobileFilterActive = computed(() => {
+  return (selectedTag.value !== '') || brickAndMortar.value || businessRegistration.value;
+})
+
 </script>
 
 <style scoped>
