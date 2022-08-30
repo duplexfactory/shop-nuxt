@@ -132,7 +132,7 @@ export default defineNuxtConfig({
         Disallow: [
           '/my'
         ],
-        Sitemap: 'https://shoperuse.com/sitemap.xml'
+        Sitemap: `${process.env.DOMAIN}/sitemap.xml`
       }
     } else {
       return {
@@ -282,6 +282,7 @@ export default defineNuxtConfig({
         })
       })
     },
+    '@nuxtjs/robots',
   ],
   hooks: {
     'pages:extend'(pages) {
