@@ -145,33 +145,30 @@ watch(onlyActiveFilter, async () => {
     // Reset pages.
     currentPage.value = 1
 
-    if (allOnlyActiveMedias.value.length !== 0) {
-      // Have the data already, no need to get again.
-      return
-    }
-
     // Get all commerce data of medias that are active.
-    const {data, error} = await useContentKeyedFetch('/api/media/commerce-data', {
+    const {data} = await $fetch('/api/media/commerce-data', {
       params: {
         active: true,
         pageId: igPageId.value
       }
     })
-    const newCommerceData: Dict<IgMediaCommerceData> = data.value["data"]
-    for (const code of Object.keys(newCommerceData))
-      commerceData.value[code] = newCommerceData[code]
+
+    const codes = Object.keys(data)
+    if (codes.length === 0) {
+      allOnlyActiveMedias.value = []
+      return
+    }
+
+    Object.assign(commerceData.value, data)
 
     // Get the medias of these commerce data.
-    const {
-      data: mediaData,
-      error: mediaError
-    } = await useContentKeyedFetch("/api/media", {
+    const mediaData = await $fetch("/api/media", {
       params: {
-        codes: Object.keys(newCommerceData).join(",")
+        codes: codes.join(",")
       }
     })
-    if (!!mediaData.value) {
-      const medias: IgMedia[] = Object.values(mediaData.value.medias)
+    if (!!mediaData) {
+      const medias: IgMedia[] = Object.values(mediaData.medias)
       allOnlyActiveMedias.value = medias.sort((a, b) => b.takenAt - a.takenAt)
     }
   }
@@ -183,13 +180,12 @@ watch(onlyActiveFilter, async () => {
 })
 
 async function fetchMediaCommerceData() {
-  const {data, error} = await useContentKeyedFetch('/api/media/commerce-data', {
+  const data = await $fetch('/api/media/commerce-data', {
     params: {
       codes: medias.value.filter((m) => !Object.keys(commerceData.value).includes(m.code)).map((m) => m.code).join(',')
     }
   })
-  for (const code of Object.keys(data.value["data"]))
-    commerceData.value[code] = data.value["data"][code]
+  Object.assign(commerceData.value, data.data)
 }
 
 onMounted(async () => {
@@ -260,11 +256,11 @@ async function confirmToggleActive() {
 
   showConfirmToggleActiveModal.value = false
   try {
-    await useContentKeyedFetch(
+    await $fetch(
         `/api/media/${togglingMediaCode.value}/commerce-data/edit`,
         {
           method: 'PUT',
-          headers: headersToObject(await getAuthHeader()),
+          headers: await getAuthHeader(),
           body: {
             active: commerceData.value[togglingMediaCode.value].active
           } as Partial<IgMediaCommerceData>
