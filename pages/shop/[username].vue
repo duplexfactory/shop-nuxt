@@ -155,7 +155,7 @@
   const config = useRuntimeConfig()
   const route = useRoute()
 
-  const {data, error} = await useLazyFetch(`/api/shop/username/${route.params.username}`)
+  const {data, error} = await useContentKeyedLazyFetch(`/api/shop/username/${route.params.username}`)
   const found = computed(() => !error?.value && data.value)
   // if (!!error && !!error.value) {
   //   throwError(notFound);

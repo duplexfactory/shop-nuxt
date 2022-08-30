@@ -88,7 +88,7 @@ const route = useRoute()
 const nuxt = useNuxtApp()
 const config = useRuntimeConfig()
 
-const {data, refresh, error} = await useLazyFetch(`/api/order/${route.params.id}`)
+const {data, refresh, error} = await useContentKeyedLazyFetch(`/api/order/${route.params.id}`)
 if (!!error && !!error.value) {
   throwError(notFound);
 }
