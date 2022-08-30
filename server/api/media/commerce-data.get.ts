@@ -3,6 +3,7 @@ import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb"
 import {isEmpty} from "~/utils/isEmpty";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {Filter} from "mongodb";
+import Dict = NodeJS.Dict;
 
 export default defineEventHandler(async (event) => {
     let {
@@ -32,7 +33,6 @@ export default defineEventHandler(async (event) => {
         data: mediaCommerceDataList.reduce((prev, curr) => {
             prev[curr._id] = curr
             return prev
-        }, {})
+        }, {} as Dict<IgMediaCommerceData>)
     }
-    // { medias: IgMedia[] }
 })

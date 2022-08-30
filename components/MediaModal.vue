@@ -393,48 +393,34 @@ onMounted(async () => {
 
   // Init data on modal open
   if (!localMedia.value) {
-    const url = `/api/media/${localMediaCode.value}`
-    const {data, pending} = await useFetch(url,  {
-      key: hash(['api-fetch', url]),
-    })
+    const {data, pending} = await useContentKeyedFetch(`/api/media/${localMediaCode.value}`)
     fetchedMedia.value = data.value.media
   }
 
   if (!localPage.value) {
-    const url = `/api/shop/id/${showingMediaModalData.value.pageId}`
-    const {data, error} = await useFetch(url,  {
-      key: hash(['api-fetch', url]),
-    })
+    const {data, error} = await useContentKeyedFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`)
     fetchedPage.value = data.value.page
   }
 
   await fetchReviews()
 
-  const mediaCommerceDataUrl = '/api/media/commerce-data'
-  const mediaCommerceDataFetchOptions = {
-    params: {
-      codes: localMedia.value.code
-    }
-  }
   const {
     data: mediaCommerceDataRaw,
     error: mediaCommerceDataError
-  } = await useFetch(mediaCommerceDataUrl, {
-    key: hash(['api-fetch', mediaCommerceDataUrl, mediaCommerceDataFetchOptions]),
-    ...mediaCommerceDataFetchOptions
+  } = await useContentKeyedFetch('/api/media/commerce-data', {
+    params: {
+      codes: localMedia.value.code
+    }
   })
-  mediaCommerceData.value = mediaCommerceDataRaw.value["data"][localMedia.value.code] || null
+  mediaCommerceData.value = mediaCommerceDataRaw.value.data[localMedia.value.code] || null
   mediaCommerceDataLoaded.value = true
 
-  const pageCommerceDataUrl = `/api/shop/id/${localPage.value._id}/commerce-data`
   const {
     data: pageCommerceDataRaw,
     error: pageCommerceDataError
-  } = await useFetch(pageCommerceDataUrl, {
-    key: hash(['api-fetch', pageCommerceDataUrl]),
-  })
+  } = await useContentKeyedFetch(`/api/shop/id/${localPage.value._id}/commerce-data`)
   if (!!pageCommerceDataRaw.value) {
-    pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
+    pageCommerceData.value = pageCommerceDataRaw.value.commerceData
   }
   pageCommerceDataLoaded.value = true
 
