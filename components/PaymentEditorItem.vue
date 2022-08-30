@@ -243,10 +243,10 @@ async function addPayment() {
     if (!!d.qrCodeUrl) {
       // Delete existing image.
       const splitted = d.qrCodeUrl.split("/")
-      await useContentKeyedFetch(
+      await $fetch(
           `/api/file/payment/${splitted[splitted.length - 1]}`,
           {
-            headers: headersToObject(await getAuthHeader()),
+            headers: await getAuthHeader(),
             method: 'DELETE',
           }
       )

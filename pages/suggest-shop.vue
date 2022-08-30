@@ -11,7 +11,7 @@ async function submit() {
   }
 
   isSubmitting.value = true;
-  await useContentKeyedFetch('/api/suggest/shop', { method: 'POST', body: { username: username.value }});
+  await $fetch('/api/suggest/shop', { method: 'POST', body: { username: username.value }});
   isSubmitting.value = false;
 
   // Reset

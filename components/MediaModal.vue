@@ -295,7 +295,7 @@ async function submitPrice() {
     code: localMediaCode.value,
     price: suggestedPrice.value
   }
-  await useContentKeyedFetch('/api/suggest/media-price', {method: 'POST', body})
+  await $fetch('/api/suggest/media-price', {method: 'POST', body})
 
   // Reset
   suggestedPrice.value = null

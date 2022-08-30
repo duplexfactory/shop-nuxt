@@ -185,14 +185,15 @@ async function confirmSettle() {
   if (!order.value)
     return
   isSettleLoading.value = true
-  const { error } = await patchStatus(OrderStatus.MAILED)
-  isSettleLoading.value = false
-  if (!!error.value) {
-    nuxt.$toast.error("完成交易失敗，請稍後再試")
-    return
+  try {
+    await patchStatus(OrderStatus.MAILED)
+    nuxt.$toast.success("已成功完成交易。")
+    await refresh()
   }
-  nuxt.$toast.success("已成功完成交易。")
-  await refresh()
+  catch (e) {
+    nuxt.$toast.error("完成交易失敗，請稍後再試")
+  }
+  isSettleLoading.value = false
 }
 
 // Verify payment proof.
@@ -208,14 +209,15 @@ async function confirmVerify() {
   if (!order.value)
     return
   isVerifyLoading.value = true
-  const { error } = await patchStatus(OrderStatus.VERIFIED)
-  isVerifyLoading.value = false
-  if (!!error.value) {
-    nuxt.$toast.error("接受證明失敗，請稍後再試")
-    return
+  try {
+    await patchStatus(OrderStatus.VERIFIED)
+    nuxt.$toast.success("已成功接受證明。")
+    await refresh()
   }
-  nuxt.$toast.success("已成功接受證明。")
-  await refresh()
+  catch (e) {
+    nuxt.$toast.error("接受證明失敗，請稍後再試")
+  }
+  isVerifyLoading.value = false
 }
 async function clickDeny() {
   showConfirmModal.value = true
@@ -228,19 +230,20 @@ async function confirmDeny() {
   if (!order.value)
     return
   isVerifyLoading.value = true
-  const { error } = await patchStatus(OrderStatus.VERIFICATION_FAILED)
-  isVerifyLoading.value = false
-  if (!!error.value) {
-    nuxt.$toast.error("拒絕接受證明失敗，請稍後再試")
-    return
+  try {
+    await patchStatus(OrderStatus.VERIFICATION_FAILED)
+    nuxt.$toast.success("已成功拒絕接受證明。")
+    await refresh()
   }
-  nuxt.$toast.success("已成功拒絕接受證明。")
-  await refresh()
+  catch (e) {
+    nuxt.$toast.error("拒絕接受證明失敗，請稍後再試")
+  }
+  isVerifyLoading.value = false
 }
 
 // Helper.
 async function patchStatus(status: OrderStatus) {
-  return useContentKeyedFetch(`/api/order/${order.value._id}/status`, { headers: headersToObject(await getAuthHeader()), method: 'PUT', body: {status}})
+  return $fetch(`/api/order/${order.value._id}/status`, { headers: await getAuthHeader(), method: 'PUT', body: {status}})
 }
 
 </script>

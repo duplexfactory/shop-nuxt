@@ -63,13 +63,14 @@ function tsToDateString(ts) {
 }
 
 async function approveRecord(id: string) {
-  const { data, error } = await useContentKeyedFetch('/api/admin/suggest/media-price/approve', {method: 'POST', params: {id}});
-  if (error.value !== null) {
-    nuxt.$toast.error("失敗！");
-    return;
+  try {
+    await $fetch('/api/admin/suggest/media-price/approve', {method: 'POST', params: {id}});
+    suggestions.value = suggestions.value.filter((s) => s.id !== id);
+    nuxt.$toast.success("成功！");
   }
-  suggestions.value = suggestions.value.filter((s) => s.id !== id);
-  nuxt.$toast.success("成功！");
+  catch (e) {
+    nuxt.$toast.error("失敗！");
+  }
 }
 
 async function deleteRecord(id: string) {

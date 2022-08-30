@@ -308,7 +308,7 @@
   async function fetchReviews() {
     if (!found.value) return
     reviews.value = (await $fetch("/api/reviews", {
-      method: "GET", params: {
+      params: {
         pageId: page.value._id,
       }
     }))["reviews"]

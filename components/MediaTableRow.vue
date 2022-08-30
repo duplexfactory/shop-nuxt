@@ -178,11 +178,11 @@ const customPrice = computed({
 
 
     try {
-      await useContentKeyedFetch(
+      await $fetch(
           `/api/media/${media.value.code}/commerce-data/edit`,
           {
             method: 'PUT',
-            headers: headersToObject(await getAuthHeader()),
+            headers: await getAuthHeader(),
             body: {
               customPrice: val
             } as Partial<IgMediaCommerceData>

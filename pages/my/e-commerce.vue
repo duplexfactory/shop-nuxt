@@ -244,18 +244,18 @@ async function incrementStep() {
     }
 
     savingConfig.value = true
-    const {
-      data,
-      error
-    } = await patchCommerce(configCommerceData.value);
-    savingConfig.value = false
-
-    if (error.value) {
-      nuxt.$toast.error("設定失敗，請重新嘗試！")
-      return
+    try {
+      await patchCommerce(configCommerceData.value);
+      step.value = steps[currentStepIndex.value + 1]
     }
+    catch (e) {
+      nuxt.$toast.error("設定失敗，請重新嘗試！")
+    }
+    savingConfig.value = false
   }
-  step.value = steps[currentStepIndex.value + 1]
+  else {
+    step.value = steps[currentStepIndex.value + 1]
+  }
 }
 
 async function navigateToCommerceSettings() {
@@ -332,58 +332,52 @@ async function init() {
 const savingMailing = ref(false)
 async function saveMailing() {
   savingMailing.value = true
-  const {
-    data,
-    error
-  } = await patchCommerce({
-    mailing: commerceData.value.mailing
-  });
-  savingMailing.value = false
-  if (error.value) {
-    nuxt.$toast.error("儲存失敗，請重新嘗試！")
-    return
+  try {
+    await patchCommerce({
+      mailing: commerceData.value.mailing
+    })
+    nuxt.$toast.success("儲存成功！")
   }
-  nuxt.$toast.success("儲存成功！")
+  catch (e) {
+    nuxt.$toast.error("儲存失敗，請重新嘗試！")
+  }
+  savingMailing.value = false
 }
 const savingPayment = ref(false)
 async function savePayment() {
   savingPayment.value = true
-  const {
-    data,
-    error
-  } = await patchCommerce({
-    paymentMethodData: commerceData.value.paymentMethodData
-  });
-  savingPayment.value = false
-  if (error.value) {
-    nuxt.$toast.error("儲存失敗，請重新嘗試！")
-    return
+  try {
+    await patchCommerce({
+      paymentMethodData: commerceData.value.paymentMethodData
+    });
+    nuxt.$toast.success("儲存成功！")
   }
-  nuxt.$toast.success("儲存成功！")
+  catch (e) {
+    nuxt.$toast.error("儲存失敗，請重新嘗試！")
+  }
+  savingPayment.value = false
 }
 const savingDiscount = ref(false)
 async function saveDiscount() {
   savingDiscount.value = true
-  const {
-    data,
-    error
-  } = await patchCommerce({
-    discount: hasDiscount.value ? tempDiscount.value : null,
-    mailingDiscount: hasMailingDiscount.value ? tempMailingDiscount.value : null,
-  });
-  savingDiscount.value = false
-  if (error.value) {
-    nuxt.$toast.error("儲存失敗，請重新嘗試！")
-    return
+  try {
+    await patchCommerce({
+      discount: hasDiscount.value ? tempDiscount.value : null,
+      mailingDiscount: hasMailingDiscount.value ? tempMailingDiscount.value : null,
+    });
+    nuxt.$toast.success("儲存成功！")
   }
-  nuxt.$toast.success("儲存成功！")
+  catch (e) {
+    nuxt.$toast.error("儲存失敗，請重新嘗試！")
+  }
+  savingDiscount.value = false
 }
 
 async function patchCommerce(patch: Partial<Omit<IgPageCommerceData, "_id">>) {
-  return useContentKeyedFetch(
+  return $fetch(
       '/api/shop/edit/self-commerce',
       {
-        headers: headersToObject(await getAuthHeader()),
+        headers: await getAuthHeader(),
         method: 'PUT',
         body: patch
       }

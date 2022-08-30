@@ -566,31 +566,29 @@ async function clickCheckout() {
 
   isSubmittingCheckout.value = true
 
-  const {
-    data,
-    error: e
-  } = await useContentKeyedFetch('/api/order', {
-    method: 'POST',
-    body: {
-      items: cart.value,
-      mailingIndex: selectedMailingIndex.value,
-      mailingInfo: mailingInfo.value,
-      notes: notes.value
-    },
-  });
+  try {
+    const data = await $fetch('/api/order', {
+      method: 'POST',
+      body: {
+        items: cart.value,
+        mailingIndex: selectedMailingIndex.value,
+        mailingInfo: mailingInfo.value,
+        notes: notes.value
+      },
+    });
 
-  isSubmittingCheckout.value = false
+    isSubmittingCheckout.value = false
 
-  if (e.value) {
-    nuxt.$toast.error("結賬時發生未知錯誤，請稍候重試！");
-    return;
+    // Clear cart items.
+    localStorage.removeItem("cart");
+
+    router.push({path: `/order/${data.id}`, query: {checkout: "true"}});
   }
+  catch (e) {
+    nuxt.$toast.error("結賬時發生未知錯誤，請稍候重試！");
 
-  // Clear cart items.
-  localStorage.removeItem("cart");
-
-  router.push({path: `/order/${data.value["id"]}`, query: {checkout: "true"}});
-
+    isSubmittingCheckout.value = false
+  }
 }
 
 </script>

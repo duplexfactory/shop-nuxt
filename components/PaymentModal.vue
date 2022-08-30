@@ -199,7 +199,7 @@ async function clickSubmit() {
       body["url"] = url
     }
 
-    await useContentKeyedFetch(
+    await $fetch(
         `/api/order/${orderId.value}/payment-proof`,
         {
           method: 'POST',
