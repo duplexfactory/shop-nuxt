@@ -195,20 +195,19 @@
 <script setup lang="ts">
 
 import IgPageReview from "~/models/IgPageReview"
-import useCreateReview from "~/composables/useCreateReview"
 
-import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states"
 import {computed} from "@vue/reactivity"
 import PageInfoRow from "~/models/PageInfoRow"
 
 import Popper from "vue3-popper"
 import type {Ref} from "vue"
 import IgMedia from "~/models/IgMedia"
-import useMediaPrice from "~/composables/useMediaPrice"
 import IgPage from "~/models/IgPage"
 import IgPageExtraData from "~/models/IgPageExtraData"
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData"
 import {IgPageCommerceData} from "~/models/IgPageCommerceData"
+
+import { hash } from 'ohash'
 
 const nuxt = useNuxtApp()
 const router = useRouter()
@@ -394,32 +393,46 @@ onMounted(async () => {
 
   // Init data on modal open
   if (!localMedia.value) {
-    const {data, pending} = await useFetch(`/api/media/${localMediaCode.value}`)
+    const url = `/api/media/${localMediaCode.value}`
+    const {data, pending} = await useFetch(url,  {
+      key: hash(['api-fetch', url]),
+    })
     fetchedMedia.value = data.value.media
   }
 
   if (!localPage.value) {
-    const {data, error} = await useFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`)
+    const url = `/api/shop/id/${showingMediaModalData.value.pageId}`
+    const {data, error} = await useFetch(url,  {
+      key: hash(['api-fetch', url]),
+    })
     fetchedPage.value = data.value.page
   }
 
   await fetchReviews()
 
-  const {
-    data: mediaCommerceDataRaw,
-    error: mediaCommerceDataError
-  } = await useFetch('/api/media/commerce-data', {
+  const mediaCommerceDataUrl = '/api/media/commerce-data'
+  const mediaCommerceDataFetchOptions = {
     params: {
       codes: localMedia.value.code
     }
+  }
+  const {
+    data: mediaCommerceDataRaw,
+    error: mediaCommerceDataError
+  } = await useFetch(mediaCommerceDataUrl, {
+    key: hash(['api-fetch', mediaCommerceDataUrl, mediaCommerceDataFetchOptions]),
+    ...mediaCommerceDataFetchOptions
   })
   mediaCommerceData.value = mediaCommerceDataRaw.value["data"][localMedia.value.code] || null
   mediaCommerceDataLoaded.value = true
 
+  const pageCommerceDataUrl = `/api/shop/id/${localPage.value._id}/commerce-data`
   const {
     data: pageCommerceDataRaw,
     error: pageCommerceDataError
-  } = await useFetch(`/api/shop/id/${localPage.value._id}/commerce-data`)
+  } = await useFetch(pageCommerceDataUrl, {
+    key: hash(['api-fetch', pageCommerceDataUrl]),
+  })
   if (!!pageCommerceDataRaw.value) {
     pageCommerceData.value = pageCommerceDataRaw.value["commerceData"]
   }
