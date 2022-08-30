@@ -49,7 +49,7 @@ export default function () {
             params["adult"] = "true";
         }
 
-        const {data, pending} = useLazyFetch(`/api/search`, {
+        const {data, pending} = useContentKeyedLazyFetch(`/api/search`, {
             headers: {
                 'Cache-Control': 'max-age=120'
             },
