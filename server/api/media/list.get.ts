@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         username,
         limit,
         before
-    } = await getQuery(event) as { id: string, username: string, limit: string, before: string }
+    } = getQuery(event) as { id: string, username: string, limit: string, before: string }
 
     let queryId: string
     if (id) {

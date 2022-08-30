@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         until,
         before,
         after
-    } = await getQuery(event) as { id: string, limit: string, since?: string, until?: string, before?: string, after?: string }
+    } = getQuery(event) as { id: string, limit: string, since?: string, until?: string, before?: string, after?: string }
 
     await initMongo()
 

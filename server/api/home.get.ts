@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     const {
         adult
-    } = await getQuery(event) as { adult: string }
+    } = getQuery(event) as { adult: string }
 
     const f: Filter<PageSearch> = {}
     if (adult !== "true") {

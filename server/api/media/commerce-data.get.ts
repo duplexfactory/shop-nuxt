@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         codes,
         active,
         pageId,
-    } = await getQuery(event) as {
+    } = getQuery(event) as {
         codes?: string,
         active?: string,
         pageId?: string

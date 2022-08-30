@@ -6,7 +6,7 @@ import {initMongo, pageSearchCollection} from "~/server/mongodb";
 export default defineEventHandler(async (event) => {
     let {
         ids
-    } = await getQuery(event) as { ids: string }
+    } = getQuery(event) as { ids: string }
 
     assert(!!ids, badRequest)
 

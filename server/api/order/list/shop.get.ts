@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
         limit,
         keyword,
         status
-    } = await getQuery(event) as (QueryObject & PaginationQuery & {keyword?: string, status?: string})
+    } = getQuery(event) as (QueryObject & PaginationQuery & {keyword?: string, status?: string})
     const filter : Filter<Order> = {
         [`shops.${igAuth.pageId}`]: {$exists: true}
     }

@@ -15,7 +15,7 @@ export function decryptImageUrl(code: string) {
 }
 
 export default defineEventHandler(async (event) => {
-    const {i} = await getQuery(event) as { i: string }
+    const {i} = getQuery(event) as { i: string }
 
     // const url = new URL(decryptImageUrl(i))
     const url = new URL('https://www.instagram.com/p/' + i + '/media/?size=m')

@@ -6,7 +6,7 @@ import {badRequest, notFound} from "~/utils/h3Error";
 export default defineEventHandler(async (event) => {
     let {
         codes
-    } = await getQuery(event) as { codes: string }
+    } = getQuery(event) as { codes: string }
 
     assert(!!codes, badRequest)
 
