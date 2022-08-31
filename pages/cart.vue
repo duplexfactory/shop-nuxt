@@ -163,9 +163,11 @@
                           <option value="-1" disabled>
                             {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}地區`}}
                           </option>
-                          <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
-                                  :key="'district-' + s.id"
-                                  :value="s.id">{{ s.name }}</option>
+                          <template v-if="!!sf">
+                            <option v-for="(s, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers)"
+                                    :key="'district-' + s.id"
+                                    :value="s.id">{{ s.name }}</option>
+                          </template>
                         </lazy-spr-select>
                       </div>
                       <div v-if="selectedSFDistrictId[pageId] !== -1" class="flex items-center mt-1">
@@ -173,13 +175,15 @@
                           <option value="" disabled>
                             {{`請選擇${selectedMailing(pageId).type === MailingType.SF_STATION ? "順豐站" : "順便智能櫃"}`}}
                           </option>
-                          <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId[pageId]).districts"
-                                    :key="d.name"
-                                    :label="d.name">
-                            <option v-for="(l, i) in d.locations"
-                                    :key="'location-' + l.id"
-                                    :value="l.id">{{ l.id + " - " + l.address }}</option>
-                          </optgroup>
+                          <template v-if="!!sf">
+                            <optgroup v-for="(d, i) in (selectedMailing(pageId).type === MailingType.SF_STATION ? sf.stations : sf.lockers).find((s) => s.id === selectedSFDistrictId[pageId]).districts"
+                                      :key="d.name"
+                                      :label="d.name">
+                              <option v-for="(l, i) in d.locations"
+                                      :key="'location-' + l.id"
+                                      :value="l.id">{{ l.id + " - " + l.address }}</option>
+                            </optgroup>
+                          </template>
                         </lazy-spr-select>
                       </div>
                     </template>
@@ -455,10 +459,9 @@ if (!process.server) {
 }
 
 const {
-  data: sfLocationsData,
+  data: sf,
   error: sfLocationsError,
-} = await useContentKeyedFetch("/api/system/sf-locations")
-const sf = sfLocationsData.value as Pick<SF, "stations" | "removed_stations" | "lockers" | "removed_lockers">
+} = await useContentKeyedLazyFetch("/api/system/sf-locations")
 
 function removeMedia(code: string) {
   cart.value = cart.value.filter((item) => item.code !== code)
