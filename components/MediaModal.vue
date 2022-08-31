@@ -399,7 +399,9 @@ onMounted(async () => {
 
   if (!localPage.value) {
     const {data, error} = await useContentKeyedFetch(`/api/shop/id/${showingMediaModalData.value.pageId}`)
-    fetchedPage.value = data.value.page
+    if (!error.value) {
+      fetchedPage.value = data.value.page
+    }
   }
 
   await fetchReviews()

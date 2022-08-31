@@ -174,17 +174,18 @@ import IgMedia from "~/models/IgMedia";
 import Dict = NodeJS.Dict;
 
 const props = defineProps({
+  pageId: String as PropType<string>,
   orderDetail: Object as PropType<OrderShopDetails>,
   orderCreated: Number as PropType<Number>,
 })
 
 const {
+  pageId,
   orderDetail,
   orderCreated
 } = toRefs(props)
 
 // Composables.
-const igPageId = useIgPageId()
 
 const mediaDict: Ref<Dict<IgMedia>> = ref({})
 onMounted(async () => {
@@ -265,7 +266,7 @@ function openMedia(mediaCode: string) {
   showingMediaModalData.value = {
     // code: mediaCode,
     media: mediaDict.value[mediaCode],
-    pageId: igPageId.value
+    pageId: pageId.value
   };
   mediaDict.value
 }

@@ -67,7 +67,11 @@
           </div>
 
           <div class="col-span-2 font-semibold mt-4">訂單內容</div>
-          <OrderReceipt v-if="!!orderDetail" class="col-span-2 mt-2" :orderDetail="orderDetail" :orderCreated="order.created"></OrderReceipt>
+          <OrderReceipt v-if="!!orderDetail"
+                        class="col-span-2 mt-2"
+                        :pageId="igPageId"
+                        :orderDetail="orderDetail"
+                        :orderCreated="order.created"></OrderReceipt>
 
         </div>
       </div>
