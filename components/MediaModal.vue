@@ -412,7 +412,9 @@ onMounted(async () => {
       codes: localMedia.value.code
     }
   })
-  mediaCommerceData.value = mediaCommerceDataRaw.value.data[localMedia.value.code] || null
+  if (!mediaCommerceDataError.value) {
+    mediaCommerceData.value = mediaCommerceDataRaw.value.data[localMedia.value.code] || null
+  }
   mediaCommerceDataLoaded.value = true
 
   const {
