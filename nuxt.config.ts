@@ -320,5 +320,32 @@ export default defineNuxtConfig({
 
       traverse('');
     }
-  }
-} as NuxtConfig);
+  },
+  nitro: // {preset: "cloudflare"}
+      {
+        extends: "base-worker",
+        entry: "#internal/nitro/entries/cloudflare",
+        commands: {
+          preview: "npx miniflare ./server/index.mjs --site ./public",
+          deploy: "npx @cloudflare/wrangler publish"
+        },
+        hooks: {
+          async "compiled"(nitro) {
+            await writeFile(resolve(nitro.options.output.dir, "package.json"), JSON.stringify({
+              private: true,
+              main: "./server/index.mjs"
+            }, null, 2))
+            await writeFile(resolve(nitro.options.output.dir, "package-lock.json"), JSON.stringify({lockfileVersion: 1}, null, 2))
+          }
+        },
+        noExternals: false
+      }
+} as NuxtConfig)
+
+import fse from "fs-extra"
+import {dirname} from "pathe"
+
+async function writeFile(file: string, contents: string, log = false) {
+  await fse.mkdirp(dirname(file))
+  await fse.writeFile(file, contents, "utf-8")
+}
