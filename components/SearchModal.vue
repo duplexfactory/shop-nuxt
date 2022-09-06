@@ -40,86 +40,84 @@
 
 <script setup lang="ts">
 
+import {PageSearchQuery} from "~/models/PageSearchQuery";
+
+const route = useRoute()
+const router = useRouter()
+
 const props = defineProps({
   showModal: { type: Boolean, default: false },
 });
+
+const emit = defineEmits(["update:showModal"])
 
 const searchText = ref<string>("");
 
 const {ageRestrictedCategories} = useTags();
 const tagsSearchResult = ref<{id: string, label: string}[]>([]);
-
 tagsSearchResult.value = ageRestrictedCategories.value.map((c) => c.tags).flat();
 
 import useSearch from "~/composables/useSearch";
+import {PaginationQuery} from "~/models/PaginationQuery";
 const {
   searchResults,
   searchResultTotalCount,
   search: quickSearch
 } = useSearch();
 
-</script>
-<script lang="ts">
-
-import {PageSearchQuery} from "~/models/PageSearchQuery";
-import {PaginationQuery} from "~/models/PaginationQuery";
-
-export default  {
-  methods: {
-    closeModal: function() {
-      this.$emit('update:showModal', false)
-    },
-    tagPressed: function(tagId: string) {
-      let query = this.$route.path == "/search" ? {...this.$route.query} : {};
-      Object.assign(query, { tag: tagId });
-      this.$router.push({path: '/search', query});
-
-      this.closeModal();
-    },
-    quickSearchResultPressed: function(username: string) {
-      this.$router.push({path: `/shop/${username}`});
-
-      this.closeModal();
-    },
-    search: function () {
-      let query = this.$route.path == "/search" ? {...this.$route.query} : {};
-      if (this.searchText != "") {
-        query["keyword"] = this.searchText;
-      }
-      else {
-        delete query["keyword"];
-      }
-
-      this.$router.push({
-        path: "/search",
-        query
-      });
-
-      this.closeModal();
-    }
-  },
-  watch: {
-    searchText: async function (searchText) {
-      this.tagsSearchResult = [];
-      if (searchText === '') {
-        this.tagsSearchResult = this.ageRestrictedCategories.map((c) => c.tags).flat();
-        this.searchResults = [];
-        return;
-      }
-
-      for (const c of this.ageRestrictedCategories as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
-        this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)));
-      }
-
-      await this.quickSearch(new PageSearchQuery(
-          searchText,
-      ), new PaginationQuery(0, 20));
-    },
-  }
+function closeModal() {
+  emit('update:showModal', false)
 }
 
-</script>
+function tagPressed(tagId: string) {
+  let query = route.path == "/search" ? {...route.query} : {}
+  Object.assign(query, { tag: tagId })
+  router.push({path: '/search', query})
 
+  closeModal()
+}
+
+function quickSearchResultPressed(username: string) {
+  router.push({path: `/shop/${username}`})
+  closeModal()
+}
+
+function search() {
+  let query = route.path == "/search" ? {...route.query} : {};
+  if (searchText.value != "") {
+    query["keyword"] = searchText.value;
+  }
+  else {
+    delete query["keyword"];
+  }
+
+  router.push({
+    path: "/search",
+    query
+  });
+
+  closeModal();
+}
+
+watch(searchText, async () => {
+
+  tagsSearchResult.value = [];
+  if (searchText.value === '') {
+    tagsSearchResult.value = ageRestrictedCategories.value.map((c) => c.tags).flat();
+    return;
+  }
+
+  for (const c of ageRestrictedCategories.value as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
+    tagsSearchResult.value.push(...c.tags.filter((t) => c.id.includes(searchText.value) || c.label.includes(searchText.value) || t.id.includes(searchText.value) || t.label.includes(searchText.value)));
+  }
+
+  await quickSearch(new PageSearchQuery(
+      searchText.value,
+  ), new PaginationQuery(0, 20));
+
+})
+
+</script>
 
 <style scoped>
 

@@ -101,6 +101,11 @@
   import useSearch from "~/composables/useSearch"
   import {useShowSearchModal} from "~/composables/states"
   import {accountTabs} from "~/data/ui";
+  import {PageSearchQuery} from "~/models/PageSearchQuery";
+  import {PaginationQuery} from "~/models/PaginationQuery";
+
+  const route = useRoute()
+  const router = useRouter()
 
   const {ageRestrictedCategories} = useTags()
   const {
@@ -130,78 +135,78 @@
     ].includes(t.route))
   })
 
-</script>
-
-<script lang="ts">
-
-  import {PageSearchQuery} from "~/models/PageSearchQuery"
-  import {PaginationQuery} from "~/models/PaginationQuery"
-
-  export default {
-    data(): {
-      showSearchDropdown: boolean,
-      searchText: string,
-      categoriesSearchResult: { id: string, label: string, tags: { id: string, label: string }[] }[],
-      tagsSearchResult: { id: string, label: string }[],
-    } {
-      return {
-        showSearchDropdown: false,
-        searchText: "",
-        categoriesSearchResult: [],
-        tagsSearchResult: [],
-      }
-    },
-    methods: {
-      searchInputFocusIn: function () {
-        this.showSearchDropdown = true
-      },
-      searchInputFocusOut: function () {
-        this.showSearchDropdown = false
-      },
-      tagPressed: function (tagId: string) {
-        let query = this.$route.path == "/search" ? {...this.$route.query} : {}
-        Object.assign(query, {tag: tagId})
-        this.$router.push({path: "/search", query})
-      },
-      quickSearchResultPressed: function (username: string) {
-        this.$router.push({path: `/shop/${username}`})
-      },
-      search: function () {
-        let query = this.$route.path == "/search" ? {...this.$route.query} : {}
-        if (this.searchText != "") {
-          query["keyword"] = this.searchText
-        } else {
-          delete query["keyword"]
-        }
-        delete query["page"]
-
-        this.$router.push({
-          path: "/search",
-          query
-        })
-      }
-    },
-    watch: {
-      searchText: async function (searchText) {
-        this.categoriesSearchResult = []
-        this.tagsSearchResult = []
-        if (searchText === "") {
-          return
-        }
-
-        for (const c of this.ageRestrictedCategories as { id: string, label: string, tags: { id: string, label: string }[] }[]) {
-          if (c.id.includes(searchText) || c.label.includes(searchText)) {
-            this.categoriesSearchResult.push(c)
-          }
-          this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)))
-        }
-
-        await this.quickSearch(new PageSearchQuery(
-          searchText,
-        ), new PaginationQuery(0, 11))
-      },
-    }
+  const showSearchDropdown = ref(false)
+  function searchInputFocusIn() {
+    showSearchDropdown.value = true
   }
+  function searchInputFocusOut() {
+    showSearchDropdown.value = false
+  }
+
+
+  function tagPressed(tagId: string) {
+    let query = route.path == "/search" ? {...route.query} : {}
+    Object.assign(query, { tag: tagId })
+    router.push({path: '/search', query})
+  }
+
+  function quickSearchResultPressed(username: string) {
+    router.push({path: `/shop/${username}`})
+  }
+
+  const searchText = ref<string>("")
+  function search() {
+    let query = route.path == "/search" ? {...route.query} : {}
+    if (searchText.value != "") {
+      query["keyword"] = searchText.value
+    }
+    else {
+      delete query["keyword"]
+    }
+    delete query["page"]
+
+    router.push({
+      path: "/search",
+      query
+    })
+  }
+
+  const tagsSearchResult = ref<{id: string, label: string}[]>([]);
+  tagsSearchResult.value = ageRestrictedCategories.value.map((c) => c.tags).flat();
+  watch(searchText, async () => {
+
+    // this.categoriesSearchResult = []
+    // this.tagsSearchResult = []
+    // if (searchText === "") {
+    //   return
+    // }
+    //
+    // for (const c of this.ageRestrictedCategories as { id: string, label: string, tags: { id: string, label: string }[] }[]) {
+    //   if (c.id.includes(searchText) || c.label.includes(searchText)) {
+    //     this.categoriesSearchResult.push(c)
+    //   }
+    //   this.tagsSearchResult.push(...c.tags.filter((t) => c.id.includes(searchText) || c.label.includes(searchText) || t.id.includes(searchText) || t.label.includes(searchText)))
+    // }
+    //
+    // await this.quickSearch(new PageSearchQuery(
+    //     searchText,
+    // ), new PaginationQuery(0, 11))
+
+    tagsSearchResult.value = [];
+    if (searchText.value === '') {
+      tagsSearchResult.value = ageRestrictedCategories.value.map((c) => c.tags).flat();
+      return;
+    }
+
+    for (const c of ageRestrictedCategories.value as {id: string, label: string, tags: {id: string, label: string}[]}[]) {
+      tagsSearchResult.value.push(...c.tags.filter((t) => c.id.includes(searchText.value) || c.label.includes(searchText.value) || t.id.includes(searchText.value) || t.label.includes(searchText.value)));
+    }
+
+    await quickSearch(new PageSearchQuery(
+        searchText.value,
+    ), new PaginationQuery(0, 20));
+
+  })
 
 </script>
 
