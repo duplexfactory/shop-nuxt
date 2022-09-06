@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /my
+Sitemap: https://shoperuse.com/sitemap.xml

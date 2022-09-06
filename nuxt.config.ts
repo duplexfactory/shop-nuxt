@@ -282,7 +282,7 @@ export default defineNuxtConfig({
         })
       })
     },
-    '@nuxtjs/robots',
+    // '@nuxtjs/robots',
   ],
   hooks: {
     'pages:extend'(pages) {
