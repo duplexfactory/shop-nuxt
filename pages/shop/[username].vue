@@ -122,6 +122,7 @@
   import IgMedia from "~/models/IgMedia"
   import useMediaPrice from "~/composables/useMediaPrice"
   import useMediaList from "~/composables/useMediaList";
+  import {notFound} from "~/utils/h3Error";
 
   const {tagsLookup, categories} = useTags()
 
@@ -157,9 +158,9 @@
 
   const {data, error} = await useContentKeyedLazyFetch(`/api/shop/username/${route.params.username}`)
   const found = computed(() => !error?.value && data.value)
-  // if (!!error && !!error.value) {
-  //   throwError(notFound);
-  // }
+  if (!!error && !!error.value) {
+    throwError(notFound);
+  }
 
   const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null)
   const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false)
