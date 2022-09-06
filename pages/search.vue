@@ -34,8 +34,10 @@
 
       <div class="col-span-4 md:col-span-3 pt-2 md:pt-0">
 
-        <div v-if="$route.query['keyword']" class="mb-2 flex items-center">
-          <h2 class="text-sm">你正在搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</h2>
+        <div v-if="selectedTag || $route.query['keyword']" class="mb-2 flex items-center">
+          <div class="text-sm">
+            你正在<template v-if="selectedTag">「 <h1 class="inline">{{ tagsLookup[selectedTag] }}</h1> 」</template><template v-if="$route.query['keyword']">搜尋「 <span class="font-semibold">{{ $route.query['keyword'] }}</span> 」</template>
+          </div>
           <button @click="clearKeyword"><i class="spr-cancel text-pink-600"></i></button>
         </div>
 
@@ -77,7 +79,7 @@
         </div>
 
         <div class="mb-2 md:mb-4 flex items-center justify-between">
-          <h1 class="text-sm text-gray-500">共 {{ searchResultTotalCount >= 0? searchResultTotalCount : "..." }} 間商店</h1>
+          <div class="text-sm text-gray-500">共 {{ searchResultTotalCount >= 0? searchResultTotalCount : "..." }} 間商店</div>
 
           <Pagination v-if="searchResults.length !== 0"
                       v-model:currentPage="currentPage"
@@ -122,12 +124,10 @@
 
 <script setup lang="ts">
 
-console.log("search setup")
-
 import {PageSearchQuery} from "~/models/PageSearchQuery";
 import useSearch from "~/composables/useSearch";
 import {PaginationQuery} from "~/models/PaginationQuery";
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
 const {
   ageRestrictedCategories,
@@ -200,8 +200,9 @@ function pageChanged() {
 const isMobileFiltersShown = ref<boolean>(false);
 function clearKeyword() {
   const query = Object.assign({}, route.query, {page: "1"});
-  delete query.keyword;
-  router.replace({query});
+  delete query.keyword
+  query.tag = ''
+  router.replace({query})
 }
 
 // Meta
