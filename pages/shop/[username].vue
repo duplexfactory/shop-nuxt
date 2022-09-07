@@ -59,35 +59,42 @@
       </section>
 
       <section class="mt-4">
+        <!-- Tabs -->
         <div class="mb-4 text-lg md:text-2xl flex">
           <h2 class="px-5 py-2 md:px-6 md:py-3 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}"
               @click="selectedIndex = 0">貼文</h2>
           <h2 v-if="found" class="px-5 py-2 md:px-6 md:py-3 cursor-pointer"
               :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
         </div>
+
+        <!-- Tab content -->
         <div v-if="selectedIndex == 0" :class="verifiedPage ? 'grid' : 'md:grid'"
              class="grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-4">
-          <!-- lazy component ratio for taking up space before scrolling to it -->
-          <lazy-component v-for="(media, i) in medias"
-                          :key="media.id + '-post-card'"
-                          class="col-span-1"
-                          :style="verifiedPage ? 'aspect-ratio: 3/5' : ''"
-                          @show="showMedia(i)">
-            <LazyMediaCard v-if="verifiedPage"
-                           @click="showMediaModal(media)"
-                           style="cursor: pointer"
-                           :media="media"
-                           :shop="page"></LazyMediaCard>
-            <LazyMediaCardIGEmbed
-              v-else
-              class="mb-4 md:mb-0"
-              @showMediaModal="showMediaModal(media)"
-              :price="mediaPrice(media)"
-              top-bar
-              :post-id="media.code"
-              :fixed-aspect-ratio="0"
-              :username="page.username"></LazyMediaCardIGEmbed>
-          </lazy-component>
+          <template v-for="(media, i) in medias"
+                    :key="media.id + '-post-card'">
+
+            <!-- aspect ratio for taking up space before scrolling to it -->
+            <div v-if="verifiedPage"
+                 class="col-span-1"
+                 style="aspect-ratio: 3/5">
+              <MediaCard @click="showMediaModal(media)"
+                         class="cursor-pointer"
+                         :media="media"
+                         :shop="page"></MediaCard>
+            </div>
+
+            <lazy-component v-else
+                            class="col-span-1">
+              <LazyMediaCardIGEmbed
+                  class="mb-4 md:mb-0"
+                  @showMediaModal="showMediaModal(media)"
+                  :price="mediaPrice(media)"
+                  top-bar
+                  :post-id="media.code"
+                  :fixed-aspect-ratio="0"
+                  :username="page.username"></LazyMediaCardIGEmbed>
+            </lazy-component>
+          </template>
         </div>
         <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
           <div class="col-span-1 lg:order-2">
@@ -107,6 +114,12 @@
             </div>
           </div>
         </div>
+
+        <!-- Tab infinite scroll -->
+        <div v-if="mediaPending" class="flex justify-center mt-8">
+          <i class="spr-spin4 animate-spin text-6xl text-pink-400"></i>
+        </div>
+
       </section>
     </div>
   </div>
@@ -204,11 +217,16 @@
     if (f) await fetchMedias()
   })
 
-  async function showMedia(i: number) {
-    if (i == medias.value.length - 1 && !mediaPending.value && medias.value.length < page.value.mediaCount) {
-      mediaPending.value = true
-      await fetchMedias()
-    }
+  if (process.client) {
+    window.onscroll = async function(ev) {
+      const pageHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,  document.documentElement.clientHeight,  document.documentElement.scrollHeight,  document.documentElement.offsetHeight );
+      if (Math.ceil(window.innerHeight + window.scrollY) >= pageHeight) {
+        if (!mediaPending.value && medias.value.length < page.value.mediaCount) {
+          mediaPending.value = true
+          await fetchMedias()
+        }
+      }
+    };
   }
 
   // Meta
