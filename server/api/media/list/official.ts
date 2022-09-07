@@ -100,15 +100,20 @@ export default defineEventHandler(async (event) => {
 
             // Update media info of page.
             const lastMedia = rmUrl[0]
-            const update = {
-                lastMedia: lastMedia.takenAt,
-                lastActivity: lastMedia.takenAt,
-                lastMediaData: lastMedia,
-                mediaCount: media_count,
-                mediaCodes: medias.slice(0, 3).map((m) => m.code)
+
+            const page = await pageSearchCollection.findOne({_id: id})
+            if (lastMedia.takenAt > page.lastMedia) {
+                const update = {
+                    lastMedia: lastMedia.takenAt,
+                    lastActivity: lastMedia.takenAt,
+                    lastMediaData: lastMedia,
+                    mediaCount: media_count,
+                    mediaCodes: medias.slice(0, 3).map((m) => m.code)
+                }
+                await pageSearchCollection.updateOne({_id: id}, {$set: update})
+                await pageCollection().doc(id).update(update)
             }
-            await pageSearchCollection.updateOne({_id: id}, {$set: update})
-            await pageCollection().doc(id).update(update)
+
         }
     }
 
