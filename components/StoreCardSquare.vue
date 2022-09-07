@@ -64,10 +64,13 @@
         <div class="col-span-1">
 
             <template v-if="verifiedPage && mediaCodes">
-                <div class="image-container image-container-clickable aspect-square cursor-pointer" v-lazy:background-image="$imageUrl(mediaCodes[0])" @click.stop="openMedia(mediaCodes[0])"></div>
+                <div class="image-container image-container-clickable aspect-square cursor-pointer"
+                     ref="test"
+                     v-lazy:background-image="mediaUrls[0]"
+                     @click.stop="openMedia(0)"></div>
                 <div class="flex" style="margin-top: 2px;">
-                  <div class="image-container image-container-clickable aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="$imageUrl(mediaCodes[1])" @click.stop="openMedia(mediaCodes[1])"></div>
-                  <div class="image-container image-container-clickable aspect-square cursor-pointer flex-1" v-lazy:background-image="$imageUrl(mediaCodes[2])" @click.stop="openMedia(mediaCodes[2])"></div>
+                  <div class="image-container image-container-clickable aspect-square cursor-pointer flex-1" style="margin-right: 2px;" v-lazy:background-image="mediaUrls[1]" @click.stop="openMedia(1)"></div>
+                  <div class="image-container image-container-clickable aspect-square cursor-pointer flex-1" v-lazy:background-image="mediaUrls[2]" @click.stop="openMedia(2)"></div>
                 </div>
             </template>
             <template v-else>
@@ -87,11 +90,12 @@
     </div>
 </template>
 <script setup lang="ts">
+
 import {PropType} from "vue";
 import dayjs from "dayjs";
 import PageInfoRow from "~/models/PageInfoRow";
 import {PageSearch} from "~/models/PageSearch";
-import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+import IgMedia from "~/models/IgMedia"
 
 const {tagsLookup} = useTags()
 const {
@@ -155,12 +159,20 @@ function formatMetric(count: number | undefined) {
 // Media interaction.
 const showMediaModal = useShowMediaModal()
 const showingMediaModalData = useShowingMediaModalData()
-function openMedia(mediaCode: string) {
-  showMediaModal.value = true;
-  showingMediaModalData.value = {
-    code: mediaCode,
-    pageId: _id
-  };
+async function openMedia(index: number) {
+  if (!officialMedias.value.length) {
+    showingMediaModalData.value = {
+      code: mediaCodes[index],
+      pageId: _id
+    }
+  }
+  else {
+    showingMediaModalData.value = {
+      media: officialMedias.value[index],
+      pageId: _id
+    }
+  }
+  showMediaModal.value = true
 }
 
 // Card base click.
@@ -173,5 +185,60 @@ function stopPropagation(e: Event, stop: boolean) {
 function navigateToPage() {
   navigateTo(`/shop/${username}`);
 }
+
+const nuxt = useNuxtApp()
+const {$imageUrl} = nuxt
+
+const officialMedias = ref<IgMedia[]>([])
+const mediaUrls = computed(() => {
+  return officialMedias.value.length === 0 ? mediaCodes.map((c) => $imageUrl(c)) : officialMedias.value.map((m) => m.mediaUrl)
+})
+
+if (igConnected) {
+  const Lazyload = nuxt.vueApp.config.globalProperties.$Lazyload
+  const errorHandler = async ({bindType, el, naturalHeight, naturalWidth, $parent, src, loading, error}, formCache) => {
+    if (src === $imageUrl(mediaCodes[0])) {
+      Lazyload.$off('error', errorHandler)
+      Lazyload.$off('loaded', loadedHandler)
+
+      // Retry with official api.
+      const {
+        limit,
+        medias,
+        fetchOfficialMedias
+      } = useMediaList()
+      limit.value = 3
+      await fetchOfficialMedias(_id)
+
+      if (medias.value && !!medias.value.length) {
+        officialMedias.value = medias.value
+      }
+    
+    }
+  }
+  const loadedHandler = ({bindType, el, naturalHeight, naturalWidth, $parent, src, loading, error}, formCache) => {
+    if (src === $imageUrl(mediaCodes[0])) {
+      Lazyload.$off('error', errorHandler)
+      Lazyload.$off('loaded', loadedHandler)
+    }
+  }
+  Lazyload.$on('error', errorHandler)
+  Lazyload.$on('loaded', loadedHandler)
+}
+
+// const test = ref<HTMLElement>(null)
+//
+// onMounted(() => {
+//   console.log('mounted')
+//   nextTick(() => {
+//     setTimeout(() => {
+//       const state = test.value.getAttribute("lazy")
+//       if (state === 'error') {
+//         console.log('error!!!')
+//       }
+//     }, 1000)
+//   })
+// })
+
 
 </script>

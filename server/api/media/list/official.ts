@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
 
     let medias: IgMedia[]
     let paging: { cursors: {before: string, after: string} }
+
     if (!!p.invalid) {
         // Token is invalid.
         // Get use existing medias from dynamo.
@@ -88,6 +89,7 @@ export default defineEventHandler(async (event) => {
                 newMedias.push(m)
             }
         })
+
         if (newMedias.length !== 0) {
             // Contains not crawled data. Process and save to db.
             const rmUrl = newMedias.map(m => {
@@ -95,31 +97,29 @@ export default defineEventHandler(async (event) => {
                 return props
             })
             await saveMedias(rmUrl)
-
-            const {media_count} = await fetchIgProfile(p.accessToken)
-
-            // Update media info of page.
-            const lastMedia = rmUrl[0]
-
-            const page = await pageSearchCollection.findOne({_id: id})
-            if (lastMedia.takenAt > page.lastMedia) {
-                const update = {
-                    lastMedia: lastMedia.takenAt,
-                    lastActivity: lastMedia.takenAt,
-                    lastMediaData: lastMedia,
-                    mediaCount: media_count,
-                    mediaCodes: medias.slice(0, 3).map((m) => m.code)
-                }
-                await pageSearchCollection.updateOne({_id: id}, {$set: update})
-                await pageCollection().doc(id).update(update)
-            }
-
         }
+
+        // Update media info of page.
+        const lastMedia = Object.assign({}, medias[0])
+        delete lastMedia.mediaUrl
+        const page = await pageSearchCollection.findOne({_id: id})
+        if (lastMedia.takenAt > page.lastMedia) {
+            const {media_count} = await fetchIgProfile(p.accessToken)
+            const update = {
+                lastMedia: lastMedia.takenAt,
+                lastActivity: lastMedia.takenAt,
+                lastMediaData: lastMedia,
+                mediaCount: media_count,
+                mediaCodes: medias.slice(0, 3).map((m) => m.code)
+            }
+            await pageSearchCollection.updateOne({_id: id}, {$set: update})
+            await pageCollection().doc(id).update(update)
+        }
+
     }
 
     return {
         medias,
         paging
     }
-    // { medias: IgMedia[] }
 })
