@@ -17,3 +17,7 @@
 //     const decrpyted = Buffer.concat([decipher.update(buffer), decipher.final()]);
 //     return decrpyted.toString();
 // }
+
+export function isIGVideoUrl(url: string): boolean {
+    return url.startsWith("https://video-")
+}

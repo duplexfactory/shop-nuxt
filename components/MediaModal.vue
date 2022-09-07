@@ -5,8 +5,17 @@
         <div class="col-span-4">
           <template v-if="localPage">
             <template v-if="localPage.igConnected && localMedia">
-              <div class="image-container aspect-square rounded-md overflow-hidden"
+
+              <div v-if="!!localMedia.mediaUrl && isIGVideoUrl(localMedia.mediaUrl)" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
+                <video controls preload="metadata">
+                  <source :src="localMedia.mediaUrl" type="video/mp4">
+                  <source :src="localMedia.mediaUrl" type="video/ogg">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div v-else class="image-container aspect-square rounded-md overflow-hidden"
                    v-lazy:background-image="localMedia.mediaUrl || $imageUrl(localMedia.code, 'l')"></div>
+
               <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
                 {{ stripTrailingHashtags(localMedia.caption) }}
               </div>
@@ -206,8 +215,7 @@ import IgPage from "~/models/IgPage"
 import IgPageExtraData from "~/models/IgPageExtraData"
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData"
 import {IgPageCommerceData} from "~/models/IgPageCommerceData"
-
-import { hash } from 'ohash'
+import {isIGVideoUrl} from "~/utils/imageUrl";
 
 const nuxt = useNuxtApp()
 const router = useRouter()

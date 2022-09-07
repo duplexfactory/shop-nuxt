@@ -1,6 +1,13 @@
 <template>
   <div>
-    <div class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="mediaUrl || $imageUrl(code, size)"></div>
+    <div v-if="!!mediaUrl && isIGVideoUrl(mediaUrl)" class="image-container aspect-square rounded-md overflow-hidden" style="background-color: #000 !important;">
+      <video preload="metadata" class="absolute" style="transform: translateY(-50%); top: 50%;">
+        <source :src="mediaUrl" type="video/mp4">
+        <source :src="mediaUrl" type="video/ogg">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div v-else class="image-container aspect-square rounded-md overflow-hidden" v-lazy:background-image="mediaUrl || $imageUrl(code, size)"></div>
 
     <!-- style="aspect-ratio: 1.5;"  -->
     <div class="pt-2 overflow-hidden flex flex-col">
@@ -19,6 +26,7 @@ import {PropType} from "vue";
 import IgMedia from "~/models/IgMedia";
 import dayjs from "dayjs";
 import {PageSearch} from "~/models/PageSearch";
+import {isIGVideoUrl} from "~/utils/imageUrl";
 
 const {tagsLookup} = useTags()
 const {media, shop, size} = defineProps({
