@@ -5,12 +5,18 @@ function toUnicodeNum(str: string) {
 }
 
 function codeBase16(code: number) {
-    return "\\u" + code.toString(16).toUpperCase();
+    return "\\u" + code.toString(16).toUpperCase().padStart(4, "0");
 }
 
 const uAlps = ["🅐"];
 const lAlps = [];
 const pairs = lAlps.map(toUnicodeNum);
+
+const latinMap = {
+    H: ["ʜ"],
+    K: ["ᴋ"],
+    D: ["ᴅ"]
+}
 
 export function replaceUpperAlphabets(txt: string) {
     if (!uAlps.length) return txt;
@@ -42,6 +48,24 @@ export function replaceLowerAlphabets(txt: string) {
     return tmp;
 }
 
+export function replaceLatinAlphabets(txt: string) {
+
+    if (!Object.keys(latinMap).length) return txt;
+
+    let tmp = txt;
+
+    for (const char of Object.keys(latinMap)) {
+        const codes = latinMap[char].map(toUnicodeNum);
+        const reg = new RegExp(
+            `(${codes.map(([base, start])=> start ? `${codeBase16(base)}${codeBase16(start)}` : `${codeBase16(base)}`).join("|")})`,
+            "g"
+        );
+        tmp = tmp.replace(reg, char);
+    }
+
+    return tmp;
+}
+
 export function replaceAlphabets(txt: string) {
-    return replaceLowerAlphabets(replaceUpperAlphabets(txt));
+    return replaceLowerAlphabets(replaceUpperAlphabets(replaceLatinAlphabets(txt)));
 }
