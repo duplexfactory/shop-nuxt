@@ -4,7 +4,8 @@ export default function useIsSubscribed() {
 
     const isSubscribed = computed(() => {
         return [
-            "myyororoom_"
+            "myyororoom_",
+            "shoperuse.tester"
             // "valentim.manas.cs"
         ].includes(igUsername.value)
     })
