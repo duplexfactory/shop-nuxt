@@ -1,8 +1,10 @@
 <template>
   <LazyModal class="text-gray-800" modalContainerClass="!w-full" @close="close">
     <template #body>
-      <MediaDetails v-if="!!localMedia && !!localPage" :media="localMedia" :page="localPage"
-                    class="pb-8 px-4"></MediaDetails>
+      <div>
+        <MediaDetails v-if="!!localMedia && !!localPage" :media="localMedia" :page="localPage"
+                      class="pb-8 px-4"></MediaDetails>
+      </div>
     </template>
   </LazyModal>
 </template>
@@ -77,19 +79,4 @@ onMounted(async () => {
 
 </script>
 
-<style scoped>
 
-.modal-enter-active .inner-sheet,
-.modal-leave-active .inner-sheet {
-  transition: all 0.25s ease;
-}
-
-.modal-enter-active .inner-sheet {
-  transition-delay: 0.25s;
-}
-
-.modal-enter-from .inner-sheet,
-.modal-leave-to .inner-sheet {
-  transform: translateY(100%);
-}
-</style>

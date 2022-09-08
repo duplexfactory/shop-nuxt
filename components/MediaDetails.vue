@@ -408,4 +408,17 @@ onMounted(async () => {
 
 <style scoped>
 
+.modal-enter-active .inner-sheet,
+.modal-leave-active .inner-sheet {
+  transition: all 0.25s ease;
+}
+
+.modal-enter-active .inner-sheet {
+  transition-delay: 0.25s;
+}
+
+.modal-enter-from .inner-sheet,
+.modal-leave-to .inner-sheet {
+  transform: translateY(100%);
+}
 </style>
