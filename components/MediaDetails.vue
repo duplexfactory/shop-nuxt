@@ -35,7 +35,7 @@
           </div>
 
           <client-only>
-            <Popper hover offsetDistance="0" placement="top">
+            <Popper v-if="!(!!mediaCommerceData && mediaCommerceData.active)" hover offsetDistance="0" placement="top">
               <button @click="showPriceSuggestionModal = true"
                       class="ml-2 text-sm text-gray-500 underline decoration-dotted">提出修改
               </button>
