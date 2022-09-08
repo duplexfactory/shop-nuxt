@@ -213,11 +213,16 @@ import {IgMediaCommerceData} from "~/models/IgMediaCommerceData"
 import {IgPageCommerceData} from "~/models/IgPageCommerceData"
 import {isIGVideoUrl} from "~/utils/imageUrl";
 
-import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";
+// import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";
 import {SimpleIgPage} from "~/models/SimpleIgPage";
 
 const nuxt = useNuxtApp()
 const router = useRouter()
+
+const {
+  mediaPrice,
+  formatMediaPrice
+} = useMediaPrice()
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
