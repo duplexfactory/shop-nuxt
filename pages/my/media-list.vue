@@ -25,8 +25,8 @@
       <div class="table">
         <div class="table-header-group">
           <div class="table-row">
-            <div class="table-cell">相片</div>
-            <div class="table-cell">描述</div>
+            <div class="table-cell" style="width: 1%; white-space: nowrap;">相片</div>
+            <div class="table-cell" style="min-width: 180px;">描述</div>
             <div class="table-cell">價錢</div>
             <div class="table-cell whitespace-nowrap">
               接受訂單
@@ -51,6 +51,7 @@
 <!--              </Popper>-->
 <!--            </div>-->
             <div class="table-cell">折扣</div>
+            <div class="table-cell">動作</div>
           </div>
         </div>
 

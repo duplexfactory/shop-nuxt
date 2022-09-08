@@ -2,8 +2,8 @@
   <div class="table-row">
     <div class="table-cell">
       <div class="image-container aspect-square rounded-md overflow-hidden cursor-pointer"
-           @click="clickMedia"
            style="width: 90px"
+           @click="clickMedia"
            v-lazy:background-image="media.mediaUrl || $imageUrl(media.code)"></div>
     </div>
     <div class="table-cell align-top text-sm whitespace-pre-wrap break-words overflow-hidden">
@@ -67,6 +67,10 @@
       </Teleport>
 
     </div>
+    <div class="table-cell align-top">
+<!--      <nuxt-link class="hover:underline text-pink-600" :to="`/product/${media.code}`" target="_blank">瀏覽下單網址</nuxt-link>-->
+      <button class="hover:underline text-pink-600" @click="clickCopyProductLink">複製下單網址</button>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -77,11 +81,14 @@ import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {ThresholdType, DiscountType, Discount} from "~/models/Discount";
 import useMediaPrice from "~/composables/useMediaPrice";
 import {discountToText} from "~/utils/discountText";
-const nuxt = useNuxtApp()
-const {getAuthHeader, headersToObject} = useAuth()
+
 import {format} from "date-fns"
 import {mediaPrice} from  "~/utils/mediaPrice"
 import {useShowingMediaModalData, useShowMediaModal} from "~/composables/states";
+
+const nuxt = useNuxtApp()
+const config = useRuntimeConfig()
+const {getAuthHeader, headersToObject} = useAuth()
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
@@ -284,11 +291,17 @@ const currentDiscount = computed(() => {
 const showMediaModal = useShowMediaModal()
 const showingMediaModalData = useShowingMediaModalData()
 function clickMedia() {
-  showMediaModal.value = true;
-  showingMediaModalData.value = {
-    media: media.value,
-    pageId: igPageId.value
-  };
+  // showMediaModal.value = true;
+  // showingMediaModalData.value = {
+  //   media: media.value,
+  //   pageId: igPageId.value
+  // };
+  window.open(config.DOMAIN + `/product/${media.value.code}`, '_blank').focus()
+}
+
+function clickCopyProductLink() {
+  navigator.clipboard.writeText(config.DOMAIN + `/product/${media.value.code}`)
+  nuxt.$toast.success("已複製此產品的下單網址，可發送給顧客！");
 }
 
 </script>
