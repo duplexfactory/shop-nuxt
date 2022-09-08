@@ -1,5 +1,5 @@
 <template>
-  <LazyModal class="text-gray-800" @close="close">
+  <LazyModal class="text-gray-800" modalContainerClass="!w-full" @close="close">
     <template #body>
       <div class="md:grid grid-cols-8 gap-8 pb-8 px-4">
         <div class="col-span-4">
