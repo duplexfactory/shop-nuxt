@@ -14,29 +14,25 @@
                          :accept="['image/png', 'image/jpeg']"
                          :allowMultiple="false">
             <dropzone v-slot="{ hovered }">
-              <div class="block w-full rounded-lg border border-dashed border-gray-400 transition-colors duration-150"
-                   :class="{ 'border-blue-200': hovered }">
+              <div class="flex flex-col w-full rounded-lg border border-dashed border-gray-400 text-center text-gray-500">
+                <div v-for="(preview, i) in previews" :key="preview" class="p-4">
+                  <img :src="preview"/>
+                  <!--                    {{ files[i].name }}-->
+                </div>
 
-
-<!--                <dialog-button class="btn-primary">-->
-<!--                  選擇評論相關照片（選填）-->
-<!--                </dialog-button>-->
-                <x-button class="w-full h-full text-center p-4 cursor-pointer text-gray-500" @click="openDialog">
-                  <div class="flex">
-                    <div v-for="(preview, i) in previews" :key="preview">
-                      <img :src="preview" style="max-width: 150px; max-height: 150px;"/>
-                      {{ files[i].name }}
-                    </div>
-                  </div>
-
-                  <div>
-                    選擇評論相關照片（選填）
+                <x-button class="flex flex-col cursor-pointer p-4 m-4"
+                          :class="{'rounded-lg border border-gray-400': previews.length !== 0}"
+                          @click="openDialog">
+                  <div class="text-lg">
+                    +增加照片<span v-if="previews.length === 0">（選填）</span>
                   </div>
                   <div class="my-1 text-sm">
-                    最多上載三張照片。
+                    最多上載三張。
                   </div>
                 </x-button>
               </div>
+
+
             </dropzone>
           </file-selector>
 
