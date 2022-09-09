@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     const {
         fields,
         files
-    } = await new Promise(function (resolve, reject) {
+    } = await new Promise<{ fields, files }>(function (resolve, reject) {
         form.parse(event.req, function (err, fields, files) {
             if (err) {
                 reject(err);

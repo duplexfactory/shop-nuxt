@@ -2,7 +2,6 @@ import {defineEventHandler} from "h3";
 import {noCache} from "~/server/util";
 import * as fs from "fs";
 import formidable from 'formidable';
-import {PaymentType} from "~/models/IgPageCommerceData";
 import {PutObjectCommand} from "@aws-sdk/client-s3";
 import { s3, s3Region} from "~/server/s3";
 
@@ -20,7 +19,7 @@ export default defineEventHandler(async (event) => {
     const {
         fields,
         files
-    } = await new Promise(function (resolve, reject) {
+    } = await new Promise<{ fields, files }>(function (resolve, reject) {
         form.parse(event.req, function (err, fields, files) {
             if (err) {
                 reject(err);
