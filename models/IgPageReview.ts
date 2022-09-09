@@ -1,6 +1,6 @@
 export default interface IgPageReview {
     pageId: string
-    mediaCode: string | undefined
+    mediaCode?: string
 
     rating: number
     content: string
@@ -8,4 +8,6 @@ export default interface IgPageReview {
 
     deleted: boolean
     ip: string
+
+    imageUrls?: string[]
 }

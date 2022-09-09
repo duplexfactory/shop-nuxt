@@ -99,7 +99,10 @@
         <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-x-8">
           <div class="col-span-1 lg:order-2">
             <div class="text-lg">撰寫評論</div>
-            <ReviewCreateCard v-model:rating="rating" v-model:content="content" :isCreatingReview="isCreatingReview"
+            <ReviewCreateCard v-model:rating="rating"
+                              v-model:content="content"
+                              v-model:imageFiles="imageFiles"
+                              :isCreatingReview="isCreatingReview"
                               @create-review="sendReview()"></ReviewCreateCard>
           </div>
           <div class="col-span-1 lg:order-1">
@@ -340,6 +343,7 @@
     isCreatingReview,
     rating,
     content,
+    imageFiles,
     createReview,
   } = useCreateReview()
 

@@ -1,38 +1,57 @@
-import { ref, computed, onMounted } from 'vue';
+import IgPageReview from "~/models/IgPageReview"
 
 export default function useCreateReview() {
 
-    const reviewingCode = ref<string>("");
-    const reviewingPageId = ref<string>("");
-    const isCreatingReview = ref<boolean>(false);
-    const rating = ref<number>(5);
-    const content = ref<string>("");
+    const reviewingCode = ref("")
+    const reviewingPageId = ref("")
+    const isCreatingReview = ref(false)
+    const rating = ref(5)
+    const content = ref("")
+
+    const imageFiles = ref<File[]>([])
 
     async function createReview() {
-        isCreatingReview.value = true;
+        isCreatingReview.value = true
 
-        const body: any = {
+        const body: Omit<IgPageReview, "created" | "deleted" | "ip"> = {
             pageId: reviewingPageId.value,
             rating: rating.value,
             content: content.value,
-        };
-        if (reviewingCode.value.length !== 0) {
-            body.mediaCode = reviewingCode.value;
         }
-        await $fetch('/api/review', { method: 'POST', body})
+        if (reviewingCode.value.length !== 0) {
+            body.mediaCode = reviewingCode.value
+        }
+        if (imageFiles.value.length !== 0) {
+            // Upload image first.
+            let formData = new FormData()
+            for (const [i, image] of imageFiles.value.entries()) {
+                formData.append( `image[${i}]`, image)
+            }
+            const {
+                urls
+            } = await $fetch(
+                '/api/file/review',
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            )
 
-        isCreatingReview.value = false;
+            body.imageUrls = urls
+        }
+        await $fetch('/api/review', {method: 'POST', body})
 
-        resetCreateReview();
+        isCreatingReview.value = false
+
+        resetCreateReview()
 
     }
 
     function resetCreateReview() {
-        rating.value = 0;
-        content.value = "";
+        rating.value = 0
+        content.value = ""
+        imageFiles.value = []
     }
-
-    // onMounted(() => console.log('useCounter mounted'));
 
     return {
         reviewingCode,
@@ -40,7 +59,8 @@ export default function useCreateReview() {
         isCreatingReview,
         rating,
         content,
+        imageFiles,
         createReview,
         resetCreateReview
-    };
+    }
 }

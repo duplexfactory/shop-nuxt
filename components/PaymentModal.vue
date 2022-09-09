@@ -101,6 +101,7 @@ import {paymentMethods, paymentMethodsToText} from "~/data/commerce";
 import {formatMediaPrice} from "~/utils/mediaPrice";
 import type {Ref} from "vue";
 import {structurePaymentMethodData} from "~/utils/paymentMethodData";
+import {imageUrlFromFile} from "~/utils/imageUrl"
 
 const nuxt = useNuxtApp()
 
@@ -129,19 +130,10 @@ const paymentInfos = computed(() => {
 
 const files = ref([])
 const previews = ref([])
-async function toBlob(file) {
-  const buffer = await file.arrayBuffer()
-  const blob = new Blob([buffer])
-  const srcBlob = URL.createObjectURL(blob)
-  return srcBlob
-}
 watch(files, async () => {
-  if (files.value.length > 1) {
+  if (files.value.length > 1)
     files.value.splice(0, files.value.length - 1)
-  }
-  previews.value = await Promise.all(
-      files.value.map(toBlob)
-  )
+  previews.value = await Promise.all(files.value.map(imageUrlFromFile))
 })
 
 // const tempPaymentImageFile = ref(null)

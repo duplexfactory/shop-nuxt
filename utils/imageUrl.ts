@@ -21,3 +21,9 @@
 export function isIGVideoUrl(url: string): boolean {
     return url.startsWith("https://video-")
 }
+
+export async function imageUrlFromFile(file: File) {
+    const buffer = await file.arrayBuffer()
+    const blob = new Blob([buffer])
+    return URL.createObjectURL(blob)
+}

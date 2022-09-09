@@ -136,8 +136,12 @@
         </div>
 
         <!-- Create Review -->
-        <ReviewCreateCard v-model:show="isShowingCreateReview" isCollapsible v-model:rating="rating"
-                          v-model:content="content" :isCreatingReview="isCreatingReview"
+        <ReviewCreateCard v-model:show="isShowingCreateReview"
+                          v-model:rating="rating"
+                          v-model:content="content"
+                          v-model:imageFiles="imageFiles"
+                          :isCreatingReview="isCreatingReview"
+                          isCollapsible
                           @create-review="sendReview()"></ReviewCreateCard>
 
         <!-- Reviews -->
@@ -241,6 +245,7 @@ const {
   isCreatingReview,
   rating,
   content,
+  imageFiles,
   createReview,
   resetCreateReview
 } = useCreateReview()
