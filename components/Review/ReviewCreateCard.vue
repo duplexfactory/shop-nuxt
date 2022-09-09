@@ -10,23 +10,32 @@
           <textarea :value="content" @input="$emit('update:content', $event.target.value)" :disabled="isCreatingReview" :placeholder="'在此輸入你的評論\n如出現濫發、粗言穢語、嘔心、或色情的内容，Shoperuse有權刪除有關評論。'" class="w-full border rounded-md p-2" rows="4"></textarea>
 
           <file-selector v-model="files"
+                         v-slot="{ openDialog }"
+                         :accept="['image/png', 'image/jpeg']"
                          :allowMultiple="false">
             <dropzone v-slot="{ hovered }">
-              <div class="block w-full rounded-lg border border-dashed border-gray-400 transition-colors duration-150 flex flex-col py-4 justify-center items-center"
+              <div class="block w-full rounded-lg border border-dashed border-gray-400 transition-colors duration-150"
                    :class="{ 'border-blue-200': hovered }">
 
-                <img v-for="preview in previews" :key="preview" :src="preview" style="max-width: 150px; max-height: 150px;"/>
-                <ul v-if="files.length" class="mb-4">
-                  <li v-for="file in files" :key="file.name">
-                    {{ file.name }}
-                  </li>
-                </ul>
-                <dialog-button class="btn-primary">
-                  選擇評論相關照片（選填）
-                </dialog-button>
-                <div class="my-1 text-sm text-gray-500">
-                  最多上載三張照片。
-                </div>
+
+<!--                <dialog-button class="btn-primary">-->
+<!--                  選擇評論相關照片（選填）-->
+<!--                </dialog-button>-->
+                <x-button class="w-full h-full text-center p-4 cursor-pointer text-gray-500" @click="openDialog">
+                  <div class="flex">
+                    <div v-for="(preview, i) in previews" :key="preview">
+                      <img :src="preview" style="max-width: 150px; max-height: 150px;"/>
+                      {{ files[i].name }}
+                    </div>
+                  </div>
+
+                  <div>
+                    選擇評論相關照片（選填）
+                  </div>
+                  <div class="my-1 text-sm">
+                    最多上載三張照片。
+                  </div>
+                </x-button>
               </div>
             </dropzone>
           </file-selector>
@@ -81,7 +90,7 @@ const files = computed({
     if (val.length > 3)
       val.splice(0, val.length - 3)
     emit("update:imageFiles", val)
-    previews.value = await Promise.all(imageFiles.value.map(imageUrlFromFile))
+    previews.value = await Promise.all(val.map(imageUrlFromFile))
   }
 })
 
