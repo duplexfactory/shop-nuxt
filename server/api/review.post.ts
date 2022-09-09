@@ -42,6 +42,10 @@ export default defineEventHandler(async (event) => {
                 Key: pathInBucket
             })
         }))
+        review.imageUrls = imageUrls.map((imageUrl) => {
+            const pathInBucket = new URL(imageUrl).pathname.slice(1)
+            return new URL(imageUrl).origin + `/${documentUuid}/${pathInBucket}`
+        })
     }
 
     await reviewCollection().doc(documentUuid).set(review)
