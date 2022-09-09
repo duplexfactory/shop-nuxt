@@ -20,7 +20,7 @@ import {PropType} from "vue";
 import IgPageReview from "~/models/IgPageReview";
 import dayjs from "dayjs";
 
-const {review, pageUsername} = defineProps({
+const {review, checkMediaButton} = defineProps({
   review: Object as PropType<IgPageReview>,
   checkMediaButton: { type: Boolean, default: false },
 });
