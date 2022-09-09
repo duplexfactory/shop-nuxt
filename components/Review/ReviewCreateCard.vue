@@ -73,6 +73,7 @@ watch(isCreatingReview, (prev, current) => {
   if (prev && !current) {
     // Toast success.
     nuxt.$toast.success(`成功發送！`)
+    previews.value = []
   }
 })
 
