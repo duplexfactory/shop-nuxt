@@ -8,6 +8,15 @@
     <div class="mt-2 text-lg md:text-xl">
       {{ review.content }}
     </div>
+
+    <div v-if="!!review.imageUrls && review.imageUrls.length" class="mt-2 flex">
+      <div v-for="url in review.imageUrls"
+           :key="url"
+           class="mr-2 image-container aspect-square"
+           style="height: 100px;"
+           v-lazy:background-image="url"></div>
+    </div>
+
     <div class="mt-2 text-sm md:text-lg text-gray-400 flex justify-between">
       {{ createdDateString }}
       <button v-if="review.mediaCode && checkMediaButton" @click="$emit('showMedia')">查看相關貼文<i class="spr-angle-right"></i></button>
