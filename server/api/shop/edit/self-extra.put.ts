@@ -1,4 +1,4 @@
-import {defineEventHandler, sendError, useBody} from "h3";
+import {defineEventHandler, sendError} from "h3";
 import {assert, getAuth, noCache} from "~/server/util";
 import {igAuthCollection, initMongo, pageOverrideCollection, pageSearchCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
     assert(igAuth, notFound);
 
-    const extraData = await useBody<IgPageExtraData>(event);
+    const extraData = await readBody<IgPageExtraData>(event);
 
     // Remove empty fields.
     Object.keys(extraData).forEach((k) => {

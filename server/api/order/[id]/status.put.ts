@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {assert, getAuth, sendOrderNotificationEmail} from "~/server/util";
 import {igAuthCollection, initMongo, orderCollection} from "~/server/mongodb";
 import {notFound} from "~/utils/h3Error";
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
     const {
         status
-    } = await useBody<{
+    } = await readBody<{
         status: OrderStatus
     }>(event);
     assert(status !== undefined && status !== null)

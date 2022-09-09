@@ -1,11 +1,11 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
 
 export default defineEventHandler(async (event) => {
     const {
         code,
         price
-    } = await useBody<{ code: string, price: number}>(event);
+    } = await readBody<{ code: string, price: number}>(event);
     const suggestion = {
         code,
         price,

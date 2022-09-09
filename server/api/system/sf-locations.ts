@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {mediaPriceSuggestionCollection} from "~/server/firebase/collections";
 import {District, DistrictLocation, Location, SF} from "~/models/SF";
 import {initMongo, miscCollection, sfLocationCollection} from "~/server/mongodb";

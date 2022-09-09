@@ -1,4 +1,4 @@
-import {defineEventHandler, sendError, useBody} from "h3"
+import {defineEventHandler, sendError} from "h3"
 import {assert, getAuth, noCache} from "~/server/util"
 import {igAuthCollection, initMongo, pageOverrideCollection, pageSearchCollection} from "~/server/mongodb"
 import {notFound} from "~/utils/h3Error"
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
         fullName,
         biography,
         tags
-    } = await useBody<Partial<Pick<PageSearch, "username" | "fullName" | "biography" | "tags">>>(event)
+    } = await readBody<Partial<Pick<PageSearch, "username" | "fullName" | "biography" | "tags">>>(event)
 
     const updateData = {
         username,

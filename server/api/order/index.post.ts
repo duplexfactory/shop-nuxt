@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import IgMedia from "~/models/IgMedia";
 import {IgMediaCommerceData} from "~/models/IgMediaCommerceData";
 import {mediaPrice} from "~/utils/mediaPrice";
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
         mailingIndex,
         mailingInfo,
         notes,
-    } = await useBody<{
+    } = await readBody<{
         items: {
             code: string,
             quantity: number

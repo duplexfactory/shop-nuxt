@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {assert, sendOrderNotificationEmail} from "~/server/util";
 import {igAuthCollection, initMongo, orderCollection} from "~/server/mongodb";
 import {ObjectId} from "mongodb";
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         pageId,
         url,
         paymentMethodData
-    } = await useBody<{ pageId: string, url: string, paymentMethodData: PaymentMethodData }>(event)
+    } = await readBody<{ pageId: string, url: string, paymentMethodData: PaymentMethodData }>(event)
 
     assert(pageId)
     assert(paymentMethodData)

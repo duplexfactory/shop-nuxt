@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {assert, getAuth, noCache} from "~/server/util";
 import {
     igAuthCollection,
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         mailingDiscount,
         mailing,
         paymentMethodData,
-    } = await useBody<Partial<Omit<IgPageCommerceData, "_id">>>(event)
+    } = await readBody<Partial<Omit<IgPageCommerceData, "_id">>>(event)
 
     const set = {
         discount,

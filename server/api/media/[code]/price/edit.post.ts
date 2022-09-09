@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {assert, guard, isOwnMedia, noCache} from "~/server/util";
 import {patchMedia} from "~/server/dynamodb";
 
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
         price
     }: {
         price: number
-    } = await useBody(event)
+    } = await readBody(event)
     guard(price == undefined)
 
     const media = await isOwnMedia(event, code)

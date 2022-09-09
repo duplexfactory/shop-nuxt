@@ -1,12 +1,12 @@
 import {reviewCollection} from "~/server/firebase/collections";
-import {assertMethod, defineEventHandler, useBody, appendHeader} from 'h3';
+import {defineEventHandler, appendHeader} from 'h3';
 import {noCache} from "~/server/util";
 import {IncomingMessage} from "http";
 
 export default defineEventHandler(async (event) => {
     noCache(event);
 
-    const {pageId, mediaCode, content, rating} = await useBody<{ pageId: string, mediaCode: string | undefined, content: string, rating: number}>(event);
+    const {pageId, mediaCode, content, rating} = await readBody<{ pageId: string, mediaCode: string | undefined, content: string, rating: number}>(event);
     const review = {
         pageId,
         mediaCode,

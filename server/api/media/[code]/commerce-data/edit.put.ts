@@ -1,4 +1,4 @@
-import {defineEventHandler, useBody} from "h3";
+import {defineEventHandler} from "h3";
 import {assert, isOwnMedia, noCache} from "~/server/util";
 import {Discount} from "~/models/Discount";
 import {initMongo, mediaCommerceDataCollection} from "~/server/mongodb";
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         customPrice?: boolean;
         stock?: number;
         discount?: Discount;
-    } = await useBody(event);
+    } = await readBody(event);
 
     let set = {
         _id: code,
