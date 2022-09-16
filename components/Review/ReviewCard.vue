@@ -10,8 +10,9 @@
     </div>
 
     <div v-if="!!review.imageUrls && review.imageUrls.length" class="mt-2 flex">
-      <div v-for="url in review.imageUrls"
+      <div v-for="(url, i) in review.imageUrls"
            :key="url"
+           @click="clickImage(i)"
            class="mr-2 image-container aspect-square"
            style="height: 100px;"
            v-lazy:background-image="url"></div>
@@ -37,5 +38,13 @@ const {review, checkMediaButton} = defineProps({
 const createdDateString = computed(() => {
   return review != null ? dayjs(review.created).format('DD/MM/YYYY') : 0;
 })
+
+const lightBox = useLightBox()
+function clickImage(i: number) {
+  lightBox.value = {
+    imageUrls: review.imageUrls,
+    currentIndex: i
+  }
+}
 
 </script>

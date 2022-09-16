@@ -46,6 +46,29 @@
         <LazyAgeRestrictedModal v-if="showAgeRestrictedModal"></LazyAgeRestrictedModal>
       </transition>
 
+      <!-- Lightbox images -->
+      <transition name="modal">
+        <LazyModal v-if="lightBox">
+          <template #container>
+            <div class="container">
+              <div class="flex justify-end">
+                <button class="flex items-center" @click="lightBox = null">
+                  <i class="spr-cancel text-2xl text-white cursor-pointer"></i>
+                </button>
+              </div>
+              <img class="mx-auto" v-lazy="lightBox.imageUrls[lightBox.currentIndex]"/>
+              <div class="flex justify-center items-center mt-4 text-white">
+                <div v-if="lightBox.currentIndex !== 0" class="spr-angle-left cursor-pointer" @click="lightBox.currentIndex = lightBox.currentIndex - 1"></div>
+                <div class="p-2 bg-gray-900">
+                  {{ `${lightBox.currentIndex + 1}/${lightBox.imageUrls.length}` }}
+                </div>
+                <div v-if="lightBox.currentIndex + 1 !== lightBox.imageUrls.length" class="spr-angle-right cursor-pointer" @click="lightBox.currentIndex = lightBox.currentIndex + 1"></div>
+              </div>
+            </div>
+          </template>
+        </LazyModal>
+      </transition>
+
     </div>
 
     <lazy-component @show="showFooter = true;">
@@ -129,6 +152,9 @@
   const showLoginLoading = computed(() => {
     return isLoggedIn.value === null && isLoginLoadingRoute.value
   })
+
+  // Image Light Box
+  const lightBox = useLightBox()
 
   // Screen Size
   const screenSize = useScreenSize()
