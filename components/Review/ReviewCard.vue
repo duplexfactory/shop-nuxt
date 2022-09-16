@@ -13,7 +13,7 @@
       <div v-for="(url, i) in review.imageUrls"
            :key="url"
            @click="clickImage(i)"
-           class="mr-2 image-container aspect-square"
+           class="mr-2 image-container image-container-clickable aspect-square cursor-pointer"
            style="height: 100px;"
            v-lazy:background-image="url"></div>
     </div>
