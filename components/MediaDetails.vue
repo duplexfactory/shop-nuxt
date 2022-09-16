@@ -4,15 +4,20 @@
       <template v-if="page">
         <template v-if="page.igConnected && media">
 
-          <div v-if="!!media.mediaUrl && isIGVideoUrl(media.mediaUrl)" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
+          <div v-if="media.mediaType === 'VIDEO'" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
             <video controls preload="metadata">
               <source :src="media.mediaUrl" type="video/mp4">
               <source :src="media.mediaUrl" type="video/ogg">
               Your browser does not support the video tag.
             </video>
           </div>
-          <div v-else class="image-container aspect-square rounded-md overflow-hidden"
+          <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
                v-lazy:background-image="media.mediaUrl || $imageUrl(media.code, 'l')"></div>
+          <div v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
+            <!--TODO CAROUSEL-->
+            <div v-for="url in media.mediaList" class="image-container aspect-square rounded-md overflow-hidden"
+                 v-lazy:background-image="url"></div>
+          </div>
 
           <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
             {{ stripTrailingHashtags(media.caption) }}
@@ -215,6 +220,11 @@ import {isIGVideoUrl} from "~/utils/imageUrl";
 
 // import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";
 import {SimpleIgPage} from "~/models/SimpleIgPage";
+import {onMounted, ref} from "vue"
+import {useNuxtApp, useRouter} from "#app"
+import useContentKeyedFetch from "~/composables/useContentKeyedFetch"
+import useMediaPrice from "~/composables/useMediaPrice"
+import {useScreenSize} from "~/composables/states"
 
 const nuxt = useNuxtApp()
 const router = useRouter()
@@ -229,6 +239,11 @@ const props = defineProps({
   page: Object as PropType<SimpleIgPage>,
 })
 const {media, page} = toRefs(props)
+
+if(media.value.mediaId && page.value.igConnected) {
+  const { data } = await useContentKeyedFetch(`/api/media/official/${page.value._id}/${media.value.mediaId}`);
+  Object.assign(media.value, data.media)
+}
 
 function stripTrailingHashtags(s: string): string {
   return s.replace(/(?:[\n\r\s]*[#][^\n\r\s]+)+[\n\r\s]*$/i, "")
