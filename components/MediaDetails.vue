@@ -15,13 +15,16 @@
                v-lazy:background-image="media.mediaUrl || $imageUrl(media.code, 'l')"></div>
           <template v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
             <div class="image-container aspect-square rounded-md overflow-hidden"
-                 v-lazy:background-image="media.mediaUrl || $imageUrl(media.code, 'l')"></div>
-            <div>{{ media }}</div>
-            <div class="flex">
-              {{ media.mediaList }}
-              <div v-for="m in media.mediaList"
-                   class="image-container aspect-square rounded-md overflow-hidden"
-                   v-lazy:background-image="m.mediaUrl"></div>
+                 v-lazy:background-image="media.mediaList[carouselIndex]"></div>
+            <div class="grid grid-cols-6 lg:grid-cols-8 gap-2 mt-2">
+              <div v-for="(m, i) in media.mediaList"
+                   :key="m"
+                   class="col-span-1">
+                <div class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden w-full"
+                     :class="{'border-2 border-pink-400': carouselIndex === i}"
+                     @click="carouselIndex = i"
+                     v-lazy:background-image="m"></div>
+              </div>
             </div>
           </template>
 
@@ -254,6 +257,9 @@ if(media.value.mediaId && page.value.igConnected) {
 function stripTrailingHashtags(s: string): string {
   return s.replace(/(?:[\n\r\s]*[#][^\n\r\s]+)+[\n\r\s]*$/i, "")
 }
+
+// Carousel Post
+const carouselIndex = ref(0)
 
 // Create Review
 const {

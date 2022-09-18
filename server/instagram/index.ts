@@ -39,8 +39,8 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
             paging: undefined
         }
     }
-    const medias = data.map(m => {
-        const media = {
+    const medias = await Promise.all(data.map(async (m) => {
+        const media: IgMedia = {
             code: m.permalink.split("/").filter(t => !!t).pop(),
             pageId,
             mediaId: m.id,
@@ -55,9 +55,9 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
         } else if (m.media_type === "VIDEO") {
             media.thumbnailUrl = m.thumbnail_url
         }
-
         return media
-    }) as IgMedia[]
+    }))
+
     medias.forEach(m => {
         if (!m.mediaUrl) delete m.mediaUrl
     })
