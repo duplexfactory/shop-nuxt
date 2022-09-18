@@ -13,6 +13,7 @@ const cardFields = [
     "mediaCount",
     "mediaUrls",
     "mediaCodes",
+    "mediaIds",
     "profilePicUrl",
     "tags",
     "locations",

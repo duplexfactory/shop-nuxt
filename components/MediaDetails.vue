@@ -12,7 +12,7 @@
             </video>
           </div>
           <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
-               v-lazy:background-image="media.mediaUrl || $imageUrl(media.code, 'l')"></div>
+               v-lazy:background-image="media.mediaUrl"></div>
           <template v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
             <div class="image-container aspect-square rounded-md overflow-hidden"
                  v-lazy:background-image="media.mediaList[carouselIndex]"></div>
@@ -27,6 +27,8 @@
               </div>
             </div>
           </template>
+          <div v-else class="image-container aspect-square rounded-md overflow-hidden"
+               v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
 
           <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
             {{ stripTrailingHashtags(media.caption) }}
@@ -249,10 +251,10 @@ const props = defineProps({
 })
 const {media, page} = toRefs(props)
 
-if(media.value.mediaId && page.value.igConnected) {
-  const { data } = await useContentKeyedFetch(`/api/media/official/${page.value._id}/${media.value.mediaId}`);
-  Object.assign(media.value, data.media)
-}
+// if (media.value.mediaId && page.value.igConnected) {
+//   const { data } = await useContentKeyedFetch(`/api/media/official/${page.value._id}/${media.value.mediaId}`);
+//   Object.assign(media.value, data.value.media)
+// }
 
 function stripTrailingHashtags(s: string): string {
   return s.replace(/(?:[\n\r\s]*[#][^\n\r\s]+)+[\n\r\s]*$/i, "")

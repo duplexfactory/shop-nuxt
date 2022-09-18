@@ -113,6 +113,7 @@ const {
   followerCount,
   mediaCount,
   mediaCodes,
+  mediaIds,
   profilePicUrl,
   tags,
   locations,
@@ -161,9 +162,17 @@ const showMediaModal = useShowMediaModal()
 const showingMediaModalData = useShowingMediaModalData()
 async function openMedia(index: number) {
   if (!officialMedias.value.length) {
-    showingMediaModalData.value = {
-      code: mediaCodes[index],
-      pageId: _id
+    if (!!mediaIds) {
+      showingMediaModalData.value = {
+        mediaId: mediaIds[index],
+        pageId: _id
+      }
+    }
+    else {
+      showingMediaModalData.value = {
+        code: mediaCodes[index],
+        pageId: _id
+      }
     }
   }
   else {

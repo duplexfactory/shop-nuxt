@@ -34,7 +34,7 @@ export default function useMediaList() {
             data,
             pending,
             error
-        } = await useContentKeyedFetch(`/api/media/list/official`, { headers: headersToObject(await getAuthHeader()), params })
+        } = await useContentKeyedFetch(`/api/media/official/list`, { headers: headersToObject(await getAuthHeader()), params })
         if (!!data.value) {
             medias.value = data.value["medias"]
 
@@ -58,7 +58,7 @@ export default function useMediaList() {
         const ms = medias.value
         if (ms.length) params["until"] = ms[ms.length - 1].takenAt
 
-        const {data: mediaData, pending} = await useContentKeyedLazyFetch(`/api/media/list/official`, {params})
+        const {data: mediaData, pending} = await useContentKeyedLazyFetch(`/api/media/official/list`, {params})
         appendMediaData(mediaData as Ref<{medias: IgMedia[], paging: { cursors: {before: string, after: string} }}>);
     }
 

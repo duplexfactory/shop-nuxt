@@ -5,8 +5,9 @@ import {User} from "firebase/auth"
 export const useShowMediaModal = () => useState<boolean>('showMediaModal', () => false)
 export const useShowingMediaModalData = () => useState<{
 
-    // Either code or media.
     code?: string,
+    mediaId?: string, // Official
+
     media?: IgMedia,
 
     pageId?: string,

@@ -33,6 +33,9 @@ const route = useRoute()
 const showMediaModal = useShowMediaModal()
 const showingMediaModalData = useShowingMediaModalData()
 
+const localPageId = computed(() => {
+  return showingMediaModalData.value.simplePage?._id || showingMediaModalData.value.pageId
+})
 const fetchedPage = ref(null)
 const localPage = computed<SimpleIgPage>(() => {
   return showingMediaModalData.value.simplePage || fetchedPage.value
@@ -40,6 +43,9 @@ const localPage = computed<SimpleIgPage>(() => {
 
 const localMediaCode = computed(() => {
   return showingMediaModalData.value.media?.code || showingMediaModalData.value.code
+})
+const localMediaId = computed(() => {
+  return showingMediaModalData.value.media?.mediaId || showingMediaModalData.value.mediaId
 })
 const fetchedMedia: Ref<IgMedia | null> = ref(null)
 const localMedia = computed(() => {
@@ -63,8 +69,15 @@ onMounted(async () => {
 
   // Init data on modal open
   if (!localMedia.value) {
-    const {data, pending} = await useContentKeyedFetch(`/api/media/${localMediaCode.value}`)
-    fetchedMedia.value = data.value.media
+    if (!!localMediaCode.value) {
+      const {data, pending} = await useContentKeyedFetch(`/api/media/${localMediaCode.value}`)
+      fetchedMedia.value = data.value.media
+    }
+
+    if (!!localMediaId.value) {
+      const { data } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${localMediaId.value}`);
+      fetchedMedia.value = data.value.media
+    }
   }
 
   if (!localPage.value) {
