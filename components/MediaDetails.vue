@@ -13,11 +13,17 @@
           </div>
           <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
                v-lazy:background-image="media.mediaUrl || $imageUrl(media.code, 'l')"></div>
-          <div v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
-            <!--TODO CAROUSEL-->
-            <div v-for="url in media.mediaList" class="image-container aspect-square rounded-md overflow-hidden"
-                 v-lazy:background-image="url"></div>
-          </div>
+          <template v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
+            <div class="image-container aspect-square rounded-md overflow-hidden"
+                 v-lazy:background-image="media.mediaUrl || $imageUrl(media.code, 'l')"></div>
+            <div>{{ media }}</div>
+            <div class="flex">
+              {{ media.mediaList }}
+              <div v-for="m in media.mediaList"
+                   class="image-container aspect-square rounded-md overflow-hidden"
+                   v-lazy:background-image="m.mediaUrl"></div>
+            </div>
+          </template>
 
           <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
             {{ stripTrailingHashtags(media.caption) }}

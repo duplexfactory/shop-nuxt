@@ -2,8 +2,7 @@
   <LazyModal class="text-gray-800" modalContainerClass="!w-full" @close="close">
     <template #body>
       <div>
-        <MediaDetails v-if="!!localMedia && !!localPage" :media="localMedia" :page="localPage"
-                      class="pb-8 px-4"></MediaDetails>
+        <MediaDetails v-if="!!localMedia && !!localPage" :media="localMedia" :page="localPage" class="pb-8 px-4"></MediaDetails>
       </div>
     </template>
   </LazyModal>
