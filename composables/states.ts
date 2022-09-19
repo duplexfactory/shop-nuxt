@@ -7,7 +7,6 @@ export const useShowingMediaModalData = () => useState<{
 
     code?: string,
     mediaId?: string, // Official
-
     media?: IgMedia,
 
     pageId?: string,

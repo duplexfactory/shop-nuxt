@@ -68,30 +68,32 @@ watch(() => route.fullPath, () => {
 onMounted(async () => {
 
   // Init data on modal open
-  if (!localMedia.value) {
-    if (!!localMediaCode.value) {
-
-      const {data, pending} = await useContentKeyedFetch(`/api/media/${localMediaCode.value}`)
-      fetchedMedia.value = data.value.media
-
-      if (!!fetchedMedia.value && !!fetchedMedia.value.mediaId) {
-
-        // Get official if available.
-        const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${fetchedMedia.value.mediaId}`);
-        const m: Omit<IgMedia, "price" | "patchPrice"> = officialData.value.media
-
-        fetchedMedia.value = Object.assign({}, fetchedMedia.value, m)
-      }
+  let code = ''
+  let officialMedia: Omit<IgMedia, "price" | "patchPrice"> | null
+  if (!!localMediaId.value) {
+    // Official must be available.
+    const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${localMediaId.value}`)
+    officialMedia = officialData.value.media
+    code = officialMedia.code
+  }
+  if (!!localMediaCode.value) {
+    code = localMediaCode.value
+  }
+  if (!!code && !localMedia.value) {
+    const {data, pending} = await useContentKeyedFetch(`/api/media/${code}`)
+    fetchedMedia.value = data.value.media
+  }
+  if (!!fetchedMedia.value && !!fetchedMedia.value.mediaId && !officialMedia) {
+    // Get official if available.
+    const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${fetchedMedia.value.mediaId}`);
+    officialMedia = officialData.value.media
+  }
+  if (!!officialMedia) {
+    if (!!showingMediaModalData.value.media) {
+      showingMediaModalData.value.media = Object.assign({}, showingMediaModalData.value.media, officialMedia)
     }
-
-    if (!!localMediaId.value) {
-
-      // Official must be available.
-      const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${localMediaId.value}`);
-      const m: Omit<IgMedia, "price" | "patchPrice"> = officialData.value.media
-
-      const {data, pending} = await useContentKeyedFetch(`/api/media/${m.code}`)
-      fetchedMedia.value = Object.assign(data.value.media, m)
+    if (!!fetchedMedia.value) {
+      fetchedMedia.value = Object.assign({}, fetchedMedia.value, officialMedia)
     }
   }
 

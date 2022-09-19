@@ -93,7 +93,11 @@ export default defineEventHandler(async (event) => {
         if (newMedias.length !== 0) {
             // Contains not crawled data. Process and save to db.
             const rmUrl = newMedias.map(m => {
-                const {mediaUrl, ...props} = m
+                const {
+                    mediaUrl,
+                    mediaList,
+                    ...props
+                } = m
                 return props
             })
             await saveMedias(rmUrl)
@@ -102,6 +106,7 @@ export default defineEventHandler(async (event) => {
         // Update media info of page.
         const lastMedia = Object.assign({}, medias[0])
         delete lastMedia.mediaUrl
+        delete lastMedia.mediaList
         const page = await pageSearchCollection.findOne({_id: id})
         if (lastMedia.takenAt > page.lastMedia) {
             const {media_count} = await fetchIgProfile(p.accessToken)

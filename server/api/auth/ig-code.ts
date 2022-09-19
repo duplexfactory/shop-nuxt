@@ -131,10 +131,20 @@ export default defineEventHandler(async (event) => {
                     m.price = price
             }
         })
-        await saveMedias(medias)
 
-        const lastMedia = medias[0]
+        const rmUrl = medias.map(m => {
+            const {
+                mediaUrl,
+                mediaList,
+                ...props
+            } = m
+            return props
+        })
+        await saveMedias(rmUrl)
 
+        const lastMedia = Object.assign({}, medias[0])
+        delete lastMedia.mediaUrl
+        delete lastMedia.mediaList
         const update = {
             lastMedia: lastMedia.takenAt,
             lastActivity: lastMedia.takenAt,

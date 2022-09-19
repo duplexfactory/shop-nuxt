@@ -95,6 +95,7 @@
     showMediaModal.value = true
     if (!!page.lastMediaData.mediaId) {
       showingMediaModalData.value = {
+        media: page.lastMediaData,
         mediaId: page.lastMediaData.mediaId,
         pageId: page._id
       }

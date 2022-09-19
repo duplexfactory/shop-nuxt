@@ -37,7 +37,7 @@ export class PageSearch {
     activeScore: number;
 
     // denormalize
-    lastMediaData?: IgMedia;
+    lastMediaData?: Omit<IgMedia, "mediaUrl" | "mediaList">;
     mediaCodes: string[];
     mediaIds?: string[]; // Only from official.
     igConnected: boolean;
