@@ -19,7 +19,7 @@
 // }
 
 export function isIGVideoUrl(url: string): boolean {
-    return url.startsWith("https://video-")
+    return url.startsWith("https://video-") || url.startsWith("https://video.cdninstagram.com")
 }
 
 export async function imageUrlFromFile(file: File) {
