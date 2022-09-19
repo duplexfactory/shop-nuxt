@@ -72,6 +72,12 @@ onMounted(async () => {
     if (!!localMediaCode.value) {
       const {data, pending} = await useContentKeyedFetch(`/api/media/${localMediaCode.value}`)
       fetchedMedia.value = data.value.media
+
+      if (!!fetchedMedia.value && !!fetchedMedia.value.mediaId) {
+        // Get official if available.
+        const { data } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${fetchedMedia.value.mediaId}`);
+        fetchedMedia.value = data.value.media
+      }
     }
 
     if (!!localMediaId.value) {
