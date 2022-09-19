@@ -13,20 +13,46 @@
             </div>
             <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
                  v-lazy:background-image="media.mediaUrl"></div>
-            <template v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
-              <div class="image-container aspect-square rounded-md overflow-hidden"
-                   v-lazy:background-image="media.mediaList[carouselIndex]"></div>
-              <div class="grid grid-cols-6 lg:grid-cols-8 gap-2 mt-2">
-                <div v-for="(m, i) in media.mediaList"
-                     :key="m"
-                     class="col-span-1">
-                  <div class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden w-full"
-                       :class="{'border-2 border-pink-400': carouselIndex === i}"
-                       @click="carouselIndex = i"
+            <div v-else-if="media.mediaType === 'CAROUSEL_ALBUM'" class="relative">
+              <div class="absolute z-10 right-4 top-4 rounded-full px-3 py-1 text-white bg-gray-900">
+                {{ `${carouselIndex + 1}/${media.mediaList.length}` }}
+              </div>
+
+              <div class="swiper" ref="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                  <!-- Slides -->
+                  <div v-for="(m, i) in media.mediaList"
+                       :key="m"
+                       class="image-container aspect-square rounded-md overflow-hidden swiper-slide"
                        v-lazy:background-image="m"></div>
                 </div>
+
+                <!-- If we need navigation buttons -->
+                <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+                <div ref="swiperButtonNext" class="swiper-button-next"></div>
               </div>
-            </template>
+
+              <div class="flex gap-2 whitespace-nowrap mt-2 overflow-x-scroll">
+                <div v-for="(m, i) in media.mediaList"
+                     :key="m"
+                     style="flex: 0 0 16%"
+                     class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden"
+                     :class="{'border-2 border-pink-400': carouselIndex === i}"
+                     @click="clickCarouselPreview(i)"
+                     v-lazy:background-image="m"></div>
+              </div>
+<!--              <div class="grid grid-cols-6 lg:grid-cols-8 gap-2 mt-2 whitespace-nowrap overflow-x-scroll">-->
+<!--                <div v-for="(m, i) in media.mediaList"-->
+<!--                     :key="m"-->
+<!--                     class="col-span-1">-->
+<!--                  <div class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden w-full"-->
+<!--                       :class="{'border-2 border-pink-400': carouselIndex === i}"-->
+<!--                       @click="clickCarouselPreview(i)"-->
+<!--                       v-lazy:background-image="m"></div>-->
+<!--                </div>-->
+<!--              </div>-->
+            </div>
             <div v-else class="image-container aspect-square rounded-md overflow-hidden"
                  v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
 
@@ -243,6 +269,12 @@ import useContentKeyedFetch from "~/composables/useContentKeyedFetch"
 import useMediaPrice from "~/composables/useMediaPrice"
 import {useScreenSize} from "~/composables/states"
 
+import {Navigation, Pagination} from "swiper"
+// import Swiper and modules styles
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import Swiper from "swiper/types/swiper-class"
+
 const nuxt = useNuxtApp()
 const router = useRouter()
 
@@ -268,6 +300,53 @@ function stripTrailingHashtags(s: string): string {
 
 // Carousel Post
 const carouselIndex = ref(0)
+function clickCarouselPreview(index: number) {
+  carouselIndex.value = index
+  swiperObj.value.slideTo(carouselIndex.value)
+}
+
+const {
+  swiper,
+  swiperButtonPrev,
+  swiperButtonNext,
+  swiperReady,
+  swiperOptions,
+  swiperObj,
+  loadSwiper
+} = useSwiper({
+  modules: [Navigation],
+
+  // Optional parameters
+  // direction: 'vertical',
+  // loop: true,
+  // loopedSlides: 1,
+
+  on: {
+    slideChange: (swiper: Swiper) => {
+      carouselIndex.value = swiper.activeIndex
+    }
+    // init: () => {
+    //   swiperReady.value = true
+    // },
+  },
+
+  // observer: true,
+
+  spaceBetween: 0,
+  slidesPerView: 1,
+  slidesPerGroup: 1,
+
+  // If we need pagination
+  // pagination: {
+  //   el: ".swiper-pagination",
+  // },
+
+  // // And if we need scrollbar
+  // scrollbar: {
+  //   el: '.swiper-scrollbar',
+  // },
+})
+watch(swiper, loadSwiper)
 
 // Create Review
 const {

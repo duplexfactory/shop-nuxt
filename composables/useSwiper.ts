@@ -11,6 +11,7 @@ export default function (options: SwiperOptions = {}) {
     const swiperLoaded = ref(false)
     const swiperReady = ref(false)
     const swiperOptions = ref<SwiperOptions>(options)
+    const swiperObj = ref<Swiper | null>(null)
 
     function loadSwiper() {
         if (!swiperLoaded.value && swiper.value) {
@@ -22,7 +23,7 @@ export default function (options: SwiperOptions = {}) {
                 prevEl: swiperButtonPrev.value,
             }
 
-            new Swiper(swiper.value, swiperOptions.value)
+            swiperObj.value = new Swiper(swiper.value, swiperOptions.value)
         }
     }
 
@@ -33,6 +34,7 @@ export default function (options: SwiperOptions = {}) {
         swiperLoaded,
         swiperReady,
         swiperOptions,
+        swiperObj,
         loadSwiper
     }
 }
