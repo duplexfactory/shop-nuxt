@@ -30,12 +30,27 @@ if (!!mediaCommerceData.value && !mediaCommerceData.value.data[route.params.code
   throwError(notFound)
 }
 
+const media = ref<IgMedia | null>(null)
+
+async function fetchOfficialIfAvailable() {
+  if (!!media.value && !!media.value.mediaId) {
+    // Crawled using official.
+    const { data } = await useContentKeyedFetch(`/api/media/official/${media.value.pageId}/${media.value.mediaId}`);
+    media.value = data.value.media as IgMedia
+  }
+}
+
 const {data: mediaData, pending} = await useContentKeyedLazyFetch(`/api/media/${route.params.code}`)
-const media = computed<IgMedia | null>(() => {
-  if (!!mediaData.value && !!mediaData.value.media)
-    return mediaData.value.media as IgMedia
-  return null
-})
+if (!!mediaData.value && !!mediaData.value.media) {
+  media.value = mediaData.value.media as IgMedia
+  await fetchOfficialIfAvailable()
+}
+else {
+  watch(mediaData, async () => {
+    media.value = mediaData.value.media as IgMedia // Use non official to get official media id.
+    await fetchOfficialIfAvailable()
+  })
+}
 
 const page = ref<PageSearch>(null)
 if (!!media.value) {
