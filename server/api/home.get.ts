@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
             username: 1,
             fullName: 1,
             lastMediaData: 1,
+            igConnected: 1
         }).toArray(),
         pageSearchCollection.find(f).sort({activeScore: -1}).limit(30).project(cardProj).toArray(),
         // pageSearchCollection.find({

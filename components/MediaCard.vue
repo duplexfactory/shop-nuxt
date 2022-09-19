@@ -28,6 +28,8 @@ import dayjs from "dayjs";
 import {PageSearch} from "~/models/PageSearch";
 import {isIGVideoUrl} from "~/utils/imageUrl";
 
+const nuxt = useNuxtApp()
+const {$imageUrl} = nuxt
 const {tagsLookup} = useTags()
 const {media, shop, size} = defineProps({
   media: Object as PropType<IgMedia>,
@@ -44,8 +46,12 @@ const {
   takenAt,
 
   price,
-  mediaUrl
+  mediaUrl: _mediaUrl
 } = media;
+const officialMediaData = ref<Omit<IgMedia, "price" | "patchPrice"> | null>(null)
+const mediaUrl = computed(() => {
+  return officialMediaData.value ? officialMediaData.value.mediaUrl : _mediaUrl
+})
 
 const takenAtString = dayjs(takenAt * 1000).fromNow();
 
@@ -54,6 +60,31 @@ const {
   mediaPrice,
   formatMediaPrice
 } = useMediaPrice();
+
+if (shop.igConnected && !_mediaUrl) {
+  const Lazyload = nuxt.vueApp.config.globalProperties.$Lazyload
+  const errorHandler = async ({bindType, el, naturalHeight, naturalWidth, $parent, src, loading, error}, formCache) => {
+    if (src === $imageUrl(code, size)) {
+      Lazyload.$off('error', errorHandler)
+      Lazyload.$off('loaded', loadedHandler)
+
+      // Retry with official api.
+      const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${pageId}/${media.mediaId}`);
+      if (officialData.value) {
+        officialMediaData.value = officialData.value.media
+      }
+    }
+  }
+  const loadedHandler = ({bindType, el, naturalHeight, naturalWidth, $parent, src, loading, error}, formCache) => {
+    if (src === $imageUrl(code, size)) {
+      Lazyload.$off('error', errorHandler)
+      Lazyload.$off('loaded', loadedHandler)
+    }
+  }
+  Lazyload.$on('error', errorHandler)
+  Lazyload.$on('loaded', loadedHandler)
+}
+
 
 </script>
 
