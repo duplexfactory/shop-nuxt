@@ -39,28 +39,7 @@ export async function fetchIgMedias(pageId: string, token: string, returnMediaUr
             paging: undefined
         }
     }
-    const medias = await Promise.all(data.map(async (m) => {
-        const media: IgMedia = {
-            code: m.permalink.split("/").filter(t => !!t).pop(),
-            pageId,
-            mediaId: m.id,
-            caption: m.caption || "",
-            takenAt: dayjs(m.timestamp).unix(),
-            mediaType: m.media_type,
-            mediaUrl: m.media_url
-        }
-
-        if (m.media_type === "CAROUSEL_ALBUM") {
-            media.mediaList = await fetchIgMediaChildren(m.id, token)
-        } else if (m.media_type === "VIDEO") {
-            media.thumbnailUrl = m.thumbnail_url
-        }
-        return media
-    }))
-
-    medias.forEach(m => {
-        if (!m.mediaUrl) delete m.mediaUrl
-    })
+    const medias = await Promise.all(data.map(async (m) => officialMediaToMedia(m, pageId, token)))
     return {
         medias,
         paging
@@ -93,7 +72,10 @@ export async function fetchIgMedia(pageId: string, mediaId: string, accessToken:
     const rawMedia = await res.json() as IgOfficialMedia
 
     if (!rawMedia.id) return null
+    return await officialMediaToMedia(rawMedia, pageId, accessToken)
+}
 
+async function officialMediaToMedia(rawMedia: IgOfficialMedia, pageId: string, accessToken: string) {
     const media: IgMedia = {
         code: rawMedia.permalink.split("/").filter(t => !!t).pop(),
         pageId,
@@ -105,7 +87,7 @@ export async function fetchIgMedia(pageId: string, mediaId: string, accessToken:
     if (rawMedia.media_url) media.mediaUrl = rawMedia.media_url
 
     if (rawMedia.media_type === "CAROUSEL_ALBUM") {
-        media.mediaList = await fetchIgMediaChildren(mediaId, accessToken)
+        media.mediaList = await fetchIgMediaChildren(rawMedia.id, accessToken)
     } else if (rawMedia.media_type === "VIDEO") {
         media.thumbnailUrl = rawMedia.thumbnail_url
     }
