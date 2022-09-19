@@ -33,7 +33,7 @@
                 <div ref="swiperButtonNext" class="swiper-button-next"></div>
               </div>
 
-              <div class="flex gap-2 whitespace-nowrap mt-2 overflow-x-scroll">
+              <div class="flex gap-2 whitespace-nowrap mt-2 overflow-x-auto">
                 <div v-for="(m, i) in media.mediaList"
                      :key="m"
                      style="flex: 0 0 16%"
