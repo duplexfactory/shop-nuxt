@@ -31,7 +31,7 @@
 
               </div>
 
-              <img class="mt-8 md:mt-0" src="~assets/images/ig_shop.jpg"/>
+              <img class="mt-8 md:mt-0" src="~assets/images/ig_shop.jpg" data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-duration="1000"/>
 
             </div>
           </div>
@@ -40,7 +40,12 @@
         <section ref="pointsSection">
           <div class="container mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div v-for="point in points" class="col-span-1 rounded bg-white md:text-center p-4">
+              <div v-for="(point, i) in points"
+                   data-aos="fade-up"
+                   data-aos-anchor-placement="top-bottom"
+                   data-aos-duration="1000"
+                   :data-aos-delay="i * 100"
+                   class="col-span-1 rounded bg-white md:text-center p-4">
                 <div class="text-pink-400 text-2xl font-semibold">{{point.title}}</div>
                 <!--                <div class="mt-4">{{point.subtitle}}</div>-->
                 <div class="mt-4 text-sm">{{point.content}}</div>
