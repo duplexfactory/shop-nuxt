@@ -92,10 +92,18 @@
   })
 
   function showMediaForPage(page: Pick<PageSearch, "lastMediaData" | "fullName" | "_id" | "username">) {
-    showMediaModal.value = true;
-    showingMediaModalData.value = {
-      media: page.lastMediaData,
-      pageId: page._id
+    showMediaModal.value = true
+    if (!!page.lastMediaData.mediaId) {
+      showingMediaModalData.value = {
+        mediaId: page.lastMediaData.mediaId,
+        pageId: page._id
+      }
+    }
+    else {
+      showingMediaModalData.value = {
+        media: page.lastMediaData,
+        pageId: page._id
+      }
     }
   }
 

@@ -46,6 +46,7 @@ export default interface IgPage {
     // denormalize
     lastMediaData?: IgMedia;
     mediaCodes: string[];
+    mediaIds?: string[]; // Only from official.
     igConnected: boolean;
 
     extraData?: IgPageExtraData;

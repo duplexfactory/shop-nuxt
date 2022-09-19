@@ -39,6 +39,7 @@ export class PageSearch {
     // denormalize
     lastMediaData?: IgMedia;
     mediaCodes: string[];
+    mediaIds?: string[]; // Only from official.
     igConnected: boolean;
 
     extraData?: IgPageExtraData;
@@ -68,6 +69,7 @@ export function createPageSearchDoc(id: string, page: Partial<IgPage>): Partial<
         activeScore: page.activeScore,
 
         mediaCodes: page.mediaCodes,
+        mediaIds: page.mediaIds,
 
         nextFetch: page.nextFetch,
 
