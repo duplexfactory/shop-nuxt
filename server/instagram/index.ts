@@ -76,13 +76,13 @@ export async function fetchIgMedia(pageId: string, mediaId: string, accessToken:
 }
 
 async function officialMediaToMedia(rawMedia: IgOfficialMedia, pageId: string, accessToken: string) {
-    const media: IgMedia = {
+    const media: Omit<IgMedia, "price" | "patchPrice"> = {
         code: rawMedia.permalink.split("/").filter(t => !!t).pop(),
         pageId,
-        mediaId: rawMedia.id,
         caption: rawMedia.caption || "",
+        mediaId: rawMedia.id,
+        mediaType: rawMedia.media_type,
         takenAt: dayjs(rawMedia.timestamp).unix(),
-        mediaType: rawMedia.media_type
     }
     if (rawMedia.media_url) media.mediaUrl = rawMedia.media_url
 

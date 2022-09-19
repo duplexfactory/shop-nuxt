@@ -2,7 +2,7 @@
   <LazyModal class="text-gray-800" modalContainerClass="!w-full" @close="close">
     <template #body>
       <div>
-        <MediaDetails v-if="!!localMedia && !!localPage" :media="localMedia" :page="localPage" class="pb-8 px-4"></MediaDetails>
+        <MediaDetails :media="localMedia" :page="localPage" class="pb-8 px-4"></MediaDetails>
       </div>
     </template>
   </LazyModal>
@@ -70,19 +70,28 @@ onMounted(async () => {
   // Init data on modal open
   if (!localMedia.value) {
     if (!!localMediaCode.value) {
+
       const {data, pending} = await useContentKeyedFetch(`/api/media/${localMediaCode.value}`)
       fetchedMedia.value = data.value.media
 
       if (!!fetchedMedia.value && !!fetchedMedia.value.mediaId) {
+
         // Get official if available.
-        const { data } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${fetchedMedia.value.mediaId}`);
-        fetchedMedia.value = data.value.media
+        const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${fetchedMedia.value.mediaId}`);
+        const m: Omit<IgMedia, "price" | "patchPrice"> = officialData.value.media
+
+        fetchedMedia.value = Object.assign({}, fetchedMedia.value, m)
       }
     }
 
     if (!!localMediaId.value) {
-      const { data } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${localMediaId.value}`);
-      fetchedMedia.value = data.value.media
+
+      // Official must be available.
+      const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${localPageId.value}/${localMediaId.value}`);
+      const m: Omit<IgMedia, "price" | "patchPrice"> = officialData.value.media
+
+      const {data, pending} = await useContentKeyedFetch(`/api/media/${m.code}`)
+      fetchedMedia.value = Object.assign(data.value.media, m)
     }
   }
 

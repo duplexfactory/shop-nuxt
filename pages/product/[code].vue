@@ -35,8 +35,9 @@ const media = ref<IgMedia | null>(null)
 async function fetchOfficialIfAvailable() {
   if (!!media.value && !!media.value.mediaId) {
     // Crawled using official.
-    const { data } = await useContentKeyedFetch(`/api/media/official/${media.value.pageId}/${media.value.mediaId}`);
-    media.value = data.value.media as IgMedia
+    const { data: officialData } = await useContentKeyedFetch(`/api/media/official/${media.value.pageId}/${media.value.mediaId}`);
+    const m: Omit<IgMedia, "price" | "patchPrice"> = officialData.value.media
+    media.value = Object.assign({}, media.value, m)
   }
 }
 

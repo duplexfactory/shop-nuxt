@@ -2,37 +2,38 @@
   <div class="md:grid grid-cols-8 gap-8">
     <div class="col-span-4">
       <template v-if="page">
-        <template v-if="page.igConnected && media">
-
-          <div v-if="media.mediaType === 'VIDEO'" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
-            <video controls preload="metadata">
-              <source :src="media.mediaUrl" type="video/mp4">
-              <source :src="media.mediaUrl" type="video/ogg">
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
-               v-lazy:background-image="media.mediaUrl"></div>
-          <template v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
-            <div class="image-container aspect-square rounded-md overflow-hidden"
-                 v-lazy:background-image="media.mediaList[carouselIndex]"></div>
-            <div class="grid grid-cols-6 lg:grid-cols-8 gap-2 mt-2">
-              <div v-for="(m, i) in media.mediaList"
-                   :key="m"
-                   class="col-span-1">
-                <div class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden w-full"
-                     :class="{'border-2 border-pink-400': carouselIndex === i}"
-                     @click="carouselIndex = i"
-                     v-lazy:background-image="m"></div>
+        <template v-if="page.igConnected">
+          <template v-if="media">
+            <div v-if="media.mediaType === 'VIDEO'" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
+              <video controls preload="metadata">
+                <source :src="media.mediaUrl" type="video/mp4">
+                <source :src="media.mediaUrl" type="video/ogg">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
+                 v-lazy:background-image="media.mediaUrl"></div>
+            <template v-else-if="media.mediaType === 'CAROUSEL_ALBUM'">
+              <div class="image-container aspect-square rounded-md overflow-hidden"
+                   v-lazy:background-image="media.mediaList[carouselIndex]"></div>
+              <div class="grid grid-cols-6 lg:grid-cols-8 gap-2 mt-2">
+                <div v-for="(m, i) in media.mediaList"
+                     :key="m"
+                     class="col-span-1">
+                  <div class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden w-full"
+                       :class="{'border-2 border-pink-400': carouselIndex === i}"
+                       @click="carouselIndex = i"
+                       v-lazy:background-image="m"></div>
+                </div>
               </div>
+            </template>
+            <div v-else class="image-container aspect-square rounded-md overflow-hidden"
+                 v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
+
+            <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
+              {{ stripTrailingHashtags(media.caption) }}
             </div>
           </template>
-          <div v-else class="image-container aspect-square rounded-md overflow-hidden"
-               v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
-
-          <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
-            {{ stripTrailingHashtags(media.caption) }}
-          </div>
         </template>
         <MediaCardIGEmbed v-if="!page.igConnected && media.code"
                           captioned
@@ -40,6 +41,22 @@
                           :fixed-aspect-ratio="0"
                           :username="page.username"></MediaCardIGEmbed>
       </template>
+
+      <template v-else>
+        <div class="image-container aspect-square rounded-md overflow-hidden" style="background-color: #ddd;">
+          <div class="h-full w-full bg-loading"></div>
+        </div>
+        <div class="mt-2 w-11/12 h-4 rounded-md overflow-hidden" style="background-color: #ddd;">
+          <div class="h-full w-full bg-loading"></div>
+        </div>
+        <div class="mt-2 w-full h-4 rounded-md overflow-hidden" style="background-color: #ddd;">
+          <div class="h-full w-full bg-loading"></div>
+        </div>
+        <div class="mt-2 w-3/5 h-4 rounded-md overflow-hidden" style="background-color: #ddd;">
+          <div class="h-full w-full bg-loading"></div>
+        </div>
+      </template>
+
     </div>
     <div class="col-span-4">
       <div class="mt-4 md:mt-0">
@@ -120,18 +137,7 @@
 
         <hr class="my-4"/>
 
-        <!--            <div v-if="contactInfoRows.length !== 0" class="text-gray-500 text-xs mt-2">-->
-        <!--              <div v-for="(pageInfoRow, i) in contactInfoRows" :key="pageInfoRow.value + i.toString()" class="mb-1">-->
-        <!--                <i class="mr-2" :class="pageInfoRow.iconClass"></i>-->
-        <!--                <component :is="pageInfoRow.link ? 'a' : 'span'"-->
-        <!--                           class="break-words"-->
-        <!--                           :class="{'hover:underline': pageInfoRow.link}"-->
-        <!--                           target="_blank"-->
-        <!--                           :href="pageInfoRow.link">{{ pageInfoRow.value }}</component>-->
-        <!--              </div>-->
-        <!--            </div>-->
-
-        <div v-if="media.code && page && page.igConnected"
+        <div v-if="media && page && page.igConnected"
              class="mt-4 md:hidden text-sm whitespace-pre-wrap break-words">
           {{ stripTrailingHashtags(media.caption) }}
         </div>
@@ -270,12 +276,15 @@ const {
   isCreatingReview,
   rating,
   content,
-  createReview,
+  createReview: _createReview,
   resetCreateReview
 } = useCreateReview()
 const isShowingCreateReview = ref<boolean>(false)
-reviewingCode.value = media.value.code
-reviewingPageId.value = page.value._id
+async function createReview() {
+  reviewingCode.value = media.value.code
+  reviewingPageId.value = page.value._id
+  await _createReview()
+}
 
 const reviews = ref<IgPageReview[]>([])
 
@@ -405,8 +414,9 @@ function addToCart() {
   localStorage.setItem("cart", JSON.stringify(cart))
 }
 
-// Mounted
-onMounted(async () => {
+// Initialize data
+
+async function initMedia() {
   await fetchReviews()
 
   const {
@@ -421,7 +431,9 @@ onMounted(async () => {
     mediaCommerceData.value = mediaCommerceDataRaw.value.data[media.value.code] || null
   }
   mediaCommerceDataLoaded.value = true
+}
 
+async function initPage() {
   const {
     data: pageCommerceDataRaw,
     error: pageCommerceDataError
@@ -430,8 +442,21 @@ onMounted(async () => {
     pageCommerceData.value = pageCommerceDataRaw.value.commerceData
   }
   pageCommerceDataLoaded.value = true
+}
 
-})
+if (media.value) {
+  await initMedia()
+}
+else {
+  watch(media, initMedia)
+}
+
+if (page.value) {
+  await initPage()
+}
+else {
+  watch(page, initPage)
+}
 
 </script>
 
