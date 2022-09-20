@@ -18,7 +18,7 @@
         <div v-for="category in ageRestrictedCategories" :key="category['id']" >
           <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
           <div class="overflow-hidden">
-            <transition name="accordion">
+            <transition name="accordion-open">
               <ul v-if="selectedCategory == category['id']">
                 <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1 cursor-pointer" @click="tagPressed(tag.id)">{{ tag.label }}</li>
               </ul>
@@ -144,13 +144,13 @@ function toggleCategory(categoryId: string) {
 
   @apply h-full w-full;
 }
-.slide-side-enter-active,
-.slide-side-leave-active {
-  transition: all 0.3s ease-out;
+
+.accordion-open-enter-active {
+  @apply transition duration-500 ease-in-out;
 }
-.slide-side-enter-from,
-.slide-side-leave-to {
-  transform: translateX(-100%);
+
+.accordion-open-enter-from {
+  @apply transform -translate-y-full;
 }
 
 </style>

@@ -232,6 +232,15 @@
   .vue-notification {
     z-index: 9999999 !important;
   }
+
+  .slide-side-enter-active,
+  .slide-side-leave-active {
+    transition: all 0.3s ease-out;
+  }
+  .slide-side-enter-from,
+  .slide-side-leave-to {
+    transform: translateX(-100%);
+  }
 </style>
 
 <style>
