@@ -506,37 +506,37 @@ async function initMedia() {
   const {
     data: mediaCommerceDataRaw,
     error: mediaCommerceDataError
-  } = await useContentKeyedFetch('/api/media/commerce-data', {
+  } = useContentKeyedLazyFetch('/api/media/commerce-data', {
     params: {
       codes: media.value.code
     }
   })
-  if (!mediaCommerceDataError.value) {
+  watch(mediaCommerceDataRaw, () => {
     mediaCommerceData.value = mediaCommerceDataRaw.value.data[media.value.code] || null
-  }
-  mediaCommerceDataLoaded.value = true
+    mediaCommerceDataLoaded.value = true
+  })
 }
 
 async function initPage() {
   const {
     data: pageCommerceDataRaw,
     error: pageCommerceDataError
-  } = await useContentKeyedFetch(`/api/shop/id/${page.value._id}/commerce-data`)
-  if (!!pageCommerceDataRaw.value) {
+  } = useContentKeyedLazyFetch(`/api/shop/id/${page.value._id}/commerce-data`)
+  watch(pageCommerceDataRaw, () => {
     pageCommerceData.value = pageCommerceDataRaw.value.commerceData
-  }
-  pageCommerceDataLoaded.value = true
+    pageCommerceDataLoaded.value = true
+  })
 }
 
 if (media.value) {
-  await initMedia()
+  initMedia()
 }
 else {
   watch(media, initMedia)
 }
 
 if (page.value) {
-  await initPage()
+  initPage()
 }
 else {
   watch(page, initPage)
