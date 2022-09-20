@@ -49,7 +49,7 @@ export default defineNuxtConfig({
     meta: [
       {charset: 'utf-8'},
       {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0'},
-      {name: 'theme-color', content: '#f472b6'},
+      // {name: 'theme-color', content: '#f472b6'},
       {name: 'description', content: 'Shoperuse是一個IG Shop評論平台及搜尋器，整理及分類超過3000間香港的IG Shop，令買家輕鬆搜尋、瀏覽、發掘大眾推薦的IG Shop，立即了解！'},
       {name: 'keywords', content: 'Shoperuse, ig shop, ig shop衫, instagram, 網店, ig shop商業登記, ig shop推薦, ig shop攻略'},
       {property: 'og:locale', hid: 'og:locale', content: 'zh_HK'},
