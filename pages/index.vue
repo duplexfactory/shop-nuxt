@@ -1,23 +1,16 @@
 <template>
   <div class="mb-16">
-
-    <!--<h1 class="rounded-md bg-green-200 text-xl text-green-700 font-bold">-->
-    <!--{{ header }}-->
-    <!--{{ counter }}-->
-    <!--with <a href="https://vueuse.org/" target="_blank">VueUse</a> and <a href="https://windicss.org/" target="_blank">Windi CSS</a>.-->
-    <!--</h1>-->
-    <!--<p>-->
-    <!--Edit <strong>layouts/default.vue</strong> and <strong>windi.config.js</strong>.-->
-    <!--</p>-->
-    <!--<nuxt-link to="/hello">HEEEEEE</nuxt-link>-->
-
-    <div class="hidden md:block bg-gray-50">
+    <div class="hidden md:block bg-gray-100">
       <div class="container mx-auto" >
-        <div class="whitespace-nowrap overflow-x-scroll" style="height: 40px; padding-top: 4px;" ref="categoriesScroll">
+        <div class="whitespace-nowrap overflow-x-auto" style="height: 40px; padding-top: 4px;" ref="categoriesScroll">
           <div v-for="category in ageRestrictedCategories" class="dropdown inline-block" :key="category['id']">
-            <div class="py-1 px-8">{{ category['label'] }}</div>
+            <div class="py-1 px-8 font-semibold text-gray-500">{{ category['label'] }}</div>
             <ul :style="`transform: translateX(-${dropdownOffset}px)`">
-              <li v-for="tag in category.tags" :key="tag.id" @click="$router.push({path: '/search', query: { tag: tag.id }});" style="cursor: pointer;">{{ tag.label }}</li>
+              <li v-for="tag in category.tags"
+                  :key="tag.id"
+                  @click="$router.push({path: '/search', query: { tag: tag.id }});">
+                {{ tag.label }}
+              </li>
             </ul>
           </div>
         </div>
@@ -192,8 +185,7 @@ export default {
 }
 
 .dropdown ul {
-  z-index: 1000;
-  @apply hidden absolute bg-gray-50;
+  @apply hidden absolute z-60 bg-gray-100;
 }
 
 .dropdown:hover ul {
@@ -201,7 +193,11 @@ export default {
 }
 
 .dropdown ul li {
-  @apply px-8 py-2 text-center;
+  @apply px-8 py-2 cursor-pointer text-left;
+}
+
+.dropdown ul li:hover {
+  @apply bg-white;
 }
 
 
