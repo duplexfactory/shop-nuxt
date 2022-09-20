@@ -139,7 +139,7 @@
 
         <div v-if="page" class="flex items-center">
           <template v-if="page.igConnected">
-            <div class="rounded-full overflow-hidden image-container aspect-square mr-2"
+            <div class="rounded-full overflow-hidden image-container aspect-square mr-2 flex-shrink-0"
                  style="height: 50px;">
               <img class="h-full w-full"
                    :alt="page.username"
