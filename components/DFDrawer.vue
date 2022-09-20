@@ -17,9 +17,13 @@
       <div>
         <div v-for="category in ageRestrictedCategories" :key="category['id']" >
           <button @click="toggleCategory(category['id'])" class="block py-2" :class="{'text-pink-400': selectedCategory == category['id']}">{{ category['label'] }}</button>
-          <ul v-if="selectedCategory == category['id']">
-            <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1 cursor-pointer" @click="tagPressed(tag.id)">{{ tag.label }}</li>
-          </ul>
+          <div class="overflow-hidden">
+            <transition name="accordion">
+              <ul v-if="selectedCategory == category['id']">
+                <li v-for="tag in category.tags" :key="tag.id" class="px-4 py-1 cursor-pointer" @click="tagPressed(tag.id)">{{ tag.label }}</li>
+              </ul>
+            </transition>
+          </div>
         </div>
       </div>
 
