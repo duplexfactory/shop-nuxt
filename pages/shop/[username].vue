@@ -224,9 +224,13 @@
     window.onscroll = async function(ev) {
       const pageHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,  document.documentElement.clientHeight,  document.documentElement.scrollHeight,  document.documentElement.offsetHeight );
       if (Math.ceil(window.innerHeight + window.scrollY) >= pageHeight) {
-        if (!mediaPending.value && medias.value.length < page.value.mediaCount) {
-          mediaPending.value = true
-          await fetchMedias()
+        // Reached bottom.
+        if (selectedIndex.value === 0) {
+          // Load more medias.
+          if (!mediaPending.value && medias.value.length < page.value.mediaCount) {
+            mediaPending.value = true
+            await fetchMedias()
+          }
         }
       }
     };
