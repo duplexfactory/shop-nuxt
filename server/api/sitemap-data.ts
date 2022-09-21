@@ -1,24 +1,22 @@
-import {pageCollection} from "~/server/firebase/collections";
-import IgPage from "~/models/IgPage";
-import {fields} from "~/server/firebase/init";
+import {blogCollection, pageCollection} from "~/server/firebase/collections"
 import {IncomingMessage, ServerResponse} from "http";
-import {useQuery} from "h3";
 import {Query, DocumentData} from "@google-cloud/firestore";
 
-export default async (req: IncomingMessage, res: ServerResponse): Promise<{ pages: {username: string}[] }> => {
+export default async (req: IncomingMessage, res: ServerResponse) => {
 
     let q: Query<DocumentData> = pageCollection()
         .where("deleted", "==", false)
         .where("private", "==", false);
 
-    const [pages] = await Promise.all([
+    const [pages, blogs] = await Promise.all([
         q
             .pick("username")
             .get()
             .then(ss => ss.data()),
+        blogCollection().pick("slug", "id").get().then(ss => ss.data())
     ])
 
     return {
-        pages
+        routes: blogs.map((b) => `/blog/${b.slug}-${b.id}`).concat(pages.map((p) => `/shop/${p.username}`))
     };
 }

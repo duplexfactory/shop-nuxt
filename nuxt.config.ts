@@ -137,11 +137,11 @@ export default defineNuxtConfig({
             ...categories.map((c) => c.tags).flat().map((t) => `tag=${t.id}`)
           ].map((q) => `${searchBase}?${q}`)
 
-          const { pages }: {pages: { username: string }[]} = await $fetch(`${process.env.DOMAIN}/api/sitemap-data`);
+          const { routes } = await $fetch<{routes: string[]}>(`/api/sitemap-data`);
           // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
           return [
               ...searchPaths,
-              ...pages.map((p) => `/shop/${p.username}`)
+              ...routes
           ]
         }
         catch (e) {
