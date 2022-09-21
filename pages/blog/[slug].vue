@@ -136,8 +136,6 @@
 
         <template v-for="b in blocks">
           <div v-if="b.type === 'html'" v-html="b.content"></div>
-<!--          @showMediaModal="showMediaModal(media)"-->
-<!--          :price="mediaPrice(media)"-->
 <!--          :username="page.username"-->
           <client-only>
             <LazyMediaCardIGEmbed
