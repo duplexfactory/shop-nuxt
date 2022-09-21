@@ -45,8 +45,6 @@
   }
 
   import edjsHTML from "editorjs-html";
-  import {useNuxt} from "@nuxt/kit";
-
   const parser = edjsHTML();
   // function createElementFromHTML(htmlString) {
   //   const div = document.createElement('div');
@@ -60,11 +58,24 @@
   //   const alignment = b.data.alignment ?? b.tunes?.alignmentTune?.alignment ?? "left";
   //   e.setAttribute("style", `text-align: ${alignment}`);
   // })
-  const htmlContent = blog.value.htmlContent.blocks.map((b) => {
+  const blocks = blog.value.htmlContent.blocks.map((b) => {
+    if (b.type === "mediaCardIGEmbed") {
+      return {
+        type: "media-card-ig-embed",
+        content: b.data.code
+      }
+    }
     const alignment = b.data.alignment ?? b.tunes?.alignmentTune?.alignment ?? "left"
-    const style = `style="text-align: ${alignment}"`;
-    return `<div ${style}>${parser.parseBlock(b)}</div>`
-  }).join("");
+    let margin = ""
+    if (["paragraph", "header"].includes(b.type)) {
+      margin = "0px 0px 16px 0px"
+    }
+    const style = `style="text-align: ${alignment}; margin: ${margin};"`;
+    return {
+      type: "html",
+      content: `<div ${style}>${parser.parseBlock(b)}</div>`
+    }
+  });
 
   // Meta
   useMeta(computed(() => {
@@ -108,9 +119,9 @@
 <template>
   <div class="container mx-auto py-4">
     <div class="grid grid-cols-12">
-      <div v-if="blog" class="col-start-3 col-span-8">
+      <div v-if="blog" class="col-span-12 md:(col-start-3 col-span-8)">
         <div class="text-3xl">{{ blog.title }}</div>
-        <div class="flex justify-between text-sm mt-2">
+        <div class="flex justify-between text-sm mt-2 mb-4">
           <div class="text-gray-500">
             {{ created }}
           </div>
@@ -123,7 +134,19 @@
           </div>
         </div>
 
-        <div v-html="htmlContent"></div>
+        <template v-for="b in blocks">
+          <div v-if="b.type === 'html'" v-html="b.content"></div>
+<!--          @showMediaModal="showMediaModal(media)"-->
+<!--          :price="mediaPrice(media)"-->
+<!--          :username="page.username"-->
+          <client-only>
+            <LazyMediaCardIGEmbed
+                v-if="b.type === 'media-card-ig-embed'"
+                class="md:w-1/2 mb-8"
+                :post-id="b.content"
+                :fixed-aspect-ratio="0"></LazyMediaCardIGEmbed>
+          </client-only>
+        </template>
 
       </div>
     </div>

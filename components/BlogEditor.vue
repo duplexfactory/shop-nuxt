@@ -65,6 +65,7 @@ onMounted(async () => {
   const FontSize = await import('editorjs-inline-font-size-tool');
   const Paragraph = await import('editorjs-paragraph-with-alignment');
   const AlignmentTuneTool = await import('editorjs-text-alignment-blocktune');
+  const MediaCardIGEmbedTool = await import('~/utils/editorjs-plugin/mediaCardIGEmbed');
 
   const editorConfig: EditorConfig = {
     holder: "editor",
@@ -100,6 +101,9 @@ onMounted(async () => {
             list: 'right'
           }
         },
+      },
+      mediaCardIGEmbed: {
+        class: MediaCardIGEmbedTool.default
       }
     },
   }
@@ -131,11 +135,13 @@ async function save() {
   }
 
   // Reset
-  blog.value = {
-    title: "",
-    slug: "",
-    metaDesc: "",
-    htmlContent: null,
+  if (!editBlog) {
+    blog.value = {
+      title: "",
+      slug: "",
+      metaDesc: "",
+      htmlContent: null,
+    }
   }
 
   nuxt.vueApp.$toast.success("儲存成功！", {position: "top"});
