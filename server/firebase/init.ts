@@ -23,9 +23,9 @@ export function fields<T extends object, Ks extends keyof T>(...fields: Ks[]): K
     return fields
 }
 
-export function initFirebase() {
+export function initFirebase(c?: any) {
     if (!getApps().length) {
-        const config = useRuntimeConfig();
+        const config = c ?? useRuntimeConfig();
         initializeApp({
             credential: cert({
                 projectId: config.FIREBASE_PROJECT_ID,

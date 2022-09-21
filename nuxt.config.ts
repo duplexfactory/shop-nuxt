@@ -9,6 +9,9 @@ import { excludeRoutes } from "@nuxtjs/sitemap/lib/routes";
 import { setDefaultSitemapOptions } from "@nuxtjs/sitemap/lib/options";
 import { $fetch } from "ohmyfetch";
 import {categories} from "./data/categories";
+import {Query, DocumentData} from "@google-cloud/firestore";
+import {initFirebase} from "./server/firebase/init"
+import {CollectionReference, getFirestore} from "firebase-admin/firestore";
 
 // Hidden paths
 import { resolve, join } from 'path'
@@ -16,6 +19,7 @@ import { createCommonJS } from 'mlly'
 import {duration} from "./utils/dayjs";
 import {MongoClient, MongoClientOptions} from "mongodb";
 import {igAuthCollection, pageSearchCollection} from "~/server/mongodb";
+import IgPage from "~/models/IgPage"
 const { __dirname } = createCommonJS(import.meta.url)
 
 export default defineNuxtConfig({
@@ -172,14 +176,22 @@ export default defineNuxtConfig({
             ...categories.map((c) => c.tags).flat().map((t) => `tag=${t.id}`)
           ].map((q) => `${searchBase}?${q}`)
 
+          initFirebase(process.env)
+          function checkDev(name: string) {
+            return process.env.DEV_DB ? "dev-" + name : name
+          }
+          const pageCollection = getFirestore().collection(checkDev("pages")) as CollectionReference<IgPage>;
+          let q: Query<DocumentData> = pageCollection
+              .where("deleted", "==", false)
+              .where("private", "==", false)
+              .where("tier", "!=", 0)
 
-          const client = await MongoClient.connect(process.env.MONGO_SRV, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-          } as MongoClientOptions)
-          const db = client.db(process.env.DEV_DB ? "ig-dev" : "ig")
-          const pageSearchCollection = db.collection("page")
-          const pages: { username: string }[] = await pageSearchCollection.find().project<{username: string}>({username: 1}).toArray();
+          const [pages] = await Promise.all([
+            q
+                .pick("username")
+                .get()
+                .then(ss => ss.data()),
+          ])
 
           // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
           return [
