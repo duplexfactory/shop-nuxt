@@ -159,4 +159,8 @@
   @apply rounded-full border border-pink-400 text-pink-400 p-1 ml-1;
 }
 
+:deep(a) {
+  @apply text-pink-700 hover:underline;
+}
+
 </style>
