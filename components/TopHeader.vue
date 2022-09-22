@@ -8,7 +8,7 @@
           <i class="spr-menu text-2xl"></i>
         </button>
 
-        <nuxt-link to="/" class="md:mr-4"><img style="width: 100px; height: 50px;" src="/images/logo.png"/></nuxt-link>
+        <nuxt-link to="/" class="mx-2 sm:mx-4 lg:ml-0"><img class="logo" src="/images/logo.png"/></nuxt-link>
 
         <!-- Mobile Search Button -->
         <button @click="showSearchModal = true" class="md:hidden border rounded-md py-2 px-4 text-sm text-gray-400 flex-1 mr-4">
@@ -211,6 +211,18 @@
 </script>
 
 <style scoped>
+
+  .logo {
+    width: 72px;
+    height: 30px;
+  }
+
+  @screen lg {
+    .logo {
+      width: 108px;
+      height: 45px;
+    }
+  }
 
   .search-input {
     @apply border py-2 px-4 text-base w-full;

@@ -193,6 +193,7 @@ export default {
 }
 
 .dropdown ul li {
+  transition: .3s;
   @apply px-8 py-2 cursor-pointer text-left;
 }
 
