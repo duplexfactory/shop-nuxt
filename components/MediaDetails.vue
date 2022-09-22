@@ -367,6 +367,26 @@ async function fetchReviews() {
       mediaCode: media.value.code,
     }
   })).reviews
+
+  // const {
+  //   data: reviewsData,
+  //   refresh,
+  //   pending: reviewsPending,
+  //   error: reviewsError
+  // } = useContentKeyedLazyFetch('/api/reviews', {
+  //   params: {
+  //     mediaCode: media.value.code,
+  //   }
+  // })
+  // reviewsRefresh.value = refresh
+  // if (reviewsPending.value) {
+  //   watch(reviewsData, () => {
+  //     reviews.value = reviewsData.value.reviews
+  //   })
+  // }
+  // else {
+  //   reviews.value = reviewsData.value.reviews
+  // }
 }
 
 async function sendReview() {
@@ -490,42 +510,65 @@ function addToCart() {
 // Initialize data
 
 async function initMedia() {
-  await fetchReviews()
-
   const {
     data: mediaCommerceDataRaw,
+    pending: mediaCommerceDataPending,
     error: mediaCommerceDataError
   } = useContentKeyedLazyFetch('/api/media/commerce-data', {
     params: {
       codes: media.value.code
     }
   })
-  watch(mediaCommerceDataRaw, () => {
-    mediaCommerceData.value = mediaCommerceDataRaw.value.data[media.value.code] || null
+  const setMedia = () => {
+    if (mediaCommerceDataRaw.value) {
+      mediaCommerceData.value = mediaCommerceDataRaw.value.data[media.value.code] || null
+    }
     mediaCommerceDataLoaded.value = true
-  })
+  }
+  if (mediaCommerceDataPending.value) {
+    watch(mediaCommerceDataRaw, setMedia)
+  }
+  else {
+    setMedia()
+  }
 }
 
 async function initPage() {
   const {
     data: pageCommerceDataRaw,
+    pending: pageCommerceDataPending,
     error: pageCommerceDataError
   } = useContentKeyedLazyFetch(`/api/shop/id/${page.value._id}/commerce-data`)
-  watch(pageCommerceDataRaw, () => {
-    pageCommerceData.value = pageCommerceDataRaw.value.commerceData
+  const setPage = () => {
+    if (pageCommerceDataRaw.value) {
+      pageCommerceData.value = pageCommerceDataRaw.value.commerceData
+    }
     pageCommerceDataLoaded.value = true
-  })
+  }
+  if (pageCommerceDataPending.value) {
+    watch(pageCommerceDataRaw, setPage)
+  }
+  else {
+    setPage()
+  }
 }
 
 if (media.value) {
-  initMedia()
+  await initMedia()
+  await fetchReviews()
 }
 else {
-  watch(media, initMedia)
+  watch(media, async (newMedia, oldMedia) => {
+    if (!!newMedia && !!oldMedia && newMedia.code === oldMedia.code) {
+      return
+    }
+    await initMedia()
+    await fetchReviews()
+  })
 }
 
 if (page.value) {
-  initPage()
+  await initPage()
 }
 else {
   watch(page, initPage)
