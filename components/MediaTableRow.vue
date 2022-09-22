@@ -28,13 +28,13 @@
         <button @click="localPrice = price; editingPrice = true" class="hover:underline text-pink-600">修改</button>
       </div>
     </div>
-    <div class="table-cell align-top">
+    <div v-if="commerceEditable" class="table-cell align-top">
       <lazy-basic-toggle v-model="active" @change="activeChanged"></lazy-basic-toggle>
     </div>
 <!--    <div class="table-cell align-top">-->
 <!--      <lazy-basic-toggle v-model="customPrice"></lazy-basic-toggle>-->
 <!--    </div>-->
-    <div class="table-cell align-top whitespace-nowrap">
+    <div v-if="commerceEditable" class="table-cell align-top whitespace-nowrap">
 
       <template v-if="hasDiscount">
         <div>{{ mediaCommerceData.discount.title }}</div>
@@ -93,10 +93,12 @@ const {getAuthHeader, headersToObject} = useAuth()
 const props = defineProps({
   media: Object as PropType<IgMedia>,
   mediaCommerceData: Object as PropType<IgMediaCommerceData>,
+  commerceEditable: { type: Boolean, default: false },
 })
 const {
   media,
-  mediaCommerceData
+  mediaCommerceData,
+  commerceEditable
 } = toRefs(props)
 
 const emit = defineEmits(["update:mediaCommerceData", "showConfirmToggleActive"])
