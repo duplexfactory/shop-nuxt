@@ -91,7 +91,7 @@
               <div v-if="verifiedPage"
                    class="col-span-1"
                    style="aspect-ratio: 3/5">
-                <MediaCard @click="showMediaModal(media)"
+                <MediaCard @click="showMediaPage(media)"
                            class="cursor-pointer"
                            :media="media"
                            :shop="page"></MediaCard>
@@ -186,6 +186,7 @@
 
   const config = useRuntimeConfig()
   const route = useRoute()
+  const router = useRouter()
 
   const {data, error} = await useContentKeyedLazyFetch(`/api/shop/username/${route.params.username}`)
   const found = computed(() => !error?.value && data.value)
@@ -321,6 +322,17 @@
 
   const showModal = useShowMediaModal()
   const showingMediaModalData = useShowingMediaModalData()
+
+  function showMediaPage(media: IgMedia) {
+    if (page.value != null) {
+      // showModal.value = true
+      // showingMediaModalData.value = {
+      //   media: media,
+      //   simplePage: page.value
+      // }
+      router.push(`/product/${media.code}`)
+    }
+  }
 
   function showMediaModal(media: IgMedia) {
     if (page.value != null) {

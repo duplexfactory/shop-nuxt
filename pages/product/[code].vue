@@ -1,7 +1,12 @@
 <template>
   <div class="mb-16">
     <div class="container mx-auto">
-      <MediaDetails v-if="!!media && !!page" :media="media" :page="page"></MediaDetails>
+      <div class="my-4 md:mt-0">
+        <nuxt-link v-if="!!page" :to="`/shop/${page.username}`"
+                   class="hover:underline"><i class="spr-angle-left"></i>返回店鋪</nuxt-link>
+      </div>
+
+      <MediaDetails :media="media" :page="page"></MediaDetails>
     </div>
   </div>
 </template>
@@ -15,20 +20,20 @@ import {notFound} from "~/utils/h3Error";
 const config = useRuntimeConfig()
 const route = useRoute()
 
-const {
-  data: mediaCommerceData,
-  error: mediaCommerceDataError
-} = await useContentKeyedFetch('/api/media/commerce-data', {
-  params: {
-    codes: route.params.code
-  }
-})
-if (!!mediaCommerceDataError.value) {
-  throwError(notFound)
-}
-if (!!mediaCommerceData.value && !mediaCommerceData.value.data[route.params.code]) {
-  throwError(notFound)
-}
+// const {
+//   data: mediaCommerceData,
+//   error: mediaCommerceDataError
+// } = await useContentKeyedFetch('/api/media/commerce-data', {
+//   params: {
+//     codes: route.params.code
+//   }
+// })
+// if (!!mediaCommerceDataError.value) {
+//   throwError(notFound)
+// }
+// if (!!mediaCommerceData.value && !mediaCommerceData.value.data[route.params.code]) {
+//   throwError(notFound)
+// }
 
 const media = ref<IgMedia | null>(null)
 

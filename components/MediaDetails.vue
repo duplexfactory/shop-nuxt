@@ -15,7 +15,7 @@
                  v-lazy:background-image="media.mediaUrl"></div>
             <div v-else-if="media.mediaType === 'CAROUSEL_ALBUM'" class="relative">
               <div class="absolute z-10 right-4 top-4 rounded-full px-3 py-1 text-white bg-gray-900">
-                {{ `${carouselIndex + 1}/${media.mediaList.length}` }}
+                {{ `${carouselIndex + 1}/${media.mediaList ? media.mediaList.length : '-'}` }}
               </div>
 
               <div class="swiper" ref="swiper">
@@ -42,16 +42,6 @@
                      @click="clickCarouselPreview(i)"
                      v-lazy:background-image="m"></div>
               </div>
-<!--              <div class="grid grid-cols-6 lg:grid-cols-8 gap-2 mt-2 whitespace-nowrap overflow-x-scroll">-->
-<!--                <div v-for="(m, i) in media.mediaList"-->
-<!--                     :key="m"-->
-<!--                     class="col-span-1">-->
-<!--                  <div class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden w-full"-->
-<!--                       :class="{'border-2 border-pink-400': carouselIndex === i}"-->
-<!--                       @click="clickCarouselPreview(i)"-->
-<!--                       v-lazy:background-image="m"></div>-->
-<!--                </div>-->
-<!--              </div>-->
             </div>
             <div v-else class="image-container aspect-square rounded-md overflow-hidden"
                  v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
@@ -268,7 +258,6 @@ import {isIGVideoUrl} from "~/utils/imageUrl";
 // import {mediaPrice, formatMediaPrice} from "~/utils/mediaPrice";
 import {SimpleIgPage} from "~/models/SimpleIgPage";
 import {onMounted, ref} from "vue"
-import {useNuxtApp, useRouter} from "#app"
 import useContentKeyedFetch from "~/composables/useContentKeyedFetch"
 import useMediaPrice from "~/composables/useMediaPrice"
 import {useScreenSize} from "~/composables/states"
