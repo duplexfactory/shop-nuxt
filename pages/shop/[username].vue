@@ -53,8 +53,10 @@
                 </div>
                 <div>
                   <component :is="pageInfoRow.link ? 'a' : 'span'"
-                             class="break-words"
-                             :class="{'hover:underline': pageInfoRow.link}"
+                             :class="{'hover:underline': pageInfoRow.link,
+                                      'break-words': !['email', 'link', 'facebook'].includes(pageInfoRow.key),
+                                      'break-all': ['email', 'link', 'facebook'].includes(pageInfoRow.key)
+                                      }"
                              target="_blank"
                              :href="pageInfoRow.link">{{ pageInfoRow.value }}
                   </component>
