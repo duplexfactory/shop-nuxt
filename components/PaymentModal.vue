@@ -172,11 +172,10 @@ async function clickSubmit() {
 
   try {
     if (selectedPaymentMethodData.value.method !== PaymentType.IN_PERSON) {
-      // Upload image first.
-      let formData = new FormData()
-      formData.append( 'image', files.value[0])
+      // Get presigned url.
       const {
-        url
+        url,
+        signedUrl
       } = await $fetch(
           '/api/file/payment-proof',
           {
@@ -185,9 +184,12 @@ async function clickSubmit() {
               orderId: orderId.value,
               pageId: pageId.value
             },
-            body: formData
           }
       )
+
+      // Upload image.
+      await $fetch(signedUrl, {method: 'PUT', body: files.value[0]});
+
       body["url"] = url
     }
 

@@ -46,7 +46,13 @@ export default defineEventHandler(async (event) => {
     const igAuth = await igAuthCollection.findOne({pageId})
     const userRecord = await getAuth().getUser(igAuth.userId)
     if (!!userRecord.email) {
-        await sendOrderNotificationEmail(userRecord.email, id, order.value.created, order.value.shops[pageId].orderStatus, pageTotal(order.value.shops[pageId]), paymentMethodData.method)
+        try {
+            await sendOrderNotificationEmail(userRecord.email, id, order.value.created, order.value.shops[pageId].orderStatus, pageTotal(order.value.shops[pageId]), paymentMethodData.method)
+        }
+        catch (e) {
+            // Catch error for failed email.
+            console.log(`Send notification email failed, Order ID: ${id}`)
+        }
     }
 
     return {
