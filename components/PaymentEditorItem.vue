@@ -238,8 +238,7 @@ async function addPayment() {
     }
 
     // Upload image first.
-    let formData = new FormData();
-    formData.append( 'image', tempPaymentImageFile.value);
+
     if (!!d.qrCodeUrl) {
       // Delete existing image.
       const splitted = d.qrCodeUrl.split("/")
@@ -251,21 +250,33 @@ async function addPayment() {
           }
       )
     }
-    const {
-      url
-    } = await $fetch(
-        '/api/file/payment',
-        {
-          headers: await getAuthHeader(),
-          method: 'POST',
-          params: {
-            type: tempPaymentType.value
-          },
-          body: formData
-        }
-    );
-    d.qrCodeUrl = url;
 
+    // Get presigned url.
+    try {
+      const {
+        url,
+        signedUrl
+      } = await $fetch(
+          '/api/file/payment',
+          {
+            headers: await getAuthHeader(),
+            method: 'POST',
+            params: {
+              type: tempPaymentType.value
+            },
+          }
+      );
+
+      // Upload image.
+      await $fetch(signedUrl, {method: 'PUT', body: tempPaymentImageFile.value});
+
+      d.qrCodeUrl = url;
+    }
+    catch (e) {
+      console.log(e)
+      nuxt.$toast.error("請上載照片失敗！請稍後再試或聯絡我們以取得幫助。")
+      return
+    }
   }
 
   // Emit save

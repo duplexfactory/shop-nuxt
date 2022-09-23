@@ -1,11 +1,10 @@
 import {assert, getAuth, noCache} from "~/server/util";
 import {defineEventHandler} from "h3";
 
-import * as fs from "fs";
-import formidable from 'formidable';
 import {PaymentType} from "~/models/IgPageCommerceData";
 import {PutObjectCommand} from "@aws-sdk/client-s3";
-import { s3, s3Region} from "~/server/s3";
+import {s3, s3Region} from "~/server/s3";
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
 
 export default defineEventHandler(async (event) => {
 
@@ -20,26 +19,6 @@ export default defineEventHandler(async (event) => {
 
     const auth = getAuth(event)
 
-    const form = new formidable.IncomingForm();
-    const {
-        fields,
-        files
-    } = await new Promise<{ fields, files }>(function (resolve, reject) {
-        form.parse(event.req, function (err, fields, files) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve({
-                fields,
-                files
-            });
-        }); // form.parse
-    });
-
-    const imagePath = files['image'].filepath
-    const blob = fs.readFileSync(imagePath)
-
     const dict = {
         [PaymentType.PAYME]: "PayMe",
         [PaymentType.WECHAT_PAY_HK]: "WeChat_Pay_HK",
@@ -50,11 +29,14 @@ export default defineEventHandler(async (event) => {
     const params = {
         Bucket: config.AWS_S3_BUCKET_NAME,
         Key: key,
-        Body: blob,
     };
-    await s3.send(new PutObjectCommand(params));
+
+    const signedUrl = await getSignedUrl(s3, new PutObjectCommand(params), {
+        expiresIn: 3600,
+    })
 
     return {
-        url: `https://${config.AWS_S3_BUCKET_NAME}.s3.${s3Region}.amazonaws.com/${key}`
+        url: `https://${config.AWS_S3_BUCKET_NAME}.s3.${s3Region}.amazonaws.com/${key}`,
+        signedUrl
     }
 })
