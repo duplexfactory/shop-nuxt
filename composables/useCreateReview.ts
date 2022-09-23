@@ -22,19 +22,23 @@ export default function useCreateReview() {
             body.mediaCode = reviewingCode.value
         }
         if (imageFiles.value.length !== 0) {
-            // Upload image first.
-            let formData = new FormData()
-            for (const [i, image] of imageFiles.value.entries()) {
-                formData.append( `image[${i}]`, image)
-            }
+            // Get presigned url.
             const {
-                urls
+                urls,
+                signedUrls
             } = await $fetch(
                 '/api/file/review',
                 {
                     method: 'POST',
-                    body: formData
+                    params: {
+                        imageCount: imageFiles.value.length
+                    }
                 }
+            )
+
+            // Upload image.
+            await Promise.all(
+                (signedUrls as Array<string>).map((signedUrl, i) => $fetch(signedUrl, {method: 'PUT', body: imageFiles.value[i]}))
             )
 
             body.imageUrls = urls
