@@ -233,11 +233,13 @@
     return (page.value.igConnected) ? fetchOfficialMedias(page.value._id) : fetchDynamoMedias(route.params.username)
   }
 
-  watch(page, async (newPage) => {
-    mediaPending.value = true
-    if (newPage)
+  const pageStopWatch = watch(page, async (newPage) => {
+    if (newPage) {
+      mediaPending.value = true
       await fetchMedias()
-    mediaPending.value = false
+      mediaPending.value = false
+      pageStopWatch()
+    }
   }, {immediate: true})
 
   if (process.client) {
