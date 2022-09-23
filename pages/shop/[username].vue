@@ -233,10 +233,12 @@
     return (page.value.igConnected) ? fetchOfficialMedias(page.value._id) : fetchDynamoMedias(route.params.username)
   }
 
-  if (page.value) await fetchMedias()
-  else watch(page, async (f) => {
-    if (f) await fetchMedias()
-  })
+  watch(page, async (newPage) => {
+    mediaPending.value = true
+    if (newPage)
+      await fetchMedias()
+    mediaPending.value = false
+  }, {immediate: true})
 
   if (process.client) {
     window.onscroll = async function(ev) {
