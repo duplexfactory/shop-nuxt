@@ -26,14 +26,23 @@ const selectedTab = computed(() => {
 const {
   isSubscribed
 } = useIsSubscribed()
+const isIgConnected = useIsIgConnected()
 const tabs = computed(() => {
-  if (isSubscribed.value) {
-    return accountTabs
+  let tabs = accountTabs
+  if (!isSubscribed.value) {
+    tabs = accountTabs.filter((t) => ![
+      "e-commerce",
+      "order-list"
+    ].includes(t.route))
   }
-  return accountTabs.filter((t) => [
-    "account",
-    "shop"
-  ].includes(t.route))
+  if (!isIgConnected.value) {
+    tabs = accountTabs.filter((t) => ![
+      "media-list",
+      "e-commerce",
+      "order-list"
+    ].includes(t.route))
+  }
+  return tabs
 })
 
 </script>

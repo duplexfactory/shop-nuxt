@@ -121,16 +121,15 @@ const isPageCommerceSet = ref(false)
 async function checkIsPageCommerceSet() {
   const {
     data: pageCommerceRawData,
+    pending: pageCommercePending,
     error: pageCommerceDataError
-  } = await useContentKeyedFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
-  isPageCommerceSet.value = !pageCommerceDataError.value
+  } = await useContentKeyedLazyFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+  watch(pageCommercePending, () => {
+    isPageCommerceSet.value = !pageCommerceDataError.value
+  }, {immediate: true})
 }
-if (!igPageId.value) {
-  watch(igPageId, checkIsPageCommerceSet)
-}
-else {
-  await checkIsPageCommerceSet()
-}
+
+watch(igPageId, checkIsPageCommerceSet, {immediate: true})
 
 const {
   mediaPending,
