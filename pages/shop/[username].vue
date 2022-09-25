@@ -79,7 +79,7 @@
           <div class="mb-4 text-lg font-semibold flex">
             <h2 class="px-4 py-2 cursor-pointer" :class="{'tab-selected': selectedIndex == 0}"
                 @click="selectedIndex = 0">貼文</h2>
-            <h2 v-if="found" class="px-4 py-2 cursor-pointer"
+            <h2 v-if="page" class="px-4 py-2 cursor-pointer"
                 :class="{'tab-selected': selectedIndex == 1}" @click="selectedIndex = 1; fetchReviews();">評論</h2>
           </div>
 
@@ -184,25 +184,19 @@
   //   "username":"susu.cha"
   // };
 
-  // Page Data Init
 
+  // Composables
   const config = useRuntimeConfig()
   const route = useRoute()
   const router = useRouter()
 
-  const {data, error} = await useContentKeyedLazyFetch(`/api/shop/username/${route.params.username}`)
-  const found = computed(() => !error?.value && data.value)
-  if (!!error && !!error.value) {
-    throwError(notFound);
-  }
-
-  const page = computed<PageSearch>(() => found.value ? data.value?.page as PageSearch : null)
-  const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false)
-  const lastActive = computed(() => (found.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).fromNow() : "")
-  const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value))
-
   const selectedIndex = ref(0)
 
+  // Page
+  const page = ref<PageSearch | null>(null)
+  const verifiedPage = computed<boolean>(() => !!page.value ? page.value.igConnected : false)
+  const lastActive = computed(() => (page.value && page.value?.lastActivity) ? dayjs(page.value.lastActivity * 1000).fromNow() : "")
+  const pageInfoRows = computed(() => PageInfoRow.rowsFromPage(page.value))
   const pageMetrics = computed<{ title: string, value: string }[]>(() => {
     return [
       {
@@ -221,26 +215,16 @@
   })
 
   // Medias
-
   const {
     mediaPending,
     medias,
     fetchOfficialMedias,
     fetchDynamoMedias
-  } = useMediaList();
+  } = useMediaList()
 
   async function fetchMedias() {
     return (page.value.igConnected) ? fetchOfficialMedias(page.value._id) : fetchDynamoMedias(route.params.username)
   }
-
-  const pageStopWatch = watch(page, async (newPage) => {
-    if (newPage) {
-      mediaPending.value = true
-      await fetchMedias()
-      mediaPending.value = false
-      pageStopWatch()
-    }
-  }, {immediate: true})
 
   if (process.client) {
     window.onscroll = async function(ev) {
@@ -257,6 +241,22 @@
       }
     };
   }
+
+  // Init data
+  const {data: shopData, pending, error} = await useContentKeyedLazyFetch(`/api/shop/username/${route.params.username}`)
+  const pageStopWatch = watch(pending, async (newPending) => {
+    if (!newPending) {
+      if (error.value) {
+        throwError(notFound)
+        return
+      }
+      page.value = shopData.value ? shopData.value?.page as PageSearch : null
+      mediaPending.value = true
+      await fetchMedias()
+      mediaPending.value = false
+      pageStopWatch()
+    }
+  }, {immediate: true})
 
   // Meta
   useMeta(computed(() => {
@@ -365,7 +365,7 @@
   const reviews = ref<IgPageReview[]>([])
 
   async function fetchReviews() {
-    if (!found.value) return
+    if (!page.value) return
     reviews.value = (await $fetch("/api/reviews", {
       params: {
         pageId: page.value._id,
@@ -385,7 +385,7 @@
   } = useCreateReview()
 
   async function sendReview() {
-    if (!found.value) return
+    if (!page.value) return
     reviewingPageId.value = page.value._id
     await createReview()
     await fetchReviews()
