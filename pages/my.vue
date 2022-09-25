@@ -1,7 +1,9 @@
 <script setup lang="ts">
 
 import {accountTabs} from "~/data/ui";
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
+const igPageId = useIgPageId()
 const route = useRoute();
 const router = useRouter();
 const isLoggedIn = useIsLoggedIn();
@@ -23,6 +25,23 @@ const selectedTab = computed(() => {
   return accountTabs.find((t) => route.path.includes(`/my/${t.route}`))
 })
 
+const pageCommerceData = ref<IgPageCommerceData>(null)
+async function fetchPageCommerceData() {
+  if (!igPageId.value) {
+    return
+  }
+  const {
+    data,
+    pending,
+    error
+  } = await useContentKeyedLazyFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
+  watch(pending, () => {
+    if (!error.value)
+      pageCommerceData.value = data.value.commerceData
+  }, {immediate: true})
+}
+watch(igPageId, fetchPageCommerceData, {immediate: true})
+
 const {
   isSubscribed
 } = useIsSubscribed()
@@ -39,6 +58,11 @@ const tabs = computed(() => {
     tabs = accountTabs.filter((t) => ![
       "media-list",
       "e-commerce",
+      "order-list"
+    ].includes(t.route))
+  }
+  if (!pageCommerceData.value) {
+    tabs = accountTabs.filter((t) => ![
       "order-list"
     ].includes(t.route))
   }
