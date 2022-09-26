@@ -189,9 +189,8 @@ const {
   headersToObject
 } = useAuth()
 const nuxt = useNuxtApp()
-const igPageId = useIgPageId();
-
-const commerceData: Ref<IgPageCommerceData | null> = ref(null)
+const router = useRouter()
+const igPageId = useIgPageId()
 
 const configCommerceData: Ref<Partial<Omit<IgPageCommerceData, "_id">>> = ref({
   discount: null,
@@ -259,14 +258,14 @@ async function incrementStep() {
 }
 
 async function navigateToCommerceSettings() {
-  await commerceDataRefresh()
-  if (!!commerceRawData.value) {
-    await init()
-  }
+  console.log("navigateToCommerceSettings")
+  console.log(fetchRefresh.value)
+  if (!!fetchRefresh.value)
+    await fetchRefresh.value()
 }
 
 function navigateToOrderList() {
-
+  router.push(`/my/order-list`)
 }
 
 // Discount
@@ -287,34 +286,19 @@ const tempMailingDiscount: Ref<MailingDiscount> = ref({
 })
 
 // Init data
-let commerceRawData;
-let commerceDataRefresh;
-let commerceDataRefreshError;
-async function initCommerceData() {
-  const {
-    data,
-    refresh,
-    error
-  } = await useContentKeyedFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
-  commerceRawData = data
-  commerceDataRefresh = refresh
-  commerceDataRefreshError = error
-
-  if (!!commerceRawData.value) {
-    await init()
-  }
-}
-await initCommerceData()
-if (!!commerceRawData.value) {
+const {
+  pageCommerceData: commerceData,
+  fetchPageCommerceData,
+  fetchRefresh,
+} = useOwnCommerceData()
+watch(igPageId, fetchPageCommerceData, {immediate: true})
+watch(commerceData, async () => {
+  if (!commerceData.value)
+    return
   await init()
-}
-else {
-  watch(igPageId, initCommerceData)
-}
+}, {immediate: true})
 
 async function init() {
-  commerceData.value = commerceRawData.value["commerceData"]
-
   if (!!commerceData.value) {
     hasDiscount.value = !!commerceData.value.discount
     hasMailingDiscount.value = !!commerceData.value.mailingDiscount

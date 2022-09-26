@@ -1,6 +1,6 @@
 <template>
   <div class="mb-8">
-    <div v-if="isPageCommerceSet" class="mb-4">
+    <div v-if="pageCommerceData" class="mb-4">
       <input type="checkbox" id="only-active" name="onlyActive" v-model="onlyActiveFilter">
       <label for="only-active" class="pl-2">只顯示接受訂單的貼文</label>
     </div>
@@ -28,7 +28,7 @@
             <div class="table-cell" style="width: 1%; white-space: nowrap;">相片</div>
             <div class="table-cell" style="min-width: 180px;">描述</div>
             <div class="table-cell">價錢</div>
-            <div v-if="isPageCommerceSet" class="table-cell whitespace-nowrap">
+            <div v-if="pageCommerceData" class="table-cell whitespace-nowrap">
               接受訂單
               <client-only>
                 <Popper hover offsetDistance="0" placement="top">
@@ -50,7 +50,7 @@
 <!--                </template>-->
 <!--              </Popper>-->
 <!--            </div>-->
-            <div v-if="isPageCommerceSet" class="table-cell">折扣</div>
+            <div v-if="pageCommerceData" class="table-cell">折扣</div>
             <div class="table-cell">動作</div>
           </div>
         </div>
@@ -58,7 +58,7 @@
         <LazyMediaTableRow v-for="media in currentMedias"
                            :key="media.code"
                            :media="media"
-                           :commerceEditable="isPageCommerceSet"
+                           :commerceEditable="!!pageCommerceData"
                            @showConfirmToggleActive="showConfirmToggleActive"
                            v-model:mediaCommerceData="commerceData[media.code]">
         </LazyMediaTableRow>
@@ -117,19 +117,11 @@ const nuxt = useNuxtApp()
 const {getAuthHeader, headersToObject} = useAuth()
 const igPageId = useIgPageId()
 
-const isPageCommerceSet = ref(false)
-async function checkIsPageCommerceSet() {
-  const {
-    data: pageCommerceRawData,
-    pending: pageCommercePending,
-    error: pageCommerceDataError
-  } = await useContentKeyedLazyFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
-  watch(pageCommercePending, () => {
-    isPageCommerceSet.value = !pageCommerceDataError.value
-  }, {immediate: true})
-}
-
-watch(igPageId, checkIsPageCommerceSet, {immediate: true})
+const {
+  pageCommerceData,
+  fetchPageCommerceData
+} = useOwnCommerceData()
+watch(igPageId, fetchPageCommerceData, {immediate: true})
 
 const {
   mediaPending,

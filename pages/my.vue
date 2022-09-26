@@ -25,21 +25,10 @@ const selectedTab = computed(() => {
   return accountTabs.find((t) => route.path.includes(`/my/${t.route}`))
 })
 
-const pageCommerceData = ref<IgPageCommerceData>(null)
-async function fetchPageCommerceData() {
-  if (!igPageId.value) {
-    return
-  }
-  const {
-    data,
-    pending,
-    error
-  } = await useContentKeyedLazyFetch(`/api/shop/id/${igPageId.value}/commerce-data`)
-  watch(pending, () => {
-    if (!error.value)
-      pageCommerceData.value = data.value.commerceData
-  }, {immediate: true})
-}
+const {
+  pageCommerceData,
+  fetchPageCommerceData
+} = useOwnCommerceData()
 watch(igPageId, fetchPageCommerceData, {immediate: true})
 
 const {
