@@ -197,7 +197,6 @@
     }, 500))
 
     onAuthStateChanged(auth.value, async (user?: User) => {
-      // console.log("onAuthStateChanged");
       currentUser.value = user
       isLoggedIn.value = !!user
 

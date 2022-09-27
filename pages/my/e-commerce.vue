@@ -258,8 +258,6 @@ async function incrementStep() {
 }
 
 async function navigateToCommerceSettings() {
-  console.log("navigateToCommerceSettings")
-  console.log(fetchRefresh.value)
   if (!!fetchRefresh.value)
     await fetchRefresh.value()
 }

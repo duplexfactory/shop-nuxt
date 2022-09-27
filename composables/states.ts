@@ -1,6 +1,7 @@
 import {SimpleIgPage} from "~/models/SimpleIgPage";
 import IgMedia from "~/models/IgMedia";
 import {User} from "firebase/auth"
+import {IgPageCommerceData} from "~/models/IgPageCommerceData";
 
 export const useShowMediaModal = () => useState<boolean>('showMediaModal', () => false)
 export const useShowingMediaModalData = () => useState<{
@@ -32,6 +33,7 @@ export const useIsLoggedIn = () => useState<boolean | null>('isLoggedIn', () => 
 export const useIsIgConnected = () => useState<boolean>('isIgConnected', () => false)
 export const useIgUsername = () => useState<string>('igUsername', () => "")
 export const useIgPageId = () => useState<string>('igPageId', () => "")
+export const useIgPageCommerceData = () => useState<IgPageCommerceData>('igPageCommerceData', () => null)
 export const useCurrentUser = () => useState<User | null>('currentUser', () => null)
 
 export const useLightBox = () => useState<{
