@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
         filter[`shops.${igAuth.pageId}.orderStatus`] = Number(status)
     }
 
-    const orders = await orderCollection.find(filter).project({
+    const orders = await orderCollection.find(filter).project<Order>({
         _id: true,
         created: true,
         [`shops.${igAuth.pageId}`]: true

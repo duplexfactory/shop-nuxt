@@ -171,16 +171,12 @@ async function fetchOrderList() {
     headers: headersToObject(await getAuthHeader()),
     initialCache: false
   })
-  if (pending.value) {
-    watch(data, () => {
-      orders.value = data.value["orders"]
-      orderCount.value = data.value["count"]
-    })
-  }
-  else {
-    orders.value = data.value["orders"]
-    orderCount.value = data.value["count"]
-  }
+  watch(data, () => {
+    if (!!data.value) {
+      orders.value = data.value.orders
+      orderCount.value = data.value.count
+    }
+  }, {immediate: true})
 }
 
 if (process.client) {
