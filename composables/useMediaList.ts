@@ -30,6 +30,7 @@ export default function useMediaList() {
             }
         }
 
+        mediaPending.value = true
         const {
             data,
             pending,
@@ -58,6 +59,7 @@ export default function useMediaList() {
         const ms = medias.value
         if (ms.length) params["until"] = ms[ms.length - 1].takenAt
 
+        mediaPending.value = true
         const {data: mediaData, pending} = await useContentKeyedLazyFetch(`/api/media/official/list`, {params})
         appendMediaData(mediaData as Ref<{medias: IgMedia[], paging: { cursors: {before: string, after: string} }}>);
     }
@@ -71,21 +73,18 @@ export default function useMediaList() {
             params["before"] = medias.value[medias.value.length - 1].takenAt
         }
 
+        mediaPending.value = true
         const {data: mediaData, pending} = await useContentKeyedLazyFetch(`/api/media/list`, {params})
         appendMediaData(mediaData as Ref<{medias: IgMedia[]}>);
     }
 
     function appendMediaData(mediaData: Ref<{medias: IgMedia[]}>) {
-        if (mediaData.value != null) {
-            medias.value = [...medias.value, ...mediaData.value.medias]
-            mediaPending.value = false
-        } else {
-            // Client navigation.
-            watch(mediaData, (newData) => {
+        watch(mediaData, (newData) => {
+            if (!!newData) {
                 medias.value = [...medias.value, ...newData.medias]
                 mediaPending.value = false
-            })
-        }
+            }
+        }, {immediate: true})
     }
 
     return {

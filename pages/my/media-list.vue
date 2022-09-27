@@ -21,7 +21,7 @@
       <span v-else></span>
     </div>
 
-    <div v-if="!mediaPending" class="wrapper my-4">
+    <div class="wrapper my-4">
       <div class="table">
         <div class="table-header-group">
           <div class="table-row">
@@ -54,15 +54,18 @@
             <div class="table-cell">動作</div>
           </div>
         </div>
-
-        <LazyMediaTableRow v-for="media in currentMedias"
-                           :key="media.code"
-                           :media="media"
-                           :commerceEditable="!!pageCommerceData"
-                           @showConfirmToggleActive="showConfirmToggleActive"
-                           v-model:mediaCommerceData="commerceData[media.code]">
-        </LazyMediaTableRow>
-
+        <template v-if="!mediaPending">
+          <LazyMediaTableRow v-for="media in currentMedias"
+                             :key="media.code"
+                             :media="media"
+                             :commerceEditable="!!pageCommerceData"
+                             @showConfirmToggleActive="showConfirmToggleActive"
+                             v-model:mediaCommerceData="commerceData[media.code]">
+          </LazyMediaTableRow>
+        </template>
+      </div>
+      <div v-if="mediaPending" class="flex w-full border justify-center py-8">
+        <i class="spr-spin4 animate-spin text-6xl text-pink-400"></i>
       </div>
     </div>
 

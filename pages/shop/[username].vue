@@ -234,7 +234,6 @@
         if (selectedIndex.value === 0) {
           // Load more medias.
           if (!mediaPending.value && medias.value.length < page.value.mediaCount) {
-            mediaPending.value = true
             await fetchMedias()
           }
         }
@@ -251,9 +250,7 @@
         return
       }
       page.value = shopData.value ? shopData.value?.page as PageSearch : null
-      mediaPending.value = true
       await fetchMedias()
-      mediaPending.value = false
       pageStopWatch()
     }
   }, {immediate: true})
