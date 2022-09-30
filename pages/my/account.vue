@@ -19,7 +19,6 @@
                         電郵
                     </div>
                     <div class="table-cell pt-2">
-<!--                        <input v-model="email" class="text-input-primary w-full" type="text" placeholder="電郵"/>-->
                         <div>{{email}}</div>
                     </div>
                 </div>
