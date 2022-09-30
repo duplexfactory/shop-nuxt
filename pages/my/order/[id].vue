@@ -2,9 +2,7 @@
   <div>
     <client-only>
       <div v-if="order">
-        <div class="mb-4 border rounded-md px-8 py-4 bg-blue-100 border-blue-500">
-          <i class="spr-info-circled-alt text-gray-600 mr-2"></i>{{ tipText }}
-        </div>
+        <NoticeBar :message="tipText"></NoticeBar>
 
         <div class="mb-4 border rounded-md p-4 md:(p-8 grid grid-cols-2)">
 
