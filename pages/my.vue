@@ -38,20 +38,20 @@ const isIgConnected = useIsIgConnected()
 const tabs = computed(() => {
   let tabs = accountTabs
   if (!isSubscribed.value) {
-    tabs = accountTabs.filter((t) => ![
+    tabs = tabs.filter((t) => ![
       "e-commerce",
       "order-list"
     ].includes(t.route))
   }
   if (!isIgConnected.value) {
-    tabs = accountTabs.filter((t) => ![
+    tabs = tabs.filter((t) => ![
       "media-list",
       "e-commerce",
       "order-list"
     ].includes(t.route))
   }
   if (!pageCommerceData.value) {
-    tabs = accountTabs.filter((t) => ![
+    tabs = tabs.filter((t) => ![
       "order-list"
     ].includes(t.route))
   }
