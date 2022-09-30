@@ -6,6 +6,10 @@ body {
     @apply text-md px-6 py-2 rounded-md font-semibold;
 }
 
+/*
+* Button types
+*/
+
 .btn-primary {
     @apply btn text-white bg-pink-400;
 }
@@ -21,6 +25,10 @@ body {
 .btn-primary-hover.btn-outline:hover {
     @apply text-white bg-pink-400;
 }
+
+/*
+* Button sizes
+*/
 
 .btn-sm {
     @apply text-sm px-3 py-1;
@@ -161,3 +169,8 @@ input[type=number] {
 .tool-tip {
     @apply bg-gray-900/80 text-white text-sm p-2 rounded-md;
 }
+
+.iconbox::before {
+    @apply !m-0;
+}
+

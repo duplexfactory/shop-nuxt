@@ -20,6 +20,7 @@ import {duration} from "./utils/dayjs";
 import {MongoClient, MongoClientOptions} from "mongodb";
 import {igAuthCollection, pageSearchCollection} from "~/server/mongodb";
 import IgPage from "~/models/IgPage"
+import Blog from "~/models/Blog"
 const { __dirname } = createCommonJS(import.meta.url)
 
 export default defineNuxtConfig({
@@ -181,22 +182,25 @@ export default defineNuxtConfig({
             return process.env.DEV_DB ? "dev-" + name : name
           }
           const pageCollection = getFirestore().collection(checkDev("pages")) as CollectionReference<IgPage>;
+          const blogCollection = getFirestore().collection(checkDev("blogs")) as CollectionReference<Blog>;
           let q: Query<DocumentData> = pageCollection
               .where("deleted", "==", false)
               .where("private", "==", false)
               .where("tier", "!=", 0)
 
-          const [pages] = await Promise.all([
+          const [pages, blogs] = await Promise.all([
             q
                 .pick("username")
                 .get()
                 .then(ss => ss.data()),
+            blogCollection.pick("slug", "id").get().then(ss => ss.data())
           ])
 
           // const { pages }: {pages: { username: string }[]} = await $fetch(`https://dreamy-swartz-fe09d4.netlify.app/api/sitemap-data`);
           return [
               ...searchPaths,
-              ...pages.map((p) => `/shop/${p.username}`)
+              ...pages.map((p) => `/shop/${p.username}`),
+              ...blogs.map((b) => `/blog/${b.slug}-${b.id}`)
           ]
         }
         catch (e) {
