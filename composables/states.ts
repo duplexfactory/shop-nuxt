@@ -2,6 +2,7 @@ import {SimpleIgPage} from "~/models/SimpleIgPage";
 import IgMedia from "~/models/IgMedia";
 import {User} from "firebase/auth"
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
+import IgPage from "~/models/IgPage"
 
 export const useShowMediaModal = () => useState<boolean>('showMediaModal', () => false)
 export const useShowingMediaModalData = () => useState<{
@@ -11,17 +12,17 @@ export const useShowingMediaModalData = () => useState<{
     media?: IgMedia,
 
     pageId?: string,
-    simplePage?: SimpleIgPage
+    simplePage?: IgPage
 }>('showingMediaModalData', () => ({
-    simplePage: {
-        _id: "",
-        fullName: "",
-        pk: 0,
-        username: "",
-        businessRegistration: false,
-        brickAndMortar: false,
-        locations: []
-    }
+    // simplePage: {
+    //     _id: "",
+    //     fullName: "",
+    //     pk: 0,
+    //     username: "",
+    //     businessRegistration: false,
+    //     brickAndMortar: false,
+    //     locations: []
+    // }
 }))
 
 export const useShowSearchModal = () => useState<boolean>('showSearchModal', () => false)
