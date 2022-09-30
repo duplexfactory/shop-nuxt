@@ -2,7 +2,8 @@
   <div class="mb-16">
     <div class="container mx-auto">
       <div class="my-4 md:mt-0">
-        <nuxt-link v-if="!!page" :to="`/shop/${page.username}`"
+        <nuxt-link :to="`/shop/${page ? page.username : ''}`"
+                   :disabled="!page"
                    class="hover:underline"><i class="spr-angle-left"></i>返回店鋪</nuxt-link>
       </div>
 

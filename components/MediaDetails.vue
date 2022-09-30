@@ -342,7 +342,7 @@ watch(swiper, loadSwiper)
 const showMediaCardLoading = computed(() => {
   return !page.value ||
       !media.value ||
-      (page.value.igConnected && media.value.mediaType === 'CAROUSEL_ALBUM' && !swiperReady.value) ||
+      // (page.value.igConnected && media.value.mediaType === 'CAROUSEL_ALBUM' && !swiperReady.value) ||
       (!page.value.igConnected && !media.value.code)
 })
 
