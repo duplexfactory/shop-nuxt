@@ -130,7 +130,7 @@ async function save() {
 
   // Error
   if (error.value) {
-    nuxt.vueApp.$toast.error("儲存失敗！", {position: "top"});
+    nuxt.$toast.error("儲存失敗！", {position: "top"});
     return;
   }
 
@@ -144,7 +144,7 @@ async function save() {
     }
   }
 
-  nuxt.vueApp.$toast.success("儲存成功！", {position: "top"});
+  nuxt.$toast.success("儲存成功！", {position: "top"});
 }
 
 

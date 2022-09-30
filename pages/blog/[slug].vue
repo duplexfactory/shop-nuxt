@@ -112,7 +112,7 @@
     const text = `${blog.value.title} | IG Shop 推薦及評論平台 | Shoperuse\n`
         + `${config.DOMAIN}/blog/${blog.value.slug}-${blog.value.id}`;
     navigator.clipboard.writeText(text);
-    nuxt.vueApp.$toast.success("已成功複製連結。", {position: "top"});
+    nuxt.$toast.success("已成功複製連結。", {position: "top"});
   }
 </script>
 

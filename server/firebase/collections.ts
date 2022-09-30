@@ -37,7 +37,7 @@ export function shopSuggestionCollection() {
 }
 
 export function blogCollection() {
-    return getFirestore().collection("blogs") as CollectionReference<Blog>;
+    return getFirestore().collection(checkDev("blogs")) as CollectionReference<Blog>;
 }
 
 export type IdInput = number | string | { id: string | number }
