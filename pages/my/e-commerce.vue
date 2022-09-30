@@ -26,7 +26,7 @@
 
         <template v-if="step == Step.INIT">
           <div class="text-xl mt-4">
-            設定你的網店後，顧客可直接在Shoperuse下單購買你的產品！
+            設定你的網店後，顧客便可直接在Shoperuse下單購買你的產品！
           </div>
           <div class="mt-2 text-gray-600">
             首次設定時，我們將會逐步指引你設定。設定後，所有資料也可隨時再次修改。
