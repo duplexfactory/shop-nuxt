@@ -1,64 +1,7 @@
 <template>
   <div class="md:grid grid-cols-8 gap-8">
     <div class="col-span-4">
-      <template v-if="page">
-        <template v-if="page.igConnected">
-          <template v-if="media">
-            <div v-if="media.mediaType === 'VIDEO'" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
-              <video controls preload="metadata">
-                <source :src="media.mediaUrl" type="video/mp4">
-                <source :src="media.mediaUrl" type="video/ogg">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-            <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
-                 v-lazy:background-image="media.mediaUrl"></div>
-            <div v-else-if="media.mediaType === 'CAROUSEL_ALBUM'" class="relative">
-              <div class="absolute z-10 right-4 top-4 rounded-full px-3 py-1 text-white bg-gray-900">
-                {{ `${carouselIndex + 1}/${media.mediaList ? media.mediaList.length : '-'}` }}
-              </div>
-
-              <div class="swiper" ref="swiper">
-                <!-- Additional required wrapper -->
-                <div class="swiper-wrapper">
-                  <!-- Slides -->
-                  <div v-for="(m, i) in media.mediaList"
-                       :key="m"
-                       class="image-container aspect-square rounded-md overflow-hidden swiper-slide"
-                       v-lazy:background-image="m"></div>
-                </div>
-
-                <!-- If we need navigation buttons -->
-                <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
-                <div ref="swiperButtonNext" class="swiper-button-next"></div>
-              </div>
-
-              <div class="flex gap-2 whitespace-nowrap mt-2 overflow-x-auto">
-                <div v-for="(m, i) in media.mediaList"
-                     :key="m"
-                     style="flex: 0 0 16%"
-                     class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden"
-                     :class="{'border-2 border-pink-400': carouselIndex === i}"
-                     @click="clickCarouselPreview(i)"
-                     v-lazy:background-image="m"></div>
-              </div>
-            </div>
-            <div v-else class="image-container aspect-square rounded-md overflow-hidden"
-                 v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
-
-            <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
-              {{ stripTrailingHashtags(media.caption) }}
-            </div>
-          </template>
-        </template>
-        <MediaCardIGEmbed v-if="!page.igConnected && media.code"
-                          captioned
-                          :post-id="media.code"
-                          :fixed-aspect-ratio="0"
-                          :username="page.username"></MediaCardIGEmbed>
-      </template>
-
-      <template v-else>
+      <template v-if="showMediaCardLoading">
         <div class="image-container aspect-square rounded-md overflow-hidden" style="background-color: #ddd;">
           <div class="h-full w-full bg-loading"></div>
         </div>
@@ -73,6 +16,60 @@
         </div>
       </template>
 
+      <template v-if="page">
+        <template v-if="page.igConnected && media">
+          <div v-if="media.mediaType === 'VIDEO'" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
+            <video controls preload="metadata">
+              <source :src="media.mediaUrl" type="video/mp4">
+              <source :src="media.mediaUrl" type="video/ogg">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div v-else-if="media.mediaType === 'IMAGE'" class="image-container aspect-square rounded-md overflow-hidden"
+               v-lazy:background-image="media.mediaUrl"></div>
+          <div v-else-if="media.mediaType === 'CAROUSEL_ALBUM'" class="relative">
+            <div class="absolute z-10 right-4 top-4 rounded-full px-3 py-1 text-white bg-gray-900">
+              {{ `${carouselIndex + 1}/${media.mediaList ? media.mediaList.length : '-'}` }}
+            </div>
+
+            <div class="swiper" ref="swiper">
+              <!-- Additional required wrapper -->
+              <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div v-for="(m, i) in media.mediaList"
+                     :key="m"
+                     class="image-container aspect-square rounded-md overflow-hidden swiper-slide"
+                     v-lazy:background-image="m"></div>
+              </div>
+
+              <!-- If we need navigation buttons -->
+              <div ref="swiperButtonPrev" class="swiper-button-prev"></div>
+              <div ref="swiperButtonNext" class="swiper-button-next"></div>
+            </div>
+
+            <div class="flex gap-2 whitespace-nowrap mt-2 overflow-x-auto">
+              <div v-for="(m, i) in media.mediaList"
+                   :key="m"
+                   style="flex: 0 0 16%"
+                   class="image-container image-container-clickable aspect-square cursor-pointer rounded-md overflow-hidden"
+                   :class="{'border-2 border-pink-400': carouselIndex === i}"
+                   @click="clickCarouselPreview(i)"
+                   v-lazy:background-image="m"></div>
+            </div>
+          </div>
+          <div v-else class="image-container aspect-square rounded-md overflow-hidden"
+               v-lazy:background-image="$imageUrl(media.code, 'l')"></div>
+
+          <div class="mt-2 hidden md:block text-sm whitespace-pre-wrap break-words">
+            {{ stripTrailingHashtags(media.caption) }}
+          </div>
+        </template>
+        <MediaCardIGEmbed v-if="!page.igConnected && media.code"
+                          captioned
+                          :post-id="media.code"
+                          :fixed-aspect-ratio="0"
+                          :username="page.username"></MediaCardIGEmbed>
+      </template>
     </div>
     <div class="col-span-4">
       <div class="mt-4 md:mt-0">
@@ -278,7 +275,7 @@ const {
 
 const props = defineProps({
   media: Object as PropType<IgMedia>,
-  page: Object as PropType<SimpleIgPage>,
+  page: Object as PropType<IgPage>,
 })
 const {media, page} = toRefs(props)
 
@@ -317,10 +314,10 @@ const {
   on: {
     slideChange: (swiper: Swiper) => {
       carouselIndex.value = swiper.activeIndex
-    }
-    // init: () => {
-    //   swiperReady.value = true
-    // },
+    },
+    init: () => {
+      swiperReady.value = true
+    },
   },
 
   // observer: true,
@@ -340,6 +337,14 @@ const {
   // },
 })
 watch(swiper, loadSwiper)
+
+// Media card loading placeholder.
+const showMediaCardLoading = computed(() => {
+  return !page.value ||
+      !media.value ||
+      (page.value.igConnected && media.value.mediaType === 'CAROUSEL_ALBUM' && !swiperReady.value) ||
+      (!page.value.igConnected && !media.value.code)
+})
 
 // Create Review
 const {
