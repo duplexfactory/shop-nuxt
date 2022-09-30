@@ -47,35 +47,28 @@ async function fetchOfficialIfAvailable() {
 }
 
 const {data: mediaData, pending} = await useContentKeyedLazyFetch(`/api/media/${route.params.code}`)
-if (!!mediaData.value && !!mediaData.value.media) {
-  media.value = mediaData.value.media as IgMedia
+watch(mediaData, async () => {
+  if (!mediaData.value || !mediaData.value.media) {
+    return
+  }
+  media.value = mediaData.value.media as IgMedia // Use non official to get official media id.
   await fetchOfficialIfAvailable()
-}
-else {
-  watch(mediaData, async () => {
-    media.value = mediaData.value.media as IgMedia // Use non official to get official media id.
-    await fetchOfficialIfAvailable()
-  })
-}
+}, {immediate: true})
+
 
 const page = ref<PageSearch>(null)
-if (!!media.value) {
-  const {data: pageData, error} = await useContentKeyedLazyFetch(`/api/shop/id/${media.value.pageId}`)
+watch(media, async (newMedia, oldMedia) => {
+  if (!!newMedia && !!oldMedia && newMedia.code === oldMedia.code) {
+    return
+  }
+  if (!newMedia) {
+    return
+  }
+  const {data: pageData, error} = await useContentKeyedFetch(`/api/shop/id/${media.value.pageId}`)
   if (!!pageData.value && !!pageData.value.page) {
     page.value = pageData.value.page
   }
-}
-else {
-  watch(media, async (newMedia, oldMedia) => {
-    if (!!newMedia && !!oldMedia && newMedia.code === oldMedia.code) {
-      return
-    }
-    const {data: pageData, error} = await useContentKeyedFetch(`/api/shop/id/${media.value.pageId}`)
-    if (!!pageData.value && !!pageData.value.page) {
-      page.value = pageData.value.page
-    }
-  })
-}
+}, {immediate: true})
 
 </script>
 
