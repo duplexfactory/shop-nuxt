@@ -39,9 +39,9 @@
   const created = dayjs(blog.value.created).format('DD/MM/YYYY');
 
   const structuredPath = `/blog/${blog.value.slug}-${blog.value.id}`;
-  if (route.path !== structuredPath) {
+  if (route.path !== encodeURI(structuredPath)) {
     // 302 redirect
-    navigateTo(structuredPath);
+    navigateTo(encodeURI(structuredPath));
   }
 
   import edjsHTML from "editorjs-html";
