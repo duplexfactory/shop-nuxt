@@ -2,7 +2,6 @@
 
 import {accountTabs} from "~/data/ui";
 import {IgPageCommerceData} from "~/models/IgPageCommerceData";
-
 const igPageId = useIgPageId()
 const route = useRoute();
 const router = useRouter();
@@ -38,30 +37,54 @@ const isIgConnected = useIsIgConnected()
 const tabs = computed(() => {
   let tabs = accountTabs
   if (!isSubscribed.value) {
-    tabs = accountTabs.filter((t) => ![
+    tabs = tabs.filter((t) => ![
       "e-commerce",
       "order-list"
     ].includes(t.route))
   }
   if (!isIgConnected.value) {
-    tabs = accountTabs.filter((t) => ![
+    tabs = tabs.filter((t) => ![
       "media-list",
       "e-commerce",
       "order-list"
     ].includes(t.route))
   }
   if (!pageCommerceData.value) {
-    tabs = accountTabs.filter((t) => ![
+    tabs = tabs.filter((t) => ![
       "order-list"
     ].includes(t.route))
   }
   return tabs
 })
 
+// Notice.
+const noticeMessage = computed(() => {
+  if (isSubscribed.value && isIgConnected.value && !pageCommerceData.value) {
+    return "設定你的網店後，顧客便可直接在Shoperuse下單購買你的產品！"
+  }
+})
+
+const noticeActionRoute = computed(() => {
+  const tab = accountTabs.find((t) => t.route === 'e-commerce')
+  if (!!tab) {
+    return `/my/${tab.route}`
+  }
+})
+
+const noticeActionText = computed(() => {
+  const tab = accountTabs.find((t) => t.route === 'e-commerce')
+  if (!!tab) {
+    // return `前往 ${tab.title}`
+    return "了解更多"
+  }
+})
+
 </script>
 
 <template>
     <div class="container mx-auto mt-4 md:mt-0">
+      <NoticeBar :message="noticeMessage" :actionTo="noticeActionRoute" :actionText="noticeActionText"></NoticeBar>
+
       <div class="hidden md:flex mb-4">
         <nuxt-link v-for="tab in tabs"
                    :key="tab.route"

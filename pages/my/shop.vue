@@ -191,7 +191,9 @@
 
     <template v-else>
       <div class="flex mb-4">
-        <nuxt-link target="_blank" class="btn-outline" :to="`/shop/${igUsername}`">查看商店頁面</nuxt-link>
+        <nuxt-link target="_blank" :to="`/shop/${igUsername}`">
+          <i class="spr-link-ext iconbox mr-2"></i>查看商店頁面
+        </nuxt-link>
       </div>
 
       <div class="info-group">
@@ -349,6 +351,11 @@
 
   .chip {
     @apply inline-block text-pink-600 text-base border rounded-md p-2 mt-1 mr-2;
+  }
+
+  a {
+    transition: .3s;
+    @apply text-gray-600 hover:text-pink-400
   }
 
 </style>

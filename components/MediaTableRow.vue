@@ -24,8 +24,12 @@
         </div>
       </div>
       <div v-else class="flex">
-        <div class="mr-2">{{ formatMediaPrice(price) }}</div>
-        <button @click="localPrice = price; editingPrice = true" class="hover:underline text-pink-600">修改</button>
+        <div class="mr-8">{{ formatMediaPrice(price) }}</div>
+        <div class="">
+          <button @click="localPrice = price; editingPrice = true" class="btn-text">
+            <i class="spr-edit iconbox mr-2"></i>修改
+          </button>
+        </div>
       </div>
     </div>
     <div v-if="commerceEditable" class="table-cell align-top">
@@ -47,7 +51,9 @@
         沒有折扣
       </div>
 
-      <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">修改</button>
+      <button @click="editDiscount" class="hover:underline text-pink-600 mr-2">
+        修改
+      </button>
       <button v-if="hasDiscount" @click="removeDiscount" class="hover:underline text-red-500">刪除折扣</button>
 
       <Teleport to="body">
@@ -68,8 +74,16 @@
 
     </div>
     <div class="table-cell align-top">
-<!--      <nuxt-link class="hover:underline text-pink-600" :to="`/product/${media.code}`" target="_blank">瀏覽下單網址</nuxt-link>-->
-      <button class="hover:underline text-pink-600" @click="clickCopyProductLink">複製下單網址</button>
+      <div>
+        <nuxt-link :to="`/product/${media.code}`" target="_blank">
+          <i class="spr-link-ext iconbox mr-2"></i>查看貼文頁面
+        </nuxt-link>
+      </div>
+      <div class="mt-2">
+        <button class="btn-text" @click="clickCopyProductLink">
+          <i class="spr-docs iconbox mr-2"></i>複製貼文網址
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -317,6 +331,16 @@ function clickCopyProductLink() {
 
 .table-cell {
   @apply p-2;
+}
+
+a {
+  transition: .3s;
+  @apply text-gray-600 hover:text-pink-400
+}
+
+.btn-text {
+  transition: .3s;
+  @apply text-gray-600 hover:text-pink-400
 }
 
 </style>

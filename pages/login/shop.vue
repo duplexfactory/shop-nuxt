@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto">
+    <div class="container mx-auto mb-16">
       <div class="w-full md:w-1/2">
         <h1 class="mt-8 text-2xl md:text-4xl font-bold">
           商戶登入
