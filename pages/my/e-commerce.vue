@@ -23,14 +23,14 @@
           <div class="w-1/2">
             <div class="text-pink-400 font-bold">"迎合你的推廣需要"</div>
             <div class="text-2xl md:text-4xl font-bold mt-1">隨意設定折扣</div>
-            <div>你可以在我們的系統上設定折扣類型、折扣條件、折扣期限等等。讓你可以隨心所欲地推廣你的產品。</div>
+            <div class="mt-2">你可以在我們的系統上設定折扣類型、折扣條件、折扣期限等等。讓你可以隨心所欲地推廣你的產品。</div>
           </div>
         </div>
         <div class="flex">
           <div class="w-1/2">
             <div class="text-pink-400 font-bold">""</div>
             <div class="text-2xl md:text-4xl font-bold mt-1">方便郵寄</div>
-            <div>内置順豐站、順便智能櫃地點，讓顧客可以輕鬆選擇。同時支援面交、到付等郵寄設定。</div>
+            <div class="mt-2">内置順豐站、順便智能櫃地點，讓顧客可以輕鬆選擇。同時支援面交、到付或任何自定義的郵寄方式。</div>
           </div>
           <div class="w-1/2">
 
@@ -43,7 +43,7 @@
           <div class="w-1/2">
             <div class="text-pink-400 font-bold">""</div>
             <div class="text-2xl md:text-4xl font-bold mt-1">付款方法</div>
-            <div></div>
+            <div class="mt-2"></div>
           </div>
         </div>
 
