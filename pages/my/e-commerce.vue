@@ -25,6 +25,54 @@
       <div v-else class="text-center w-full md:w-3/5 mx-auto">
 
         <template v-if="step == Step.INIT">
+
+          <div class="grid grid-cols-3">
+            <div v-for="(point, i) in points"
+                 data-aos="fade-up"
+                 data-aos-anchor-placement="top-bottom"
+                 data-aos-duration="1000"
+                 class="col-span-1 rounded bg-white md:text-center p-4">
+              <div class="text-pink-400 text-2xl font-semibold">{{point.title}}</div>
+              <!--                <div class="mt-4">{{point.subtitle}}</div>-->
+              <div class="mt-4 text-sm">{{point.content}}</div>
+            </div>
+          </div>
+
+
+
+          <div>
+            <div class="w-1/2">
+
+            </div>
+            <div class="w-1/2">
+              <div>"迎合你的推廣需要"</div>
+              <div>隨意設定折扣</div>
+              <div>你可以在我們的系統上設定折扣類型、折扣條件、折扣期限等等。讓你可以隨心所欲地推廣你的產品。</div>
+            </div>
+          </div>
+          <div>
+            <div class="w-1/2">
+              <div>""</div>
+              <div>郵寄方法</div>
+              <div></div>
+            </div>
+            <div class="w-1/2">
+
+            </div>
+          </div>
+          <div>
+            <div class="w-1/2">
+
+            </div>
+            <div class="w-1/2">
+              <div>""</div>
+              <div>付款方法</div>
+              <div></div>
+            </div>
+          </div>
+
+
+
           <div class="text-xl mt-4">
             設定你的網店後，顧客便可直接在Shoperuse下單購買你的產品！
           </div>
@@ -32,6 +80,9 @@
             首次設定時，我們將會逐步指引你設定。設定後，所有資料也可隨時再次修改。
           </div>
           <button class="mt-4 btn-primary" @click="incrementStep">立即開始設定</button>
+
+
+
         </template>
         <template v-else-if="step == Step.MAILING">
           <div class="text-2xl">
@@ -365,6 +416,13 @@ async function patchCommerce(patch: Partial<Omit<IgPageCommerceData, "_id">>) {
       }
   );
 }
+
+// Selling points.
+const points = [
+  {title: "一店兩用", subtitle: "", content: "Shoperuse與IG上的貼文自動同步，IG發文後可即時在Shoperuse上發售！減省大量設置時間！"},
+  {title: "直接收款", subtitle: "", content: "顧客付款時，所有款項不經Shoperuse。顧客直接過數或透過QR Code付款給你。"},
+  {title: "訂單管理", subtitle: "", content: "設有訂單管理系統，輕鬆管理訂單狀態及聯絡顧客。"},
+]
 
 </script>
 
