@@ -15,4 +15,6 @@ ENV PORT=8080
 
 RUN yarn build
 
+RUN rm -rf node_modules
+
 CMD [ "yarn", "start" ]
