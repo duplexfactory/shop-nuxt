@@ -1,0 +1,33 @@
+steps:
+  - id: Env
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: /bin/bash
+    args: ['-c', 'echo $_ENV | base64 --decode | gunzip > .env']
+  - id: 'Print Env'
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: /bin/bash
+    args: ['-c', 'cat .env']
+  - name: node:16
+    entrypoint: yarn
+    args: [ 'install' ]
+    id: Install
+  - name: node:16
+    entrypoint: yarn
+    args: [ 'test' ]
+    id: Test
+  - name: node
+    entrypoint: yarn
+    args:
+      - run
+      - build
+    id: Build
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - app
+      - deploy
+    id: Deploy
+options:
+  substitutionOption: ALLOW_LOOSE
+tags:
+  - shoperuse-web

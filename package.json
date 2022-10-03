@@ -5,7 +5,8 @@
     "dev": "nuxt dev",
     "build": "yarn patch && nuxt build",
     "start": "node .output/server/index.mjs",
-    "patch": "yarn add -D patch-vue-directive-ssr"
+    "patch": "yarn add -D patch-vue-directive-ssr",
+    "test": "echo 'no test, skip'"
   },
   "devDependencies": {
     "nuxt": "npm:nuxt3@3.0.0",
