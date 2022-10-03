@@ -1,0 +1,26 @@
+runtime: nodejs16
+
+instance_class: F1
+
+handlers:
+  - url: /_nuxt
+    static_dir: .output/public/_nuxt
+    secure: always
+
+  - url: /(images/logo\.png|favicon\.ico|robots\.txt|sitemap\.xml)$
+    static_files: .output/public/\1
+    upload: .output/public/.*
+    secure: always
+
+  - url: /(.*\.(gif|png|jpg|ico|txt))$
+    static_files: static/\1
+    upload: static/.*\.(gif|png|jpg|ico|txt)$
+    secure: always
+
+  - url: /.*
+    script: auto
+    secure: always
+
+env_variables:
+  PORT: '8080'
+  HOST: '0.0.0.0'
