@@ -1,8 +1,10 @@
 import IgPageExtraData from "~/models/IgPageExtraData";
 
 export default interface IgPageOverride {
-    _id: string,
+    _id: string;
 
+    fullName: string;
+    biography: string;
     adult?: boolean;
 
     // marked
