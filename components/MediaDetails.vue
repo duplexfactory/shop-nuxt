@@ -19,7 +19,7 @@
       <template v-if="page">
         <template v-if="page.igConnected && media">
           <div v-if="media.mediaType === 'VIDEO'" class="image-container rounded-md overflow-hidden" style="background-color: #000 !important;">
-            <video controls preload="metadata">
+            <video controls preload="metadata" :key="media.mediaUrl">
               <source :src="media.mediaUrl" type="video/mp4">
               <source :src="media.mediaUrl" type="video/ogg">
               Your browser does not support the video tag.
