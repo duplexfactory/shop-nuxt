@@ -21,12 +21,20 @@ export default function useMediaList() {
             limit: limit.value
         }
 
-        if (cursors.value != null) {
-            if (prev) {
+        if (prev) {
+            if (cursors.value != null && cursors.value["before"]) {
                 params["before"] = cursors.value["before"]
             }
-            else {
+            if (medias.value.length) {
+                params["since"] = medias.value[0].takenAt
+            }
+        }
+        else {
+            if (cursors.value != null && cursors.value["after"]) {
                 params["after"] = cursors.value["after"]
+            }
+            if (medias.value.length) {
+                params["until"] = medias.value[medias.value.length - 1].takenAt
             }
         }
 

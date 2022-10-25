@@ -3,7 +3,7 @@ import {igAuthCollection, initMongo, pageSearchCollection} from "~/server/mongod
 import {badRequest, notFound} from "~/utils/h3Error"
 import {assert, getAuth} from "~/server/util"
 import {fetchIgMedias, fetchIgProfile} from "~/server/instagram"
-import {getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
+import {getMediasByCodes, getPageMedias, initDynamo, saveMedias} from "~/server/dynamodb"
 import {detectPrice} from "~/utils/from-crawler/detect-price"
 import {pageCollection} from "~/server/firebase/collections"
 import IgMedia from "~/models/IgMedia"
@@ -36,12 +36,10 @@ export default defineEventHandler(async (event) => {
 
     // Get existing medias from dynamo for price and patchPrice.
     initDynamo()
-    const existingMedias = await getPageMedias(
-        id,
-        limit ? Number(limit) : undefined,
-        until ? Number(until) - 1 : undefined,
-        since ? Number(since) - 1 : undefined,
-    )
+    // console.log(before)
+    // console.log(after)
+    // console.log(until)
+    // console.log(since)
 
     let medias: IgMedia[]
     let paging: { cursors: {before: string, after: string} }
@@ -49,6 +47,12 @@ export default defineEventHandler(async (event) => {
     if (!!p.invalid) {
         // Token is invalid.
         // Get use existing medias from dynamo.
+        const existingMedias = await getPageMedias(
+            id,
+            limit ? Number(limit) : undefined,
+            until ? Number(until) - 1 : undefined,
+            since ? Number(since) + 1 : undefined,
+        )
         medias = existingMedias
     }
     else {
@@ -57,21 +61,25 @@ export default defineEventHandler(async (event) => {
         const paginate = {
             limit: Number(limit)
         }
-        if (!!before) {
-            paginate["before"] = before
-        }
-        else if (!!after) {
-            paginate["after"] = after
+        if (!!before || !!after) {
+            if (!!before) {
+                paginate["before"] = before
+            }
+            if (!!after) {
+                paginate["after"] = after
+            }
         }
         else {
-            paginate["since"] = since ? Number(since) + 1 : undefined
             paginate["until"] = until ? Number(until) - 1 : undefined
+            paginate["since"] = since ? Number(since) + 1 : undefined
         }
 
         const res = await fetchIgMedias(id, p.accessToken, true, paginate)
         medias = res.medias
         paging = res.paging
         // const since: number | undefined = medias.length ? medias[0].takenAt : undefined
+
+        const existingMedias = await getMediasByCodes(medias.map((m) => m.code))
 
         const newMedias: IgMedia[] = []
         medias.forEach((m) => {
@@ -89,6 +97,8 @@ export default defineEventHandler(async (event) => {
                 newMedias.push(m)
             }
         })
+
+        // console.log(newMedias.length)
 
         if (newMedias.length !== 0) {
             // Contains not crawled data. Process and save to db.
@@ -121,7 +131,6 @@ export default defineEventHandler(async (event) => {
             await pageSearchCollection.updateOne({_id: id}, {$set: update})
             await pageCollection().doc(id).update(update)
         }
-
     }
 
     return {

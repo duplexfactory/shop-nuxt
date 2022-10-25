@@ -31,22 +31,27 @@ export async function initDynamo() {
 
 export async function getPageMedias(pageId: string, limit?: number, until?: number, since?: number, before?: string, after?: string) {
 
-    if (!!since) {
-        const res = await client.send(new QueryCommand({
-            TableName: "media",
-            KeyConditionExpression: "pageId = :pageId AND takenAt > :since",
-            ExpressionAttributeValues: marshall({":pageId": pageId, ":since": since}),
-            ScanIndexForward: false,
-            Limit: limit
-        }))
-        return res.Items?.map(m => unmarshall(m)) as IgMedia[]
+    let keyCondition = ""
+    let expressionAttributeValues
+    if (since !== undefined && until === undefined) {
+        keyCondition = "pageId = :pageId AND takenAt > :since"
+        expressionAttributeValues = marshall({":pageId": pageId, ":since": since})
+    }
+    else if (since !== undefined && until !== undefined) {
+        keyCondition = "pageId = :pageId AND takenAt > :since AND takenAt < :before"
+        expressionAttributeValues = marshall({":pageId": pageId, ":before": until, ":since": since})
+    }
+    else {
+        // until !== undefined && since === undefined
+        // until === undefined && since === undefined
+        keyCondition = "pageId = :pageId AND takenAt < :before"
+        expressionAttributeValues = marshall({":pageId": pageId, ":before": until || dayjs().unix()})
     }
 
-    const b = until || dayjs().unix();
     const res = await client.send(new QueryCommand({
         TableName: "media",
-        KeyConditionExpression: "pageId = :pageId AND takenAt < :before",
-        ExpressionAttributeValues: marshall({":pageId": pageId, ":before": b}),
+        KeyConditionExpression: keyCondition,
+        ExpressionAttributeValues: expressionAttributeValues,
         ScanIndexForward: false,
         Limit: limit
     }))
